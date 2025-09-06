@@ -1,14 +1,14 @@
-# Instacli
+# SpecScript
 
-Instantly create CLI applications with light scripting in Yaml!
+Spec your projects the human _and_ AI-friendly way using Markdown and Yaml.
 
-Use Instacli to quickly automate or prototype light tasks like testing out APIs. Sprinkle in some user interaction.
+Use SpecScript to quickly prototype and test specifications. Sprinkle in some user interaction.
 
 As-code, but without the complexity of actual code.
 
-## Full Example
+## Example
 
-Get a flavor of Instacli with this example file `greetings.cli`:
+Get a flavor of SpecScript with this example file `greetings.cli`:
 
 ```yaml file=greetings.cli
 Script info:
@@ -91,15 +91,15 @@ And we get the result in Spanish:
 
 # Documentation
 
-All of Instacli is defined in the **[instacli-spec](instacli-spec)**.
+All of SpecScript is defined in the **[instacli-spec](instacli-spec)** directory.
 
 * [CLI](instacli-spec/cli/README.md) defines the `cli` shell command
-* [Language](instacli-spec/language/README.md) defines the structure of the Instacli scripting language
+* [Language](instacli-spec/language/README.md) defines the structure of the SpecScript scripting language
 * [Command reference](instacli-spec/commands/README.md) defines all commands with descriptions, code examples and tests.
 
 # Build & Run
 
-The Instacli implementation is in Kotlin.
+The SpecScript implementation is in Kotlin.
 
 ## Build it
 
@@ -143,17 +143,17 @@ for subsequent invocations.
 
 # Highlight Reel
 
-Instacli has two main ideas:
+SpecScript has two main ideas:
 
-1. Everything is Yaml.
+1. Everything is Markdown or Yaml.
 2. Keep it simple.
 
 ## Hello world
 
-This is the simplest Instacli progam, **[hello.cli](samples/hello.cli)**:
+This is the simplest SpecScript progam, **[hello.cli](samples/hello.cli)**:
 
 ```yaml file=hello.cli
-Print: Hello from Instacli!
+Print: Hello from SpecScript!
 ```
 
 Invoke it with
@@ -165,14 +165,14 @@ cli hello.cli
 And it will print the expected message:
 
 ```output
-Hello from Instacli!
+Hello from SpecScript!
 ```
 
 ## HTTP requests as code
 
 Tired of remembering the exact curl syntax or forgetting which tab had that request that worked in Postman?
 
-Simply write your **[GET](instacli-spec/commands/instacli/http/GET.spec.md)** request as-code with Instacli:
+Simply write your **[GET](instacli-spec/commands/instacli/http/GET.spec.md)** request as-code with SpecScript:
 
 ```yaml instacli
 GET: http://localhost:2525/greetings
@@ -218,7 +218,7 @@ Options:
 
 ## Input options
 
-Instacli allows you to specify the type and format
+SpecScript allows you to specify the type and format
 of [input properties](instacli-spec/commands/instacli/user-interaction/Prompt.spec.md#prompt-properties). Here's an
 example file `input-options.cli`
 
@@ -250,7 +250,7 @@ Options:
 
 ## Interactive mode
 
-By default, Instacli runs in interactive mode. If there are unknown commandline options, the user is prompted to give
+By default, SpecScript runs in interactive mode. If there are unknown commandline options, the user is prompted to give
 input.
 
 <!-- answers
@@ -326,7 +326,7 @@ Available commands:
 
 ## User interaction
 
-Easily construct [user prompts](instacli-spec/commands/instacli/user-interaction/Prompt.spec.md) with Instacli.
+Easily construct [user prompts](instacli-spec/commands/instacli/user-interaction/Prompt.spec.md) with SpecScript.
 
 Here's an example of how to ask the user to pick something from a list, in a file called `prompt.cli`:
 
@@ -434,9 +434,9 @@ Print:
 
 ## Http Server
 
-For quick API prototyping, Instacli will run
+For quick API prototyping, SpecScript will run
 an [HTTP server](instacli-spec/commands/instacli/http/Http%20server.spec.md) for you. Define some endpoints and back
-them by Instacli scripts:
+them by SpecScript Yaml scripts:
 
 ```yaml instacli
 Code example: Running an HTTP server
@@ -451,11 +451,11 @@ Http server:
 ```
 
 Take a look at the [sample server](samples/http-server/sample-server/sample-server.cli) that serves all requests from
-the Instacli documentation and test suite.
+the SpecScript documentation and test suite.
 
 ## If statement
 
-Instacli supports various programming logic constructs, like 'if', 'repeat', 'for each'
+SpecScript supports various programming logic constructs, like 'if', 'repeat', 'for each'
 
 This is what an **[If](instacli-spec/commands/instacli/control-flow/If.spec.md)** statement looks like:
 
@@ -513,9 +513,9 @@ Expected output:
   - Hello Carol!
 ```
 
-## Testing in Instacli
+## Testing in SpecScript
 
-Writing tests in Instacli is straightforward:
+Writing tests in SpecScript is straightforward:
 
 ```yaml instacli
 Test case: A simple test case
@@ -525,17 +525,17 @@ Assert that:
   in: [ one, two, three ]
 ```
 
-In fact, all tests for the Instacli language and commands are written in Instacli itself and can be found in the
+In fact, all tests for the SpecScript language and commands are written in SpecScript itself and can be found in the
 **[instacli-spec](instacli-spec)** directory, in the `tests` subfolders. For example, take a look at
 the [tests for assertions](instacli-spec/commands/instacli/testing/tests/Assert%20tests.cli)
 
-## Documenting Instacli
+## Documenting SpecScript
 
 All documentation can be found in the **[instacli-spec](instacli-spec)** directory.
 
-Instacli documentation is in Markdown and contains runnable code that is run as part of the test suite.
+SpecScript documentation is in Markdown and contains runnable code that is run as part of the test suite.
 
-Here's an example of Instacli documentation:
+Here's an example of SpecScript documentation:
 
     ## Code examples
     
@@ -545,7 +545,7 @@ Here's an example of Instacli documentation:
     Print: Hello from Instacli!
     ```
 
-You can do 'Spec-driven development' with Instacli. For new features, write the documentation first, then run it. Since
+You can do 'Spec-driven development' with SpecScript. For new features, write the documentation first, then run it. Since
 you haven't implemented anything yet, the test suite will fail. Then write the implementation, and once the tests are
 green, you're done!
 
