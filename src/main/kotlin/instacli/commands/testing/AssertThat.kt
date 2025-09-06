@@ -8,7 +8,7 @@ import instacli.language.CommandHandler
 import instacli.language.ObjectHandler
 import instacli.language.ScriptContext
 
-object AssertThat : CommandHandler("Assert that", "instacli/testing"), ObjectHandler {
+object AssertThat : CommandHandler("Assert that", "core/testing"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
 

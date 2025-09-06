@@ -11,7 +11,7 @@ import instacli.language.types.resolve
 import instacli.language.types.validate
 import instacli.util.*
 
-object ValidateType : CommandHandler("Validate type", "instacli/schema"), ObjectHandler {
+object ValidateType : CommandHandler("Validate type", "core/schema"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val json = data.getParameter("item")

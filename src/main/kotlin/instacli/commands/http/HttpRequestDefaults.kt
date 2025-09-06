@@ -9,7 +9,7 @@ import instacli.language.ScriptContext
 import instacli.language.ValueHandler
 import instacli.util.Json
 
-object HttpRequestDefaults : CommandHandler("Http request defaults", "instacli/http"), ObjectHandler, ValueHandler {
+object HttpRequestDefaults : CommandHandler("Http request defaults", "core/http"), ObjectHandler, ValueHandler {
 
     private const val HTTP_DEFAULTS = "http.defaults"
 

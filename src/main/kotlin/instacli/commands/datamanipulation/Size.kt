@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.*
 import instacli.language.*
 
-object Size : CommandHandler("Size", "instacli/data-manipulation"), ValueHandler, ArrayHandler, ObjectHandler {
+object Size : CommandHandler("Size", "core/data-manipulation"), ValueHandler, ArrayHandler, ObjectHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
 

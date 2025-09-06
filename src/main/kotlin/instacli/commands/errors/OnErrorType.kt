@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import instacli.commands.errors.OnError.runErrorHandling
 import instacli.language.*
 
-object OnErrorType : CommandHandler("On error type", "instacli/errors"), ObjectHandler, DelayedResolver, ErrorHandler {
+object OnErrorType : CommandHandler("On error type", "core/errors"), ObjectHandler, DelayedResolver, ErrorHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
 

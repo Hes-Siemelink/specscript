@@ -7,7 +7,7 @@ import instacli.language.ObjectHandler
 import instacli.language.ScriptContext
 import instacli.util.toDomainObject
 
-object CreateCredentials : CommandHandler("Create credentials", "instacli/connections"), ObjectHandler {
+object CreateCredentials : CommandHandler("Create credentials", "core/connections"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode {
 

@@ -8,7 +8,7 @@ import instacli.language.ObjectHandler
 import instacli.language.ScriptContext
 import instacli.language.ValueHandler
 
-object Fields : CommandHandler("Fields", "instacli/data-manipulation"), ObjectHandler, ValueHandler {
+object Fields : CommandHandler("Fields", "core/data-manipulation"), ObjectHandler, ValueHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
 

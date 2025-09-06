@@ -7,7 +7,7 @@ import com.networknt.schema.JsonSchema
 import instacli.language.*
 import instacli.util.*
 
-object ValidateSchema : CommandHandler("Validate schema", "instacli/schema"), ObjectHandler {
+object ValidateSchema : CommandHandler("Validate schema", "core/schema"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val json = data.getParameter("data")

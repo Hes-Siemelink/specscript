@@ -9,7 +9,7 @@ import instacli.language.ScriptContext
 import instacli.language.ValueHandler
 import io.ktor.http.*
 
-object Delete : CommandHandler("DELETE", "instacli/http"), ValueHandler, ObjectHandler {
+object Delete : CommandHandler("DELETE", "core/http"), ValueHandler, ObjectHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
         return HttpClient.processRequest(data, context, HttpMethod.Delete)

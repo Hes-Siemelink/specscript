@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import instacli.language.*
 import instacli.util.applyPatch
 
-object JsonPatch : CommandHandler("Json patch", "instacli/data-manipulation"), ObjectHandler {
+object JsonPatch : CommandHandler("Json patch", "core/data-manipulation"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode {
 

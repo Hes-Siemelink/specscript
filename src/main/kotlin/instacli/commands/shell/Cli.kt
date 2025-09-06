@@ -14,7 +14,7 @@ import instacli.util.IO
 import instacli.util.toDomainObject
 import java.nio.file.Path
 
-object Cli : CommandHandler("Cli", "instacli/shell"), ValueHandler, ObjectHandler {
+object Cli : CommandHandler("Cli", "core/shell"), ValueHandler, ObjectHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
 

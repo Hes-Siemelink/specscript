@@ -9,7 +9,7 @@ import instacli.util.toDomainObject
 /**
  * Asks multiple questions at once
  */
-object PromptObject : CommandHandler("Prompt object", "instacli/user-interaction"), ObjectHandler, DelayedResolver {
+object PromptObject : CommandHandler("Prompt object", "core/user-interaction"), ObjectHandler, DelayedResolver {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
 

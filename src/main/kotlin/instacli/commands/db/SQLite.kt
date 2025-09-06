@@ -12,7 +12,7 @@ import java.sql.Connection
 import java.sql.DriverManager
 import kotlin.use
 
-object SQLite : CommandHandler("SQLite", "instacli/db"), ObjectHandler {
+object SQLite : CommandHandler("SQLite", "core/db"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val sql = data.toDomainObject(SQLiteData::class)

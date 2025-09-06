@@ -7,7 +7,7 @@ import instacli.language.ObjectHandler
 import instacli.language.ScriptContext
 import instacli.language.getTextParameter
 
-object DeleteCredentials : CommandHandler("Delete credentials", "instacli/connections"), ObjectHandler {
+object DeleteCredentials : CommandHandler("Delete credentials", "core/connections"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
 

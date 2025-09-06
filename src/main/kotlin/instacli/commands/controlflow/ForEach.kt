@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.node.ValueNode
 import instacli.language.*
 
-object ForEach : CommandHandler("For each", "instacli/control-flow"), ObjectHandler, DelayedResolver {
+object ForEach : CommandHandler("For each", "core/control-flow"), ObjectHandler, DelayedResolver {
 
     private val FOR_EACH_VARIABLE = Regex(VARIABLE_REGEX.pattern + " in")
 

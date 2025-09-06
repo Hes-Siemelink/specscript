@@ -7,7 +7,7 @@ import instacli.language.ObjectHandler
 import instacli.language.ScriptContext
 import instacli.language.getParameter
 
-object AssertEquals : CommandHandler("Assert equals", "instacli/testing"), ObjectHandler {
+object AssertEquals : CommandHandler("Assert equals", "core/testing"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
 

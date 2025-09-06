@@ -7,7 +7,7 @@ import instacli.language.ObjectHandler
 import instacli.language.ScriptContext
 import instacli.language.getTextParameter
 
-object SetDefaultCredentials : CommandHandler("Set default credentials", "instacli/connections"), ObjectHandler {
+object SetDefaultCredentials : CommandHandler("Set default credentials", "core/connections"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
 

@@ -11,7 +11,7 @@ import instacli.util.Yaml
 import java.nio.file.Path
 import kotlin.io.path.exists
 
-object ReadFile : CommandHandler("Read file", "instacli/files"), ValueHandler, ObjectHandler {
+object ReadFile : CommandHandler("Read file", "core/files"), ValueHandler, ObjectHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode {
         val file = data.toPath(context)

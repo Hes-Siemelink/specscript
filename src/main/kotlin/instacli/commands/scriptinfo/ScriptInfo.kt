@@ -9,7 +9,7 @@ import instacli.language.types.TypeSpecification
 import instacli.language.types.resolve
 import instacli.util.toDomainObject
 
-object ScriptInfo : CommandHandler("Script info", "instacli/script-info"),
+object ScriptInfo : CommandHandler("Script info", "core/script-info"),
     ObjectHandler, ValueHandler, DelayedResolver {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {

@@ -18,7 +18,7 @@ class JsonSchemasTest {
     fun `Validate Replace (Jackson)`() {
         val yaml = Yaml.readFile(example("Replace.yaml"))
 
-        yaml.validateWithSchema("instacli/data-manipulation/Replace.schema")
+        yaml.validateWithSchema("core/data-manipulation/Replace.schema")
     }
 
     //    @Test
@@ -50,7 +50,7 @@ class JsonSchemasTest {
     fun `Validate Equals with conditions schema (Jackson)`() {
         val yaml = Yaml.readFile(example("Equals.yaml"))
 
-        yaml.validateWithSchema("instacli/Conditions.schema")
+        yaml.validateWithSchema("core/Conditions.schema")
     }
 
     @Test
@@ -58,7 +58,7 @@ class JsonSchemasTest {
         val yaml = Yaml.readFile(example("Equals-incorrect.yaml"))
 
         assertThrows<CommandFormatException> {
-            yaml.validateWithSchema("instacli/Conditions.schema")
+            yaml.validateWithSchema("core/Conditions.schema")
         }
     }
 
@@ -82,7 +82,7 @@ class JsonSchemasTest {
     fun `Validate nested conditions (Jackson)`() {
         val yaml = Yaml.readFile(example("Nested conditions.yaml"))
 
-        yaml.validateWithSchema("instacli/Conditions.schema")
+        yaml.validateWithSchema("core/Conditions.schema")
     }
 
     //    @Test
@@ -98,7 +98,7 @@ class JsonSchemasTest {
         val yaml = Yaml.readFile(example("Nested conditions-incorrect.yaml"))
 
         assertThrows<CommandFormatException> {
-            yaml.validateWithSchema("instacli/Conditions.schema")
+            yaml.validateWithSchema("core/Conditions.schema")
         }.let { print(it) }
     }
 
@@ -115,7 +115,7 @@ class JsonSchemasTest {
     fun `Validate with Assert that schema (Jackson)`() {
         val yaml = Yaml.readFile(example("Nested conditions.yaml"))
 
-        yaml.validateWithSchema("instacli/Conditions.schema")
+        yaml.validateWithSchema("core/Conditions.schema")
     }
 
     //    @Test
@@ -131,7 +131,7 @@ class JsonSchemasTest {
         val yaml = Yaml.readFile(example("Nested conditions-incorrect.yaml"))
 
         assertThrows<CommandFormatException> {
-            yaml.validateWithSchema("instacli/Conditions.schema")
+            yaml.validateWithSchema("core/Conditions.schema")
         }.let { print(it.toString().replace(',', '\n')) }
     }
 

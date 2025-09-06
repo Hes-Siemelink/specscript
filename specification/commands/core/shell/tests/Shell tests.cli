@@ -6,7 +6,7 @@ Expected output: Hello
 ---
 Test case: Run shell script
 
-Shell: specification/commands/instacli/shell/tests/helloworld.sh
+Shell: specification/commands/core/shell/tests/helloworld.sh
 Expected output: Hello World
 
 ---

@@ -1,6 +1,6 @@
 Test case: Read file from working directory (short way)
 
-Read file: specification/commands/instacli/files/tests/content/plain.yaml
+Read file: specification/commands/core/files/tests/content/plain.yaml
 
 Expected output:
   loaded: true
@@ -9,7 +9,7 @@ Expected output:
 Test case: Read file from working directory (file property)
 
 Read file:
-  file: specification/commands/instacli/files/tests/content/plain.yaml
+  file: specification/commands/core/files/tests/content/plain.yaml
 
 Expected output:
   loaded: true
@@ -34,7 +34,7 @@ Expected output: Hello world!
 Test case: Run script from working directory (file property)
 
 Run script:
-  file: specification/commands/instacli/files/tests/greet.cli
+  file: specification/commands/core/files/tests/greet.cli
   input:
     name: Fay
 
@@ -53,7 +53,7 @@ Expected output: Hello Ray!
 ---
 Test case: Shell command from current directory (short way)
 
-Shell: specification/commands/instacli/files/tests/hello.sh
+Shell: specification/commands/core/files/tests/hello.sh
 
 Expected output: Hello World
 

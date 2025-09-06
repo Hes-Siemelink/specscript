@@ -8,7 +8,7 @@ import instacli.language.*
 import instacli.util.toDisplayYaml
 
 object ExpectedError :
-    CommandHandler("Expected error", "instacli/testing"),
+    CommandHandler("Expected error", "core/testing"),
     ErrorHandler,
     ValueHandler,
     ArrayHandler,

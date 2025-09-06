@@ -13,7 +13,7 @@ import instacli.util.toDisplayYaml
 /**
  * Asks user to confirm a question
  */
-object Confirm : CommandHandler("Confirm", "instacli/user-interaction"), ValueHandler {
+object Confirm : CommandHandler("Confirm", "core/user-interaction"), ValueHandler {
 
     val yes = TextNode("Yes")
     val no = TextNode("No")

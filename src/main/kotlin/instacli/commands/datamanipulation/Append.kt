@@ -7,7 +7,7 @@ import instacli.language.CommandHandler
 import instacli.language.ScriptContext
 import instacli.util.asArray
 
-object Append : CommandHandler("Append", "instacli/data-manipulation"), AnyHandler {
+object Append : CommandHandler("Append", "core/data-manipulation"), AnyHandler {
 
     override fun execute(data: JsonNode, context: ScriptContext): JsonNode {
 

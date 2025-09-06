@@ -169,7 +169,7 @@ is displayed. The yaml code from the comment will be appended to script.
 ## Predefined answers
 
 When writing documentation or tests, you may want to provide answers to questions that are asked in the code. You can do
-so by embedding the [**Answers**](../commands/instacli/testing/Answers.spec.md) command in a hidden code block. A more
+so by embedding the [**Answers**](../commands/core/testing/Answers.spec.md) command in a hidden code block. A more
 concise way of doing this is to use the `<!-- answers` HTML comment.
 
 #### Markdown format
@@ -207,11 +207,11 @@ Print: Hello, ${name}!
 ## Checking output
 
 You can check the console output of a code block using the ` ```output` directive. This is equivalent to using the
-command [**Expected console output**](../commands/instacli/testing/Expected%20console%20output.spec.md). If the output
+command [**Expected console output**](../commands/core/testing/Expected%20console%20output.spec.md). If the output
 of the command is not the same as specified in the ` ````output` block, the script will fail.
 
 For checking the output of a command within a script, use the
-[**Expected output**](../commands/instacli/testing/Expected%20output.spec.md) command inside the script. Note: there is
+[**Expected output**](../commands/core/testing/Expected%20output.spec.md) command inside the script. Note: there is
 no Markdown shortcut for **Expected output**.
 
 #### Markdown format
@@ -251,7 +251,7 @@ Hello, Alice!
 ## Printing to the console
 
 When writing an Instacli script you can use the `>` quote character to print to the console, as a shortcut for using the
-[**Print**](../commands/instacli/util/Print.spec.md) command.
+[**Print**](../commands/core/util/Print.spec.md) command.
 
 
 <!-- yaml instacli
@@ -287,7 +287,7 @@ Script is running
 ## Helper files
 
 If you need to have a helper file for the example to work, you can define one with ` ```yaml
-file=[filename]`. This is a shortcut for the [**Temp file**](../commands/instacli/files/Temp%20file.spec.md)
+file=[filename]`. This is a shortcut for the [**Temp file**](../commands/core/files/Temp%20file.spec.md)
 command.
 
 The file will be created in the temporary directory of the script. You can use the `${SCRIPT_TEMP_DIR}` variable to
@@ -340,7 +340,7 @@ When using the ` ```yaml file` directive, the contents are stored as-is and vari
 If you need dynamic content with variables and eval blocks, use the `resolve=[boolean]` option.
 
 This is equivalent to using the
-[**Temp file**](../commands/instacli/files/Temp%20file.spec.md) command with the `resolve` option. Note that for the
+[**Temp file**](../commands/core/files/Temp%20file.spec.md) command with the `resolve` option. Note that for the
 ` ```yaml file` directive, the default is `false`, where is for **Temp file** the default is `true`.
 
 #### Markdown format
@@ -395,7 +395,7 @@ Expected output:
 
 To execute a command in the shell, use the ` ```shell` directive.
 
-Instacli will execute this command using the [**Shell**](../commands/instacli/shell/Shell.spec.md) command.
+Instacli will execute this command using the [**Shell**](../commands/core/shell/Shell.spec.md) command.
 
 The output of the shell command can be checked with the ` ```ouput` directive.
 
@@ -446,7 +446,7 @@ Expected console output: Hello
 ### Setting the current directory
 
 Set the current directory with the `cd` option. This is equivalent to using the
-[**Shell**](../commands/instacli/shell/Shell.spec.md) command with the `cd` option.
+[**Shell**](../commands/core/shell/Shell.spec.md) command with the `cd` option.
 
 The following example shows how to set the current directory to the temporary directory created by Instacli for the
 execution of the current script. This is where temporary files are stored that are created with ` ```yaml file` or
@@ -487,12 +487,12 @@ key: value
 There are two options to show the command and output of the shell command.
 
 `show_command=[boolean]` will show the command that is executed. The default is `false`. This is equivalent to using the
-[**Shell**](../commands/instacli/shell/Shell.spec.md#displaying-the-shell-command) command with the `show command`
+[**Shell**](../commands/core/shell/Shell.spec.md#displaying-the-shell-command) command with the `show command`
 option.
 
 `show_output=[boolean]` will show and record the output of the command. The default is `true`. This is equivalent to
 using the
-[**Shell**](../commands/instacli/shell/Shell.spec.md#displaying-the-output) command with the `show output` option. Note:
+[**Shell**](../commands/core/shell/Shell.spec.md#displaying-the-output) command with the `show output` option. Note:
 the default for **Shell** is `false`.
 
 #### Markdown format
@@ -553,7 +553,7 @@ kill 1
 ## Invoking Instacli itself
 
 You can also use the ` ```shell cli` directive to show how to invoke Instacli itself. This is equivalent to using the
-[**Cli**](../commands/instacli/shell/Cli.spec.md) command.
+[**Cli**](../commands/core/shell/Cli.spec.md) command.
 
 This is useful for showing how to use the `cli` command and its command line options.
 
@@ -613,7 +613,7 @@ Global options:
 ### Setting the current directory
 
 Like ` ```shell`, you can set the current directory with the `cd` option. This is equivalent to using the
-[**Cli**](../commands/instacli/shell/Cli.spec.md) command with the `cd` option.
+[**Cli**](../commands/core/shell/Cli.spec.md) command with the `cd` option.
 
 The following example shows how to set the current directory to the temporary directory created by Instacli for the
 execution of the current script. This is where temporary files are stored that are created with ` ```yaml file`.

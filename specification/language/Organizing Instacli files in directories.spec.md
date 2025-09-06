@@ -84,7 +84,7 @@ Simple Instacli example scripts
 ### Calling another Instacli script
 
 We showed above that you can call another Instacli script from within an Instacli script with the
-**[Run script](../commands/instacli/files/Run%20script.spec.md)** command.
+**[Run script](../commands/core/files/Run%20script.spec.md)** command.
 
 Another way is to use it as a regular command. Instacli reads all cli files in the same directory and makes them
 available as commands in the current script. While doing so, it transforms file names in "kebab-style" to "Sentence
@@ -216,6 +216,6 @@ Something funny
 ### Specifying connection data
 
 The `.instacli.yaml` file also contains a `connections` settings for retrieving HTTP connection credentials. See the
-**[Connect to](../commands/instacli/connections/Connect%20to.spec.md)** command for more details.
+**[Connect to](../commands/core/connections/Connect%20to.spec.md)** command for more details.
 
 

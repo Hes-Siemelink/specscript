@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.node.ValueNode
 import instacli.language.*
 import instacli.util.Json
 
-object GetCredentials : CommandHandler("Get credentials", "instacli/connections"), ValueHandler {
+object GetCredentials : CommandHandler("Get credentials", "core/connections"), ValueHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
 

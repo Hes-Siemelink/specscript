@@ -8,7 +8,7 @@ import instacli.language.ScriptContext
 import instacli.language.ValueHandler
 import java.util.*
 
-object Base64Encode : CommandHandler("Base64 encode", "instacli/util"), ValueHandler {
+object Base64Encode : CommandHandler("Base64 encode", "core/util"), ValueHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode {
         return TextNode(Base64.getEncoder().encodeToString(data.asText().toByteArray()))

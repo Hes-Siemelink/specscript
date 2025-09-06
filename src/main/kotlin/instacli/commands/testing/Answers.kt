@@ -9,7 +9,7 @@ import instacli.language.ScriptContext
 /**
  * Records answers to be replayed in test cases for user input commands.
  */
-object Answers : CommandHandler("Answers", "instacli/testing"), ObjectHandler {
+object Answers : CommandHandler("Answers", "core/testing"), ObjectHandler {
 
     val recordedAnswers = mutableMapOf<String, JsonNode>()
 

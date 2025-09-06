@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import instacli.language.*
 import instacli.util.toJson
 
-object Sort : CommandHandler("Sort", "instacli/data-manipulation"), ObjectHandler {
+object Sort : CommandHandler("Sort", "core/data-manipulation"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
 

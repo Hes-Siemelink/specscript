@@ -11,7 +11,7 @@ import instacli.language.types.ObjectDefinition
 import instacli.language.types.ParameterData
 import instacli.util.toDomainObject
 
-object InputParameters : CommandHandler("Input parameters", "instacli/script-info"),
+object InputParameters : CommandHandler("Input parameters", "core/script-info"),
     ObjectHandler, DelayedResolver {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode {

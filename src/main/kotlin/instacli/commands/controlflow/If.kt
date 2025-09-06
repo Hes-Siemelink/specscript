@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import instacli.commands.toCondition
 import instacli.language.*
 
-object If : CommandHandler("If", "instacli/control-flow"), ObjectHandler, DelayedResolver {
+object If : CommandHandler("If", "core/control-flow"), ObjectHandler, DelayedResolver {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
 

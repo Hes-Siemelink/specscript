@@ -8,7 +8,7 @@ import instacli.language.ScriptContext
 import instacli.language.ValueHandler
 import instacli.util.Json
 
-object GetAllCredentials : CommandHandler("Get all credentials", "instacli/connections"), ValueHandler {
+object GetAllCredentials : CommandHandler("Get all credentials", "core/connections"), ValueHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode {
 

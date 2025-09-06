@@ -13,7 +13,7 @@ import instacli.util.toDomainObject
 /**
  * Asks user through simple text prompt
  */
-object Prompt : CommandHandler("Prompt", "instacli/user-interaction"), ValueHandler, ObjectHandler {
+object Prompt : CommandHandler("Prompt", "core/user-interaction"), ValueHandler, ObjectHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode {
         return UserPrompt.prompt(data.textValue())

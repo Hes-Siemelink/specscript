@@ -7,7 +7,7 @@ import instacli.language.CliScriptingException
 import instacli.language.CommandHandler
 import instacli.language.ScriptContext
 
-object Add : CommandHandler("Add", "instacli/data-manipulation"), ArrayHandler {
+object Add : CommandHandler("Add", "core/data-manipulation"), ArrayHandler {
 
     override fun execute(data: ArrayNode, context: ScriptContext): JsonNode {
         var total: JsonNode = data.first()

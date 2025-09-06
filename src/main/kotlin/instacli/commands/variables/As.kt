@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ValueNode
 import instacli.language.*
 
-object As : CommandHandler("As", "instacli/variables"), ValueHandler, DelayedResolver {
+object As : CommandHandler("As", "core/variables"), ValueHandler, DelayedResolver {
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
 
         if (!context.variables.containsKey(OUTPUT_VARIABLE)) {

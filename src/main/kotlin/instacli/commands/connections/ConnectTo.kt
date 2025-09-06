@@ -7,7 +7,7 @@ import instacli.files.CliFileContext
 import instacli.language.*
 import kotlin.io.path.name
 
-object ConnectTo : CommandHandler("Connect to", "instacli/connections"), ValueHandler {
+object ConnectTo : CommandHandler("Connect to", "core/connections"), ValueHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
 

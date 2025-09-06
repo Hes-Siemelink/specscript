@@ -5,7 +5,7 @@ import instacli.commands.datamanipulation.Add.add
 import instacli.language.*
 import instacli.util.asArray
 
-object AddTo : CommandHandler("Add to", "instacli/data-manipulation"), ObjectHandler {
+object AddTo : CommandHandler("Add to", "core/data-manipulation"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): Nothing? {
 

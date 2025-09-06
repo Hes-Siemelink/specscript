@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.node.TextNode
 import instacli.language.*
 import instacli.util.toDisplayYaml
 
-object Replace : CommandHandler("Replace", "instacli/data-manipulation"), ObjectHandler {
+object Replace : CommandHandler("Replace", "core/data-manipulation"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode {
 

@@ -7,7 +7,7 @@ import instacli.language.ObjectHandler
 import instacli.language.ScriptContext
 import io.ktor.http.*
 
-object Patch : CommandHandler("PATCH", "instacli/http"), ObjectHandler {
+object Patch : CommandHandler("PATCH", "core/http"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         return HttpClient.processRequest(data, context, HttpMethod.Patch)

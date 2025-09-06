@@ -10,7 +10,7 @@ import instacli.util.toDomainObject
 import java.nio.file.Files
 import java.nio.file.Path
 
-object TempFile : CommandHandler("Temp file", "instacli/files"), ObjectHandler, ValueHandler, DelayedResolver {
+object TempFile : CommandHandler("Temp file", "core/files"), ObjectHandler, ValueHandler, DelayedResolver {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val options = data.toDomainObject(TempFileData::class)

@@ -7,7 +7,7 @@ import instacli.language.InstacliCommandError
 import instacli.language.ScriptContext
 import instacli.util.Json
 
-object ExpectedOutput : CommandHandler("Expected output", "instacli/testing"), AnyHandler {
+object ExpectedOutput : CommandHandler("Expected output", "core/testing"), AnyHandler {
 
     override fun execute(data: JsonNode, context: ScriptContext): JsonNode? {
 

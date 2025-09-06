@@ -1,4 +1,4 @@
-$id: "https://instacli.spec.it/v1/commands/instacli/script-info/Script_info"
+$id: "https://instacli.spec.it/v1/commands/core/script-info/Script_info"
 $schema: https://json-schema.org/draft/2020-12/schema
 
 oneOf:
@@ -14,7 +14,7 @@ oneOf:
       "input":
         type: object
         additionalProperties:
-          $ref: "/v1/commands/instacli/ParameterData.schema.yaml"
+          $ref: "/v1/commands/core/ParameterData.schema.yaml"
       "input type":
         type:
           - string
@@ -24,7 +24,7 @@ oneOf:
             type: string
           "properties":
             additionalProperties:
-              $ref: "/v1/commands/instacli/ParameterData.schema.yaml"
+              $ref: "/v1/commands/core/ParameterData.schema.yaml"
             unevaluatedProperties: false
           additionalProperties: false
     additionalProperties: false

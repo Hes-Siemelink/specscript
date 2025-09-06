@@ -14,7 +14,7 @@ import java.io.FileNotFoundException
 import java.io.IOException
 import java.nio.file.Path
 
-object Shell : CommandHandler("Shell", "instacli/shell"), ObjectHandler, ValueHandler {
+object Shell : CommandHandler("Shell", "core/shell"), ObjectHandler, ValueHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
 

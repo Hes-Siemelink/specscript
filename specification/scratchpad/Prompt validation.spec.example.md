@@ -8,7 +8,7 @@
 | List         | no        |
 | Object       | yes       |
 
-[Prompt.schema.yaml](../commands/instacli/user-interaction/schema/Prompt.schema.yaml)
+[Prompt.schema.yaml](../commands/core/user-interaction/schema/Prompt.schema.yaml)
 
 ## Basic usage
 

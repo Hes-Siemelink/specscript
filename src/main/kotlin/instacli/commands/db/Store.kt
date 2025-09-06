@@ -12,7 +12,7 @@ import java.sql.Connection
 import java.sql.DriverManager
 import kotlin.use
 
-object Store : CommandHandler("Store", "instacli/db"), ObjectHandler {
+object Store : CommandHandler("Store", "core/db"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val command = data.toDomainObject(StoreData::class)

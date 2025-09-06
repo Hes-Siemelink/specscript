@@ -6,7 +6,7 @@ import instacli.language.CommandHandler
 import instacli.language.ScriptContext
 import instacli.util.toDisplayJson
 
-object PrintJson : CommandHandler("Print JSON", "instacli/util"), AnyHandler {
+object PrintJson : CommandHandler("Print JSON", "core/util"), AnyHandler {
 
     override fun execute(data: JsonNode, context: ScriptContext): JsonNode? {
 

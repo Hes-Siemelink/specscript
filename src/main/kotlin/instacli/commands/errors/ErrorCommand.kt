@@ -8,7 +8,7 @@ import instacli.language.*
 import instacli.util.toDisplayYaml
 import instacli.util.toDomainObject
 
-object ErrorCommand : CommandHandler("Error", "instacli/errors"), ValueHandler, ObjectHandler, ArrayHandler {
+object ErrorCommand : CommandHandler("Error", "core/errors"), ValueHandler, ObjectHandler, ArrayHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
         throw InstacliCommandError(data.toDisplayYaml())

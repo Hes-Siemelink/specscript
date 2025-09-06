@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import instacli.language.*
 
-object When : CommandHandler("When", "instacli/control-flow"), ArrayHandler, DelayedResolver {
+object When : CommandHandler("When", "core/control-flow"), ArrayHandler, DelayedResolver {
 
     override fun execute(data: ArrayNode, context: ScriptContext): JsonNode? {
 

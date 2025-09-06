@@ -6,7 +6,7 @@ import instacli.language.CommandHandler
 import instacli.language.ScriptContext
 import instacli.language.ValueHandler
 
-object TestCase : CommandHandler("Test case", "instacli/testing"), ValueHandler {
+object TestCase : CommandHandler("Test case", "core/testing"), ValueHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
         ExpectedConsoleOutput.reset(context)

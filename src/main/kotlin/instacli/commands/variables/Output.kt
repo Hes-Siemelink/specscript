@@ -8,7 +8,7 @@ import instacli.language.ScriptContext
 /**
  * Returns the input as output.
  */
-object Output : CommandHandler("Output", "instacli/variables"), AnyHandler {
+object Output : CommandHandler("Output", "core/variables"), AnyHandler {
 
     override fun execute(data: JsonNode, context: ScriptContext): JsonNode {
         return data

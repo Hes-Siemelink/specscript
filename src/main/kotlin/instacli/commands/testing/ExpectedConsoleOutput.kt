@@ -13,7 +13,7 @@ import instacli.util.toDisplayYaml
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 
-object ExpectedConsoleOutput : CommandHandler("Expected console output", "instacli/testing"), ValueHandler {
+object ExpectedConsoleOutput : CommandHandler("Expected console output", "core/testing"), ValueHandler {
 
     private const val OUT = "stdout"
     private const val ERR = "stderr"

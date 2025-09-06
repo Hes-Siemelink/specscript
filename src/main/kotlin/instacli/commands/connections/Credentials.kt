@@ -19,7 +19,7 @@ import kotlin.io.path.createDirectories
 import kotlin.io.path.createFile
 import kotlin.io.path.exists
 
-object Credentials : CommandHandler("Credentials", "instacli/shell"), ValueHandler {
+object Credentials : CommandHandler("Credentials", "core/shell"), ValueHandler {
 
     const val FILENAME = "credentials.yaml"
     private val DEFAULT_FILE: Path = InstacliPaths.INSTACLI_HOME.resolve(FILENAME)

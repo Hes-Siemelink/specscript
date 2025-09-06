@@ -7,7 +7,7 @@ import instacli.language.CommandHandler
 import instacli.language.ScriptContext
 import instacli.language.ValueHandler
 
-object Wait : CommandHandler("Wait", "instacli/util"), ValueHandler {
+object Wait : CommandHandler("Wait", "core/util"), ValueHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
 

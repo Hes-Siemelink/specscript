@@ -15,7 +15,7 @@ import io.javalin.http.HandlerType
 import io.javalin.http.bodyAsClass
 import kotlin.io.path.name
 
-object HttpServer : CommandHandler("Http server", "instacli/http"), ObjectHandler, DelayedResolver {
+object HttpServer : CommandHandler("Http server", "core/http"), ObjectHandler, DelayedResolver {
 
     private val servers = mutableMapOf<Int, Javalin>()
 
