@@ -299,7 +299,7 @@ samples has several subcommands.
    digitalai     Interact with Digital.ai products and services.
    hello         Hello
    http-server   Use Instacli to run web services
-   programming   Programming examples in Instacli
+   programming   Programming examples in SpecScript
    spotify       Spotify API examples
 ```
 
@@ -319,7 +319,7 @@ Available commands:
   digitalai     Interact with Digital.ai products and services.
   hello         Hello
   http-server   Use Instacli to run web services
-  programming   Programming examples in Instacli
+  programming   Programming examples in SpecScript
   spotify       Spotify API examples
 
 ```

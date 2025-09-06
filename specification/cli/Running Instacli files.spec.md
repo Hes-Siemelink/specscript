@@ -32,7 +32,7 @@ In the **[samples](/samples)** directory, there is a file **[hello.cli](/samples
 Hello World" command:
 
 ```yaml file=hello.cli
-Print: Hello from Instacli!
+Print: Hello from SpecScript!
 ```
 
 After [installing Instacli](/README.md#build--run), run it with the following command
@@ -44,7 +44,7 @@ cli hello.cli
 And you will see this output:
 
 ```output
-Hello from Instacli!
+Hello from SpecScript!
 ```
 
 You can omit the `.cli` extension to make it look more like a "cli command":
@@ -54,7 +54,7 @@ cli hello
 ```
 
 ```output
-Hello from Instacli!
+Hello from SpecScript!
 ```
 
 ## Running a directory

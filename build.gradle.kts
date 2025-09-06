@@ -4,6 +4,7 @@ version = "0.6.0-SNAPSHOT"
 plugins {
     kotlin("jvm") version "2.1.20"
     kotlin("plugin.serialization") version "2.1.20"
+    `maven-publish`
     id("com.github.breadmoirai.github-release") version "2.5.2"
 }
 
@@ -146,4 +147,51 @@ tasks.named("githubRelease") {
 
 tasks.register("release") {
     dependsOn("clean", "githubRelease")
+}
+
+//
+// Library publishing
+//
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+            
+            pom {
+                name.set("SpecScript")
+                description.set("Spec your projects the human and AI-friendly way using Markdown and Yaml")
+                url.set("https://github.com/Hes-Siemelink/specscript")
+                
+                licenses {
+                    license {
+                        name.set("Custom License - View Only")
+                        url.set("https://github.com/Hes-Siemelink/specscript/blob/main/LICENSE")
+                    }
+                }
+                
+                developers {
+                    developer {
+                        id.set("Hes-Siemelink")
+                        name.set("Hes Siemelink")
+                    }
+                }
+                
+                scm {
+                    connection.set("scm:git:git://github.com/Hes-Siemelink/specscript.git")
+                    developerConnection.set("scm:git:ssh://github.com/Hes-Siemelink/specscript.git")
+                    url.set("https://github.com/Hes-Siemelink/specscript")
+                }
+            }
+        }
+    }
+    
+    repositories {
+        mavenLocal()
+    }
 }

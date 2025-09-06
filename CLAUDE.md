@@ -40,6 +40,16 @@ cli samples                       # Interactive selection
 ./gradlew githubRelease          # Create GitHub release (includes both thin and fat JARs)
 ```
 
+### Library publishing
+```bash
+./gradlew publishToMavenLocal    # Publish to local Maven repository
+```
+
+Published artifacts:
+- `hes.specscript:specscript:0.6.0-SNAPSHOT` - Main library JAR
+- `hes.specscript:specscript:0.6.0-SNAPSHOT:sources` - Sources JAR  
+- `hes.specscript:specscript:0.6.0-SNAPSHOT:javadoc` - Javadoc JAR
+
 ## Architecture
 
 ### Core Components
@@ -93,3 +103,4 @@ All documentation includes runnable code examples that are executed as part of t
 - Goal: Transform SpecScript into a library that Instacli depends on
 - Will enable separation of core engine from CLI-specific implementations
 - Planned multi-repository development setup for easier cross-repo work
+- Run the tests before creating a commit
