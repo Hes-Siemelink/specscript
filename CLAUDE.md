@@ -16,15 +16,17 @@ SpecScript is a Kotlin-based tool for creating human and AI-friendly specificati
 ### Run tests
 ```bash
 ./gradlew test                    # Unit tests
-./gradlew specificationTest       # Specification tests
-./gradlew integrationTest        # Integration tests
+./gradlew specificationTest       # Specification tests (392 tests)
 ./gradlew check                   # All tests including specification tests
 ```
 
 ### Create executable
 ```bash
-./gradlew build
-alias cli="java -jar `pwd`/build/libs/specscript-*.jar"
+./gradlew build fatJar
+# Thin JAR (requires classpath)
+alias cli-thin="java -jar `pwd`/build/libs/specscript-*.jar"
+# Fat JAR (self-contained)
+alias cli="java -jar `pwd`/build/libs/specscript-*-full.jar"
 ```
 
 ### Run examples
@@ -35,7 +37,7 @@ cli samples                       # Interactive selection
 
 ### Release process
 ```bash
-./gradlew githubRelease          # Create GitHub release
+./gradlew githubRelease          # Create GitHub release (includes both thin and fat JARs)
 ```
 
 ## Architecture
@@ -45,6 +47,8 @@ cli samples                       # Interactive selection
 - **CLI Entry Point**: `src/main/kotlin/instacli/cli/Main.kt` - Main application entry point
 - **Language Engine**: `src/main/kotlin/instacli/language/` - Core language processing and command execution
 - **Commands**: `src/main/kotlin/instacli/commands/` - Implementation of all script commands (HTTP, testing, control flow, etc.)
+  - Commands use paths like `"core/testing"` to reference specification files
+  - 56+ command implementations organized by functionality
 - **File Handling**: `src/main/kotlin/instacli/files/` - .cli file parsing and management
 - **Utilities**: `src/main/kotlin/instacli/util/` - JSON/YAML processing, I/O utilities
 
@@ -52,13 +56,15 @@ cli samples                       # Interactive selection
 
 - **Unit Tests**: `src/tests/unit/` - Traditional unit tests
 - **Specification Tests**: `src/tests/specification/` - Tests that validate the SpecScript language specifications
-- **Integration Tests**: `src/tests/integration/` - End-to-end integration tests
+  - All 392 specification tests run executable documentation
+  - Uses Jackson dependencies for JSON processing in tests
 
 ### Documentation and Specifications
 
 The `specification/` directory contains the complete language specification written in executable Markdown:
 - `specification/language/` - Language syntax and features
-- `specification/commands/` - Command reference with examples
+- `specification/commands/core/` - Core command reference with examples (renamed from instacli)
+- `specification/commands/ai/` - AI-related commands (MCP server, etc.)
 - `specification/cli/` - CLI tool usage
 
 All documentation includes runnable code examples that are executed as part of the test suite.
@@ -78,3 +84,12 @@ All documentation includes runnable code examples that are executed as part of t
 - All specifications are executable - documentation doubles as test cases
 - The `specification/` directory is included as a resource directory for runtime access
 - The CLI supports interactive mode with prompts and non-interactive mode with command-line arguments
+- Command implementations reference `"core/"` paths instead of legacy `"instacli/"` paths
+- Two JAR artifacts are built: thin (531KB) and fat (36MB) for different deployment scenarios
+
+## Major Refactoring Plans
+
+- **Library Architecture Refactoring**: See `plan/instacli-to-specscript-library-refactoring.md`
+- Goal: Transform SpecScript into a library that Instacli depends on
+- Will enable separation of core engine from CLI-specific implementations
+- Planned multi-repository development setup for easier cross-repo work

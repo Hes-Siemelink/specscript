@@ -4,7 +4,9 @@
       "Bash(./gradlew:*)",
       "Bash(java:*)",
       "Bash(git add:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(git commit:*)",
+      "Read(//Users/hes/Code/instacli/**)"
     ],
     "deny": [],
     "ask": []
