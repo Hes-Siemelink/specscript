@@ -153,7 +153,7 @@ SpecScript has two main ideas:
 This is the simplest SpecScript progam, **[hello.cli](samples/hello.cli)**:
 
 ```yaml file=hello.cli
-Print: Hello from SpecScript!
+Print: Hello from Instacli!
 ```
 
 Invoke it with
@@ -165,20 +165,20 @@ cli hello.cli
 And it will print the expected message:
 
 ```output
-Hello from SpecScript!
+Hello from Instacli!
 ```
 
 ## HTTP requests as code
 
 Tired of remembering the exact curl syntax or forgetting which tab had that request that worked in Postman?
 
-Simply write your **[GET](specification/commands/instacli/http/GET.spec.md)** request as-code with SpecScript:
+Simply write your **[GET](specification/commands/core/http/GET.spec.md)** request as-code with SpecScript:
 
 ```yaml instacli
 GET: http://localhost:2525/greetings
 ```
 
-Here's a **[POST](specification/commands/instacli/http/POST.spec.md)**:
+Here's a **[POST](specification/commands/core/http/POST.spec.md)**:
 
 ```yaml instacli
 POST:
@@ -219,7 +219,7 @@ Options:
 ## Input options
 
 SpecScript allows you to specify the type and format
-of [input properties](specification/commands/instacli/user-interaction/Prompt.spec.md#prompt-properties). Here's an
+of [input properties](specification/commands/core/user-interaction/Prompt.spec.md#prompt-properties). Here's an
 example file `input-options.cli`
 
 ```yaml file=input-options.cli
@@ -326,7 +326,7 @@ Available commands:
 
 ## User interaction
 
-Easily construct [user prompts](specification/commands/instacli/user-interaction/Prompt.spec.md) with SpecScript.
+Easily construct [user prompts](specification/commands/core/user-interaction/Prompt.spec.md) with SpecScript.
 
 Here's an example of how to ask the user to pick something from a list, in a file called `prompt.cli`:
 
@@ -409,7 +409,7 @@ Hello from Instacli!
 
 Some commands work directly with the output variable. This helps in having a more declarative and readable script. For
 example, you don;t need to pass the `${output}` variable to the **[Expected output
-](specification/commands/instacli/testing/Expected%20output.spec.md)** command.
+](specification/commands/core/testing/Expected%20output.spec.md)** command.
 
 ```yaml instacli
 Code example: Implicit output variable
@@ -420,7 +420,7 @@ Expected output: Hello from Instacli!
 ```
 
 If you are going to use the output variable later on, best practice is to assign it to a named variable using **[As
-](specification/commands/instacli/variables/As.spec.md)**.
+](specification/commands/core/variables/As.spec.md)**.
 
 ```yaml instacli
 Code example: Assign output to a named variable
@@ -435,7 +435,7 @@ Print:
 ## Http Server
 
 For quick API prototyping, SpecScript will run
-an [HTTP server](specification/commands/instacli/http/Http%20server.spec.md) for you. Define some endpoints and back
+an [HTTP server](specification/commands/core/http/Http%20server.spec.md) for you. Define some endpoints and back
 them by SpecScript Yaml scripts:
 
 ```yaml instacli
@@ -457,7 +457,7 @@ the SpecScript documentation and test suite.
 
 SpecScript supports various programming logic constructs, like 'if', 'repeat', 'for each'
 
-This is what an **[If](specification/commands/instacli/control-flow/If.spec.md)** statement looks like:
+This is what an **[If](specification/commands/core/control-flow/If.spec.md)** statement looks like:
 
 ```yaml instacli
 Code example: If statement
@@ -471,7 +471,7 @@ If:
 
 ## For each
 
-With **[For each](specification/commands/instacli/control-flow/For%20each.spec.md)** you can loop over collections and
+With **[For each](specification/commands/core/control-flow/For%20each.spec.md)** you can loop over collections and
 do stuff.
 
 ```yaml instacli
@@ -494,7 +494,7 @@ Hello Carol!
 ```
 
 You can use **For each**
-to [transform a list](specification/commands/instacli/control-flow/For%20each.spec.md#transform-a-list) into something
+to [transform a list](specification/commands/core/control-flow/For%20each.spec.md#transform-a-list) into something
 else, like the `map()` function in some programming languages.
 
 ```yaml instacli
@@ -527,7 +527,7 @@ Assert that:
 
 In fact, all tests for the SpecScript language and commands are written in SpecScript itself and can be found in the
 **[specification](specification)** directory, in the `tests` subfolders. For example, take a look at
-the [tests for assertions](specification/commands/instacli/testing/tests/Assert%20tests.cli)
+the [tests for assertions](specification/commands/core/testing/tests/Assert%20tests.cli)
 
 ## Documenting SpecScript
 
