@@ -1,5 +1,5 @@
-group = "hes.instacli"
-version = "0.5.2-SNAPSHOT"
+group = "hes.specscript"
+version = "0.6.0-SNAPSHOT"
 
 plugins {
     kotlin("jvm") version "2.1.20"
@@ -66,6 +66,8 @@ testing {
             dependencies {
                 implementation(project())
                 implementation("io.kotest:kotest-assertions-core:5.7.2")
+                implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.+")
+                implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.17.+")
             }
 
             sources {
@@ -83,26 +85,6 @@ testing {
             }
         }
 
-        register<JvmTestSuite>("integrationTest") {
-
-            dependencies {
-                implementation(project())
-            }
-
-            sources {
-                java {
-                    setSrcDirs(listOf("src/tests/integration"))
-                }
-            }
-
-            targets {
-                all {
-                    testTask.configure {
-                        shouldRunAfter(test)
-                    }
-                }
-            }
-        }
     }
 }
 
@@ -119,10 +101,22 @@ tasks.jar {
     manifest {
         attributes["Main-Class"] = "instacli.cli.MainKt"
     }
-    configurations["compileClasspath"].forEach { file: File ->
-        from(zipTree(file.absoluteFile))
-    }
+}
+
+tasks.register<Jar>("fatJar") {
+    archiveClassifier.set("full")
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    
+    manifest {
+        attributes["Main-Class"] = "instacli.cli.MainKt"
+    }
+    
+    from(sourceSets.main.get().output)
+    
+    dependsOn(configurations.runtimeClasspath)
+    from({
+        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+    })
 }
 
 //
@@ -131,20 +125,23 @@ tasks.jar {
 
 githubRelease {
     token(System.getenv("GITHUB_TOKEN"))
-    repo = "instacli"
+    repo = "specscript"
     owner = "Hes-Siemelink"
     tagName = "${project.version}"
-    releaseName = "Instacli ${project.version}"
+    releaseName = "SpecScript ${project.version}"
     targetCommitish = "main"
-    body = "Release of Instacli ${project.version}"
+    body = "Release of SpecScript ${project.version}"
     draft = false
     prerelease = false
     overwrite = true
-    releaseAssets(file("build/libs/instacli-${project.version}.jar"))
+    releaseAssets(
+        file("build/libs/specscript-${project.version}.jar"),
+        file("build/libs/specscript-${project.version}-full.jar")
+    )
 }
 
 tasks.named("githubRelease") {
-    dependsOn(tasks.named("build"))
+    dependsOn(tasks.named("build"), tasks.named("fatJar"))
 }
 
 tasks.register("release") {
