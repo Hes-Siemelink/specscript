@@ -18,7 +18,7 @@ the test suite for the implementation.
 
 ### Architectural Principles
 
-- The project is split into `instacli-spec` (the language specification) and `src` (the Kotlin implementation).
+- The project is split into `specification` (the language specification) and `src` (the Kotlin implementation).
 - Commands are implemented as singleton objects extending `instacli.language.CommandHandler`.
 - The command's name and group are registered in the `CommandHandler` constructor, e.g.,
   `CommandHandler("Mcp server", "ai/mcp")`.

@@ -56,10 +56,10 @@ cli samples                       # Interactive selection
 
 ### Documentation and Specifications
 
-The `instacli-spec/` directory contains the complete language specification written in executable Markdown:
-- `instacli-spec/language/` - Language syntax and features
-- `instacli-spec/commands/` - Command reference with examples
-- `instacli-spec/cli/` - CLI tool usage
+The `specification/` directory contains the complete language specification written in executable Markdown:
+- `specification/language/` - Language syntax and features
+- `specification/commands/` - Command reference with examples
+- `specification/cli/` - CLI tool usage
 
 All documentation includes runnable code examples that are executed as part of the test suite.
 
@@ -76,5 +76,5 @@ All documentation includes runnable code examples that are executed as part of t
 
 - The project uses "Instacli" internally but is branded as "SpecScript" externally
 - All specifications are executable - documentation doubles as test cases
-- The `instacli-spec/` directory is included as a resource directory for runtime access
+- The `specification/` directory is included as a resource directory for runtime access
 - The CLI supports interactive mode with prompts and non-interactive mode with command-line arguments

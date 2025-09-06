@@ -47,7 +47,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 }
 
-sourceSets.main.get().resources.srcDir("instacli-spec")
+sourceSets.main.get().resources.srcDir("specification")
 
 testing {
     suites {

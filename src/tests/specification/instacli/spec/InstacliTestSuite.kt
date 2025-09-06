@@ -19,7 +19,7 @@ class InstacliTestSuite {
     }
 
     @TestFactory
-    fun `instacli-spec`(): List<DynamicNode> {
+    fun `specification`(): List<DynamicNode> {
         return TestPaths.SPEC.getTests()
     }
 

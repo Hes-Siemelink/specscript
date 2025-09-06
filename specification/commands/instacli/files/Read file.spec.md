@@ -14,7 +14,7 @@
 
 Use **Read file** to load a Yaml / Json file
 
-For example, we have a file `greeting.yaml` in the `instacli-spec/commands/instacli/files` directory:
+For example, we have a file `greeting.yaml` in the `specification/commands/instacli/files` directory:
 
 ```yaml file=greeting.yaml
 greeting: Hello
@@ -26,7 +26,7 @@ Then you can read it like this:
 ```yaml instacli
 Code example: Read Yaml from a file
 
-Read file: instacli-spec/commands/instacli/files/greeting.yaml
+Read file: specification/commands/instacli/files/greeting.yaml
 
 Expected output:
   greeting: Hello
