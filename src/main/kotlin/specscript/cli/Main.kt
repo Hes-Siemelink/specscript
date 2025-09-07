@@ -187,38 +187,3 @@ class SpecScriptMain(
     }
 }
 
-fun InstacliLanguageException.reportError(printStackTrace: Boolean) {
-    System.err.println("\nInstacli scripting error")
-
-    // Exception caused by incorrect instacli script
-    if (cause == null || cause is InstacliLanguageException) {
-        System.err.println("\n${message}")
-    } else {
-        // Unexpected exception from command handler implementation
-        if (printStackTrace) {
-            System.err.print("\nCaused by: ")
-            cause?.printStackTrace()
-        } else {
-            System.err.println("\nCaused by: $cause")
-        }
-    }
-
-    // Print Instacli context
-    data?.let {
-        val yaml = data.toDisplayYaml().prependIndent("  ")
-        val message = "In ${context ?: "command"}:"
-        System.err.println("\n\n$message\n\n${yaml}".trimMargin())
-    }
-}
-
-fun InstacliCommandError.reportError() {
-    System.err.println(message)
-    if (message != error.message) {
-        System.err.println(error.message)
-    }
-
-    if (error.data != null) {
-        val details = Json.newObject().set<JsonNode>(error.type, error.data)
-        System.err.println(details.toDisplayYaml())
-    }
-}
