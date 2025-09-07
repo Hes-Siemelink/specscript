@@ -10,9 +10,9 @@ class ExceptionTest {
     @Test
     fun `Command format exception`() {
 
-        // Given
+        // Given - Use direct file path instead of directory navigation
         val session = SpecScriptMain(
-            "-q", "exceptions", "command-format-exception.cli",
+            "-q", "exceptions/command-format-exception.cli",
             workingDir = TestPaths.RESOURCES
         )
 
@@ -24,4 +24,3 @@ class ExceptionTest {
         }
     }
 }
-

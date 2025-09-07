@@ -1,5 +1,8 @@
-# Running Instacli with the `cli` command
+# SpecScript CLI - Simple File Runner
 
-* [Running files and directories](Running%20Instacli%20files.spec.md)
+SpecScript provides a simplified CLI optimized for library usage and file execution.
+
+* [Running files](Running%20files.spec.md)
 * [Command line options](Command%20line%20options.spec.md)
-* [Configuration files](Configuration%20files.spec.md)
+* [Library usage](Library%20usage.spec.md)
+* [Error handling](Error%20handling.spec.md)

@@ -40,24 +40,13 @@ Select a language: English
 -->
 
 ```shell cli
-cli greetings.cli
+cli greetings.cli --name Hes --language English
 ```
 
 When running it, we get prompted for input before a POST request is made to the server. The greeting that we get back is
 printed.
 
-<!-- answers
-Your name: Hes
-Select a language: English
--->
-
 ```output
-? Your name Hes
-? Select a language 
- ❯ ◉ English
-   ◯ Spanish
-   ◯ Dutch
-
 Hi Hes!
 ```
 
@@ -246,25 +235,6 @@ Different input options
 Options:
   --user, -u   Username
   --password, -p   Password
-```
-
-## Interactive mode
-
-By default, SpecScript runs in interactive mode. If there are unknown commandline options, the user is prompted to give
-input.
-
-<!-- answers
-Username: Hes
-Password: Secret
--->
-
-```shell cli
-cli input-options.cli
-```
-
-```output
-? Username Hes
-? Password ********
 ```
 
 ## Subcommand support

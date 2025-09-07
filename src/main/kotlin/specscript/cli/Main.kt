@@ -1,18 +1,9 @@
 package specscript.cli
 
-import com.fasterxml.jackson.databind.JsonNode
-import specscript.cli.OutputOption.JSON
-import specscript.cli.OutputOption.YAML
-import specscript.files.CliFile
 import specscript.files.CliFileContext
 import specscript.language.*
 import specscript.language.types.toDisplayString
-import specscript.util.Json
-import specscript.util.add
-import specscript.util.toDisplayJson
-import specscript.util.toDisplayYaml
 import java.nio.file.Path
-import kotlin.io.path.exists
 import kotlin.io.path.isDirectory
 import kotlin.io.path.name
 
@@ -22,81 +13,55 @@ fun main(args: Array<String>) {
     SpecScriptMain.main(args)
 }
 
+/**
+ * Simple CLI.
+ * 
+ * This CLI is optimized for:
+ * - Non-interactive directory listing and file execution
+ * - Library integration (minimal overhead)
+ * - Simple error handling (fail fast)
+ * - Programmatic usage
+ */
 class SpecScriptMain(
     private val options: CliCommandLineOptions,
     private val workingDir: Path = Path.of("."),
-    private val input: UserInput = StandardInput,
     private val output: ConsoleOutput = StandardOutput
 ) {
 
     constructor(
         vararg args: String,
         workingDir: Path = Path.of("."),
-        input: UserInput = StandardInput,
         output: ConsoleOutput = StandardOutput
-    ) : this(CliCommandLineOptions(args.toList()), workingDir, input, output)
+    ) : this(CliCommandLineOptions(args.toList()), workingDir, output)
 
     fun run(parent: ScriptContext? = null) {
-
-        // Print usage when no commands are given
+        // Show usage when no commands are given (library compatibility)
         if (options.commands.isEmpty()) {
             output.printUsage(CliCommandLineOptions.definedOptions)
             return
         }
 
-        // First argument should be a valid file
-        val file = targetFile(options.commands[0])
+        // Resolve file using shared utility
+        val filename = options.commands[0]
+        val resolvedFile = try {
+            CliFileUtils.resolveFile(filename, workingDir)
+        } catch (e: CliInvocationException) {
+            throw CliInvocationException("Could not find file: $filename")
+        }
 
-        // Create context based on the file and options.
-        // A parent context can be passed for testing scenarios.
+        // Create context for execution
         val context = if (parent == null) {
-            CliFileContext(file, interactive = options.interactive, workingDir = workingDir)
+            CliFileContext(resolvedFile, interactive = false, workingDir = workingDir)
         } else {
-            CliFileContext(file, parent)
+            CliFileContext(resolvedFile, parent)
         }
 
-        // Run script directly or a command from a directory
-        if (file.isDirectory()) {
-            invokeDirectory(file, options.commands.drop(1), context, options)
+        // Handle both files and directories (non-interactively)
+        if (resolvedFile.isDirectory()) {
+            invokeDirectory(resolvedFile, options.commands.drop(1), context, options)
         } else {
-            val cliFile = CliFile(file)
-            invokeFile(cliFile, context, options)
-        }
-    }
-
-    private fun targetFile(filename: String): Path {
-        // Command is filename
-        workingDir.resolve(filename).let {
-            if (it.exists()) {
-                return it
-            }
-        }
-
-        // Append '.cli'
-        workingDir.resolve("$filename.cli").let {
-            if (it.exists()) {
-                return it
-            }
-        }
-
-        throw CliInvocationException("Could not find command: $filename")
-    }
-
-    private fun invokeFile(cliFile: CliFile, context: CliFileContext, options: CliCommandLineOptions) {
-
-        if (options.help) {
-            output.printScriptInfo(cliFile.script)
-            return
-        }
-
-        context.getInputVariables().add(options.commandParameters)
-
-        val output = cliFile.script.run(context)
-
-        when (options.printOutput) {
-            YAML -> this.output.printOutput(output.toDisplayYaml())
-            JSON -> this.output.printOutput(output.toDisplayJson())
-            else -> {}
+            // Execute using shared utility
+            CliFileUtils.executeFile(resolvedFile, options, context, output)
         }
     }
 
@@ -106,14 +71,13 @@ class SpecScriptMain(
         context: CliFileContext,
         options: CliCommandLineOptions
     ) {
-
         // Parse command
-        val rawCommand = getCommand(args, context, context.interactive) ?: return
+        val rawCommand = getCommand(args, context) ?: return
 
         // Run script
         val script = context.getCliScriptFile(rawCommand)
         if (script != null) {
-            invokeFile(script, context, options)
+            CliFileUtils.executeFile(script.file, options, CliFileContext(script.file, context), output)
             return
         }
 
@@ -128,35 +92,27 @@ class SpecScriptMain(
         throw CliInvocationException("Command '$rawCommand' not found in ${cliDir.name}")
     }
 
-    private fun getCommand(args: List<String>, context: CliFileContext, interactive: Boolean): String? {
-
+    private fun getCommand(args: List<String>, context: CliFileContext): String? {
         // Return the command if specified
         if (args.isNotEmpty()) {
             return args[0]
         }
 
-
-        // Print info
+        // Print info non-interactively
         output.printDirectoryInfo(context.info)
 
-        // Select command
+        // Print available commands and exit (non-interactive)
         val commands = context.getAllCommands().filter { !it.hidden }
-        return when {
-            interactive && !options.help -> input.askForCommand(commands)
-            else -> {
-                output.printCommands(commands)
-                null
-            }
-        }
+        output.printCommands(commands)
+        return null
     }
 
     companion object {
         fun main(args: Array<String>, workingDir: Path = Path.of(".")): Int {
-
             val options = try {
                 CliCommandLineOptions(args.toList())
             } catch (e: CliInvocationException) {
-                System.err.println(e.message)
+                CliErrorReporter.reportInvocationError(e)
                 return 1
             }
 
@@ -164,21 +120,22 @@ class SpecScriptMain(
                 SpecScriptMain(options, workingDir = workingDir).run()
 
             } catch (e: CliInvocationException) {
-                System.err.println(e.message)
+                CliErrorReporter.reportInvocationError(e)
                 return 1
 
             } catch (e: MissingParameterException) {
+                e.printStackTrace()
                 System.err.println("Missing parameter: --${e.name}")
                 System.err.println("\nOptions:")
                 System.err.println(e.parameters.toDisplayString())
                 return 1
 
             } catch (e: InstacliLanguageException) {
-                e.reportError(options.debug)
+                CliErrorReporter.reportLanguageError(e, options.debug)
                 return 1
 
             } catch (e: InstacliCommandError) {
-                e.reportError()
+                CliErrorReporter.reportCommandError(e)
                 return 1
             }
 
@@ -186,4 +143,3 @@ class SpecScriptMain(
         }
     }
 }
-
