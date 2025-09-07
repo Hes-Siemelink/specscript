@@ -23,10 +23,10 @@ object InstacliPaths {
 class CliInvocationException(message: String) : Exception(message)
 
 fun main(args: Array<String>) {
-    InstacliMain.main(args)
+    SpecScriptMain.main(args)
 }
 
-class InstacliMain(
+class SpecScriptMain(
     private val options: CliCommandLineOptions,
     private val workingDir: Path = Path.of("."),
     private val input: UserInput = StandardInput,
@@ -165,7 +165,7 @@ class InstacliMain(
             }
 
             try {
-                InstacliMain(options, workingDir = workingDir).run()
+                SpecScriptMain(options, workingDir = workingDir).run()
 
             } catch (e: CliInvocationException) {
                 System.err.println(e.message)

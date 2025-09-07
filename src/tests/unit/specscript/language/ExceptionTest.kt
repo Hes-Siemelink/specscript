@@ -1,7 +1,7 @@
 package specscript.language
 
 import specscript.TestPaths
-import specscript.cli.InstacliMain
+import specscript.cli.SpecScriptMain
 import io.kotest.assertions.throwables.shouldThrow
 import org.junit.jupiter.api.Test
 
@@ -11,7 +11,7 @@ class ExceptionTest {
     fun `Command format exception`() {
 
         // Given
-        val session = InstacliMain(
+        val session = SpecScriptMain(
             "-q", "exceptions", "command-format-exception.cli",
             workingDir = TestPaths.RESOURCES
         )

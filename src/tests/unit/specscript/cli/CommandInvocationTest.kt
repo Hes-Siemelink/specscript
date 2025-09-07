@@ -22,7 +22,7 @@ class CommandInvocationTest {
     fun `Print usage`() {
 
         // Given
-        val session = InstacliMain("-q", workingDir = TestPaths.RESOURCES, output = out)
+        val session = SpecScriptMain("-q", workingDir = TestPaths.RESOURCES, output = out)
 
         // When
         session.run()
@@ -35,7 +35,7 @@ class CommandInvocationTest {
     fun `Print directory info and commands`() {
 
         // Given
-        val session = InstacliMain("-q", "sample", workingDir = TestPaths.RESOURCES, output = out)
+        val session = SpecScriptMain("-q", "sample", workingDir = TestPaths.RESOURCES, output = out)
 
         // When
         session.run()
@@ -53,7 +53,7 @@ class CommandInvocationTest {
 
         // Given
         val session =
-            InstacliMain("-q", "sample", "simple", workingDir = TestPaths.RESOURCES, output = out)
+            SpecScriptMain("-q", "sample", "simple", workingDir = TestPaths.RESOURCES, output = out)
 
         // When
         session.run()
@@ -69,7 +69,7 @@ class CommandInvocationTest {
 
         // Given
         val session =
-            InstacliMain(
+            SpecScriptMain(
                 "-q", "--help", "sample", "simple", "echo",
                 workingDir = TestPaths.RESOURCES,
                 output = out
@@ -86,7 +86,7 @@ class CommandInvocationTest {
     fun `Print output - yes`() {
 
         // Given
-        val session = InstacliMain(
+        val session = SpecScriptMain(
             "-q", "-o", "sample", "simple", "echo", "--text", "Script output",
             workingDir = TestPaths.RESOURCES,
             output = out
@@ -103,7 +103,7 @@ class CommandInvocationTest {
     fun `Print output - no`() {
 
         // Given
-        val session = InstacliMain(
+        val session = SpecScriptMain(
             "-q", "sample", "simple", "echo", "--text", "Script output",
             workingDir = TestPaths.RESOURCES,
             output = out
