@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.databind.node.JsonNodeFactory
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.node.ValueNode
-import specscript.cli.InstacliPaths
 import specscript.language.CommandHandler
 import specscript.language.ScriptContext
 import specscript.language.ValueHandler
@@ -22,7 +21,7 @@ import kotlin.io.path.exists
 object Credentials : CommandHandler("Credentials", "core/shell"), ValueHandler {
 
     const val FILENAME = "credentials.yaml"
-    private val DEFAULT_FILE: Path = InstacliPaths.INSTACLI_HOME.resolve(FILENAME)
+    private val DEFAULT_FILE: Path = Path.of(System.getProperty("user.home"), ".instacli").resolve(FILENAME)
 
     fun fromFile(file: Path = DEFAULT_FILE): CredentialsFile {
 
