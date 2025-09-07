@@ -100,7 +100,7 @@ tasks.named("check") {
 
 tasks.jar {
     manifest {
-        attributes["Main-Class"] = "instacli.cli.MainKt"
+        attributes["Main-Class"] = "specscript.cli.MainKt"
     }
 }
 
@@ -109,7 +109,7 @@ tasks.register<Jar>("fatJar") {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     
     manifest {
-        attributes["Main-Class"] = "instacli.cli.MainKt"
+        attributes["Main-Class"] = "specscript.cli.MainKt"
     }
     
     from(sourceSets.main.get().output)

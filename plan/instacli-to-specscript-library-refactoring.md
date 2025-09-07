@@ -69,7 +69,7 @@
 **Tasks**:
 1. **Remove Instacli implementation**
    - Delete `src/main/kotlin/instacli/` directory (except CLI bootstrap)
-   - Remove `instacli-spec/` directory
+   - From the `instacli-spec/` directory, remove `commands/`, `language/` and `scratchpad/` but retain `cli/` and `README.md`
    - Clean up build configuration
    - Preserve gradle wrapper, README, and project structure
 
@@ -212,19 +212,21 @@
 - [x] CLI functionality unchanged
 - [x] All existing tests passing (392 tests, 100% success rate)
 
-### **Phase 2 Complete**
+### **Phase 2**
+- [ ] All changes are on a dedicated branch `specscript`
 - [ ] Instacli codebase reduced by >90%
 - [ ] Identical user experience to original Instacli
-- [ ] All integration tests passing
+- [ ] Specification tests still run -- testing the README and remaining `instacli-spec/cli/` documentation
+- [ ] All tests passing in both repos
 - [ ] Fat JAR builds successfully
 
-### **Phase 3 Complete**
+### **Phase 3**
 - [ ] Dev-workspace repository functional
 - [ ] Cross-repo changes work seamlessly
 - [ ] Automated testing across both repos
 - [ ] Developer onboarding documentation
 
-### **Phase 4 Ongoing**
+### **Phase 4**
 - [ ] Clear migration patterns established
 - [ ] At least one feature migrated back to Instacli
 - [ ] Extension mechanisms proven to work

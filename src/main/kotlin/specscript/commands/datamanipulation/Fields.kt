@@ -1,0 +1,34 @@
+package specscript.commands.datamanipulation
+
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.node.ObjectNode
+import com.fasterxml.jackson.databind.node.ValueNode
+import specscript.language.CommandHandler
+import specscript.language.ObjectHandler
+import specscript.language.ScriptContext
+import specscript.language.ValueHandler
+
+object Fields : CommandHandler("Fields", "core/data-manipulation"), ObjectHandler, ValueHandler {
+
+    override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
+
+        val fields = data.arrayNode()
+
+        for ((key, _) in data.fields()) {
+            fields.add(key)
+        }
+
+        return fields
+    }
+
+    override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
+
+        val output = context.output
+
+        return if (output is ObjectNode) {
+            execute(output, context)
+        } else {
+            null
+        }
+    }
+}
