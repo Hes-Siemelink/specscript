@@ -6,7 +6,7 @@ import specscript.commands.userinteraction.UserPrompt
 import specscript.files.CliFile
 import org.junit.jupiter.api.*
 
-class InstacliTestSuite {
+class SpecScriptTestSuite {
 
     @BeforeEach
     fun setup() {
