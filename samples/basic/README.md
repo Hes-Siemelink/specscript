@@ -1,3 +1,3 @@
 # Basic examples
 
-Simple Instacli example scripts
+Simple SpecScript example scripts

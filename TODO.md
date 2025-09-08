@@ -1,7 +1,7 @@
 # On my mind
 
 * Remove all references to Instacli from SpecScript
-* Make Instacli work and move interaction to Instacli project
+* Make SpecScript work and move interaction to Instacli project
 
 
 ## MCP
@@ -57,7 +57,7 @@
 
 * Clean up Exceptions and error handling
 * Proper "StackTrace"
-* Define commands in Instacli
+* Define commands in SpecScript itself
 * Secrets
 * Properly handle: null, empty, boolean, int
 * Convert to yaml

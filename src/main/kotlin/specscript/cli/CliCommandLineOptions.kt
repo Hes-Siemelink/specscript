@@ -21,7 +21,7 @@ class CliCommandLineOptions private constructor(
     companion object {
 
         val definedOptions: CommandLineParameters by lazy {
-            Yaml.readResource("cli/instacli-command-line-options.yaml").toDomainObject(CommandLineParameters::class)
+            Yaml.readResource("cli/specscript-command-line-options.yaml").toDomainObject(CommandLineParameters::class)
         }
 
         operator fun invoke(args: List<String> = emptyList()): CliCommandLineOptions {

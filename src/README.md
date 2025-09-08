@@ -1,6 +1,6 @@
 # Developer notes
 
-## Releasing Instacli
+## Releasing SpecScript
 
 1. Update the version in `build.gradle.kts`
 

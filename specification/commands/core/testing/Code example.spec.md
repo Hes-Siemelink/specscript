@@ -17,7 +17,7 @@ runner to validate the code that is being described.
 
 This is what it looks like when writing Markdown:
 
-> This is a Markdown document describing how to run a simple Instacli command
+> This is a Markdown document describing how to run a simple SpecScript command
 >
 > \```yaml specscript
 > Code example: Hello world

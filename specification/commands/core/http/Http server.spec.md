@@ -1,6 +1,6 @@
 # Command: Http server
 
-`Http server` starts an embedded HTTP server, based on an OpenAPI-flavored spec and backed by Instacli scripts. Use
+`Http server` starts an embedded HTTP server, based on an OpenAPI-flavored spec and backed by SpecScript scripts. Use
 **Http server** to quickly prototype and API.
 
 | Content type | Supported |
@@ -50,8 +50,8 @@ First, you define a path, in this case `/hello`. On the path, you need a define 
 Then you define a handler. There are three handler types
 
 * `output`: returns the content below it
-* `script`: runs an inline instacli script
-* `file`: runs an instacli script file
+* `script`: runs an inline SpecScript script
+* `file`: runs a SpecScript file
 
 In this example we have a static Hello World greeting being returned by `output: Hello World!`
 
@@ -77,7 +77,7 @@ Http server:
 
 This will only stop the server running on the specified port, other servers will continue operating.
 
-If the server is still running at the end of the script, Instacli will not exit and keep serving requests until you stop
+If the server is still running at the end of the script, SpecScript will not exit and keep serving requests until you stop
 the process -- for example by pressing `^C` from the command line.
 
 ## Supplied variables
@@ -121,10 +121,10 @@ Http server:
 
 ## Running an inline script
 
-Define an Instacli script in the handler using the `script` type:
+Define a SpecScript script in the handler using the `script` type:
 
 ```yaml specscript
-Code example: Instacli script handler
+Code example: SpecScript script handler
 
 Http server:
   port: 25001
@@ -161,7 +161,7 @@ Http server:
 
 ## Running a file
 
-You can also specify an Instacli file to run.
+You can also specify a SpecScript file to run.
 
 Suppose you have a file `greet.cli`
 

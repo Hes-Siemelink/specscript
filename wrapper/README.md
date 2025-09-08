@@ -1,24 +1,24 @@
-# Instacli Wrapper
+# SpecScript Wrapper
 
-This directory contains a wrapper script for Instacli so you don't need to build it.
+This directory contains a wrapper script for SpecScript so you don't need to build it.
 
-## Running Instacli
+## Running SpecScript
 
-Run Instacli by invoking the wrapper script:
+Run SpecScript by invoking the wrapper script:
 
     ./cli
 
-The wrapper script will download the published version of Instacli specified
-in [.instacli/wrapper.conf](.instacli/wrapper.conf) and run it.
+The wrapper script will download the published version of SpecScript specified
+in [.SpecScript/wrapper.conf](.SpecScript/wrapper.conf) and run it.
 
 ## Copy the wrapper
 
-You can use the wrapper script in your Instacli project by copying the following files:
+You can use the wrapper script in your SpecScript project by copying the following files:
 
-    .instacli/wrapper.conf
+    .SpecScript/wrapper.conf
     cli
 
-## Instacli versions
+## SpecScript versions
 
-For the latest versions, check the [Instacli Releases](https://github.com/Hes-Siemelink/instacli/releases) page on
+For the latest versions, check the [SpecScript Releases](https://github.com/Hes-Siemelink/specscript/releases) page on
 GitHub.

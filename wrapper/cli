@@ -2,7 +2,7 @@
 
 ##############################################################################
 ##
-##  Instacli wrapper script for Linux/Darwin
+##  specscript wrapper script for Linux/Darwin
 ##
 ##############################################################################
 
@@ -18,22 +18,22 @@ command -v java &> /dev/null || die "Please install Java"
 PROG_DIR="$(cd "$(dirname "${0:-$PWD}")" 2>/dev/null 1>&2 && pwd)"
 
 # Get version and download URL
-source "${PROG_DIR}/.instacli/wrapper.conf" || die "Could not read .instacli/wrapper.conf"
+source "${PROG_DIR}/.specscript/wrapper.conf" || die "Could not read .specscript/wrapper.conf"
 
 # Find target location
-INSTACLI_HOME="${HOME}/.instacli/lib"
-if [ ! -d "${INSTACLI_HOME}" ] ; then
-  mkdir -p "${INSTACLI_HOME}" || die "Could not create wrapper home at: $INSTACLI_HOME"
+SPECSCRIPT_HOME="${HOME}/.specscript/lib"
+if [ ! -d "${SPECSCRIPT_HOME}" ] ; then
+  mkdir -p "${SPECSCRIPT_HOME}" || die "Could not create wrapper home at: $SPECSCRIPT_HOME"
 fi
 
-# Download instacli jar if it does not exist
-INSTACLI_JAR="${INSTACLI_HOME}/instacli-${INSTACLI_VERSION}.jar"
-if [ ! -f "${INSTACLI_JAR}" ] ; then
-  echo "Downloading Instacli to ${INSTACLI_JAR}"
-  DOWNLOAD_URL="${INSTACLI_BASE_URL}/${INSTACLI_VERSION}/instacli-${INSTACLI_VERSION}.jar"
-  curl -fLsSo "${INSTACLI_JAR}.$$" "${DOWNLOAD_URL}" || die "Could not download instacli jar from: $DOWNLOAD_URL"
-  mv "${INSTACLI_JAR}.$$" "${INSTACLI_JAR}" || die "Could not move instacli jar to home folder"
+# Download SpecScript jar if it does not exist
+SPECSCRIPT_JAR="${SPECSCRIPT_HOME}/specscript-${SPECSCRIPT_VERSION}.jar"
+if [ ! -f "${SPECSCRIPT_JAR}" ] ; then
+  echo "Downloading specscript to ${SPECSCRIPT_JAR}"
+  DOWNLOAD_URL="${SPECSCRIPT_BASE_URL}/${SPECSCRIPT_VERSION}/specscript-${SPECSCRIPT_VERSION}.jar"
+  curl -fLsSo "${SPECSCRIPT_JAR}.$$" "${DOWNLOAD_URL}" || die "Could not download SpecScript jar from: $DOWNLOAD_URL"
+  mv "${SPECSCRIPT_JAR}.$$" "${SPECSCRIPT_JAR}" || die "Could not move SpecScript jar to home folder"
 fi
 
-# Run Instacli
-exec java -jar ${INSTACLI_JAR} "$@"
+# Run SpecScript
+exec java -jar ${SPECSCRIPT_JAR} "$@"

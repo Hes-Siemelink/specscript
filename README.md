@@ -107,7 +107,7 @@ Run the "Hello world" example:
 cli samples/hello.cli
 ```
 
-See [Running instacli files](specification/cli/Running%20Instacli%20files.spec.md) for more information on the `cli`
+See [Running SpecScript files](specification/cli/Running%20SpecScript%20files.spec.md) for more information on the `cli`
 command.
 
 ## Explore
@@ -126,9 +126,8 @@ The following example will provide an interactive experience and connect to the 
 cli samples/spotify
 ```
 
-When connecting to Spotify for the first time, the script will ask you for your login credentials (App Client ID and
-Client secret -- you should already have those). These will be stored in `~/.instacli/credentials.yaml` and will be used
-for subsequent invocations.
+When connecting to Spotify for the first time, the script will ask you for your login credentials: App Client ID and
+Client secret -- you should already have those. 
 
 # Highlight Reel
 
@@ -142,7 +141,7 @@ SpecScript has two main ideas:
 This is the simplest SpecScript progam, **[hello.cli](samples/hello.cli)**:
 
 ```yaml file=hello.cli
-Print: Hello from Instacli!
+Print: Hello from SpecScript!
 ```
 
 Invoke it with
@@ -154,7 +153,7 @@ cli hello.cli
 And it will print the expected message:
 
 ```output
-Hello from Instacli!
+Hello from SpecScript!
 ```
 
 ## HTTP requests as code
@@ -265,10 +264,10 @@ Use the cursor to select a command
 samples has several subcommands.
 
 * Available commands: 
- > basic         Simple Instacli example scripts
+ > basic         Simple SpecScript example scripts
    digitalai     Interact with Digital.ai products and services.
    hello         Hello
-   http-server   Use Instacli to run web services
+   http-server   Use SpecScript to run a web server
    programming   Programming examples in SpecScript
    spotify       Spotify API examples
 ```
@@ -285,10 +284,10 @@ will just print the info message:
 samples has several subcommands.
 
 Available commands:
-  basic         Simple Instacli example scripts
+  basic         Simple SpecScript example scripts
   digitalai     Interact with Digital.ai products and services.
   hello         Hello
-  http-server   Use Instacli to run web services
+  http-server   Use SpecScript to run a web server
   programming   Programming examples in SpecScript
   spotify       Spotify API examples
 
@@ -374,7 +373,7 @@ Print: ${output}
 Will print the output of the GET request:
 
 ```output
-Hello from Instacli!
+Hello from SpecScript!
 ```
 
 Some commands work directly with the output variable. This helps in having a more declarative and readable script. For
@@ -386,7 +385,7 @@ Code example: Implicit output variable
 
 GET: http://localhost:2525/hello
 
-Expected output: Hello from Instacli!
+Expected output: Hello from SpecScript!
 ```
 
 If you are going to use the output variable later on, best practice is to assign it to a named variable using **[As
@@ -417,7 +416,7 @@ Http server:
     /hello-example:
       get:
         script:
-          Output: Hello from Instacli!
+          Output: Hello from SpecScript!
 ```
 
 Take a look at the [sample server](samples/http-server/sample-server/sample-server.cli) that serves all requests from
@@ -512,7 +511,7 @@ Here's an example of SpecScript documentation:
     The following code prints a message:
     
     ```yaml specscript
-    Print: Hello from Instacli!
+    Print: Hello from SpecScript!
     ```
 
 You can do 'Spec-driven development' with SpecScript. For new features, write the documentation first, then run it. Since

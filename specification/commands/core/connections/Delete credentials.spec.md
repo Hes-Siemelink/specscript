@@ -17,7 +17,7 @@ With **Delete credentials** you get rid of previously configured credentials.
 Given the following list of credentials in `~/.instacli/credentials.yaml`:
 
 ```yaml file=credentials.yaml
-Instacli Sample Server:
+SpecScript Sample Server:
   credentials:
     - name: Test account 1
       username: admin
@@ -38,6 +38,6 @@ You can delete Test account 2 with the following snippet:
 Code example: Delete credentials for an endpoint
 
 Delete credentials:
-  target: Instacli Sample Server
+  target: SpecScript Sample Server
   name: Test account 2
 ```

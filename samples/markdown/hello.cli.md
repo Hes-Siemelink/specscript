@@ -1,5 +1,5 @@
-This is an example file to show how you can execute markdown as instacli.
+This is an example file to show how you can execute markdown as SpecScript.
 
 ```yaml specscript
-Print: Hello from Instacli!
+Print: Hello from SpecScript!
 ```

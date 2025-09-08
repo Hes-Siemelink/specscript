@@ -26,7 +26,7 @@ Http request defaults:
 ```yaml file=connect-to.cli
 Code example: Use a connection
 
-Connect to: Instacli Samples
+Connect to: SpecScript Samples
 
 GET: /items
 
@@ -36,12 +36,12 @@ Expected output:
   - 3
 ```
 
-In order for this to work, you need to configure a _connection script_ for the **Instacli Samples** endpoint. You do
+In order for this to work, you need to configure a _connection script_ for the **SpecScript Samples** endpoint. You do
 this in the  `.directory-info.yaml` file in the same directory
 
 ```yaml file=.directory-info.yaml
 connections:
-  Instacli Samples: connect.cli
+  SpecScript Samples: connect.cli
 ```
 
 The connect script `connect.cli` will be responsible for selecting the account. This way the main script does not need

@@ -20,7 +20,7 @@ const val CLI_MARKDOWN_SCRIPT_EXTENSION = ".cli.md"
 const val MARKDOWN_SPEC_EXTENSION = ".spec.md"
 
 /**
- * Context for running an Instacli script inside a directory.
+ * Context for running  SpecScript  script inside a directory.
  * It will scan the directory for other scripts and expose them as commands.
  */
 class CliFileContext(

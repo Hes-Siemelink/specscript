@@ -1,7 +1,7 @@
 # Command: Run script
 
-Use **Run script** to run another Instacli script. See
-also [Instacli files as commands](Instacli%20files%20as%20commands.spec.md)
+Use **Run script** to run another SpecScript script. See
+also [SpecScript files as commands](SpecScript%20files%20as%20commands.spec.md)
 
 | Content type | Supported |
 |--------------|-----------|
@@ -19,7 +19,7 @@ Suppose you have a cli file `do-something.cli`
 Output: Something done!
 ```
 
-Then you can call it from another Instacli file using **Run script**.
+Then you can call it from another SpecScript file using **Run script**.
 
 Pass the name of the script in the current working directory as a single text parameter.
 
@@ -43,7 +43,7 @@ To call it with **Run script**, you can pass the input parameters in the `input`
 the `resource` property.
 
 ```yaml specscript
-Code example: Call another instacli file
+Code example: Call another SpecScript file
 
 Run script:
   resource: create-greeting.cli
@@ -59,10 +59,10 @@ Expected output: Hello Alice!
 In the example above, we used the property `resource` to indicate that the script to be called was in the same directory
 as the current script.
 
-Use the `file` property to look for a script in the directory that you are calling Instacli from.
+Use the `file` property to look for a script in the directory that you are calling SpecScript from.
 
 ```yaml specscript
-Code example: Call another instacli file from working dir
+Code example: Call another SpecScript file from working dir
 
 Run script:
   file: samples/basic/create-greeting.cli

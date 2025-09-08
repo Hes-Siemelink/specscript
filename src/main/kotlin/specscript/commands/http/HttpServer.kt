@@ -40,14 +40,14 @@ object HttpServer : CommandHandler("Http server", "core/http"), ObjectHandler, D
     }
 
     fun stop(port: Int) {
-        print("Stopping Instacli Http Server on port $port\")")
+        print("Stopping SpecScript Http Server on port $port\")")
         servers[port]?.stop()
         servers.remove(port)
     }
 
     private fun addHandler(port: Int, path: String, data: EndpointData, context: ScriptContext) {
         val server = servers.getOrPut(port) {
-            println("Starting Instacli Http Server for ${context.cliFile.name} on port $port")
+            println("Starting SpecScript Http Server for ${context.cliFile.name} on port $port")
             Javalin.create().start(port)
         }
 

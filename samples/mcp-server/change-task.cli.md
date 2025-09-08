@@ -6,7 +6,7 @@ This script changes the type of a task in Digital.ai Release and updates its pro
 
 ### Connect to Digital.ai Release
 
-Our target system is Digital.ai Release. In Instacli, you just declare the connection to the system you want to work
+Our target system is Digital.ai Release. In SpecScript, you just declare the connection to the system you want to work
 with.
 
 ```yaml specscript

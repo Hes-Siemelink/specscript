@@ -20,7 +20,7 @@ Global options:
   --help, -h          Print help on a script or directory and does not run anything
   --output, -o        Print the output at the end of the script in Yaml format
   --output-json, -j   Print the output at the end of the script in Json format
-  --non-interactive, -q   Indicate that Instacli should not prompt for user input
+  --non-interactive, -q   Indicates that SpecScript should not prompt for user input
   --debug, -d         Run in debug mode. Prints stacktraces when an error occurs.
 ```
 
@@ -35,7 +35,7 @@ Hello World" command:
 Print: Hello from SpecScript!
 ```
 
-After [installing Instacli](/README.md#build--run), run it with the following command
+After [installing SpecScript](/README.md#build--run), run it with the following command
 
 ```shell cli cd=samples
 cli hello.cli
@@ -68,7 +68,7 @@ cli basic
 ```
 
 ```
-Simple Instacli example scripts
+Simple SpecScript example scripts
 
 * Available commands: 
    create-greeting   Creates a greeting and puts it in the output
@@ -123,7 +123,7 @@ Hello, Alice!
 
 ## Capturing output
 
-Some Instacli commands will produce output. By default, Instacli does not print the output. Use
+Some SpecScript commands produce output. By default, the SpecScript cli does not print the output. Use
 the [--output](Command%20line%20options.spec.md#--output) option to see it.
 
 For example, the **[greet](/samples/basic/greet.cli)** script uses a **Print** command to show the greeting, whereas

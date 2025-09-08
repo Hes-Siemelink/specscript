@@ -12,7 +12,7 @@
 
 ## Basic usage
 
-Instacli assigns the result of a command to the `${ouput}` variable
+SpecScript assigns the result of a command to the `${ouput}` variable
 
 ```yaml specscript
 Code example: Output variable is automatically set

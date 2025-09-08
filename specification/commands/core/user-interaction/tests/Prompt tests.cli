@@ -1,11 +1,11 @@
 Test case: Simple question
 
 Answers:
-  "What is your name?": Instacli
+  "What is your name?": Emma
 
 Prompt: What is your name?
 
-Expected output: Instacli
+Expected output: Emma
 
 ---
 Test case: Default answer
@@ -20,7 +20,7 @@ Expected output: "2"
 Test case: Multiple questions
 
 Answers:
-  - "What is your name?": Instacli
+  - "What is your name?": Mateo
 
 Prompt object:
   name: What is your name?
@@ -29,7 +29,7 @@ Prompt object:
     default: 2
 
 Expected output:
-  name: Instacli
+  name: Mateo
   sum: "2"
 
 ---

@@ -27,7 +27,7 @@ Script info: A script containing a code example
 # Do some stuff
 ```
 
-When running Instacli from the command line with the `cli` command, this is the description that is given. For example,
+When running SpecScript from the command line with the `cli` command, this is the description that is given. For example,
 when listing the commands in a directory
 
 ```
@@ -51,7 +51,7 @@ You will need this when specifying input parameters, see below.
 
 ## Hidden commands
 
-When invoking Instacli interactively, `cli --help` will show the contents of the directory as commands. If you don't
+When invoking SpecScript interactively, `cli --help` will show the contents of the directory as commands. If you don't
 want to expose a script this way, for example a helper script, then you can hide it with the `hide` property in **Script
 info**.
 

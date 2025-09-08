@@ -8,7 +8,7 @@ You can check if some data is valid according to a type definition.
 
 This helps you by rejecting data that is not fit for processing, and making assumptions about what's there and not.
 
-You can also add useful hints about for user interaction. This way Instacli knows what questions to ask in a form.
+You can also add useful hints about for user interaction. This way SpecScript knows what questions to ask in a form.
 
 ## Basic example
 

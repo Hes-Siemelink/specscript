@@ -1,6 +1,6 @@
 # Command: Cli
 
-With **Cli** you execute the Instacli command without popping into a new shell. This is mainly useful to document and
+With **Cli** you execute the SpecScript command without popping into a new shell. This is mainly useful to document and
 test the behavior of the `cli` command line interface.
 
 | Content type | Supported |
@@ -13,10 +13,10 @@ test the behavior of the `cli` command line interface.
 
 ## Basic usage
 
-Show Instacli help
+Show SpecScript help
 
 ```yaml specscript
-Code example: Execute Instacli command
+Code example: Execute SpecScript command
 
 Cli: --help
 
@@ -30,7 +30,7 @@ Expected console output: |
     --help, -h          Print help on a script or directory and does not run anything
     --output, -o        Print the output at the end of the script in Yaml format
     --output-json, -j   Print the output at the end of the script in Json format
-    --non-interactive, -q   Indicate that Instacli should not prompt for user input
+    --non-interactive, -q   Indicates that SpecScript should not prompt for user input
     --debug, -d         Run in debug mode. Prints stacktraces when an error occurs.
 ```
 
@@ -47,7 +47,7 @@ Cli:
   cd: samples
 
 Expected console output: |
-  Simple Instacli example scripts
+  Simple SpecScript example scripts
 
   Available commands:
     create-greeting   Creates a greeting and puts it in the output

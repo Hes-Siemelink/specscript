@@ -35,7 +35,7 @@ Expected output:
 
 ## Reading a file in the same directory as your script
 
-If you want to load a file that is next to your Instacli script, use the `resource` parameter:
+If you want to load a file that is next to your script, use the `resource` parameter:
 
 ```yaml specscript
 Code example: Read a local file

@@ -6,4 +6,4 @@ Input parameters:
     description: Your name
     default: there
 
-Output: Hello ${input.name} from Instacli Server!
+Output: Hello ${input.name} from SpecScript HTTP Server!

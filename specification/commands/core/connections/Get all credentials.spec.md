@@ -17,7 +17,7 @@ With **Get all credentials** you get the list of connection details for a certai
 Given the following list of credentials in `~/.instacli/credentials.yaml`:
 
 ```yaml file=credentials.yaml
-Instacli Sample Server:
+SpecScript Sample Server:
   credentials:
     - name: Test account 1
       username: admin
@@ -37,7 +37,7 @@ You can retrieve all credentials with the following snippet:
 ```yaml FIXME instacli -- there was a hack in TestUtil to use mock credentials specified above but now it doesn't work anymore
 Code example: Get all credentials for an endpoint
 
-Get all credentials: Instacli Sample Server
+Get all credentials: SpecScript Sample Server
 
 Expected output:
   - name: Test account 1

@@ -1,4 +1,4 @@
-Script info: Interact with the Instacli Sample Server
+Script info: Interact with the SpecScript Sample Server
 
 connections:
   Digital.ai Platform: ../digitalai/platform/login/connect.cli

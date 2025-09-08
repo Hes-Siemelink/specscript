@@ -54,13 +54,13 @@ Published artifacts:
 
 ### Core Components
 
-- **CLI Entry Point**: `src/main/kotlin/instacli/cli/Main.kt` - Main application entry point
-- **Language Engine**: `src/main/kotlin/instacli/language/` - Core language processing and command execution
-- **Commands**: `src/main/kotlin/instacli/commands/` - Implementation of all script commands (HTTP, testing, control flow, etc.)
+- **CLI Entry Point**: `src/main/kotlin/specscript/cli/Main.kt` - Main application entry point
+- **Language Engine**: `src/main/kotlin/specscript/language/` - Core language processing and command execution
+- **Commands**: `src/main/kotlin/specscript/commands/` - Implementation of all script commands (HTTP, testing, control flow, etc.)
   - Commands use paths like `"core/testing"` to reference specification files
   - 56+ command implementations organized by functionality
-- **File Handling**: `src/main/kotlin/instacli/files/` - .cli file parsing and management
-- **Utilities**: `src/main/kotlin/instacli/util/` - JSON/YAML processing, I/O utilities
+- **File Handling**: `src/main/kotlin/specscript/files/` - .cli file parsing and management
+- **Utilities**: `src/main/kotlin/specscript/util/` - JSON/YAML processing, I/O utilities
 
 ### Test Structure
 
@@ -73,7 +73,7 @@ Published artifacts:
 
 The `specification/` directory contains the complete language specification written in executable Markdown:
 - `specification/language/` - Language syntax and features
-- `specification/commands/core/` - Core command reference with examples (renamed from instacli)
+- `specification/commands/core/` - Core command reference with examples (renamed from specscript)
 - `specification/commands/ai/` - AI-related commands (MCP server, etc.)
 - `specification/cli/` - CLI tool usage
 
@@ -90,17 +90,17 @@ All documentation includes runnable code examples that are executed as part of t
 
 ## Important Notes
 
-- The project uses "Instacli" internally but is branded as "SpecScript" externally
+- The project uses "specscript" internally but is branded as "SpecScript" externally
 - All specifications are executable - documentation doubles as test cases
 - The `specification/` directory is included as a resource directory for runtime access
 - The CLI supports interactive mode with prompts and non-interactive mode with command-line arguments
-- Command implementations reference `"core/"` paths instead of legacy `"instacli/"` paths
+- Command implementations reference `"core/"` paths instead of legacy `"specscript/"` paths
 - Two JAR artifacts are built: thin (531KB) and fat (36MB) for different deployment scenarios
 
 ## Major Refactoring Plans
 
-- **Library Architecture Refactoring**: See `plan/instacli-to-specscript-library-refactoring.md`
-- Goal: Transform SpecScript into a library that Instacli depends on
+- **Library Architecture Refactoring**: See `plan/specscript-to-specscript-library-refactoring.md`
+- Goal: Transform SpecScript into a library that specscript depends on
 - Will enable separation of core engine from CLI-specific implementations
 - Planned multi-repository development setup for easier cross-repo work
 - Run the tests before creating a commit

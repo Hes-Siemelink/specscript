@@ -20,7 +20,7 @@ In the first field you can declare the loop variable. The variable is defined in
 
 The field value contains the list of items to loop over.
 
-The remaining fields in **For each** must be commands. They are executed by Instacli for each item in the list.
+The remaining fields in **For each** must be commands. They are executed by SpecScript for each item in the list.
 
 Here's a simple example:
 

@@ -23,7 +23,7 @@ Credentials: ${SCRIPT_TEMP_DIR}/credentials.yaml
 Code example: Create credentials for an endpoint
 
 Create credentials:
-  target: Instacli Sample Server
+  target: SpecScript Sample Server
   credentials:
     name: Test Account
     username: admin
@@ -36,7 +36,7 @@ should have a `name` field to identify it,
 The account data is stored in the `~/.instacli/credentials.yaml` file like this:
 
 ```yaml
-Instacli Sample Server:
+SpecScript Sample Server:
   credentials:
     - name: Test account
       username: admin

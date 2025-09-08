@@ -1,8 +1,8 @@
-# Instacli Command Reference
+# SpecScript Command Reference
 
-Overview of standard commands in Instacli.
+Overview of standard commands in SpecScript.
 
-## Core instacli
+## Core commands
 
 ### Script definition
 
@@ -71,13 +71,13 @@ Overview of standard commands in Instacli.
 * [Read file](core/files/Read%20file.spec.md) - Loads Yaml or Json from a file
 * [Write file](core/files/Write%20file.spec.md) - Saves content to a file as Yaml
 * [Temp file](core/files/Temp%20file.spec.md) - Saves content to a temporary file
-* [Run script](core/files/Run%20script.spec.md) - Runs another Instacli script
-* [Instacli files as commands](core/files/Instacli%20files%20as%20commands.spec.md) - To run any instacli file in
+* [Run script](core/files/Run%20script.spec.md) - Runs another SpecScript file
+* [SpecScript files as commands](core/files/SpecScript%20files%20as%20commands.spec.md) - To run any SpecScript file in
   the same directory as a regular command
 
 ### Shell
 
-* [Cli](core/shell/Cli.spec.md) - Executes the Instacli command
+* [Cli](core/shell/Cli.spec.md) - Executes the SpecScript cli command
 * [Shell](core/shell/Shell.spec.md) - Executes a shell command
 
 ## REST API interaction
@@ -95,7 +95,7 @@ Overview of standard commands in Instacli.
 ### Http server
 
 * [Http server](core/http/Http%20server.spec.md) - Starts an embedded HTTP server, based on an OpenAPI-flavored spec
-  and backed by Instacli scripts
+  and backed by SpecScript commands.
 
 ### Manage credentials
 

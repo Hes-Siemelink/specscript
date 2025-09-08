@@ -1,10 +1,10 @@
-### Instacli Project Context
+### specscript Project Context
 
 This file provides context for the Gemini AI assistant.
 
 ### Project Overview
 
-Instacli is a YAML-based scripting language for creating command-line tools. It uses a spec-driven development approach
+specscript is a YAML-based scripting language for creating command-line tools. It uses a spec-driven development approach
 where specifications are written in Markdown with embedded, testable YAML examples. The entire specification is used as
 the test suite for the implementation.
 
@@ -19,7 +19,7 @@ the test suite for the implementation.
 ### Architectural Principles
 
 - The project is split into `specification` (the language specification) and `src` (the Kotlin implementation).
-- Commands are implemented as singleton objects extending `instacli.language.CommandHandler`.
+- Commands are implemented as singleton objects extending `specscript.language.CommandHandler`.
 - The command's name and group are registered in the `CommandHandler` constructor, e.g.,
   `CommandHandler("Mcp server", "ai/mcp")`.
 - The command logic is implemented in the `execute` method.
@@ -28,7 +28,7 @@ the test suite for the implementation.
 
 - **Build:** `./gradlew build`
 - **Run Tests:** `./gradlew test`
-- **Run CLI:** `java -jar build/libs/instacli-*.jar` (or use the `cli` alias if configured)
+- **Run CLI:** `java -jar build/libs/specscript-*.jar` (or use the `cli` alias if configured)
 
 ### Coding Conventions
 

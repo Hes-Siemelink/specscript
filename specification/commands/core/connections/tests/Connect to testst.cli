@@ -1,6 +1,6 @@
-Test case: Use a connection with instacli code
+Test case: Use a connection with SpecScript code
 
-Connect to: Instacli Sample Server
+Connect to: SpecScript Sample Server
 
 GET: /items
 
@@ -12,7 +12,7 @@ Expected output:
 ---
 Test case: Use a connection script
 
-Connect to: Instacli Sample Server with script
+Connect to: SpecScript Sample Server with script
 
 GET: /items
 

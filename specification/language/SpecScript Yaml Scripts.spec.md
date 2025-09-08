@@ -1,16 +1,16 @@
-# Instacli Yaml Scripts
+# SpecScript Yaml Scripts
 
-## What does a single Instacli script look like
+## What does a single SpecScript script look like
 
 ### Hello world example
 
-This is the simplest Instacli file:
+This is the simplest SpecScript file:
 
 ```yaml file=hello-world.cli
 Print: Hello world
 ```
 
-Instacli files are a list of **commands**. In this case the file contains a single `Print` command. By convention,
+SpecScript files are a list of **commands**. In this case the file contains a single `Print` command. By convention,
 commands start with a capital letter.
 
 If we store it in a file `hello-world.cli`, we can run it with the following command:
@@ -27,7 +27,7 @@ Hello world
 
 ### It's all YAML
 
-Instacli scripts are just Yaml.
+SpecScript scripts are just Yaml.
 
 The main idea is to blur the line between 'code' and 'data'. By having the data closer to code it makes it easier to
 adopt a declarative style: saying _what_ you want to happen rather than _how_ you want it to be carried out. In this
@@ -36,18 +36,18 @@ is data, and the logic is a smaller part. Then Yaml starts making sense as a for
 
 By convention, commands start with a capital letter, for example `Print` or `Read file`, to distinguish them from data.
 
-Another advantage of Instacli syntax being Yaml is familiarity: if you have worked with Yaml before you know its
+Another advantage of SpecScript syntax being Yaml is familiarity: if you have worked with Yaml before you know its
 structure (and pitfalls) already, and you get editor support out-of-the-box. It's also way easier for the implementation
 to parse it than a custom format.
 
-Instacli files have `.cli` file extension. Within Instacli, the convention is that `.yaml` files are for static data and
-`.cli` files are Instacli scripts that contain commands. Tip: Map your editor to recognize `.cli`
+SpecScript files have `.cli` file extension. Within SpecScript, the convention is that `.yaml` files are for static data and
+`.cli` files are SpecScript scripts that contain commands. Tip: Map your editor to recognize `.cli`
 as `.yaml`.
 
-Instacli's Yaml flavor does not rely on special Yaml features like directives. It is used as a human-friendly way of
+SpecScript's Yaml flavor does not rely on special Yaml features like directives. It is used as a human-friendly way of
 writing JSON.
 
-Instacli does add some additional formatting on top of Yaml, for example the variable syntax `${..}`.
+SpecScript does add some additional formatting on top of Yaml, for example the variable syntax `${..}`.
 
 ### The command sequence
 
@@ -117,7 +117,7 @@ Do:
   - Print: Hello again!
 ```
 
-You could argue that an Instacli script should have a giant `Do` on top, and all commands should be specified in the
+You could argue that a SpecScript script should have a giant `Do` on top, and all commands should be specified in the
 list. That's perfectly fine code, but to me it looks distracting, so I prefer the separator approach. Besides, the
 separator helps you to visually divide sections in your code if placed strategically.
 
@@ -195,7 +195,7 @@ Output:
   c: three
 ```
 
-The output is stored in the `${output}` variable. When invoking instacli with the
+The output is stored in the `${output}` variable. When invoking SpecScript with the
 **[--output](../cli/Command%20line%20options.spec.md#--output)** option, it will be printed:
 
 ```shell cli

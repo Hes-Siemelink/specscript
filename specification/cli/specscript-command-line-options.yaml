@@ -13,7 +13,7 @@ output-json:
   short option: j
 
 non-interactive:
-  description: Indicate that Instacli should not prompt for user input
+  description: Indicates that SpecScript should not prompt for user input
   default: false
   type: boolean
   short option: q

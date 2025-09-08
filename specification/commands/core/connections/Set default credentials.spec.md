@@ -18,7 +18,7 @@ for [Get credentials](Get%20credentials.spec.md) when there are multiple availab
 Given the following connections in `~/.instacli/credentials.yaml`:
 
 ```yaml file=credentials.yaml
-Instacli Sample Server:
+SpecScript Sample Server:
   credentials:
     - name: Test account 1
       username: admin
@@ -39,6 +39,6 @@ You can set the default credentials with the following snippet:
 Code example: Set the default credentials for an endpoint
 
 Set default credentials:
-  target: Instacli Sample Server
+  target: SpecScript Sample Server
   name: Test account 2
 ```

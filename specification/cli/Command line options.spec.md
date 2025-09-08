@@ -1,7 +1,7 @@
-# Instacli command-line options
+# SpecScript command-line options
 
 The names and descriptions of the global options are defined
-in [instacli-command-line-options.yaml](instacli-command-line-options.yaml) and this document explains the behavior.
+in [specscript-command-line-options.yaml](specscript-command-line-options.yaml) and this document explains the behavior.
 
 ## Global options
 
@@ -21,7 +21,7 @@ Global options:
   --help, -h          Print help on a script or directory and does not run anything
   --output, -o        Print the output at the end of the script in Yaml format
   --output-json, -j   Print the output at the end of the script in Json format
-  --non-interactive, -q   Indicate that Instacli should not prompt for user input
+  --non-interactive, -q   Indicates that SpecScript should not prompt for user input
   --debug, -d         Run in debug mode. Prints stacktraces when an error occurs.
 ```
 
@@ -30,14 +30,14 @@ Global options:
 The `--help` option prints help on a script or directory and then exits. No scripts are run.
 
 For this example we run from the **[samples](/samples)** directory. It contains a directory `basic`. Let's use the
-`--help` option to see what Instacli commands it contains
+`--help` option to see what SpecScript commands it contains
 
 ```shell cli cd=samples
 cli --help basic
 ```
 
 ```output
-Simple Instacli example scripts
+Simple SpecScript example scripts
 
 Available commands:
   create-greeting   Creates a greeting and puts it in the output
@@ -75,7 +75,7 @@ Hello, Alice!
 
 ### --output
 
-Some Instacli commands will produce output. By default, Instacli does not print the output. You can turn it on with the
+Some SpecScript scripts will produce output. By default, the `cli` command does not print the output. You can turn it on with the
 `--output` option.
 
 For example, the **[greet](/samples/basic/greet.cli)** script uses a **Print** command to show the greeting, whereas
@@ -118,12 +118,12 @@ cli --output-json basic create-greeting --name Bob
 ### --debug
 
 Use this option to see stacktraces from the underlying runtime when an internal error occurs. This option is meant for
-troubleshooting the Instacli runtime.
+troubleshooting the SpecScript runtime.
 
-For example, the file `error-in-add.cli` has an error in it that is not handled by Instacli.
+For example, the file `error-in-add.cli` has an error in it that is not handled by SpecScript.
 
 ```yaml file=script-with-error.cli
-GET: http:\\localhost  # Malformed URL - not caught by Instacli runtime
+GET: http:\\localhost  # Malformed URL - not caught by SpecScript runtime
 ```
 
 Without debug mode you get the following error message
@@ -179,4 +179,4 @@ In error.cli:
   GET: http:\\localhost
 ```
 
-This may help the Instacli runtime developer to diagnose the problem and fix it,
+This may help the SpecScript runtime developer to diagnose the problem and fix it,

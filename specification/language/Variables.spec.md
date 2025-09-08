@@ -2,7 +2,7 @@
 
 ## Basic usage
 
-Instacli variables are written in `${..}` syntax.
+SpecScript variables are written in `${..}` syntax.
 
 Assign a variable using `${var}:` followed by some content.
 
@@ -66,7 +66,7 @@ Assert equals:
     expected: 2
 ```
 
-Since we know that there will always an output variable, there is some special support for it in Instacli. For example,
+Since we know that there will always an output variable, there is some special support for it in SpecScript. For example,
 we can rewrite the above example as
 
 ```yaml specscript
@@ -193,7 +193,7 @@ Output: Hello ${input.name}!
 ```
 
 Now you can call it with input and retrieve the output. In the following example we use the name of the script as a
-command. (See **[Instacli files as commands](../commands/core/files/Instacli%20files%20as%20commands.spec.md)**)
+command. (See **[SpecScript files as commands](../commands/core/files/SpecScript%20files%20as%20commands.spec.md)**)
 
 ```yaml specscript
 Code example: Input and output when calling a script

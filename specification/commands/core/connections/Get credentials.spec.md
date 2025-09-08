@@ -17,7 +17,7 @@ With **Get credentials** you get the default connection details for a certain en
 Given the following list of credentials in `~/.instacli/credentials.yaml`:
 
 ```yaml file=credentials.yaml
-Instacli Sample Server:
+SpecScript Sample Server:
   credentials:
     - name: Test account
       username: admin
@@ -33,7 +33,7 @@ You can retrieve the default credentials with the following snippet:
 ```yaml specscript
 Code example: Get default credentials for an endpoint
 
-Get credentials: Instacli Sample Server
+Get credentials: SpecScript Sample Server
 
 Expected output:
   name: Test account

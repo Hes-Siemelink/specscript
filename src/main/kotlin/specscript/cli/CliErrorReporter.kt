@@ -14,7 +14,7 @@ import specscript.util.toDisplayYaml
 object CliErrorReporter {
 
     /**
-     * Reports an InstacliLanguageException with optional stack trace.
+     * Reports a SpecScriptLanguageException with optional stack trace.
      * 
      * @param exception The language exception to report
      * @param printStackTrace Whether to include stack traces in debug mode
@@ -22,7 +22,7 @@ object CliErrorReporter {
     fun reportLanguageError(exception: SpecScriptException, printStackTrace: Boolean) {
         System.err.println("\nInstacli scripting error")
 
-        // Exception caused by incorrect instacli script
+        // Exception caused by incorrect SpecScript script
         if (exception.cause == null || exception.cause is SpecScriptException) {
             System.err.println("\n${exception.message}")
         } else {
@@ -35,7 +35,7 @@ object CliErrorReporter {
             }
         }
 
-        // Print Instacli context
+        // Print SpecScript context
         exception.data?.let {
             val yaml = exception.data.toDisplayYaml().prependIndent("  ")
             val message = "In ${exception.context ?: "command"}:"

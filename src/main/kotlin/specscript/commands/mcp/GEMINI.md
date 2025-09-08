@@ -1,6 +1,6 @@
 ### McpServer Command
 
-The `McpServer` command launches a long-running Model Context Protocol (MCP) server in a background thread. This allowed the instacli script to complete while the server is running. The instacli command line tool will keep running until the server is stopped.
+The `McpServer` command launches a long-running Model Context Protocol (MCP) server in a background thread. This allowed the SpecScript script to complete while the server is running. The SpecScript command line tool will keep running until the server is stopped.
 
 ### Key Implementation Details:
 

@@ -165,10 +165,10 @@ Shell:
 Expected output: Hello Alice
 ```
 
-## Calling a script next to your Instacli file
+## Calling a script next to your SpecScript file
 
 Shell commands are executed in the current working directory from where you launched the script. Sometimes it useful to
-have a helper script next to your Instacli file. Then you would use the `resource` parameter to indicate that.
+have a helper script next to your SpecScript file. Then you would use the `resource` parameter to indicate that.
 
 Suppose you have a shell script `hello.sh`
 
@@ -176,7 +176,7 @@ Suppose you have a shell script `hello.sh`
 echo "Hello World"
 ```
 
-Then you can call it from an Instacli file by using the `resource` parameter on **Shell**:
+Then you can call it from a SpecScript file by using the `resource` parameter on **Shell**:
 
 ```yaml specscript
 Code example: Call a local shell script

@@ -1,12 +1,12 @@
 Script info:
-  description: Starts the Instacli Sample Server
+  description: Starts the SpecScript Sample Server
 
 Http server:
   port: 2525
   endpoints:
     /hello:
       get:
-        output: Hello from Instacli!
+        output: Hello from SpecScript!
 
     /greeting:
       post: handlers/create-greeting.cli

@@ -1,6 +1,6 @@
-## Organizing Instacli files in directories
+## Organizing SpecScript files in directories
 
-With one or more files in a directory, you can run the directory as a cli command. The Instacli scripts will be
+With one or more files in a directory, you can run the directory as a cli command. The SpecScript scripts will be
 subcommands.
 
 For this example we run from the **[samples](/samples)** directory. It contains a directory `basic` with the following
@@ -23,7 +23,7 @@ cli --help basic
 ```
 
 ```output
-Simple Instacli example scripts
+Simple SpecScript example scripts
 
 Available commands:
   create-greeting   Creates a greeting and puts it in the output
@@ -61,7 +61,7 @@ cli basic/greet.cli
 
 ### Interactive command chooser
 
-When invoking a directory without the `--help` parameter, Instacli lets you select the command with an interactive
+When invoking a directory without the `--help` parameter, SpecScript lets you select the command with an interactive
 prompt. This is a great way to explore the commands and subcommands!
 
 <!-- Insert gif here -->
@@ -71,7 +71,7 @@ cli basic
 ```
 
 ```
-Simple Instacli example scripts
+Simple SpecScript example scripts
 
 * Available commands: 
  > create-greeting          Creates a greeting and puts it in the output
@@ -81,12 +81,12 @@ Simple Instacli example scripts
    prompt-simple-question   Simple interactive prompt
 ```
 
-### Calling another Instacli script
+### Calling another script
 
-We showed above that you can call another Instacli script from within an Instacli script with the
+We showed above that you can call another SpecScript script from within a SpecScript script with the
 **[Run script](../commands/core/files/Run%20script.spec.md)** command.
 
-Another way is to use it as a regular command. Instacli reads all cli files in the same directory and makes them
+Another way is to use it as a regular command. SpecScript reads all cli files in the same directory and makes them
 available as commands in the current script. While doing so, it transforms file names in "kebab-style" to "Sentence
 style".
 
@@ -140,7 +140,7 @@ Available commands:
   create-greeting   Creates a greeting
 ```
 
-If there is no `.directory-info.yaml` file, or it doesn't have a description, Instacli will use the first sentence of the
+If there is no `.directory-info.yaml` file, or it doesn't have a description, SpecScript will use the first sentence of the
 README.md file in the directory.
 <!-- TODO: Add example and test cases -->
 
@@ -169,8 +169,8 @@ Script info:
 ### Importing files from another directory
 
 Out-of-the-box, you
-can [call a script from within the same directory](Organizing%20Instacli%20files%20in%20directories.spec.md#calling-another-instacli-script)
-as a regular Instacli command.
+can [call a script from within the same directory](Organizing%20SpecScript%20files%20in%20directories.spec.md#calling-another-script)
+as a regular SpecScript command.
 
 To call a script from another directory, you can import it in the `.directory-info.yaml` file. This will import it for all
 scripts in that directory.

@@ -1,6 +1,6 @@
 # Directory tests
 
-This contains Instacli behavior that is too boring for the main spec but should be tested.
+This contains SpecScript behavior that is too boring for the main spec but should be tested.
 
 ## Empty directory
 

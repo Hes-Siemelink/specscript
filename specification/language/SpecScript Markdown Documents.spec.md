@@ -1,6 +1,6 @@
-# Instacli Markdown Documents
+# SpecScript Markdown Documents
 
-If by now you are getting accustomed to the fact that Instacli is Yaml, get ready for the kicker: Instacli scripts can
+If by now you are getting accustomed to the fact that SpecScript is Yaml, get ready for the kicker: SpecScript scripts can
 also be written in Markdown!
 
 This way, we can freely mix code, data _and_ documentation in a single file. Another way to llok at it is that in the
@@ -13,12 +13,12 @@ the output and automatically test that they are correct.
 
 Another use case are script files, where the source reads like a README file explaining what is going on.
 
-Here is an example of a Markdown file `hello.cli.md` that contains Instacli code:
+Here is an example of a Markdown file `hello.cli.md` that contains SpecScript code:
 
 ~~~markdown
-### My Instacli script
+### My SpecScript script
 
-This is a simple Instacli script that prints a greeting.
+This is a simple SpecScript script that prints a greeting.
 
 ```yaml specscript
 Print: Hello world!
@@ -27,15 +27,15 @@ Print: Hello world!
 
 Your document will look like
 
-> ### My Instacli script
+> ### My SpecScript script
 >
->    This is a simple Instacli script that prints a greeting.
+>    This is a simple SpecScript script that prints a greeting.
 >
 >    ```yaml specscript
 >    Print: Hello world!
 >    ```
 
-And when you run it, Instacli will execute the code in the `yaml specscript` block and print the output:
+And when you run it, SpecScript will execute the code in the `yaml specscript` block and print the output:
 
 ```shell ignore
 cli hello
@@ -45,57 +45,57 @@ cli hello
 Hello world!
 ```
 
-## The Instacli specification is in Instacli!
+## The SpecScript specification is in SpecScript!
 
-The Instacli specification itself is written in Instacli Markdown. All the documents in these directories are run as
-unit tests in the Instacli build, validating the code examples and test cases. This way we can make sure that the
+The SpecScript specification itself is written in SpecScript Markdown. All the documents in these directories are run as
+unit tests in the SpecScript build, validating the code examples and test cases. This way we can make sure that the
 implementation of the specification is always up-to-date and correct!
 
 That means that all the examples in _this_ document are also tested automatically. But we also need to describe them. In
 order for that to work, you will see examples twice: first we will show how they are written in Markdown as a literal
 code block, and then how they will show up in the document.
 
-# Writing Instacli Markdown
+# Writing SpecScript Markdown
 
-To write Instacli Markdown, just write a Markdown document like you would do normally. Instacli will pick up certain
+To write SpecScript Markdown, just write a Markdown document like you would do normally. SpecScript will pick up certain
 code blocks to execute.
 
-Here is an overview of the constructs you can use to embed Instacli code in Markdown documents.
+Here is an overview of the constructs you can use to embed SpecScript code in Markdown documents.
 
-| Description                                           | Markdown directive    |
-|-------------------------------------------------------|-----------------------|
-| [Instacli code](#instacli-code)                       | ` ```yaml specscript`   | 
-| [Hidden code](#hidden-code)                           | ` <!-- yaml specscript` | 
-| [Predefined answers](#predefined-answers)             | ` <!-- answers`       | 
-| [Checking output](#checking-output)                   | ` ```output`          | 
-| [Helper files](#helper-files)                         | ` ```yaml file`       | 
-| [Shell commands](#shell-commands)                     | ` ```shell`           | 
-| [Invoking Instacli itself](#invoking-instacli-itself) | ` ```shell cli`       | 
+| Description                                               | Markdown directive    |
+|-----------------------------------------------------------|-----------------------|
+| [SpecScript code](#specscript-code)                       | ` ```yaml specscript`   | 
+| [Hidden code](#hidden-code)                               | ` <!-- yaml specscript` | 
+| [Predefined answers](#predefined-answers)                 | ` <!-- answers`       | 
+| [Checking output](#checking-output)                       | ` ```output`          | 
+| [Helper files](#helper-files)                             | ` ```yaml file`       | 
+| [Shell commands](#shell-commands)                         | ` ```shell`           | 
+| [Invoking SpecScript itself](#invoking-specscript-itself) | ` ```shell cli`       | 
 
-## Instacli code
+## SpecScript code
 
-Define Instacli code with the ` ```yaml specscript` markdown block directive.
+Define SpecScript code with the ` ```yaml specscript` markdown block directive.
 
 #### Markdown format
 
 ~~~markdown
-Here is an Instacli code example:
+Here is a SpecScript code example:
 
 ```yaml specscript
-Code example: An Instacli snippet inside Markdown
+Code example: a SpecScript snippet inside Markdown
 
-Print: Hello from Instacli!
+Print: Hello from SpecScript!
 ```
 ~~~
 
 #### Display example
 
-Here is an Instacli code example:
+Here is a SpecScript code example:
 
 ```yaml specscript
-Code example: An Instacli snippet inside Markdown
+Code example: a SpecScript snippet inside Markdown
 
-Print: Hello from Instacli!
+Print: Hello from SpecScript!
 ```
 
 ## Hidden code
@@ -250,7 +250,7 @@ Hello, Alice!
 
 ## Printing to the console
 
-When writing an Instacli script you can use the `>` quote character to print to the console, as a shortcut for using the
+When writing a SpecScript script you can use the `>` quote character to print to the console, as a shortcut for using the
 [**Print**](../commands/core/util/Print.spec.md) command.
 
 
@@ -395,7 +395,7 @@ Expected output:
 
 To execute a command in the shell, use the ` ```shell` directive.
 
-Instacli will execute this command using the [**Shell**](../commands/core/shell/Shell.spec.md) command.
+SpecScript will execute this command using the [**Shell**](../commands/core/shell/Shell.spec.md) command.
 
 The output of the shell command can be checked with the ` ```ouput` directive.
 
@@ -431,7 +431,7 @@ Hello
 
 #### Yaml equivalent
 
-The above example is equivalent to the following Instacli script in Yaml:
+The above example is equivalent to the following SpecScript script in Yaml:
 
 ```yaml specscript
 Code example: Shell command with output check in Instacli
@@ -448,7 +448,7 @@ Expected console output: Hello
 Set the current directory with the `cd` option. This is equivalent to using the
 [**Shell**](../commands/core/shell/Shell.spec.md) command with the `cd` option.
 
-The following example shows how to set the current directory to the temporary directory created by Instacli for the
+The following example shows how to set the current directory to the temporary directory created by SpecScript for the
 execution of the current script. This is where temporary files are stored that are created with ` ```yaml file` or
 `Temp file`.
 
@@ -530,12 +530,12 @@ ls /tmp
 When you want to use the shell directive for display purposes only, you can use the `ignore` option. This will prevent
 the command from being executed.
 
-This way, tools like GitHub will show it as a shell command, but it will not be executed by Instacli.
+This way, tools like GitHub will show it as a shell command, but it will not be executed by SpecScript.
 
 #### Markdown format
 
 ~~~markdown
-Instacli will not execute this command:
+SpecScript will not execute this command:
 
 ```shell ignore
 kill 1
@@ -544,21 +544,21 @@ kill 1
 
 #### Display example
 
-Instacli will not execute this command:
+SpecScript will not execute this command:
 
 ```shell ignore
 kill 1
 ```
 
-## Invoking Instacli itself
+## Invoking SpecScript itself
 
-You can also use the ` ```shell cli` directive to show how to invoke Instacli itself. This is equivalent to using the
+You can also use the ` ```shell cli` directive to show how to invoke SpecScript itself. This is equivalent to using the
 [**Cli**](../commands/core/shell/Cli.spec.md) command.
 
 This is useful for showing how to use the `cli` command and its command line options.
 
-Note: Within an Instacli script itself, there are better ways to invoke another script.
-See [Calling another script](Organizing%20Instacli%20files%20in%20directories.spec.md#calling-another-instacli-script).
+Note: Within a SpecScript script itself, there are better ways to invoke another script.
+See [Calling another script](Organizing%20SpecScript%20files%20in%20directories.spec.md#calling-another-script).
 
 #### Markdown format
 
@@ -581,7 +581,7 @@ Global options:
   --help, -h          Print help on a script or directory and does not run anything
   --output, -o        Print the output at the end of the script in Yaml format
   --output-json, -j   Print the output at the end of the script in Json format
-  --non-interactive, -q   Indicate that Instacli should not prompt for user input
+  --non-interactive, -q   Indicates that SpecScript should not prompt for user input
   --debug, -d         Run in debug mode. Prints stacktraces when an error occurs.
 ```
 ~~~
@@ -606,7 +606,7 @@ Global options:
   --help, -h          Print help on a script or directory and does not run anything
   --output, -o        Print the output at the end of the script in Yaml format
   --output-json, -j   Print the output at the end of the script in Json format
-  --non-interactive, -q   Indicate that Instacli should not prompt for user input
+  --non-interactive, -q   Indicates that SpecScript should not prompt for user input
   --debug, -d         Run in debug mode. Prints stacktraces when an error occurs.
 ```
 
@@ -615,7 +615,7 @@ Global options:
 Like ` ```shell`, you can set the current directory with the `cd` option. This is equivalent to using the
 [**Cli**](../commands/core/shell/Cli.spec.md) command with the `cd` option.
 
-The following example shows how to set the current directory to the temporary directory created by Instacli for the
+The following example shows how to set the current directory to the temporary directory created by SpecScript for the
 execution of the current script. This is where temporary files are stored that are created with ` ```yaml file`.
 
 #### Markdown format
@@ -664,7 +664,7 @@ Hello world!
 
 You can also use `ignore` on `shell cli`. This willl not trigger execution.
 
-In the following example, `cli unknown-command` would raise an error, but this command is never executed by Instacli so
+In the following example, `cli unknown-command` would raise an error, but this command is never executed by SpecScript so
 we can continue safely.
 
 <!-- yaml specscript
@@ -674,7 +674,7 @@ Code example: Ignore shell command
 #### Markdown format
 
 ~~~markdown
-Instacli will not execute this command:
+SpecScript will not execute this command:
 
   ```shell cli ignore
   cli unknown-command
@@ -688,7 +688,7 @@ So there should be no output:
 
 #### Display example
 
-Instacli will not execute this command:
+SpecScript will not execute this command:
 
 ```shell cli ignore
 cli unknown-command

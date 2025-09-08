@@ -1,6 +1,6 @@
-# Command: <any instacli file in the same directory>
+# Command: <any SpecScript file in the same directory>
 
-You can run any instacli file in the same directory as a regular command
+You can run any SpecScript file in the same directory as a regular command
 
 | Content type | Supported |
 |--------------|-----------|
@@ -16,10 +16,10 @@ Suppose you have a cli file `generate-greeting.cli`
 Output: Hello ${input.name}!
 ```
 
-Then you can call it from another Instacli file. Convert "skewer-case" to "Sentence case" and off you go.
+Then you can call it from another SpecScript file. Convert "skewer-case" to "Sentence case" and off you go.
 
 ```yaml specscript
-Code example: Call another instacli file as a command
+Code example: Call another SpecScript file as a command
 
 Generate greeting:
   name: Alice

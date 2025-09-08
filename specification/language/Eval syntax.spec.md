@@ -78,5 +78,5 @@ Expected output: 29
 
 ```
 
-In the end it's a matter of taste. **Instacli** scripts are meant to be simple and legible. Choose the style that best
+In the end it's a matter of taste. SpecScript scripts are meant to be simple and legible. Choose the style that best
 expresses how you would explain what is going on in words.

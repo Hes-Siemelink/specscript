@@ -2,7 +2,7 @@
 
 You can write a markdown file with shell commands inside ` ```shell` blocks.
 
-Instacli will execute these commands.
+SpecScript will execute these commands.
 
 For example:
 
