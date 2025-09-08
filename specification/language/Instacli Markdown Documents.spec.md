@@ -572,7 +572,7 @@ cli --help
 The output should be:
 
 ```output
-Instacli -- Instantly create CLI applications with light scripting!
+SpecScript -- Create instantly runnable specs using Yaml and Markdown!
 
 Usage:
    cli [global options] file | directory [command options]
@@ -597,7 +597,7 @@ cli --help
 The output should be:
 
 ```output
-Instacli -- Instantly create CLI applications with light scripting!
+SpecScript -- Create instantly runnable specs using Yaml and Markdown!
 
 Usage:
    cli [global options] file | directory [command options]

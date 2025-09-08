@@ -81,7 +81,7 @@ object StandardOutput : ConsoleOutput {
     }
 
     override fun printUsage(globalOptions: CommandLineParameters) {
-        println("Instacli -- Instantly create CLI applications with light scripting!")
+        println("SpecScript -- Create instantly runnable specs using Yaml and Markdown!")
         println()
         println("Usage:\n   cli [global options] file | directory [command options]")
         println("\nGlobal options:")

@@ -1,16 +1,8 @@
 # On my mind
 
-* Resolve difference between Input parameters and Prompt for default values. Use two terms:
-    - 'default' for Input parameters only -- no confirmation
-    - 'placeholder' for both that will display the value for confirmation. (Alternative names: 'suggestion', '
-      example', 'hint')
-    - When putting 'default' on Prompt it will act as a placeholder
+* Remove all references to Instacli from SpecScript
+* Make Instacli work and move interaction to Instacli project
 
-* Support 'default' parameter to support text parameters in commands that are instacli scripts
-* Support 'list execution' for commands that are instacli scripts
-* Multi-line shell support
-* Check command browser on Windows
-* Command browser should support ESC character to go a level up or exit
 
 ## MCP
 
@@ -49,23 +41,17 @@
 * Kotlin native? => Use Pure Kotlin libraries
 * Go?
 
-# Easyspec
+# SpecScript
 
-* Extract into a separate module:
-    * Markdown doc
-    * Cli tests
-    * Schema stuff
-    * Http server
-    * ...what's left not to extract?
-* Naming
+* Naming alternatives
     * Easyspec.ai
     * Easyspec
     * Quickspec
     * Spec.it
-* Add tests for samples
-    * Test script for a directory, using multiple commands
+* Add test support in cli command 
+    * `spec run` vs `spec test`
 
-# Instacli language
+# SpecScript language
 
 ## Core
 
@@ -88,21 +74,29 @@
 * Refactor types and directory info
 * Base on TypeScript types
 
-## Docs
+## User interaction
 
-* Document literate programming style with cli scripts in markdown
-* Run CLI command as 'semi-interactive': print mock output and exit.
+* Resolve difference between Input parameters and Prompt for default values. Use two terms:
+    - 'default' for Input parameters only -- no confirmation
+    - 'placeholder' for both that will display the value for confirmation. (Alternative names: 'suggestion', '
+      example', 'hint')
+    - When putting 'default' on Prompt it will act as a placeholder
+* Check command browser on Windows
+* Command browser should support ESC character to go a level up or exit
 
 ## Http
 
-* Configuring connections out of the box with packaged instacli scripts
+* Configuring connections out of the box with packaged scripts
 * Clean up Connect to: be smart about multiple connections and tokens. Currently `connect-to` script in Digital.ai only
   checks if something has been set as Http defaults
-* Built-in OAuth. It's kinda cool that you can do it in Instacli but not that you should... Makes the script 'turn into
+* Built-in OAuth. It's kinda cool that you can do it in SpecScript but not that you should... Makes the script 'turn into
   code'.
 
 ## Shell & Files
 
+* Support 'default' parameter to support text parameters in commands that are SpecScript scripts
+* Support 'list execution' for commands that are SpecScript scripts
+* Multi-line shell support
 * Support stdin:
   if (System.`in`.available() != 0) { val input = Yaml.mapper.readTree(System.`in`)}
 * Code organization
@@ -172,7 +166,7 @@ In create-release-connection.cli:
   explicitly. For example: content type, variable replacement yes/no, etc.
 * HouseApp
 * Run Release templates
-* Instacli as glue
+* SpecScript as bash replacement
     * Shell and pipe support
     * https://www.gnu.org/software/bash/manual/bash.html
     * Database support (SQLite or something)
@@ -187,7 +181,7 @@ In create-release-connection.cli:
     * "Http server" was "Http endpoint" was: "Http serve"
     * Cheesy test data
 * Liberation of Code: Say What, Not How
-    * Sample Server in Instacli vs. Javalin/Kotlin
+    * Sample Server in SpecScript vs. Javalin/Kotlin
 * Coding is the Unhappy Path
     * 80% of code is about exceptions to the rule
     * 80% of coding goes into the happy path
@@ -205,4 +199,4 @@ In create-release-connection.cli:
 * Code as-code
 * Towers of Hanoi
 * Made it a Lisp by adding 30 lines of code.
-* Define Instacli in Instacli itself
+* Define SpecScript in SpecScript itself
