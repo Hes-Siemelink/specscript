@@ -2,13 +2,13 @@
 
 This is the script to connect to Digital.ai Platform.
 
-```yaml instacli
+```yaml specscript
 Script info: Logs in to Digital.ai Platform
 ```
 
 First, we check if we are already logged in. If we are, we exit the script.
 
-```yaml instacli
+```yaml specscript
 If:
   not:
     empty:
@@ -19,14 +19,14 @@ If:
 
 Then we get the credentials for the Digital.ai Platform that were stored previously.
 
-```yaml instacli
+```yaml specscript
 Get credentials: Digital.ai Platform
 As: ${endpoint}
 ```
 
 If no connection credentials are set, we create a new account. This action will ask the user for credentials.
 
-```yaml instacli
+```yaml specscript
 If:
   empty: ${endpoint}
   then:
@@ -39,7 +39,7 @@ Print: Connecting as ${endpoint.username} to ${endpoint.id} on ${endpoint.url}
 Finally, we need to set the token for the connection. If the token is already set, we store it in the Http defaults for
 this session.
 
-```yaml instacli
+```yaml specscript
 If:
   not:
     empty: ${endpoint.token}
@@ -55,7 +55,7 @@ If we don't have a token, we need to get a Bearer token. We do this by sending a
 with the credentials we have. This is done in the Get token script that we call from here. Once we have the token, we
 can store it in the request defaults for this session.
 
-```yaml instacli
+```yaml specscript
 Get token: ${endpoint}
 
 Http request defaults:

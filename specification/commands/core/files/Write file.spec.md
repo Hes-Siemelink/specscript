@@ -14,7 +14,7 @@
 
 Use **Write file** to store content in a file
 
-```yaml instacli
+```yaml specscript
 Code example: Write content to a file
 
 Write file:
@@ -30,7 +30,7 @@ Expected output: Hello, World!
 
 You can store the contents of the `${output}` variable directly with the short form.
 
-```yaml instacli
+```yaml specscript
 Code example: Save output
 
 Output: Hello, World!

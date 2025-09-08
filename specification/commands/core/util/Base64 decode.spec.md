@@ -14,7 +14,7 @@ Use `Base64 decode` to decode stuff. See [Base64 encode](Base64%20encode.spec.md
 
 Use **Base64 decode** to decode a message
 
-```yaml instacli
+```yaml specscript
 Code example: Base 64 decode
 
 Base64 decode: SGVsbG8gd29ybGQh

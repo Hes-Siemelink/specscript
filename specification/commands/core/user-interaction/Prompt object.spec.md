@@ -19,7 +19,7 @@ First name: Juan
 Last name: Pérez
 -->
 
-```yaml instacli
+```yaml specscript
 Code example: Multiple questions
 
 Prompt object:
@@ -55,7 +55,7 @@ Email address: info@example.com
 Choose a color: Red
 -->
 
-```yaml instacli
+```yaml specscript
 Code example: Prompt object with properties
 
 Prompt object:
@@ -77,7 +77,7 @@ variable will not be set.
 
 In the following example, there will only a prompt for variable a, and not for variable b
 
-```yaml instacli
+```yaml specscript
 Code example: Prompt object, but not all
 
 Answers:
@@ -113,7 +113,7 @@ You can also make questions depend on previous questions. The answers to previou
 
 This example will prompt which variable to set, and depending on the result will ask the following question a or b.
 
-```yaml instacli
+```yaml specscript
 Code example: Prompt object, with conditions
 
 Answers:

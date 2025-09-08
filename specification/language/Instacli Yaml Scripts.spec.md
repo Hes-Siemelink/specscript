@@ -89,7 +89,7 @@ Print: Hello again!  # Invalid YAML!
 
 The solution is to add the Yaml document separator `---`:
 
-```yaml instacli
+```yaml specscript
 Print: Hello
 ---
 Print: Hello again!
@@ -101,7 +101,7 @@ There are some ways to avoid the `---` separator, though.
 
 With most commands you can simply supply the arguments as a list, and they will be executed in sequence:
 
-```yaml instacli
+```yaml specscript
 Print:
   - Hello
   - Hello again!
@@ -111,7 +111,7 @@ Print:
 
 Another approach is using the `Do` command, that takes a list of command
 
-```yaml instacli
+```yaml specscript
 Do:
   - Print: Hello
   - Print: Hello again!
@@ -210,7 +210,7 @@ c: three
 
 You also get it when calling a script from another script:
 
-```yaml instacli
+```yaml specscript
 Run script: hello.cli
 
 Expected output:

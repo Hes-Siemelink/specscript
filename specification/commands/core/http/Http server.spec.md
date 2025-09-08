@@ -17,7 +17,7 @@ Set up an HTTP server by defining the port and endpoints.
 
 The following example defines an HTTP `GET` request on path `/hello` to return the text "Hello World!".
 
-```yaml instacli
+```yaml specscript
 Code example: Http server setup
 
 Http server:
@@ -59,7 +59,7 @@ In this example we have a static Hello World greeting being returned by `output:
 
 When defining the endpoints, the server is started right away, and we can test it with a simple GET request:
 
-```yaml instacli
+```yaml specscript
 GET: http://localhost:25001/hello
 ```
 
@@ -67,7 +67,7 @@ GET: http://localhost:25001/hello
 
 Stop and remove the server for a specific port with the `stop` command:
 
-```yaml instacli
+```yaml specscript
 Code example: Stop server
 
 Http server:
@@ -97,7 +97,7 @@ The following variables can be used in `output`, `script` and `file`
 
 Variables are resolved in the `output` handler, making it easy to echo certain parts of the request without processing
 
-```yaml instacli
+```yaml specscript
 Code example: Variables in output
 
 Http server:
@@ -111,7 +111,7 @@ Http server:
         output: Hello ${input.name}
 ```
 
-<!-- yaml instacli
+<!-- yaml specscript
 
 --- 
 Http server:
@@ -123,7 +123,7 @@ Http server:
 
 Define an Instacli script in the handler using the `script` type:
 
-```yaml instacli
+```yaml specscript
 Code example: Instacli script handler
 
 Http server:
@@ -151,7 +151,7 @@ Expected output:
   - Hello Carol!
 ```
 
-<!-- yaml instacli
+<!-- yaml specscript
 
 ---
 Http server:
@@ -177,7 +177,7 @@ Output: Hello ${input.name}!
 You can call this directly from the http endpoint definition. Note that body or query parameters are automatically
 passed as input to the script.
 
-```yaml instacli
+```yaml specscript
 Code example: File handler
 
 Http server:
@@ -192,7 +192,7 @@ GET: http://localhost:25001/greet?name=Alice
 Expected output: Hello Alice!
 ```
 
-<!-- yaml instacli
+<!-- yaml specscript
 
 ---
 Http server:

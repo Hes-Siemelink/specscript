@@ -20,7 +20,7 @@ Here is an example of a Markdown file `hello.cli.md` that contains Instacli code
 
 This is a simple Instacli script that prints a greeting.
 
-```yaml instacli
+```yaml specscript
 Print: Hello world!
 ```
 ~~~
@@ -31,11 +31,11 @@ Your document will look like
 >
 >    This is a simple Instacli script that prints a greeting.
 >
->    ```yaml instacli
+>    ```yaml specscript
 >    Print: Hello world!
 >    ```
 
-And when you run it, Instacli will execute the code in the `yaml instacli` block and print the output:
+And when you run it, Instacli will execute the code in the `yaml specscript` block and print the output:
 
 ```shell ignore
 cli hello
@@ -64,8 +64,8 @@ Here is an overview of the constructs you can use to embed Instacli code in Mark
 
 | Description                                           | Markdown directive    |
 |-------------------------------------------------------|-----------------------|
-| [Instacli code](#instacli-code)                       | ` ```yaml instacli`   | 
-| [Hidden code](#hidden-code)                           | ` <!-- yaml instacli` | 
+| [Instacli code](#instacli-code)                       | ` ```yaml specscript`   | 
+| [Hidden code](#hidden-code)                           | ` <!-- yaml specscript` | 
 | [Predefined answers](#predefined-answers)             | ` <!-- answers`       | 
 | [Checking output](#checking-output)                   | ` ```output`          | 
 | [Helper files](#helper-files)                         | ` ```yaml file`       | 
@@ -74,14 +74,14 @@ Here is an overview of the constructs you can use to embed Instacli code in Mark
 
 ## Instacli code
 
-Define Instacli code with the ` ```yaml instacli` markdown block directive.
+Define Instacli code with the ` ```yaml specscript` markdown block directive.
 
 #### Markdown format
 
 ~~~markdown
 Here is an Instacli code example:
 
-```yaml instacli
+```yaml specscript
 Code example: An Instacli snippet inside Markdown
 
 Print: Hello from Instacli!
@@ -92,7 +92,7 @@ Print: Hello from Instacli!
 
 Here is an Instacli code example:
 
-```yaml instacli
+```yaml specscript
 Code example: An Instacli snippet inside Markdown
 
 Print: Hello from Instacli!
@@ -105,7 +105,7 @@ Sometimes a code example gets cluttered with setup code.
 Consider this interactive example. In order for the automated tests to run, we need to provide an answer, so the test
 will not hang on input:
 
-```yaml instacli
+```yaml specscript
 Code example: Example with setup code
 
 Answers:
@@ -121,19 +121,19 @@ When reading the example, a reader may be distracted by the **Answers** bit. Tha
 about. It would be great if we could hide it somehow.
 
 The way to do this is to put the code that we don't want to show in an HTML comment starting with
-`<!-- yaml instacli`.
+`<!-- yaml specscript`.
 
 #### Markdown format
 
 ~~~markdown
 A cleaner looking example:
 
-<!-- yaml instacli
+<!-- yaml specscript
 Answers:
   What is your name?: Alice
 -->
 
-```yaml instacli
+```yaml specscript
 Code example: Example without setup code
 
 Prompt: What is your name?
@@ -147,12 +147,12 @@ Print: Hello, ${name}!
 
 A cleaner looking example:
 
-<!-- yaml instacli
+<!-- yaml specscript
 Answers:
     What is your name?: Alice
 -->
 
-```yaml instacli
+```yaml specscript
 Code example: Example without setup code
 
 Prompt: What is your name?
@@ -163,7 +163,7 @@ Print: Hello, ${name}!
 
 ### Cleanup code
 
-You can also use `<!-- yaml instacli` to provide hidden cleanup code by putting a code block after the code example that
+You can also use `<!-- yaml specscript` to provide hidden cleanup code by putting a code block after the code example that
 is displayed. The yaml code from the comment will be appended to script.
 
 ## Predefined answers
@@ -179,7 +179,7 @@ concise way of doing this is to use the `<!-- answers` HTML comment.
 What is your name?: Alice
 -->
 
-```yaml instacli
+```yaml specscript
 Code example: Example with answers block
 
 Prompt: What is your name?
@@ -195,7 +195,7 @@ Print: Hello, ${name}!
 What is your name?: Alice
 -->
 
-```yaml instacli
+```yaml specscript
 Code example: Example with answers block
 
 Prompt: What is your name?
@@ -219,7 +219,7 @@ no Markdown shortcut for **Expected output**.
 ~~~markdown
 The following snippet
 
-```yaml instacli
+```yaml specscript
 Code example: Example with output check
 
 Print: Hello, Alice!
@@ -236,7 +236,7 @@ Hello, Alice!
 
 The following snippet
 
-```yaml instacli
+```yaml specscript
 Code example: Example with output check
 
 Print: Hello, Alice!
@@ -254,7 +254,7 @@ When writing an Instacli script you can use the `>` quote character to print to 
 [**Print**](../commands/core/util/Print.spec.md) command.
 
 
-<!-- yaml instacli
+<!-- yaml specscript
 Code example: "Print with > character"
 -->
 
@@ -304,7 +304,7 @@ key: value
 
 And then read it with **Read file**:
 
-```yaml instacli
+```yaml specscript
 Code example: Read from a file
 
 Read file: ${SCRIPT_TEMP_DIR}/data.yaml
@@ -324,7 +324,7 @@ key: value
 
 And then read it with **Read file**:
 
-```yaml instacli
+```yaml specscript
 Code example: Read from a file
 
 Read file: ${SCRIPT_TEMP_DIR}/data.yaml
@@ -348,7 +348,7 @@ This is equivalent to using the
 ~~~markdown
 Suppose you have defined a variable inside a Yaml script:
 
-```yaml instacli
+```yaml specscript
 ${value}: large
 ```
 
@@ -360,7 +360,7 @@ size: ${value}
 
 When we read it, we will see that the value was resolved:
 
-```yaml instacli
+```yaml specscript
 Read file: ${SCRIPT_TEMP_DIR}/config.yaml
 
 Expected output:
@@ -372,7 +372,7 @@ Expected output:
 
 Suppose you have defined a variable inside a Yaml script:
 
-```yaml instacli
+```yaml specscript
 ${value}: large
 ```
 
@@ -384,7 +384,7 @@ size: ${value}
 
 When we read it, we will see that the value was resolved:
 
-```yaml instacli
+```yaml specscript
 Read file: ${SCRIPT_TEMP_DIR}/config.yaml
 
 Expected output:
@@ -433,7 +433,7 @@ Hello
 
 The above example is equivalent to the following Instacli script in Yaml:
 
-```yaml instacli
+```yaml specscript
 Code example: Shell command with output check in Instacli
 
 Shell:
@@ -667,7 +667,7 @@ You can also use `ignore` on `shell cli`. This willl not trigger execution.
 In the following example, `cli unknown-command` would raise an error, but this command is never executed by Instacli so
 we can continue safely.
 
-<!-- yaml instacli
+<!-- yaml specscript
 Code example: Ignore shell command
 -->
 

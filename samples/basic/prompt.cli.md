@@ -6,7 +6,7 @@ Simple interactive prompt
 
 We use the `Prompt` command to display an interactive prompt to the user.
 
-```yaml instacli
+```yaml specscript
 Prompt: What is your name?
 ```
 
@@ -14,6 +14,6 @@ The user's input is stored in the `${output}` variable. We can use this variable
 
 Let's print a personalized greeting:
 
-```yaml instacli
+```yaml specscript
 Print: Hello ${output}!
 ```

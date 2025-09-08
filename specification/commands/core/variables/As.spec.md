@@ -14,7 +14,7 @@
 
 **As** puts the `${output}` into a new variable
 
-```yaml instacli
+```yaml specscript
 Code example: Assign a variable with As
 
 Output: Hello World!

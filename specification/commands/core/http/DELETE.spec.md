@@ -14,7 +14,7 @@
 
 Just specify the endpoint to send the **DELETE** request to.
 
-```yaml instacli
+```yaml specscript
 Code example: Simple DELETE
 
 DELETE: http://localhost:2525/items
@@ -22,7 +22,7 @@ DELETE: http://localhost:2525/items
 
 or use the longer form if you need to specify more details
 
-```yaml instacli
+```yaml specscript
 Code example: DELETE with more properties
 
 DELETE:
@@ -36,7 +36,7 @@ DELETE:
 As with all Http commands, you can use [Http request defaults](Http%20request%20defaults.spec.md) to set the defaults
 for common fields.
 
-```yaml instacli
+```yaml specscript
 Code example: Http request defaults and DELETE
 
 Http request defaults:

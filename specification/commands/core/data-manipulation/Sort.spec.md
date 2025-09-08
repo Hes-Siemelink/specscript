@@ -15,7 +15,7 @@
 **Sort** expectes the list of things to sort in the `items` field. This should be a list of objects. The `by` parameter
 specifies the field to sort on.
 
-```yaml instacli
+```yaml specscript
 Code example: Sort a list of things
 
 Sort:
@@ -41,7 +41,7 @@ Expected output:
 
 If the ouput variable is set, you can leave out the `items` field.
 
-```yaml instacli
+```yaml specscript
 Code example: Sort output
 
 Output:

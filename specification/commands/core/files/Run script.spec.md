@@ -23,7 +23,7 @@ Then you can call it from another Instacli file using **Run script**.
 
 Pass the name of the script in the current working directory as a single text parameter.
 
-```yaml instacli
+```yaml specscript
 Code example: Call another instacli
 
 Run script: do-something.cli
@@ -42,7 +42,7 @@ Output: Hello ${input.name}!
 To call it with **Run script**, you can pass the input parameters in the `input` property. The script name is passed in
 the `resource` property.
 
-```yaml instacli
+```yaml specscript
 Code example: Call another instacli file
 
 Run script:
@@ -61,7 +61,7 @@ as the current script.
 
 Use the `file` property to look for a script in the directory that you are calling Instacli from.
 
-```yaml instacli
+```yaml specscript
 Code example: Call another instacli file from working dir
 
 Run script:

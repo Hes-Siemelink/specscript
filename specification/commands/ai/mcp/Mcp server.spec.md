@@ -14,7 +14,7 @@
 
 Use **Mcp server** to start a server with tools, resources and prompts.
 
-```yaml instacli
+```yaml specscript
 Code example: Simple MCP server
 
 Mcp server:
@@ -35,7 +35,7 @@ Mcp server:
 
 Stop and remove the server with the `stop` command:
 
-```yaml instacli
+```yaml specscript
 Code example: Stop server
 
 Mcp server:

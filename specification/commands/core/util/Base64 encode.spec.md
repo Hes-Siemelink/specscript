@@ -14,7 +14,7 @@ Use `Base64 encode` to encode stuff. See [Base64 decode](Base64%20decode.spec.md
 
 Use **Base64 encode** to encode a message
 
-```yaml instacli
+```yaml specscript
 Code example: Base64 encode
 
 Base64 encode: Hello world!

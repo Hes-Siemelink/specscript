@@ -14,7 +14,7 @@
 
 With **Test case** you give a name to a test. The test runner sees the **Test case** command as the beginning of a test.
 
-```yaml instacli
+```yaml specscript
 Code example: A simple test case
 
 Test case: A simple test case
@@ -29,7 +29,7 @@ Assert that:
 If there are multiple test cases in a file, it will take all the commands from one Test case command to another as one
 test.
 
-```yaml instacli
+```yaml specscript
 Code example: Multiple tests
 
 ---

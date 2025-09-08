@@ -14,7 +14,7 @@
 
 Specify `url` and `body` to send a **PATCH** request.
 
-```yaml instacli
+```yaml specscript
 Code example: Simple PATCH
 
 PATCH:
@@ -28,7 +28,7 @@ PATCH:
 As with all Http commands, you can use [Http request defaults](Http%20request%20defaults.spec.md) to set the defaults
 for common fields.
 
-```yaml instacli
+```yaml specscript
 Code example: Http request defaults and PATCH
 
 Http request defaults:

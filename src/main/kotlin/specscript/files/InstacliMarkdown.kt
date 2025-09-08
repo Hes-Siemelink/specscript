@@ -140,8 +140,8 @@ class MarkdownBlock(
 
     object Text : BlockType("", "```")
     object Header : BlockType("#", "")
-    object HiddenYamlInstacli : BlockType("<!-- yaml instacli", "-->")
-    object YamlInstacli : BlockType("```yaml instacli", "```")
+    object HiddenYamlInstacli : BlockType("<!-- yaml specscript", "-->")
+    object YamlInstacli : BlockType("```yaml specscript", "```")
     object YamlFile : BlockType("```yaml file", "```")
     object ShellCli : BlockType("```shell cli", "```")
     object ShellBlock : BlockType("```shell", "```")

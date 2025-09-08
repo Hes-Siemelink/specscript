@@ -14,7 +14,7 @@ Use **Shell** to execute a shell command
 
 Call a shell command with **Shell**
 
-```yaml instacli
+```yaml specscript
 Code example: Execute a shell command
 
 Shell: echo Hello
@@ -27,7 +27,7 @@ Expected output: Hello
 You can also pass the shell command in the `command` field. It is equivalent to the basic usage where you pass the
 command as a string.
 
-```yaml instacli
+```yaml specscript
 Code example: Shell command with command parameter
 
 Shell:
@@ -42,7 +42,7 @@ This option is needed if you want to pass multiple parameters, like `show output
 
 You can set the working directory with the `cd` property.
 
-```yaml instacli
+```yaml specscript
 Code example: Shell command with dir
 
 Shell:
@@ -53,7 +53,7 @@ Shell:
 One example is to use the `SCRIPT_TEMP_DIR` variable to set the working directory to the temporary directory of the
 script. this is where temp files are stored.
 
-```yaml instacli
+```yaml specscript
 Code example: Shell command with SCRIPT_TEMP_DIR
 
 Temp file:
@@ -89,7 +89,7 @@ HelloHello
 
 By the default, the console output is hidden. Show it with the `show output` parameter:
 
-```yaml instacli
+```yaml specscript
 Code example: Show the output of a shell command on the console
 
 Shell:
@@ -104,7 +104,7 @@ Expected console output: Hello World
 It may be useful to show the command that is executed. For example, when using variables, you want to see what command
 is actually executed. You can do this with the `show command` parameter.
 
-```yaml instacli
+```yaml specscript
 Code example: Echo the command itself
 
 ${name}: Alice
@@ -123,7 +123,7 @@ setting `capture` to false, the output is not stored in the output variable, and
 
 This is useful if the output of a shell command will be big and irrelevant to the script.
 
-```yaml instacli
+```yaml specscript
 Code example: Don't store the output of a shell command
 
 Output: original output
@@ -139,7 +139,7 @@ Expected output: original output
 
 All variables from your script are available in the shell command.
 
-```yaml instacli
+```yaml specscript
 Code example: Exposed variables
 
 ${name}: Alice
@@ -154,7 +154,7 @@ Expected output: Hello Alice
 
 You can set environment variables for the shell explicitly using the `env` parameter.
 
-```yaml instacli
+```yaml specscript
 Code example: Environment variables
 
 Shell:
@@ -178,7 +178,7 @@ echo "Hello World"
 
 Then you can call it from an Instacli file by using the `resource` parameter on **Shell**:
 
-```yaml instacli
+```yaml specscript
 Code example: Call a local shell script
 
 Shell:
@@ -191,7 +191,7 @@ Expected output: Hello World
 
 You can achieve the same by using the `SCRIPT_DIR` variable.
 
-```yaml instacli
+```yaml specscript
 Code example: Use SCRIPT_DIR
 
 Shell: sh $SCRIPT_DIR/hello.sh
@@ -203,7 +203,7 @@ Expected output: Hello World
 
 Errors in the shell command can be caught by the On error command.
 
-```yaml instacli
+```yaml specscript
 Code example: Handle shell errors
 
 Shell: exit 1

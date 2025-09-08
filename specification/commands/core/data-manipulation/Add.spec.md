@@ -14,7 +14,7 @@
 
 Add some numbers
 
-```yaml instacli
+```yaml specscript
 Code example: 1 + 1 = 2
 
 Add:
@@ -28,7 +28,7 @@ Expected output: 2
 
 Use **Add** to combine two things
 
-```yaml instacli
+```yaml specscript
 Code example: Add a field
 
 Add:
@@ -46,7 +46,7 @@ Expected output:
 
 You can add an item to a list
 
-```yaml instacli
+```yaml specscript
 Code example: Add an item to a list
 
 ${list}:
@@ -65,7 +65,7 @@ Expected output:
 
 Or combine two lists.
 
-```yaml instacli
+```yaml specscript
 Code example: Append a list to another
 
 Add:
@@ -85,7 +85,7 @@ Expected output:
 
 You can also extend a text string.
 
-```yaml instacli
+```yaml specscript
 Code example: Append text
 
 Add:

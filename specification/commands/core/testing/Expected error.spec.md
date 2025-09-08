@@ -15,7 +15,7 @@
 **Expected error** is a shortcut for checking if an error was raised. If there is an error, it will just pass. If there
 is no error condition going on, then a new error is raised.
 
-```yaml instacli
+```yaml specscript
 Code example: Check for an expected error
 
 Error: PANIC
@@ -30,7 +30,7 @@ a flag when there was _no_ error.
 
 You can also check for a specific error type
 
-```yaml instacli
+```yaml specscript
 Code example: Check for a specific error
 
 Error:
@@ -43,7 +43,7 @@ Expected error:
 
 Like [On error type](../errors/On%20error%20type.spec.md), the `any` error type is a catch-all.
 
-```yaml instacli
+```yaml specscript
 Code example: Check for an expected error
 
 Error: PANIC

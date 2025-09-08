@@ -24,13 +24,13 @@ Instacli Sample Server:
       password: admin
 ```
 
-<!-- yaml instacli
+<!-- yaml specscript
 Credentials: ${SCRIPT_TEMP_DIR}/credentials.yaml
 -->
 
 You can retrieve the default credentials with the following snippet:
 
-```yaml instacli
+```yaml specscript
 Code example: Get default credentials for an endpoint
 
 Get credentials: Instacli Sample Server

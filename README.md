@@ -163,13 +163,13 @@ Tired of remembering the exact curl syntax or forgetting which tab had that requ
 
 Simply write your **[GET](specification/commands/core/http/GET.spec.md)** request as-code with SpecScript:
 
-```yaml instacli
+```yaml specscript
 GET: http://localhost:2525/greetings
 ```
 
 Here's a **[POST](specification/commands/core/http/POST.spec.md)**:
 
-```yaml instacli
+```yaml specscript
 POST:
   url: http://localhost:2525
   path: /greeting
@@ -336,7 +336,7 @@ You selected: English
 Define [variables](specification/language/Variables.spec.md) in `${...}` syntax and pick and choose content using the
 path notation.
 
-```yaml instacli
+```yaml specscript
 Code example: Define a variable
 
 ${var}:
@@ -363,7 +363,7 @@ This makes it easy to pick up in a subsequent command
 
 For example
 
-```yaml instacli
+```yaml specscript
 Code example: Using the output variable
 
 GET: http://localhost:2525/hello
@@ -381,7 +381,7 @@ Some commands work directly with the output variable. This helps in having a mor
 example, you don;t need to pass the `${output}` variable to the **[Expected output
 ](specification/commands/core/testing/Expected%20output.spec.md)** command.
 
-```yaml instacli
+```yaml specscript
 Code example: Implicit output variable
 
 GET: http://localhost:2525/hello
@@ -392,7 +392,7 @@ Expected output: Hello from Instacli!
 If you are going to use the output variable later on, best practice is to assign it to a named variable using **[As
 ](specification/commands/core/variables/As.spec.md)**.
 
-```yaml instacli
+```yaml specscript
 Code example: Assign output to a named variable
 
 GET: http://localhost:2525/hello
@@ -408,7 +408,7 @@ For quick API prototyping, SpecScript will run
 an [HTTP server](specification/commands/core/http/Http%20server.spec.md) for you. Define some endpoints and back
 them by SpecScript Yaml scripts:
 
-```yaml instacli
+```yaml specscript
 Code example: Running an HTTP server
 
 Http server:
@@ -429,7 +429,7 @@ SpecScript supports various programming logic constructs, like 'if', 'repeat', '
 
 This is what an **[If](specification/commands/core/control-flow/If.spec.md)** statement looks like:
 
-```yaml instacli
+```yaml specscript
 Code example: If statement
 
 If:
@@ -444,7 +444,7 @@ If:
 With **[For each](specification/commands/core/control-flow/For%20each.spec.md)** you can loop over collections and
 do stuff.
 
-```yaml instacli
+```yaml specscript
 Code example: For each statement
 
 For each:
@@ -467,7 +467,7 @@ You can use **For each**
 to [transform a list](specification/commands/core/control-flow/For%20each.spec.md#transform-a-list) into something
 else, like the `map()` function in some programming languages.
 
-```yaml instacli
+```yaml specscript
 Code example: For each to transform a list
 
 For each:
@@ -487,7 +487,7 @@ Expected output:
 
 Writing tests in SpecScript is straightforward:
 
-```yaml instacli
+```yaml specscript
 Test case: A simple test case
 
 Assert that:
@@ -511,7 +511,7 @@ Here's an example of SpecScript documentation:
     
     The following code prints a message:
     
-    ```yaml instacli
+    ```yaml specscript
     Print: Hello from Instacli!
     ```
 

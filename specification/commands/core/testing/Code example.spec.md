@@ -19,7 +19,7 @@ This is what it looks like when writing Markdown:
 
 > This is a Markdown document describing how to run a simple Instacli command
 >
-> \```yaml instacli
+> \```yaml specscript
 > Code example: Hello world
 >
 > Print: Hello world!  
@@ -27,7 +27,7 @@ This is what it looks like when writing Markdown:
 
 And it will render like this in the documentation:
 
-```yaml instacli
+```yaml specscript
 Code example: Hello world
 
 Print: Hello world!

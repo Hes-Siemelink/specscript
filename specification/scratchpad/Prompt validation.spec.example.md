@@ -20,7 +20,7 @@ With **Prompt**, you can ask the user a question.
 What is your name?: Hes
 -->
 
-```yaml instacli
+```yaml specscript
 Code example: Define input
 
 Repeat:

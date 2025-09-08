@@ -14,7 +14,7 @@ Validates data with JSON schema
 
 Use **Validate schema** to check if data is valid according to a JSON Schema
 
-```yaml instacli
+```yaml specscript
 Code example: Validate with inline JSON schema
 
 Validate schema:
@@ -42,7 +42,7 @@ Suppose you have the data in a file called `myschema.json`
 }
 ```
 
-```yaml instacli
+```yaml specscript
 Code example: Validate with JSON schema from file
 
 Validate schema:
@@ -56,7 +56,7 @@ Note: the file is resolved relative to the script itself, not to the working dir
 
 If the data in `data` is invalid, you will get an error
 
-```yaml instacli
+```yaml specscript
 Code example: Invalid data with JSON schema
 
 Validate schema:

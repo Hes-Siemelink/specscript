@@ -27,14 +27,14 @@ Instacli Sample Server:
       password: user
 ```
 
-<!-- yaml instacli
+<!-- yaml specscript
 Credentials: ${SCRIPT_TEMP_DIR}/credentials.yaml
 -->
 
 
 You can delete Test account 2 with the following snippet:
 
-```yaml instacli
+```yaml specscript
 Code example: Delete credentials for an endpoint
 
 Delete credentials:

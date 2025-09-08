@@ -23,7 +23,7 @@ language: en
 
 Then you can read it like this:
 
-```yaml instacli
+```yaml specscript
 Code example: Read Yaml from a file
 
 Read file: specification/commands/core/files/greeting.yaml
@@ -37,7 +37,7 @@ Expected output:
 
 If you want to load a file that is next to your Instacli script, use the `resource` parameter:
 
-```yaml instacli
+```yaml specscript
 Code example: Read a local file
 
 Read file:

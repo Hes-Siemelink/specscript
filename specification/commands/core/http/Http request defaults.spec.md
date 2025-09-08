@@ -15,7 +15,7 @@ like [GET](GET.spec.md), [POST](POST.spec.md), etc.
 
 Set the HTTP server and credentials, then issue a normal **GET**
 
-```yaml instacli
+```yaml specscript
 Code example: Http request defaults usage
 
 Http request defaults:
@@ -39,7 +39,7 @@ All parameters for **Http request defaults** are available for all other Http co
 
 The target host server.
 
-```yaml instacli
+```yaml specscript
 Code example: Default url
 
 Http request defaults:
@@ -52,7 +52,7 @@ GET: /items
 
 The endpoint path.
 
-```yaml instacli
+```yaml specscript
 Code example: Default url and path
 
 Http request defaults:
@@ -70,7 +70,7 @@ POST:
 
 The (JSON) body
 
-```yaml instacli
+```yaml specscript
 Code example: Default body
 
 Http request defaults:
@@ -89,7 +89,7 @@ POST:
 When using the **username** and **password** properties, Basic Authentication will be used to authenticate against the
 endpoint
 
-```yaml instacli
+```yaml specscript
 Code example: Basic authentication
 
 Http request defaults:
@@ -104,7 +104,7 @@ GET: /items
 
 Set headers with the **headers** property
 
-```yaml instacli
+```yaml specscript
 Code example: Custom headers
 
 Http request defaults:
@@ -120,7 +120,7 @@ GET: /items
 
 You can save the result to a file with **save as**.
 
-```yaml instacli
+```yaml specscript
 Code example: Save file
 
 Http request defaults:

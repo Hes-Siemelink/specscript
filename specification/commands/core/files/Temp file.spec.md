@@ -16,7 +16,7 @@ Use **Temp file** to create a temporary file.
 
 The command returns the file name of the created file.
 
-```yaml instacli
+```yaml specscript
 Code example: Temporary file
 
 Temp file: |
@@ -35,7 +35,7 @@ The file will be deleted when the script ends.
 
 You can also specify a name for the temporary file. The file will be created in the `SCRIPT_TEMP_DIR` directory.
 
-```yaml instacli
+```yaml specscript
 Code example: Temporary file with specified name
 
 Temp file:
@@ -53,7 +53,7 @@ Expected output: |
 
 You can use variables in the content of the temporary file. The variables will be resolved when the file is created.
 
-```yaml instacli
+```yaml specscript
 Code example: Temporary file with variables
 
 ${name}: Carol
@@ -71,7 +71,7 @@ Expected output: |
 In some cases, you don't want to resolve the variables in the content of the temporary file. You can use the `resolve`
 property to control this.
 
-```yaml instacli
+```yaml specscript
 Code example: Temporary file with variables not resolved
 
 Temp file:

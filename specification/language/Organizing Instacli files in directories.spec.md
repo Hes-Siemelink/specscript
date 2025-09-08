@@ -103,7 +103,7 @@ Output: Hello ${name}!
 
 We can now call it as `Create greeting` from a script in the same directory:
 
-```yaml instacli
+```yaml specscript
 Code example: Calling another cli file
 
 Create greeting:
@@ -161,7 +161,7 @@ It will not show up as a subcommand when invoking `cli --help`.
 
 You can indicate the version of the Instacli spec that the script is using.
 
-```yaml instacli
+```yaml specscript
 Script info:
   instacli-spec: v0.1
 ```

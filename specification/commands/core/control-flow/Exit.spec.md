@@ -15,7 +15,7 @@
 **Exit** is used to stop processing the current script. It will return the exit value to the calling script or to the
 shell.
 
-```yaml instacli
+```yaml specscript
 Code example: Exit from script
 
 Exit: 0

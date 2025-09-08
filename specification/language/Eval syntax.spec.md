@@ -9,7 +9,7 @@ Inside a data block, you can use any command prefixed with `:` to have it evalua
 
 For example:
 
-```yaml instacli
+```yaml specscript
 Code example: Simple Eval
 
 Add:
@@ -23,7 +23,7 @@ Expected output: 6
 
 This is equivalent to:
 
-```yaml instacli
+```yaml specscript
 Code example: No Eval
 
 Add:
@@ -44,7 +44,7 @@ that **For each**
 returns [a list of outputs for each item](../commands/core/control-flow/For%20each.spec.md#transform-a-list). We can
 then use that list in **Add**.
 
-```yaml instacli
+```yaml specscript
 Code example: Eval with for each
 
 ${cast}:
@@ -66,7 +66,7 @@ Expected output: 29
 
 Note that you can 'unfold' this example to make it more linear and less nested:
 
-```yaml instacli
+```yaml specscript
 Code example: Alternative to nesting
 
 For each:

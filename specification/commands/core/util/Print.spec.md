@@ -14,7 +14,7 @@
 
 Use **Print** to print a message to the console
 
-```yaml instacli
+```yaml specscript
 Code example: Print a message
 
 Print: Hello, World!
@@ -30,7 +30,7 @@ Hello, World!
 
 Object content is printed as Yaml
 
-```yaml instacli
+```yaml specscript
 Code example: Print Yaml
 
 Print:

@@ -21,7 +21,7 @@ and [Repeat](../control-flow/Repeat.spec.md)
 
 Compare two objects, one is in field `item`; the other in `equals`.
 
-```yaml instacli
+```yaml specscript
 Code example: Comparing values
 
 Assert that:
@@ -31,7 +31,7 @@ Assert that:
 
 This is also works for lists
 
-```yaml instacli
+```yaml specscript
 Code example: Comparing lists
 
 Assert that:
@@ -45,7 +45,7 @@ Assert that:
 
 and objects
 
-```yaml instacli
+```yaml specscript
 Code example: Comparing objects
 
 Assert that:
@@ -61,7 +61,7 @@ Assert that:
 
 You can also test if something is inside something else with the `'item'` and `in`.
 
-```yaml instacli
+```yaml specscript
 Code example: Check if an object is in a list
 
 Assert that:
@@ -74,7 +74,7 @@ Assert that:
 
 You can also test for parts of an object.
 
-```yaml instacli
+```yaml specscript
 Code example: Check if an object contains some properties
 
 Assert that:
@@ -91,7 +91,7 @@ Assert that:
 
 Check if an array or value is empty
 
-```yaml instacli
+```yaml specscript
 Code example: Empty list and string
 
 Assert that:
@@ -102,7 +102,7 @@ Assert that:
 It's a shorthand for checking equality. This makes more sense in an `If` statement when you are checking the value that
 is coming from somewhere else.
 
-```yaml instacli
+```yaml specscript
 Code example: If with empty
 
 ${values}: [ ]
@@ -119,7 +119,7 @@ The conditions **all**, **any** and **not** take other conditions as a subcondit
 
 The **all** condition is a logical AND.
 
-```yaml instacli
+```yaml specscript
 Code example: All conditions
 
 Assert that:
@@ -132,7 +132,7 @@ Assert that:
 
 The **any** condition is a logical OR.
 
-```yaml instacli
+```yaml specscript
 Code example: Any condition
 
 Assert that:
@@ -145,7 +145,7 @@ Assert that:
 
 The **not** condition is the negation
 
-```yaml instacli
+```yaml specscript
 Code example: Not condition
 
 Assert that:

@@ -14,7 +14,7 @@ You can also add useful hints about for user interaction. This way Instacli know
 
 To show types in action, we can validate given data against a type definition.
 
-```yaml instacli
+```yaml specscript
 Code example: Validate data with inline type
 
 Validate type:
@@ -25,7 +25,7 @@ Validate type:
 
 If the validation is false, you will get an error,
 
-```yaml instacli
+```yaml specscript
 Code example: Invalid type
 
 Validate type:

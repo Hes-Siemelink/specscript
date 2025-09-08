@@ -14,7 +14,7 @@ With `Add to`, you can add stuff to variables in a concise way.
 
 Use **Add to** to add something to existing variables.
 
-```yaml instacli
+```yaml specscript
 Code example: Add to variable
 
 ${index}: 0
@@ -31,7 +31,7 @@ Assert equals:
 
 You can do this with multiple variables at once
 
-```yaml instacli
+```yaml specscript
 Code example: Add to multiple variables
 
 ${index}: 0
@@ -52,7 +52,7 @@ Assert equals:
 
 You can add an item to a list
 
-```yaml instacli
+```yaml specscript
 Code example: Add an item to a list
 
 ${list}:
@@ -72,7 +72,7 @@ Assert equals:
 
 Or combine two lists.
 
-```yaml instacli
+```yaml specscript
 Code example: Append a list to another
 
 ${list}:
@@ -97,7 +97,7 @@ Assert equals:
 
 You can also extend a text string.
 
-```yaml instacli
+```yaml specscript
 Code example: Append text
 
 ${text}: Hello

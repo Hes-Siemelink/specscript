@@ -14,7 +14,7 @@
 
 Specify `url` and `body` to send a **POST** request.
 
-```yaml instacli
+```yaml specscript
 Code example: Simple POST
 
 POST:
@@ -29,7 +29,7 @@ POST:
 
 You can use the shortcut notation to send a POST request without a body.
 
-```yaml instacli
+```yaml specscript
 Code example: POST without body
 
 POST: http://localhost:2525/echo/body
@@ -42,7 +42,7 @@ Expected output: { }
 As with all Http commands, you can use [Http request defaults](Http%20request%20defaults.spec.md) to set the defaults
 for common fields.
 
-```yaml instacli
+```yaml specscript
 Code example: Http request defaults and POST
 
 Http request defaults:

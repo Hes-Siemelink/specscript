@@ -18,7 +18,7 @@ With **Prompt**, you can ask the user a question.
 What is your name?: Hes
 -->
 
-```yaml instacli
+```yaml specscript
 Code example: Define input
 
 Prompt: What is your name?
@@ -41,7 +41,7 @@ Syntax for using a default value
 What is your name?: World
 -->
 
-```yaml instacli
+```yaml specscript
 Code example: Prompt with default value
 
 Prompt:
@@ -64,7 +64,7 @@ When asking for a password, the user prompt will mask the input that the user is
 What is your password?: ssh
 -->
 
-```yaml instacli
+```yaml specscript
 Code example: Asking for a password
 
 Prompt:
@@ -86,7 +86,7 @@ You can ask for one item of a list:
 What is your favorite color?: Red
 -->
 
-```yaml instacli
+```yaml specscript
 Code example: Choose one item from a list
 
 Prompt:
@@ -114,7 +114,7 @@ What are your favorite colors?:
 - Green
 -->
 
-```yaml instacli
+```yaml specscript
 Code example: Choose mutliple items from a list
 
 Prompt:
@@ -144,7 +144,7 @@ object with the `display property` field. The entire object will be given as out
 Select a user: Alice
 -->
 
-```yaml instacli
+```yaml specscript
 Code example: Choose an object
 
 ${users}:
@@ -182,7 +182,7 @@ If you are only interested in a single field form an object, you can specify tha
 Select a user: Alice
 -->
 
-```yaml instacli
+```yaml specscript
 Code example: Only use the value of a specific field when selecting from an enum list
 
 ${users}:
@@ -215,7 +215,7 @@ You chose: 123
 
 Prompts support inline conditions. If the condition is false, the prompt is skipped.
 
-```yaml instacli
+```yaml specscript
 Code example: Prompt with condition
 
 Output: Already there

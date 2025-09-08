@@ -14,7 +14,7 @@
 
 **Values** strips the object of its fields and returns a list of the contents.
 
-```yaml instacli
+```yaml specscript
 Code example: Only the values
 
 Values:

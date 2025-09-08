@@ -14,7 +14,7 @@
 
 **Fields** strips the fields (keys) of an object
 
-```yaml instacli
+```yaml specscript
 Code example: Just the fields
 
 Fields:
@@ -34,7 +34,7 @@ Note that field names are always strings.
 
 You can 'pipe' output into Fields.
 
-```yaml instacli
+```yaml specscript
 Code example: Use Fields on output
 
 Output:
@@ -51,7 +51,7 @@ Expected output:
 
 This uses a clever/dumb Yaml trick: a single `|` is an empty string.
 
-```yaml instacli
+```yaml specscript
 Code example: Pipe is string
 
 Assert equals:

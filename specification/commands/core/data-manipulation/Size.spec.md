@@ -14,7 +14,7 @@
 
 Get the size of a list with Size
 
-```yaml instacli
+```yaml specscript
 Code example: Size of a list
 
 Size:
@@ -27,7 +27,7 @@ Expected output: 3
 
 For texts, you get the number of characters:
 
-```yaml instacli
+```yaml specscript
 Code example: Text size
 
 Size: internationalization
@@ -37,7 +37,7 @@ Expected output: 20
 
 And for objects, the number of entries
 
-```yaml instacli
+```yaml specscript
 Code example: Object size
 
 Size:
@@ -49,7 +49,7 @@ Expected output: 2
 
 **Size** also works on numbers
 
-```yaml instacli
+```yaml specscript
 Code example: Number size
 
 Size: 12

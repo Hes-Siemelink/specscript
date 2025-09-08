@@ -19,7 +19,7 @@ opening the file.
 
 The simplest way of using **Script info** takes only text.
 
-```yaml instacli
+```yaml specscript
 Code example: Basic Script info
 
 Script info: A script containing a code example
@@ -40,7 +40,7 @@ Script info usage examples
 
 You can also put the description in the `description` property:
 
-```yaml instacli
+```yaml specscript
 Code example: Script info with description property
 
 Script info:
@@ -79,7 +79,7 @@ No commands available.
 
 You can indicate the version of the Instacli spec that the script is using.
 
-```yaml instacli
+```yaml specscript
 Script info:
   instacli-spec: 0.5.1
 ```
@@ -112,13 +112,13 @@ FullName:
 
 Then you can use the types in the script:
 
-<!-- yaml instacli
+<!-- yaml specscript
 ${input}:
   first_name: Alice
   last_name: Wonderland
 -->
 
-```yaml instacli
+```yaml specscript
 Code example: Define script input and output with types
 
 Script info:
@@ -126,7 +126,7 @@ Script info:
   input type: FullName
 ```
 
-<!-- yaml instacli
+<!-- yaml specscript
 Output: Hello, ${input.first_name} ${input.last_name}
 
 Expected output: Hello, Alice Wonderland

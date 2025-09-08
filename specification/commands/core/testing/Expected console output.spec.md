@@ -14,7 +14,7 @@
 
 **Expected console output** tests the printed output of the script.
 
-```yaml instacli
+```yaml specscript
 Code example: Test console output
 
 Print: Hello world!
@@ -27,7 +27,7 @@ Expected console output: Hello world!
 The output buffer to check against is only recorded when a new `Code example` or `Test case` is started. It is reset for
 each time a new example or test case is started.
 
-```yaml instacli
+```yaml specscript
 Code example: Test new console output
 
 Print: Hello again
@@ -37,7 +37,7 @@ Expected console output: Hello again
 
 For test cases:
 
-```yaml instacli
+```yaml specscript
 Test case: Output 1
 
 Print: one

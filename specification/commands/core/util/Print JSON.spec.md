@@ -14,7 +14,7 @@
 
 Use **Print JSON** to see contents in JSON representation.
 
-```yaml instacli
+```yaml specscript
 Code example: Print an object as JSON
 
 Print JSON:

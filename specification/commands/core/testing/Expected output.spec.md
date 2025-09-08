@@ -17,7 +17,7 @@
 
 It works for simple values
 
-```yaml instacli
+```yaml specscript
 Code example: Expect output to be a simple value
 
 Output: one
@@ -27,7 +27,7 @@ Expected output: one
 
 Also for complex objects
 
-```yaml instacli
+```yaml specscript
 Code example: Compare output to complex value
 
 Output:
@@ -41,7 +41,7 @@ Expected output:
 
 And for lists
 
-```yaml instacli
+```yaml specscript
 Code example: Check output list
 
 Output:

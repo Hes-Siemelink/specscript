@@ -14,7 +14,7 @@ Use `Append` to add stuff to the output variable.
 
 Use **Append** to add something to `${output}`.
 
-```yaml instacli
+```yaml specscript
 Code example: Add to output
 
 Output:
@@ -34,7 +34,7 @@ Expected output:
 
 You can also add to a list
 
-```yaml instacli
+```yaml specscript
 Code example: Add a single item to a list
 
 Output:
@@ -51,7 +51,7 @@ Expected output:
 
 Or combine two lists.
 
-```yaml instacli
+```yaml specscript
 Code example: Append a list to another
 
 Output:
@@ -73,7 +73,7 @@ Expected output:
 
 You can also extend a text string.
 
-```yaml instacli
+```yaml specscript
 Code example: Append text
 
 Output: Hello

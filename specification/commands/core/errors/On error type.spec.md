@@ -14,7 +14,7 @@ Error handling in CLI scripts
 
 Use **[Error](Error.spec.md)** to raise an error with a speicifc identifie and **On error** to handle it.
 
-```yaml instacli
+```yaml specscript
 Code example: Error handling
 
 Error:
@@ -35,7 +35,7 @@ Expected output: Don't panic
 
 You can use the 'any' keyword to as a catch-all.
 
-```yaml instacli
+```yaml specscript
 Code example: Catch any exception
 
 Error:

@@ -18,7 +18,7 @@ and `expected` that make it read nicer in tests.
 
 It works for simple values
 
-```yaml instacli
+```yaml specscript
 Code example: Values should be equal
 
 Assert equals:
@@ -28,7 +28,7 @@ Assert equals:
 
 and also for complex objects
 
-```yaml instacli
+```yaml specscript
 Code example: Compare complex objects
 
 Assert equals:

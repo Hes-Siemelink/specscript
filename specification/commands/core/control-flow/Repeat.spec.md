@@ -15,7 +15,7 @@ Executes a block of code until a condition is satisfied.
 **Repeat** repeats a bunch of commands until the condition specified in `Until` is reached.
 See [conditions](../testing/Assert%20that.spec.md#conditions).
 
-```yaml instacli
+```yaml specscript
 Code example: Count to five
 
 Output: 1

@@ -9,7 +9,7 @@ This script changes the type of a task in Digital.ai Release and updates its pro
 Our target system is Digital.ai Release. In Instacli, you just declare the connection to the system you want to work
 with.
 
-```yaml instacli
+```yaml specscript
 Connect to: Digital.ai Release
 ```
 
@@ -19,7 +19,7 @@ These are the input properties for the script. They may be superfluous here, bec
 the [mcp-relelese.cli](mcp-release.cli) server specification. Technically you can leave them out, but when defined here
 it makes it easier the test the script in isolation and reuse it in other contexts.
 
-```yaml instacli
+```yaml specscript
 Input parameters:
 
   task_id:
@@ -46,7 +46,7 @@ The first call changes the task type.
 See [Change task type](https://apidocs.digital.ai/xl-release/25.1.x/rest-docs/#change-task-type) documentation for more
 details.
 
-```yaml instacli
+```yaml specscript
 POST: /api/v1/tasks/${input.task_id}/changeType?targetType=${input.target_type}
 As: ${task}
 ```
@@ -59,7 +59,7 @@ First we prepare the data for the task properties. We assume we are updating a J
 necessary snippet for the `pythonScript` field first. We use the **Add** command to merge the provided properties with
 the template for a Jython script.
 
-```yaml instacli
+```yaml specscript
 Add:
   - id: ${task.pythonScript.id}
     type: ${input.target_type}
@@ -69,7 +69,7 @@ As: ${script}
 
 Now we can update the task with the new properties by sending a `PUT`.
 
-```yaml instacli
+```yaml specscript
 PUT:
   path: /api/v1/tasks/${input.task_id}
   body:

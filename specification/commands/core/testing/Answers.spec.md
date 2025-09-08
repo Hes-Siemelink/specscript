@@ -17,7 +17,7 @@ pass.
 
 To give an answer, simply define the question and answer under **Answers** like this:
 
-```yaml instacli
+```yaml specscript
 Code example: Prerecord an answer to a prompt
 
 Answers:

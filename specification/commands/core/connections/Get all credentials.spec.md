@@ -27,7 +27,7 @@ Instacli Sample Server:
       password: user
 ```
 
-<!-- yaml instacli
+<!-- yaml specscript
 Credentials: ${SCRIPT_TEMP_DIR}/credentials.yaml
 -->
 

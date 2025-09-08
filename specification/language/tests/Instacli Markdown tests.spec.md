@@ -6,13 +6,13 @@ This document specifies the nitty-gritty around writing Instacli scripts in Mark
 
 Hidden code blocks that become before actual code may contain a script that contains `---` dividers.
 
-<!-- yaml instacli
+<!-- yaml specscript
 ${one}: one
 ---
 ${two}: two
 -->
 
-```yaml instacli
+```yaml specscript
 Test case: Hidden before block with dividers
 
 Assert that:

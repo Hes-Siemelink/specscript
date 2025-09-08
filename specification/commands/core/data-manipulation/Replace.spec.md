@@ -14,7 +14,7 @@ Does a text-based find & replace.
 
 Use **Replace** to modify text
 
-```yaml instacli
+```yaml specscript
 Code example: Replace in text
 
 Replace:
@@ -27,7 +27,7 @@ Expected output: Hello World!
 
 Replace also works in lists
 
-```yaml instacli
+```yaml specscript
 Code example: Replace in list
 
 Replace:
@@ -46,7 +46,7 @@ Expected output:
 
 And with objects
 
-```yaml instacli
+```yaml specscript
 Code example: Replace in object
 
 Replace:
@@ -64,7 +64,7 @@ Expected output:
 By omitting the `in` field, you can modify the output variable directly. This is useful to filter and modify the output
 of a previous command.
 
-```yaml instacli
+```yaml specscript
 Code example: Replace in text
 
 Output: Hello World!

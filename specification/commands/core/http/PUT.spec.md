@@ -14,7 +14,7 @@
 
 Specify `url` and `body` to send a **PUT** request.
 
-```yaml instacli
+```yaml specscript
 Code example: Simple PUT
 
 PUT:
@@ -30,7 +30,7 @@ PUT:
 As with all Http commands, you can use [Http request defaults](Http%20request%20defaults.spec.md) to set the defaults
 for common fields.
 
-```yaml instacli
+```yaml specscript
 Code example: Http request defaults and PUT
 
 Http request defaults:

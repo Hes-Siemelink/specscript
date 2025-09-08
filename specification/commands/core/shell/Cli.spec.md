@@ -15,7 +15,7 @@ test the behavior of the `cli` command line interface.
 
 Show Instacli help
 
-```yaml instacli
+```yaml specscript
 Code example: Execute Instacli command
 
 Cli: --help
@@ -39,7 +39,7 @@ Expected console output: |
 Use the long format to specify the working directory. This is useful when you want to run a command in a different
 directory than the one where the script is located.
 
-```yaml instacli
+```yaml specscript
 Code example: Cli in a different directory
 
 Cli:

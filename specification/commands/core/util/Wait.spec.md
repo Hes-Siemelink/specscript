@@ -14,7 +14,7 @@
 
 Use **Wait** to pause for the amount of seconds specified.
 
-```yaml instacli
+```yaml specscript
 Code example: Wait a tenth of a second
 
 Wait: 0.1

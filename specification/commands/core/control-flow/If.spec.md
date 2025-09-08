@@ -15,7 +15,7 @@
 **If** is used with the [conditions](../testing/Assert%20that.spec.md#conditions) defined
 in [Assert that](../testing/Assert%20that.spec.md) and if a condition holds, the commands under `then` are executed
 
-```yaml instacli
+```yaml specscript
 Code example: Simple if
 
 If:
@@ -29,7 +29,7 @@ Expected output: correct
 
 You can also use `else`:
 
-```yaml instacli
+```yaml specscript
 Code example: Simple if with else
 
 If:
@@ -47,7 +47,7 @@ Expected output: no match
 
 With multiple conditions, each one is evaluated.
 
-```yaml instacli
+```yaml specscript
 Code example: Multiple conditions in If
 
 If:
@@ -68,7 +68,7 @@ Expected output:
 
 If you only want to match one, use [When](When.spec.md)
 
-```yaml instacli
+```yaml specscript
 Code example: Multiple conditions in When
 
 When:

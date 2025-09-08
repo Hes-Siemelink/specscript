@@ -18,7 +18,7 @@ With **Confirmation**, you can ask the user a question.
 Do you want to continue?: "Yes"
 -->
 
-```yaml instacli
+```yaml specscript
 Code example: Simple confirmation message
 
 Confirm: Do you want to continue?
@@ -44,7 +44,7 @@ When a user says no, the **Confirm** command will raise on error. You can catch 
 Are you sure?: "No"
 -->
 
-```yaml instacli
+```yaml specscript
 Code example: Not confirmed
 
 Confirm: Are you sure?

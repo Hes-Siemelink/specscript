@@ -27,7 +27,7 @@ My Sample Server:
 
 We can use the `Credentials` command to specify this file
 
-```yaml instacli
+```yaml specscript
 Code example: Use a different credentials file
 
 Credentials: ${SCRIPT_TEMP_DIR}/my_credentials.yaml
@@ -46,7 +46,7 @@ The **credentials** command takes a file name as a parameter. Here is an example
 using the [Temp file](../files/Temp%20file.spec.md) command and
 the [Eval syntax](../../../language/Eval%20syntax.spec.md):
 
-```yaml instacli
+```yaml specscript
 Code example: Specify credentials inline
 
 Credentials:

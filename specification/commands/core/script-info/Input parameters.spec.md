@@ -20,12 +20,12 @@ can easily read it when opening the file.
 The simplest way of using **Input parameters** takes a simple map, where the key is the name of the input parameter, and
 the value is the description.
 
-<!-- yaml instacli
+<!-- yaml specscript
 ${input}:
  name: world
 -->
 
-```yaml instacli
+```yaml specscript
 Code example: Basic Input parameter usage
 
 Input parameters:
@@ -76,13 +76,13 @@ Options:
 
 You can define multiple input parameters at once.
 
-<!-- yaml instacli
+<!-- yaml specscript
 ${input}:
    greeting: Hello
    name: world
 -->
 
-```yaml instacli
+```yaml specscript
 Code example: Define input with multiple variables
 
 Input parameters:
@@ -96,13 +96,13 @@ Print: ${greeting}, ${name}!
 
 Input parameters are also stored in the `${input}` variable.
 
-<!-- yaml instacli
+<!-- yaml specscript
 ${input}:
    greeting: Hello
    name: world
 -->
 
-```yaml instacli
+```yaml specscript
 Code example: Input with direct variable access
 
 Input parameters:
@@ -125,7 +125,7 @@ You can specify various properties on the input parameters.
 
 For example:
 
-```yaml instacli
+```yaml specscript
 Code example: Input with default value
 
 Input parameters:
@@ -145,13 +145,13 @@ defined before the property that is using them. You can to them as part of the `
 This example uses the ${input.switch} to determine which variable will be part of the input. By setting `switch` to `a`,
 the `property-A` is set but not `property-B`.
 
-<!-- yaml instacli
+<!-- yaml specscript
 ${input}: { }
 -->
 
 <!-- TODO Make this run in interactive mode, so we can use 'Answers' for a more compelling example. --> 
 
-```yaml instacli
+```yaml specscript
 Code example: Script info with variables and conditions
 
 Input parameters:
