@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import specscript.commands.errors.ErrorData
 import specscript.language.types.ObjectDefinition
 
-open class InstacliLanguageException(
+open class SpecScriptException(
     message: String,
     var data: JsonNode? = null,
     cause: Throwable? = null,
@@ -12,21 +12,21 @@ open class InstacliLanguageException(
 ) :
     Exception(message, cause)
 
-class CommandFormatException(message: String) : InstacliLanguageException(message)
+class CommandFormatException(message: String) : SpecScriptException(message)
 
-class CliScriptingException(message: String, data: JsonNode? = null) : InstacliLanguageException(message, data)
+class ScriptingException(message: String, data: JsonNode? = null) : SpecScriptException(message, data)
 
 class MissingParameterException(
     message: String,
     val name: String,
     val parameters: ObjectDefinition
 ) :
-    InstacliLanguageException(message)
+    SpecScriptException(message)
 
-class InstacliImplementationException(message: String, data: JsonNode? = null, cause: Throwable? = null) :
-    InstacliLanguageException(message, data, cause)
+class SpecScriptImplementationException(message: String, data: JsonNode? = null, cause: Throwable? = null) :
+    SpecScriptException(message, data, cause)
 
-open class InstacliCommandError(message: String, val error: ErrorData = ErrorData(message = message)) :
+open class SpecScriptCommandError(message: String, val error: ErrorData = ErrorData(message = message)) :
     Exception(message) {
 
     constructor(error: ErrorData) :

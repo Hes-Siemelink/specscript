@@ -34,7 +34,7 @@ fun JsonNode.toPath(context: ScriptContext, directory: Path? = null): Path {
             if (file.exists()) {
                 file
             } else {
-                throw InstacliCommandError(
+                throw SpecScriptCommandError(
                     "file not found",
                     "File not found: ${file.toRealPath()}",
                     Json.newObject("file", file.toRealPath().toString())
@@ -48,10 +48,10 @@ fun JsonNode.toPath(context: ScriptContext, directory: Path? = null): Path {
             } else if (contains("resource")) {
                 this["resource"].toPath(context, context.scriptDir)
             } else {
-                throw CliScriptingException("Expected either 'file' or 'resource' property.")
+                throw ScriptingException("Expected either 'file' or 'resource' property.")
             }
         }
 
-        else -> throw CliScriptingException("Unsupported node type for files: ${javaClass.simpleName}")
+        else -> throw ScriptingException("Unsupported node type for files: ${javaClass.simpleName}")
     }
 }

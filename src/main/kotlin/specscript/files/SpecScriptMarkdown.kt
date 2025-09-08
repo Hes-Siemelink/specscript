@@ -5,7 +5,7 @@ import java.io.PrintStream
 import java.nio.file.Path
 import kotlin.io.path.readLines
 
-class InstacliMarkdown(val document: Path) {
+class SpecScriptMarkdown(val document: Path) {
 
     val blocks = mutableListOf<MarkdownBlock>()
 
@@ -46,8 +46,8 @@ class InstacliMarkdown(val document: Path) {
 
         private val blockTypes: List<BlockType> = listOf(
             YamlFile,
-            HiddenYamlInstacli,
-            YamlInstacli,
+            HiddenSpecScriptYaml,
+            SpecScriptYaml,
             ShellCli,
             ShellBlock,
             Answers,
@@ -56,9 +56,9 @@ class InstacliMarkdown(val document: Path) {
             Text // Should be last
         )
 
-        fun scan(document: Path): InstacliMarkdown {
+        fun scan(document: Path): SpecScriptMarkdown {
 
-            val doc = InstacliMarkdown(document)
+            val doc = SpecScriptMarkdown(document)
             var currentBlock = doc.addBlock(Text)
             for (line in document.readLines()) {
                 when {
@@ -140,8 +140,8 @@ class MarkdownBlock(
 
     object Text : BlockType("", "```")
     object Header : BlockType("#", "")
-    object HiddenYamlInstacli : BlockType("<!-- yaml specscript", "-->")
-    object YamlInstacli : BlockType("```yaml specscript", "```")
+    object HiddenSpecScriptYaml : BlockType("<!-- yaml specscript", "-->")
+    object SpecScriptYaml : BlockType("```yaml specscript", "```")
     object YamlFile : BlockType("```yaml file", "```")
     object ShellCli : BlockType("```shell cli", "```")
     object ShellBlock : BlockType("```shell", "```")

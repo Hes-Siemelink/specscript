@@ -130,11 +130,11 @@ class SpecScriptMain(
                 System.err.println(e.parameters.toDisplayString())
                 return 1
 
-            } catch (e: InstacliLanguageException) {
+            } catch (e: SpecScriptException) {
                 CliErrorReporter.reportLanguageError(e, options.debug)
                 return 1
 
-            } catch (e: InstacliCommandError) {
+            } catch (e: SpecScriptCommandError) {
                 CliErrorReporter.reportCommandError(e)
                 return 1
             }

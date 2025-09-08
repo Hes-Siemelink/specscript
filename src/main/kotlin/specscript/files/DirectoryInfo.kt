@@ -60,7 +60,7 @@ class DirectoryInfo : CommandInfo {
 
         private fun getDescriptionFromMarkdown(readme: Path): String {
             return if (readme.exists()) {
-                val doc = InstacliMarkdown.scan(readme)
+                val doc = SpecScriptMarkdown.scan(readme)
                 doc.description ?: ""
             } else {
                 ""
@@ -69,7 +69,7 @@ class DirectoryInfo : CommandInfo {
     }
 }
 
-object InstacliDirectories {
+object SpecScriptDirectories {
     val directories = mutableMapOf<Path, DirectoryInfo>()
 
     fun get(dir: Path): DirectoryInfo {

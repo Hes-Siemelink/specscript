@@ -25,7 +25,7 @@ class VariablesTest {
 
     @Test
     fun missingVariable() {
-        assertThrows<InstacliLanguageException> {
+        assertThrows<SpecScriptException> {
             resolveVariablesInText("There is no \${3}", variables)
         }
     }

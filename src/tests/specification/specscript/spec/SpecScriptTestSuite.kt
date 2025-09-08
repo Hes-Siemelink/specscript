@@ -19,7 +19,7 @@ class SpecScriptTestSuite {
     }
 
     @TestFactory
-    fun `specification`(): List<DynamicNode> {
+    fun specification(): List<DynamicNode> {
         return TestPaths.SPEC.getTests()
     }
 

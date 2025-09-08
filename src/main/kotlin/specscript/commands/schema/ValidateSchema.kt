@@ -36,7 +36,7 @@ private fun JsonNode.validateWithSchema(schema: JsonSchema) {
             Json.newObject(it.code, it.message)
         }.toJson()
 
-        throw InstacliCommandError("Schema validation error", "Schema validation error", validationErrors)
+        throw SpecScriptCommandError("Schema validation error", "Schema validation error", validationErrors)
     }
 }
 

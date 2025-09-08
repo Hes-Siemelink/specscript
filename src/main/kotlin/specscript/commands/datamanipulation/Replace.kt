@@ -13,7 +13,7 @@ object Replace : CommandHandler("Replace", "core/data-manipulation"), ObjectHand
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode {
 
         val text = data.getParameter("text")
-        val source = data["in"] ?: context.output ?: throw InstacliCommandError(
+        val source = data["in"] ?: context.output ?: throw SpecScriptCommandError(
             "Replace needs 'in' parameter or non-null output variable."
         )
         val replacement = data.getParameter("with")

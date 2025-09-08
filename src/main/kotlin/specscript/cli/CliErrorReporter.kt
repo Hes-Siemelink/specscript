@@ -1,8 +1,8 @@
 package specscript.cli
 
 import com.fasterxml.jackson.databind.JsonNode
-import specscript.language.InstacliCommandError
-import specscript.language.InstacliLanguageException
+import specscript.language.SpecScriptCommandError
+import specscript.language.SpecScriptException
 import specscript.util.Json
 import specscript.util.toDisplayYaml
 
@@ -19,11 +19,11 @@ object CliErrorReporter {
      * @param exception The language exception to report
      * @param printStackTrace Whether to include stack traces in debug mode
      */
-    fun reportLanguageError(exception: InstacliLanguageException, printStackTrace: Boolean) {
+    fun reportLanguageError(exception: SpecScriptException, printStackTrace: Boolean) {
         System.err.println("\nInstacli scripting error")
 
         // Exception caused by incorrect instacli script
-        if (exception.cause == null || exception.cause is InstacliLanguageException) {
+        if (exception.cause == null || exception.cause is SpecScriptException) {
             System.err.println("\n${exception.message}")
         } else {
             // Unexpected exception from command handler implementation
@@ -43,7 +43,7 @@ object CliErrorReporter {
         }
     }
 
-    fun reportCommandError(commandError: InstacliCommandError) {
+    fun reportCommandError(commandError: SpecScriptCommandError) {
         System.err.println(commandError.message)
         if (commandError.message != commandError.error.message) {
             System.err.println(commandError.error.message)
@@ -61,10 +61,10 @@ object CliErrorReporter {
     }
 }
 
-fun InstacliLanguageException.reportError(printStackTrace: Boolean) {
+fun SpecScriptException.reportError(printStackTrace: Boolean) {
     CliErrorReporter.reportLanguageError(this, printStackTrace)
 }
 
-fun InstacliCommandError.reportError() {
+fun SpecScriptCommandError.reportError() {
     CliErrorReporter.reportCommandError(this)
 }

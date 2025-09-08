@@ -100,12 +100,12 @@ private fun execute(
             null
         }
 
-    } catch (e: InstacliCommandError) {
+    } catch (e: SpecScriptCommandError) {
         print(buffer.toString())
         throw e
     } catch (e: IOException) {
         print(buffer.toString())
-        throw InstacliCommandError("shell", e.toString())
+        throw SpecScriptCommandError("shell", e.toString())
     }
 }
 
@@ -141,7 +141,7 @@ fun streamCommand(
 
             val exitCode = process.waitFor()
             if (exitCode != 0) {
-                throw InstacliCommandError(
+                throw SpecScriptCommandError(
                     "shell",
                     "Shell command failed",
                     Json.newObject("exitCode", exitCode.toString())

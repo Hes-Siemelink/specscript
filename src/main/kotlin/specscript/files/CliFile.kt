@@ -23,9 +23,9 @@ class CliFile(val file: Path) : CommandInfo, CommandHandler(asScriptCommand(file
     }
     private val scriptNodes: List<JsonNode> by lazy { Yaml.parse(file) }
 
-    val markdown: InstacliMarkdown? by lazy {
+    val markdown: SpecScriptMarkdown? by lazy {
         if (file.isMarkdownScript()) {
-            InstacliMarkdown.scan(file)
+            SpecScriptMarkdown.scan(file)
         } else {
             null
         }

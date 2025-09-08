@@ -102,7 +102,7 @@ private fun handleRequest(
             }
 
             else -> {
-                throw CliScriptingException("No handler action defined")
+                throw ScriptingException("No handler action defined")
             }
         }
 

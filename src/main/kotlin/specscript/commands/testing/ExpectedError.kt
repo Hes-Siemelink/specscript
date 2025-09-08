@@ -46,4 +46,4 @@ object ExpectedError :
     }
 }
 
-class MissingExpectedError(message: String) : InstacliCommandError(message)
+class MissingExpectedError(message: String) : SpecScriptCommandError(message)

@@ -32,7 +32,7 @@ private fun validate(data: JsonNode, type: Type, registry: TypeRegistry) {
     if (messages.isNotEmpty()) {
         val validationErrors = messages.map { TextNode(it) }.toJson()
 
-        throw InstacliCommandError("Type validation", "Type validation errors", validationErrors)
+        throw SpecScriptCommandError("Type validation", "Type validation errors", validationErrors)
     }
 }
 

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.node.TextNode
 import com.fasterxml.jackson.databind.node.ValueNode
-import specscript.language.InstacliCommandError
+import specscript.language.SpecScriptCommandError
 import specscript.language.ScriptContext
 import specscript.util.Json
 import specscript.util.Yaml
@@ -126,7 +126,7 @@ object HttpClient {
                 TextNode(response.bodyAsText())
             }
             val type = response.status.value.toString()
-            throw InstacliCommandError(type, "Http request returned an error", data)
+            throw SpecScriptCommandError(type, "Http request returned an error", data)
         }
 
         // No content

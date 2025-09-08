@@ -39,7 +39,7 @@ class Script(val commands: List<Command>, val title: String? = null) {
             }
         } catch (a: Break) {
             a.output
-        } catch (e: InstacliLanguageException) {
+        } catch (e: SpecScriptException) {
             e.context = e.context ?: context.cliFile.name
             throw e
         }
@@ -57,7 +57,7 @@ class Script(val commands: List<Command>, val title: String? = null) {
 
             try {
                 output = runCommand(handler, command.data, context) ?: output
-            } catch (e: InstacliCommandError) {
+            } catch (e: SpecScriptCommandError) {
                 context.error = e
             }
         }
@@ -124,7 +124,7 @@ fun List<MarkdownBlock>.toScript(): Script {
                 title = block.headerLine.substring(block.headerLine.indexOf(' ')).trim()
             }
 
-            YamlInstacli, HiddenYamlInstacli -> {
+            SpecScriptYaml, HiddenSpecScriptYaml -> {
                 commands.addAll(toCommandList(block.getContent()))
             }
 

@@ -57,12 +57,12 @@ class TestCaseRunner(
             script.run(context)
         } catch (a: Break) {
             a.output
-        } catch (e: InstacliCommandError) {
+        } catch (e: SpecScriptCommandError) {
             e.error.data?.let {
                 System.err.println(it.toDisplayYaml())
             }
             throw e
-        } catch (e: InstacliLanguageException) {
+        } catch (e: SpecScriptException) {
             e.reportError(printStackTrace = false)
             throw e
         }

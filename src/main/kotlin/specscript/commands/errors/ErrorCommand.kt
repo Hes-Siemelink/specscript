@@ -11,13 +11,13 @@ import specscript.util.toDomainObject
 object ErrorCommand : CommandHandler("Error", "core/errors"), ValueHandler, ObjectHandler, ArrayHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
-        throw InstacliCommandError(data.toDisplayYaml())
+        throw SpecScriptCommandError(data.toDisplayYaml())
     }
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val errorData = data.toDomainObject(ErrorData::class)
 
-        throw InstacliCommandError(errorData.message, errorData)
+        throw SpecScriptCommandError(errorData.message, errorData)
     }
 
     override fun execute(data: ArrayNode, context: ScriptContext): JsonNode? {

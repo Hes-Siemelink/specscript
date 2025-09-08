@@ -12,7 +12,7 @@ object JsonPatch : CommandHandler("Json patch", "core/data-manipulation"), Objec
 
         val doc = data["doc"]
             ?: context.output
-            ?: throw InstacliCommandError("Json patch needs 'doc' parameter or non-null output variable.")
+            ?: throw SpecScriptCommandError("Json patch needs 'doc' parameter or non-null output variable.")
         val patch = data.getParameter("patch") as ArrayNode
 
         return doc.applyPatch(patch)

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.TextNode
 import com.fasterxml.jackson.databind.node.ValueNode
 import specscript.language.CommandHandler
-import specscript.language.InstacliCommandError
+import specscript.language.SpecScriptCommandError
 import specscript.language.ScriptContext
 import specscript.language.ValueHandler
 import specscript.language.types.ParameterData
@@ -30,7 +30,7 @@ object Confirm : CommandHandler("Confirm", "core/user-interaction"), ValueHandle
         val answer = confirmationDialog.prompt()
 
         if (answer == no) {
-            throw InstacliCommandError("No confirmation -- action canceled.")
+            throw SpecScriptCommandError("No confirmation -- action canceled.")
         }
 
         return answer

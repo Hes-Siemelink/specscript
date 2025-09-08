@@ -11,7 +11,7 @@ import com.github.kinquirer.components.promptInputPassword
 import com.github.kinquirer.components.promptListObject
 import com.github.kinquirer.core.Choice
 import specscript.commands.testing.Answers
-import specscript.language.CliScriptingException
+import specscript.language.ScriptingException
 import specscript.util.Yaml
 import specscript.util.toDisplayYaml
 
@@ -142,7 +142,7 @@ object TestPrompt : UserPrompt {
         } else {
             val selection = choices.find {
                 selectedAnswer.textValue() == it.displayName
-            } ?: throw CliScriptingException("Prerecorded choice '$selectedAnswer' not found in provided list.")
+            } ?: throw ScriptingException("Prerecorded choice '$selectedAnswer' not found in provided list.")
 
             println(KInquirer.renderInput(message, choices, listOf(selection)))
 

@@ -1,6 +1,6 @@
 package specscript.language.types
 
-import specscript.language.CliScriptingException
+import specscript.language.ScriptingException
 import specscript.language.CommandFormatException
 
 
@@ -34,7 +34,7 @@ private class Resolver(val registry: TypeRegistry, val seen: MutableSet<String> 
 
             type.name != null -> {
                 val foundType =
-                    (registry.getType(type.name) ?: throw CliScriptingException("Type not found: ${type.name}"))
+                    (registry.getType(type.name) ?: throw ScriptingException("Type not found: ${type.name}"))
                 seen.add(type.name)
                 foundType.definition = resolveDefinition(foundType.definition)
                 foundType

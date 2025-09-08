@@ -23,7 +23,7 @@ object GetCredentials : CommandHandler("Get credentials", "core/connections"), V
                 target.credentials.first()
             }
 
-            else -> throw InstacliCommandError(
+            else -> throw SpecScriptCommandError(
                 "no accounts",
                 "No accounts defined for $targetName",
                 Json.newObject("target", targetName)

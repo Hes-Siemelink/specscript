@@ -15,7 +15,7 @@ interface ScriptContext {
     val workingDir: Path
     val tempDir: Path
     val output: JsonNode?
-    var error: InstacliCommandError?
+    var error: SpecScriptCommandError?
     val types: TypeRegistry
 
     fun getCommandHandler(command: String): CommandHandler

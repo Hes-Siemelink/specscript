@@ -68,9 +68,9 @@ class CliFileContext(
 
     override val output: JsonNode?
         get() = variables[OUTPUT_VARIABLE]
-    override var error: InstacliCommandError? = null
+    override var error: SpecScriptCommandError? = null
 
-    val info: DirectoryInfo by lazy { InstacliDirectories.get(scriptDir) }
+    val info: DirectoryInfo by lazy { SpecScriptDirectories.get(scriptDir) }
     val name: String
         get() = scriptDir.name
 
@@ -108,7 +108,7 @@ class CliFileContext(
         }
 
         // No handler found for command
-        throw CliScriptingException("Unknown command: $command")
+        throw ScriptingException("Unknown command: $command")
     }
 
     private fun findLocalFileCommands(): Map<String, CliFile> {
@@ -147,7 +147,7 @@ class CliFileContext(
         Files.list(scriptDir)
             .filter { it.isDirectory() && it.name != "tests" && it.hasCliCommands() }
             .forEach { dir ->
-                subcommands[asCliCommand(dir.name)] = InstacliDirectories.get(dir)
+                subcommands[asCliCommand(dir.name)] = SpecScriptDirectories.get(dir)
             }
 
         return subcommands

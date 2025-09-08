@@ -14,7 +14,7 @@ object AddTo : CommandHandler("Add to", "core/data-manipulation"), ObjectHandler
                 ?: throw CommandFormatException("Entries should be in \${..} variable syntax.")
             val varName = match.groupValues[1]
 
-            var total = context.variables[varName] ?: throw CliScriptingException("Variable $varName not found.")
+            var total = context.variables[varName] ?: throw ScriptingException("Variable $varName not found.")
             for (item in value.asArray()) {
                 total = add(total, item)
             }

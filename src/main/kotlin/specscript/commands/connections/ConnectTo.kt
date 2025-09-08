@@ -17,7 +17,7 @@ object ConnectTo : CommandHandler("Connect to", "core/connections"), ValueHandle
 
         val targetName = data.textValue()
         val connectScript = context.info.connections[targetName]
-            ?: throw CliScriptingException("No connection script configured for $targetName in ${context.cliFile.parent.toRealPath().name}")
+            ?: throw ScriptingException("No connection script configured for $targetName in ${context.cliFile.parent.toRealPath().name}")
 
         when (connectScript) {
             is ValueNode -> {

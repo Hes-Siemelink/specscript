@@ -46,7 +46,7 @@ fun getValue(varName: String, variables: Map<String, JsonNode>): JsonNode {
 
     if (!variables.containsKey(variableWithPath.name)) {
         // FIXME Produces message: "Unknown variable 'greeting' in ${greeting}"
-        throw CliScriptingException("Unknown variable \${${variableWithPath.name}}")
+        throw ScriptingException("Unknown variable \${${variableWithPath.name}}")
     }
 
     val value = variables[variableWithPath.name]!!
