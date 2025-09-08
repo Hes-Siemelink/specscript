@@ -37,9 +37,9 @@ Expected output:
 ```
 
 In order for this to work, you need to configure a _connection script_ for the **Instacli Samples** endpoint. You do
-this in the  `.instacli.yaml` file in the same directory
+this in the  `.directory-info.yaml` file in the same directory
 
-```yaml file=.instacli.yaml
+```yaml file=.directory-info.yaml
 connections:
   Instacli Samples: connect.cli
 ```

@@ -112,18 +112,18 @@ Create greeting:
 Expected output: Hello Cray!
 ```
 
-## The .instacli.yaml file
+## The .directory-info.yaml file
 
-Each directory can have a `.instacli.yaml` file that contains metadata about the directory.
+Each directory can have a `.directory-info.yaml` file that contains metadata about the directory.
 
 You can give the directory a readable description, import cli files from other directories and manage http connection
 data.
 
 ### Directory description
 
-Add a `.instacli.yaml` file to the directory to give a description to the current directory.
+Add a `.directory-info.yaml` file to the directory to give a description to the current directory.
 
-```yaml file=.instacli.yaml
+```yaml file=.directory-info.yaml
 Script info: This is an example directory
 ```
 
@@ -140,7 +140,7 @@ Available commands:
   create-greeting   Creates a greeting
 ```
 
-If there is no `.instacli.yaml` file, or it doesn't have a description, Instacli will use the first sentence of the
+If there is no `.directory-info.yaml` file, or it doesn't have a description, Instacli will use the first sentence of the
 README.md file in the directory.
 <!-- TODO: Add example and test cases -->
 
@@ -148,9 +148,9 @@ README.md file in the directory.
 
 You can hide the directory from the interactive command chooser by setting the `hidden` property to `true`.
 
-For example take the following `.instacli.yaml` file in the `subcommand` directory:
+For example take the following `.directory-info.yaml` file in the `subcommand` directory:
 
-```yaml file=subcommand/.instacli.yaml
+```yaml file=subcommand/.directory-info.yaml
 Script info:
   hiddent: true
 ```
@@ -172,7 +172,7 @@ Out-of-the-box, you
 can [call a script from within the same directory](Organizing%20Instacli%20files%20in%20directories.spec.md#calling-another-instacli-script)
 as a regular Instacli command.
 
-To call a script from another directory, you can import it in the `.instacli.yaml` file. This will import it for all
+To call a script from another directory, you can import it in the `.directory-info.yaml` file. This will import it for all
 scripts in that directory.
 
 For example, if we have the file `helper/say-something.cli`:
@@ -181,9 +181,9 @@ For example, if we have the file `helper/say-something.cli`:
 Output: Something ${input.what}
 ```
 
-And we have it in the `.instacli.yaml` file as follows:
+And we have it in the `.directory-info.yaml` file as follows:
 
-```yaml file=.instacli.yaml
+```yaml file=.directory-info.yaml
 Script info: This is an example directory
 
 imports:
@@ -215,7 +215,5 @@ Something funny
 
 ### Specifying connection data
 
-The `.instacli.yaml` file also contains a `connections` settings for retrieving HTTP connection credentials. See the
+The `.directory-info.yaml` file also contains a `connections` settings for retrieving HTTP connection credentials. See the
 **[Connect to](../commands/core/connections/Connect%20to.spec.md)** command for more details.
-
-

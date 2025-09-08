@@ -30,9 +30,12 @@ class DirectoryInfo : CommandInfo {
 
     companion object {
         fun load(dir: Path): DirectoryInfo {
-            val instacliYaml = dir.resolve(".instacli.yaml")
+            val directoryInfoYaml = dir.resolve(".directory-info.yaml")
+            val instacliYaml = dir.resolve(".instacli.yaml") // Legacy support
 
-            val info = if (instacliYaml.exists()) {
+            val info = if (directoryInfoYaml.exists()) {
+                Yaml.mapper.readValue(directoryInfoYaml.toFile())
+            } else if (instacliYaml.exists()) {
                 Yaml.mapper.readValue(instacliYaml.toFile())
             } else {
                 DirectoryInfo()

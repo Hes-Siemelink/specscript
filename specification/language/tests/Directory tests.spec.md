@@ -6,9 +6,9 @@ This contains Instacli behavior that is too boring for the main spec but should 
 
 This is what happens when you run `cli` in an empty directory.
 
-The `.instacli.yaml` file for the `empty` directory:
+The `.directory-info.yaml` file for the `empty` directory:
 
-```yaml file=empty/.instacli.yaml
+```yaml file=empty/.directory-info.yaml
 Script info: This is an example directory
 ```
 
@@ -42,9 +42,9 @@ And a helper script `say-something.cli` in the `helper` directory:
 Output: Hello
 ```
 
-You can import the say-something script by way of the `.instacli.yaml` file in the `main` directory:
+You can import the say-something script by way of the `.directory-info.yaml` file in the `main` directory:
 
-```yaml file=main/.instacli.yaml
+```yaml file=main/.directory-info.yaml
 Script info: Main directory
 imports:
   - ../helper/say-something.cli
