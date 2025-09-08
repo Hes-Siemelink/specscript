@@ -2,7 +2,7 @@
 
 ## Language
 
-These topics define the basic infrastructure of SpecScript scripts.
+These topics define the basic infrastructure of SpecScript:
 
 * [SpecScript Yaml Scripts](SpecScript%20Yaml%20Scripts.spec.md)
 * [SpecScript Markdown Documents](SpecScript%20Markdown%20Documents.spec.md)

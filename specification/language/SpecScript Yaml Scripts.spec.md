@@ -1,6 +1,6 @@
 # SpecScript Yaml Scripts
 
-## What does a single SpecScript script look like
+## What does a single SpecScript file look like
 
 ### Hello world example
 
@@ -41,7 +41,7 @@ structure (and pitfalls) already, and you get editor support out-of-the-box. It'
 to parse it than a custom format.
 
 SpecScript files have `.cli` file extension. Within SpecScript, the convention is that `.yaml` files are for static data and
-`.cli` files are SpecScript scripts that contain commands. Tip: Map your editor to recognize `.cli`
+`.cli` files are SpecScript files that contain commands. Tip: Map your editor to recognize `.cli`
 as `.yaml`.
 
 SpecScript's Yaml flavor does not rely on special Yaml features like directives. It is used as a human-friendly way of
@@ -117,7 +117,7 @@ Do:
   - Print: Hello again!
 ```
 
-You could argue that a SpecScript script should have a giant `Do` on top, and all commands should be specified in the
+You could argue that a SpecScript file should have a giant `Do` on top, and all commands should be specified in the
 list. That's perfectly fine code, but to me it looks distracting, so I prefer the separator approach. Besides, the
 separator helps you to visually divide sections in your code if placed strategically.
 

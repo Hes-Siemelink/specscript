@@ -1,6 +1,6 @@
 # SpecScript Markdown Documents
 
-If by now you are getting accustomed to the fact that SpecScript is Yaml, get ready for the kicker: SpecScript scripts can
+If by now you are getting accustomed to the fact that SpecScript is Yaml, get ready for the kicker: SpecScript files can
 also be written in Markdown!
 
 This way, we can freely mix code, data _and_ documentation in a single file. Another way to llok at it is that in the
@@ -16,9 +16,9 @@ Another use case are script files, where the source reads like a README file exp
 Here is an example of a Markdown file `hello.cli.md` that contains SpecScript code:
 
 ~~~markdown
-### My SpecScript script
+### My SpecScript file
 
-This is a simple SpecScript script that prints a greeting.
+This is a simple SpecScript file that prints a greeting.
 
 ```yaml specscript
 Print: Hello world!
@@ -27,9 +27,9 @@ Print: Hello world!
 
 Your document will look like
 
-> ### My SpecScript script
+> ### My SpecScript file
 >
->    This is a simple SpecScript script that prints a greeting.
+>    This is a simple SpecScript file that prints a greeting.
 >
 >    ```yaml specscript
 >    Print: Hello world!
@@ -250,7 +250,7 @@ Hello, Alice!
 
 ## Printing to the console
 
-When writing a SpecScript script you can use the `>` quote character to print to the console, as a shortcut for using the
+When writing a SpecScript file you can use the `>` quote character to print to the console, as a shortcut for using the
 [**Print**](../commands/core/util/Print.spec.md) command.
 
 
@@ -557,7 +557,7 @@ You can also use the ` ```shell cli` directive to show how to invoke SpecScript 
 
 This is useful for showing how to use the `cli` command and its command line options.
 
-Note: Within a SpecScript script itself, there are better ways to invoke another script.
+Note: Within a SpecScript file itself, there are better ways to invoke another script.
 See [Calling another script](Organizing%20SpecScript%20files%20in%20directories.spec.md#calling-another-script).
 
 #### Markdown format

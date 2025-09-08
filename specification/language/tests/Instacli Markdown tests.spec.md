@@ -1,6 +1,6 @@
 # SpecScript Markdown tests
 
-This document specifies the nitty-gritty around writing SpecScript scripts in Markdown.
+This document specifies the nitty-gritty around writing SpecScript files in Markdown.
 
 ## Hidden before blocks
 

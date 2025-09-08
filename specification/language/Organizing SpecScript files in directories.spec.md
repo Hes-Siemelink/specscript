@@ -1,6 +1,6 @@
 ## Organizing SpecScript files in directories
 
-With one or more files in a directory, you can run the directory as a cli command. The SpecScript scripts will be
+With one or more files in a directory, you can run the directory as a cli command. The SpecScript files will be
 subcommands.
 
 For this example we run from the **[samples](/samples)** directory. It contains a directory `basic` with the following
@@ -83,7 +83,7 @@ Simple SpecScript example scripts
 
 ### Calling another script
 
-We showed above that you can call another SpecScript script from within a SpecScript script with the
+We showed above that you can call another SpecScript file with the
 **[Run script](../commands/core/files/Run%20script.spec.md)** command.
 
 Another way is to use it as a regular command. SpecScript reads all cli files in the same directory and makes them
