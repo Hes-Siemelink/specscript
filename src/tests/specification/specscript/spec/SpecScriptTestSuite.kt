@@ -5,6 +5,7 @@ import specscript.commands.userinteraction.TestPrompt
 import specscript.commands.userinteraction.UserPrompt
 import specscript.files.CliFile
 import org.junit.jupiter.api.*
+import java.nio.file.Path
 
 class SpecScriptTestSuite {
 
@@ -15,7 +16,7 @@ class SpecScriptTestSuite {
 
     @TestFactory
     fun `Main README_md`(): List<DynamicNode> {
-        return CliFile(TestPaths.README).getCodeExamples()
+        return CliFile(TestPaths.README).getCodeExamples() + CliFile(Path.of("README-2.md")).getCodeExamples()
     }
 
     @TestFactory

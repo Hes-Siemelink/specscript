@@ -155,4 +155,28 @@ Assert that:
       - two
 ```
 
+## Multiple assertions
+
+When you need multiple assertions, use list syntax instead of repeating the command:
+
+```yaml specscript
+Code example: Multiple assertions with list syntax
+
+${config}:
+  database:
+    host: localhost
+    port: 5432
+  features:
+    authentication: true
+    logging: true
+
+Assert that:
+- not:
+    empty: ${config.database.host}
+- item: ${config.features.authentication}
+  equals: true
+- item: ${config.database.port}
+  equals: 5432
+```
+
 

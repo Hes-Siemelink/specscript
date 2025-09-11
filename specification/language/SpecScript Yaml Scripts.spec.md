@@ -40,6 +40,8 @@ Another advantage of SpecScript syntax being Yaml is familiarity: if you have wo
 structure (and pitfalls) already, and you get editor support out-of-the-box. It's also way easier for the implementation
 to parse it than a custom format.
 
+> **⚠️ YAML Pitfall**: Since SpecScript uses YAML, you cannot repeat command names because they are dictionary keys. Use list syntax or `---` separators for multiple commands. See [Multiple commands and `---`](#multiple-commands-and---) for details.
+
 SpecScript files have `.cli` file extension. Within SpecScript, the convention is that `.yaml` files are for static data and
 `.cli` files are SpecScript files that contain commands. Tip: Map your editor to recognize `.cli`
 as `.yaml`.

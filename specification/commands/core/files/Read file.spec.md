@@ -47,3 +47,25 @@ Expected output:
   greeting: Hello
   language: en    
 ```
+
+## Reading temp files created in Markdown
+
+For files created with ````yaml file=filename.ext` in the same markdown document, use the `resource` parameter:
+
+```yaml file=config.yaml
+database:
+  host: localhost
+  port: 5432
+```
+
+```yaml specscript
+Code example: Read temp file from markdown
+
+Read file:
+  resource: config.yaml
+
+Expected output:
+  database:
+    host: localhost
+    port: 5432
+```
