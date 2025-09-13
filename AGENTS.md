@@ -70,6 +70,76 @@ Published artifacts:
   `CommandHandler("Mcp server", "ai/mcp")`.
 - The command logic is implemented in the `execute` method.
 
+### Server Architecture Patterns
+
+SpecScript implements server patterns for both MCP and HTTP servers with similar but not identical structures:
+
+**Common Server Patterns:**
+- Server registries using `mutableMapOf` for tracking running servers
+- Lifecycle management with start/stop operations  
+- Context cloning for isolated script execution
+- Support for both inline scripts and external file references
+
+**MCP Server Specifics:**
+- Registry keyed by server `name` (string)
+- Schema: `name`, `version`, `tools`, `resources`, `prompts`, `stop`
+- Uses MCP Kotlin SDK with stdio transport
+- Lifecycle: explicit `stop: true` flag for shutdown
+
+**HTTP Server Specifics:**  
+- Registry keyed by `port` (integer)
+- Schema: `port`, `endpoints` with method handlers
+- Uses Javalin for HTTP handling
+- Lifecycle: separate stop command by port
+
+**Server Alignment Opportunities:**
+- Property naming consistency (both should support `name`, `version`, `stop`)
+- Unified lifecycle interface implementation
+- Consistent context variable handling (`input` vs `request`)
+- Server registry access patterns for modular tool/endpoint definitions
+
+### MCP Server Implementation Guidance
+
+**Critical MCP Patterns to Follow:**
+- Use name-based server registry: `servers = mutableMapOf<String, Server>()`
+- Follow tools/resources/prompts structure (not endpoints like HTTP)
+- Implement explicit lifecycle: `stopServer(name: String)` with `server.close()`
+- Use `INPUT_VARIABLE` for consistent context handling
+- Support both inline scripts and external file references
+
+**MCP Testing Strategy:**
+- MCP servers require **manual lifecycle management** in tests (not automatic like HTTP)
+- Use explicit start/stop commands: `Start mcp server` / `Stop mcp server`
+- NOT integrated into test framework automatic lifecycle
+- This provides better control and explicit resource management
+- Example test pattern:
+```yaml
+Test case: MCP operation
+  setup:
+    Start mcp server:
+      name: test-server
+      tools: { ... }
+  test:
+    # Test operations
+  cleanup:
+    Stop mcp server:
+      name: test-server
+```
+
+**MCP Backlog System Patterns:**
+- Follow `create_ticket`, `update_ticket`, `delete_ticket`, `list_tickets` naming
+- Use standard CRUD operations with proper state management
+- Implement ticket states: `todo`, `doing`, `done` with validation
+- Support filtering by state, assignee in list operations
+- Include proper error handling for missing tickets/invalid states
+
+**YAML Correctness for MCP:**
+- All MCP tool examples must be valid YAML with proper nesting
+- Use `---` separators between multiple commands (YAML constraint)
+- Avoid duplicate keys - use list syntax for repetition
+- Proper indentation for inputSchema properties
+- Schema validation: `type`, `enum`, `description` properties must be correctly structured
+
 ### Test Structure
 
 - **Unit Tests**: `src/tests/unit/` - Traditional unit tests
@@ -113,9 +183,32 @@ All documentation includes runnable code examples that are executed as part of t
 - Two JAR artifacts are built: thin (531KB) and fat (36MB) for different deployment scenarios
 - Run the tests before creating a commit
 
+## Strategic Planning and Development Approach
+
+### Spec-First Development Philosophy
+SpecScript follows a **spec-first development methodology**:
+1. **Always write specifications first** - Define behavior in SpecScript YAML/Markdown format
+2. **Analyze existing patterns** - Study current Kotlin implementation before proposing solutions
+3. **Create detailed plans** - Document approach, phases, and integration considerations in `/plan` directory
+4. **Implement incrementally** - Build based on specification, validating against existing patterns
+
+### Planning Documents Structure
+- **Focused Plans**: Single-responsibility plans like `mcp-backlog-focused-plan.md`
+- **Future Work Plans**: Separate plans for dependent work like `server-alignment-future-plan.md`
+- **Learning Integration**: Document insights and lessons learned for future reference
+- **Phase-based Implementation**: Clear phases with dependencies and success criteria
+
+### Key Planning Principles
+- **Scope Discipline**: Separate immediate needs from future architectural work
+- **Learning-Based**: Build on insights from current implementations
+- **Backward Compatibility**: Maintain existing functionality while adding new capabilities
+- **Risk Mitigation**: Identify technical and implementation risks with mitigation strategies
+
 ## Major Refactoring Plans
 
 - **Library Architecture Refactoring**: See `plan/specscript-to-specscript-library-refactoring.md`
+- **MCP Backlog System**: See `plan/mcp-backlog-focused-plan.md` (immediate focus)
+- **Server Alignment**: See `plan/server-alignment-future-plan.md` (future work)
 - Goal: Transform SpecScript into a library that specscript depends on
 - Will enable separation of core engine from CLI-specific implementations
 - Planned multi-repository development setup for easier cross-repo work
@@ -185,6 +278,40 @@ When committing changes to the project, follow these rules:
 
 **This is the magic of SpecScript**: Documentation that can't lie because it executes.
 
+## Spec-First Development Philosophy
+
+SpecScript enables true **specification-driven development** where the specification IS the implementation:
+
+### Core Principles
+1. **Write the spec first** - Define how the system should work in `.spec.md` files with executable examples
+2. **Implement in SpecScript** - Use pure SpecScript (YAML) before writing any Kotlin/Java code
+3. **Mock with `Output` commands** - Use `Output:` to return mock data that demonstrates the intended behavior
+4. **Iterate on the specification** - Test and refine the spec until it perfectly describes the desired system
+5. **Only then implement in code** - Convert SpecScript implementations to optimized code when needed
+
+### Development Workflow
+1. **Create specification**: Write `.spec.md` with complete documentation and examples
+2. **Implement in SpecScript**: Create `.cli` files with mock implementations using `Output` commands
+3. **Test the specification**: Run `cli your-spec.spec.md` to validate syntax and behavior
+4. **Iterate and refine**: Adjust the specification based on testing and feedback
+5. **Replace mocks gradually**: Convert mock `Output` commands to real implementations when needed
+
+### Benefits
+- **Immediate feedback**: Specifications are executable from day one
+- **Clear requirements**: The spec defines exactly how the system should behave
+- **No implementation-spec drift**: The spec IS a working implementation
+- **Faster iteration**: Changes to behavior start with changing the spec
+- **Better collaboration**: Non-technical stakeholders can understand and run the specs
+
+### Example: MCP Server Development
+```markdown
+1. Write `mcp-server.spec.md` with complete MCP tool definitions
+2. Implement tools with `script: Output: { mock: "data" }` 
+3. Test with `cli mcp-server.spec.md`
+4. Iterate on tool schemas and responses
+5. Replace `Output` with real logic when spec is solid
+```
+
 ## Documentation Style Guidelines
 
 ### Markdown Headers
@@ -194,5 +321,5 @@ When committing changes to the project, follow these rules:
 
 # Agent tone
 
-- I am a grumpy senior developer with 20 years of experience.
+- I am a grumpy old European with 20 years of experience in software engineering.
 - Be concise and to the point.
