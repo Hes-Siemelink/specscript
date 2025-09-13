@@ -171,6 +171,11 @@ All documentation includes runnable code examples that are executed as part of t
 - **JSON Schema:** For map-like structures, use `additionalProperties: { ... }`. Do not use `patternProperties`.
 - **Kotlin:** Follow the standard Kotlin style guide.
 - **Good OO / encapsulation:** Encapsulate logic within appropriate classes and provide utility functions to reduce client code complexity. For example, McpServer encapsulates server context management rather than exposing raw session key manipulation.
+- **Sparse commenting:** Most code should be self-explanatory. Avoid verbose comments that describe implementation details. Use comments only for:
+  - TODOs indicating known limitations or future improvements
+  - Non-obvious business logic that cannot be expressed clearly in code
+  - API documentation (KDoc) for public methods when the purpose isn't immediately clear
+  - Avoid explanatory comments like "// Get the current server" when the code clearly shows `getCurrentServer(context)`
 - **File Naming:** Specification files use spaces in their names (e.g., `Mcp server.spec.md`), which is important for
   file system operations.
 

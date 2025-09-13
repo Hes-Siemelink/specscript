@@ -24,31 +24,6 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
     
     val servers = mutableMapOf<String, Server>()
     
-    /**
-     * Get the current MCP server from the script context.
-     * Good OO / encapsulation: Encapsulates server context logic within McpServer.
-     */
-    fun getCurrentServer(context: ScriptContext): Server? {
-        val currentServerName = context.session[CURRENT_MCP_SERVER_KEY] as String? ?: return null
-        return servers[currentServerName]
-    }
-    
-    /**
-     * Set the current MCP server in the script context.
-     * Good OO / encapsulation: Encapsulates server context management.
-     */
-    private fun setCurrentServer(context: ScriptContext, serverName: String) {
-        context.session[CURRENT_MCP_SERVER_KEY] = serverName
-    }
-    
-    /**
-     * Clear the current MCP server from the script context.
-     * Good OO / encapsulation: Encapsulates server context cleanup.
-     */
-    private fun clearCurrentServer(context: ScriptContext) {
-        context.session.remove(CURRENT_MCP_SERVER_KEY)
-    }
-
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val info = data.toDomainObject(McpServerInfo::class)
 
@@ -128,6 +103,20 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
         runBlocking {
             server.close()
         }
+    }
+
+    fun getCurrentServer(context: ScriptContext): Server {
+        val currentServerName = context.session[CURRENT_MCP_SERVER_KEY] as String
+        return servers[currentServerName] ?:
+        throw IllegalStateException("No MCP server found in current context. An MCP server must be started before defining tools.")
+    }
+
+    private fun setCurrentServer(context: ScriptContext, serverName: String) {
+        context.session[CURRENT_MCP_SERVER_KEY] = serverName
+    }
+
+    private fun clearCurrentServer(context: ScriptContext) {
+        context.session.remove(CURRENT_MCP_SERVER_KEY)
     }
 
     fun Server.addTool(toolName: String, tool: ToolInfo, localContext: ScriptContext) {

@@ -9,14 +9,11 @@ import specscript.util.*
 object McpTool : CommandHandler("Mcp tool", "ai/mcp"), ObjectHandler, DelayedResolver {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
-        // Parse tools data - similar to how McpServer handles tools
+
         val toolsData = data.toDomainObject(McpToolsData::class)
-        
-        // Get the current server using encapsulated McpServer logic
         val server = McpServer.getCurrentServer(context)
-            ?: throw IllegalStateException("No MCP server context found. An MCP server must be started before defining tools.")
-        
-        // Add each tool to the running server using shared extension method
+
+        // Add each tool to the running server
         toolsData.tools.forEach { (toolName, toolInfo) ->
             // TODO: Check if tools can be added to running servers dynamically. 
             // The MCP Kotlin SDK may require server restart to add new tools.
@@ -30,10 +27,6 @@ object McpTool : CommandHandler("Mcp tool", "ai/mcp"), ObjectHandler, DelayedRes
     }
 }
 
-/**
- * Data class for Mcp tool command - handles multiple tools with names as keys.
- * Good OO / encapsulation: Reuses existing ToolInfo and follows same pattern as McpServer.
- */
 class McpToolsData {
     @JsonAnySetter
     val tools: MutableMap<String, ToolInfo> = mutableMapOf()
