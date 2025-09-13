@@ -31,7 +31,7 @@ Mcp server:
               }            
       
       
-      script: change-task.cli.md
+      script: change-task.spec.md
 
   resources:
     file://info.txt:

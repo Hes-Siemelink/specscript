@@ -305,24 +305,27 @@ SpecScript enables true **specification-driven development** where the specifica
 
 ### Example: MCP Server Development
 ```markdown
-1. Write `mcp-server.cli.md` with complete MCP tool definitions using `yaml specscript` blocks
+1. Write `mcp-server.spec.md` with complete MCP tool definitions using `yaml specscript` blocks
 2. Implement tools with `script: Output: { mock: "data" }` 
-3. Test with `cli mcp-server.cli.md`
+3. Test with `cli mcp-server.spec.md`
 4. Iterate on tool schemas and responses
 5. Replace `Output` with real logic when spec is solid
 ```
 
 ### Critical File Extension Rules
-- **`.cli.md`**: Executable SpecScript documentation with ````yaml specscript` blocks
-- **`.spec.md`**: Regular markdown documentation (not executable)
+- **`.spec.md`**: Executable SpecScript documentation with ````yaml specscript` blocks
 - **`.cli`**: Pure SpecScript YAML files
 - **NEVER use**: ````yaml file=filename.cli` in executable documentation - this creates temp files, not executable code
 
 ### Common Mistakes to Avoid
-1. **Wrong Extension**: Using `.spec.md` instead of `.cli.md` for executable specs
-2. **Wrong Block Type**: Using ````yaml file=` instead of ````yaml specscript` in `.cli.md` files
-3. **Premature Commits**: Always test changes before committing, especially for "bug fixes"
-4. **Wrong Commit Messages**: Use "Bug fix" for actual bugs, not "Fix" or other summaries
+1. **Wrong Block Type**: Using ````yaml file=` instead of ````yaml specscript` in `.spec.md` files
+2. **Eager Commits**: Always run `./gradlew specificationTest` before committing - we are spec-driven!
+3. **Wrong Commit Messages**: 
+   - Use "Bug fix" for actual bugs
+   - Use functional change descriptions for user-facing changes
+   - Use change emoji (💫) for new features
+   - Use warning triangle (⚠️) for breaking changes
+   - Example: "💫⚠️ Changed Markdown extension from 'cli.md' to 'spec.md'"
 
 ## Documentation Style Guidelines
 

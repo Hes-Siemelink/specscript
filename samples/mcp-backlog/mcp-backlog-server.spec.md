@@ -211,7 +211,7 @@ Mcp server:
 To start the MCP backlog server:
 
 ```shell cli
-cli samples/mcp-backlog/mcp-backlog-server.cli.md
+cli samples/mcp-backlog/mcp-backlog-server.spec.md
 ```
 
 The server will start and wait for MCP client connections.

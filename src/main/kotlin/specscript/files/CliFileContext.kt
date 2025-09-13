@@ -16,7 +16,6 @@ import kotlin.io.path.isDirectory
 import kotlin.io.path.name
 
 const val CLI_SCRIPT_EXTENSION = ".cli"
-const val CLI_MARKDOWN_SCRIPT_EXTENSION = ".cli.md"
 const val MARKDOWN_SPEC_EXTENSION = ".spec.md"
 
 /**
@@ -135,7 +134,7 @@ class CliFileContext(
 
     private fun addCommand(commands: MutableMap<String, CliFile>, file: Path) {
         if (file.isDirectory()) return
-        if (!(file.name.endsWith(CLI_SCRIPT_EXTENSION) || file.name.endsWith(CLI_MARKDOWN_SCRIPT_EXTENSION))) return
+        if (!(file.name.endsWith(CLI_SCRIPT_EXTENSION) || file.name.endsWith(MARKDOWN_SPEC_EXTENSION))) return
 
         val name = asScriptCommand(file.name)
         commands[name] = CliFile(file)
@@ -185,7 +184,7 @@ private fun TypeRegistry.loadTypes(info: DirectoryInfo) {
 private fun Path.hasCliCommands(): Boolean {
     return Files.walk(this).anyMatch { file ->
         !file.isDirectory()
-                && (file.name.endsWith(CLI_SCRIPT_EXTENSION) || file.name.endsWith(CLI_MARKDOWN_SCRIPT_EXTENSION))
+                && (file.name.endsWith(CLI_SCRIPT_EXTENSION) || file.name.endsWith(MARKDOWN_SPEC_EXTENSION))
     }
 }
 
@@ -203,8 +202,8 @@ fun asScriptCommand(commandName: String): String {
     if (command.endsWith(CLI_SCRIPT_EXTENSION)) {
         command = command.substring(0, commandName.length - CLI_SCRIPT_EXTENSION.length)
     }
-    if (command.endsWith(CLI_MARKDOWN_SCRIPT_EXTENSION)) {
-        command = command.substring(0, commandName.length - CLI_MARKDOWN_SCRIPT_EXTENSION.length)
+    if (command.endsWith(MARKDOWN_SPEC_EXTENSION)) {
+        command = command.substring(0, commandName.length - MARKDOWN_SPEC_EXTENSION.length)
     }
 
     // Spaces for dashes
@@ -224,8 +223,8 @@ fun asCliCommand(commandName: String): String {
     if (command.endsWith(CLI_SCRIPT_EXTENSION)) {
         command = command.substring(0, commandName.length - CLI_SCRIPT_EXTENSION.length)
     }
-    if (command.endsWith(CLI_MARKDOWN_SCRIPT_EXTENSION)) {
-        command = command.substring(0, commandName.length - CLI_MARKDOWN_SCRIPT_EXTENSION.length)
+    if (command.endsWith(MARKDOWN_SPEC_EXTENSION)) {
+        command = command.substring(0, commandName.length - MARKDOWN_SPEC_EXTENSION.length)
     }
 
     // Dashes for spaces

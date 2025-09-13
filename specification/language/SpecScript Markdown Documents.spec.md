@@ -13,7 +13,7 @@ the output and automatically test that they are correct.
 
 Another use case are script files, where the source reads like a README file explaining what is going on.
 
-Here is an example of a Markdown file `hello.cli.md` that contains SpecScript code:
+Here is an example of a Markdown file `hello.spec.md` that contains SpecScript code:
 
 ~~~markdown
 ### My SpecScript file
