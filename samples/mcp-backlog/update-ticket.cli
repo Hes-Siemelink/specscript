@@ -1,0 +1,8 @@
+Output:
+  id: "${input.id}"
+  title: "${input.title}"
+  description: "${input.description}"
+  state: "${input.state}"
+  priority: "${input.priority}"
+  assignee: "${input.assignee}"
+  updated_at: "2025-01-13T09:22:00Z"

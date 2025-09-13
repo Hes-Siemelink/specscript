@@ -1,0 +1,10 @@
+Output:
+  id: "TICKET-003"
+  title: "${input.title}"
+  description: "${input.description}"
+  state: "todo"
+  priority: "${input.priority}"
+  assignee: "${input.assignee}"
+  created_at: "2025-01-13T09:22:00Z"
+  updated_at: "2025-01-13T09:22:00Z"
+  order: 3

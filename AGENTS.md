@@ -170,6 +170,7 @@ All documentation includes runnable code examples that are executed as part of t
 
 - **JSON Schema:** For map-like structures, use `additionalProperties: { ... }`. Do not use `patternProperties`.
 - **Kotlin:** Follow the standard Kotlin style guide.
+- **Good OO / encapsulation:** Encapsulate logic within appropriate classes and provide utility functions to reduce client code complexity. For example, McpServer encapsulates server context management rather than exposing raw session key manipulation.
 - **File Naming:** Specification files use spaces in their names (e.g., `Mcp server.spec.md`), which is important for
   file system operations.
 
@@ -251,6 +252,12 @@ When committing changes to the project, follow these rules:
 
 **Key Learning**: SpecScript documentation IS the test suite. Every code example in specification documents literally executes during tests.
 
+**CRITICAL**: The files in `specification/language/` are the authoritative reference for writing effective SpecScript. These documents define the canonical patterns and must be consulted before writing any specification documents. Key references:
+- `SpecScript Yaml Scripts.spec.md` - Core language syntax and command usage
+- `SpecScript Markdown Documents.spec.md` - Defines proper structure for spec files including hidden cleanup code
+- `Organizing SpecScript files in directories.spec.md` - File organization patterns
+- Other language specifications provide the authoritative guidance for SpecScript syntax and structure
+
 ### Code Block Types in SpecScript Docs:
 - ````yaml specscript` - **EXECUTABLE**: Runs as actual tests during the gradle specificationTest
 - ````yaml` - **ILLUSTRATIVE**: Shows syntax without execution (for invalid/example code)
@@ -278,6 +285,66 @@ When committing changes to the project, follow these rules:
 4. This is **spec-driven development** - documentation validates behavior
 
 **This is the magic of SpecScript**: Documentation that can't lie because it executes.
+
+## Adding New SpecScript Commands: Complete Development Process
+
+This section documents the complete process used to create the `Mcp tool` command, serving as a template for future command development.
+
+### Phase 1: User-Centered Specification Writing
+1. **Write basic use case**: Start with the simplest, most natural way a user would want to use the command
+2. **Create declarative examples**: Focus on *what* the user wants to achieve, not *how* it works internally
+3. **Build specification document**: Write `.spec.md` with realistic examples that make intuitive sense
+4. **Expand use cases**: Add more complex scenarios, edge cases, and variations based on natural usage patterns
+5. **Validate readability**: Ensure the specification reads clearly and demonstrates obvious value to users
+
+### Phase 2: Technical Design
+1. **Study existing patterns**: Examine similar commands (e.g., `Mcp server`) for structural consistency
+2. **Design YAML structure**: Determine content type support (Value/List/Object) based on specification examples
+3. **Create JSON schema**: Define `schema/CommandName.schema.yaml` following established patterns
+4. **Refine specification structure**: Apply `SpecScript Markdown Documents.spec.md` patterns for proper execution
+
+### Phase 3: Kotlin Implementation
+1. **Create command handler**: Implement `CommandHandler` extending appropriate interfaces (`ObjectHandler`, `DelayedResolver`)
+2. **Design data classes**: Reuse existing classes where possible (good OO/encapsulation principle)
+3. **Implement business logic**: Focus on core functionality, delegate to existing utility methods
+4. **Add to CommandLibrary**: Register the new command in the centralized command registry
+5. **Handle shared concerns**: Utilize existing patterns for context management, server registries, etc.
+
+### Phase 4: Integration and Testing
+1. **Build and test**: Use `./gradlew build fatJar -x test -x specificationTest` for rapid iteration
+2. **Validate specification**: Run individual spec files to verify examples work correctly
+3. **Full test suite**: Execute `./gradlew build` to ensure all tests pass
+4. **Refactor based on feedback**: Apply architectural improvements (encapsulation, code reuse)
+
+### Key Architectural Decisions Made
+- **Data structure reuse**: Modified existing `ToolInfo` class rather than creating duplicates
+- **Context management**: Added utility functions to `McpServer` for session state encapsulation
+- **YAML structure evolution**: Evolved from individual tool definitions to map-based structure for consistency
+- **Proper spec structure**: Separate YAML blocks, descriptive text flow, hidden cleanup code
+
+### Critical Patterns for Future Commands
+- **User-first specification**: Start with how users naturally want to express their intent, not technical constraints
+- **Declarative examples**: Focus on *what* users want to achieve, making the command's purpose immediately clear
+- **Specification-driven design**: The readability and intuitiveness of the specification drives all technical decisions
+- **Good OO/encapsulation**: Create utility functions in parent classes to reduce client code complexity
+- **Structural consistency**: Follow existing command patterns only after the user experience is well-defined
+- **Test-driven validation**: Every code example in specifications must execute successfully
+- **Context sharing**: Use `ScriptContext.session` for cross-command state when appropriate
+
+### Why Specification-First Matters
+Implementation-first approaches often result in:
+- Awkward, technical-sounding command structures
+- Documentation that's hard to write because the design is unintuitive
+- Commands that feel like programming rather than declaring intent
+- Complex examples that obscure the command's value
+
+Specification-first ensures:
+- Natural, declarative command usage that reads like human intent
+- Documentation that flows logically and demonstrates clear value
+- Implementation that serves user needs rather than technical convenience
+- Commands that feel like configuration rather than code
+
+This process ensures new commands integrate seamlessly with the existing SpecScript ecosystem while maintaining consistency and testability.
 
 ## Spec-First Development Philosophy
 

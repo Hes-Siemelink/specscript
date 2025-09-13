@@ -31,6 +31,30 @@ Mcp server:
         Output: Hello ${input.name}!
 ```
 
+### External script files
+
+You can reference external SpecScript files in the `script` property by providing a filename:
+
+```yaml specscript
+Code example: MCP server with external script
+
+Mcp server:
+  name: file-server
+  version: "1.0.0"
+  tools:
+    process_data:
+      description: Process some data
+      inputSchema:
+        data:
+          type: string
+          description: Data to process
+      script: process-data.cli
+```
+
+The external script file should contain the SpecScript commands to execute when the tool is called.
+
+<!-- TODO: Need to stop the file-server after Mcp tool command is implemented to avoid interference with other tests -->
+
 ### Stop the server
 
 Stop and remove the server with the `stop` command:

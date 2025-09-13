@@ -1,0 +1,19 @@
+Output:
+  - id: "TICKET-001"
+    title: "Implement user authentication"
+    description: "Add login and registration functionality"
+    state: "todo"
+    priority: "high"
+    assignee: "alice"
+    created_at: "2025-01-01T10:00:00Z"
+    updated_at: "2025-01-01T10:00:00Z"
+    order: 1
+  - id: "TICKET-002"
+    title: "Design dashboard mockups"
+    description: "Create wireframes for main dashboard"
+    state: "doing"
+    priority: "medium"
+    assignee: "bob"
+    created_at: "2025-01-01T11:00:00Z"
+    updated_at: "2025-01-02T09:00:00Z"
+    order: 2

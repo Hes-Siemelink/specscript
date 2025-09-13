@@ -20,7 +20,34 @@ import kotlin.concurrent.thread
 
 object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, DelayedResolver {
 
-    private val servers = mutableMapOf<String, Server>()
+    private const val CURRENT_MCP_SERVER_KEY = "currentMcpServer"
+    
+    val servers = mutableMapOf<String, Server>()
+    
+    /**
+     * Get the current MCP server from the script context.
+     * Good OO / encapsulation: Encapsulates server context logic within McpServer.
+     */
+    fun getCurrentServer(context: ScriptContext): Server? {
+        val currentServerName = context.session[CURRENT_MCP_SERVER_KEY] as String? ?: return null
+        return servers[currentServerName]
+    }
+    
+    /**
+     * Set the current MCP server in the script context.
+     * Good OO / encapsulation: Encapsulates server context management.
+     */
+    private fun setCurrentServer(context: ScriptContext, serverName: String) {
+        context.session[CURRENT_MCP_SERVER_KEY] = serverName
+    }
+    
+    /**
+     * Clear the current MCP server from the script context.
+     * Good OO / encapsulation: Encapsulates server context cleanup.
+     */
+    private fun clearCurrentServer(context: ScriptContext) {
+        context.session.remove(CURRENT_MCP_SERVER_KEY)
+    }
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val info = data.toDomainObject(McpServerInfo::class)
@@ -28,6 +55,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
         // Stop server
         if (info.stop) {
             this.stopServer(info.name)
+            clearCurrentServer(context)
             return null
         }
 
@@ -61,6 +89,9 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
             server.addPrompt(promptName, prompt, context.clone())
         }
 
+        // Store current server name in session context for Mcp tool command
+        setCurrentServer(context, info.name)
+        
         // Listen to standard IO
         startServer(info.name, server)
 
@@ -99,7 +130,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
         }
     }
 
-    private fun Server.addTool(toolName: String, tool: ToolInfo, localContext: ScriptContext) {
+    fun Server.addTool(toolName: String, tool: ToolInfo, localContext: ScriptContext) {
 
         // TODO add support for required fields
         addTool(

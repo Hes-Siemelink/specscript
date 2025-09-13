@@ -1,0 +1,5 @@
+Output:
+  id: "${input.id}"
+  old_order: 2
+  new_order: "${input.new_order}"
+  message: "Ticket moved successfully"

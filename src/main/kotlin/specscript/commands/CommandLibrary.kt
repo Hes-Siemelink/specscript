@@ -14,6 +14,7 @@ import specscript.commands.files.TempFile
 import specscript.commands.files.WriteFile
 import specscript.commands.http.*
 import specscript.commands.mcp.McpServer
+import specscript.commands.mcp.McpTool
 import specscript.commands.schema.ValidateSchema
 import specscript.commands.schema.ValidateType
 import specscript.commands.scriptinfo.InputParameters
@@ -130,7 +131,8 @@ object CommandLibrary {
         Store,
 
         // AI
-        McpServer
+        McpServer,
+        McpTool
     )
 
     // TODO Store commands in canonical form: all lower case and spaces

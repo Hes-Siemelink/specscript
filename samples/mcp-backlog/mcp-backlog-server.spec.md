@@ -8,200 +8,195 @@ The MCP Backlog server provides tools for managing software development tickets 
 
 ## Server Configuration
 
-The backlog server runs as an MCP server with the following tools:
-
 ```yaml specscript
 Mcp server:
   name: mcp-backlog
   version: 1.0.0
-  tools:
-    list_tickets:
-      description: List all tickets with optional filtering
-      inputSchema:
-        type: object
-        properties:
-          state:
-            type: string
-            enum: [todo, doing, done]
-            description: Filter tickets by state
-          assignee:
-            type: string
-            description: Filter tickets by assignee
-        additionalProperties: false
-      script:
-        Output:
-          - id: "TICKET-001"
-            title: "Implement user authentication"
-            description: "Add login and registration functionality"
-            state: "todo"
-            priority: "high"
-            assignee: "alice"
-            created_at: "2025-01-01T10:00:00Z"
-            updated_at: "2025-01-01T10:00:00Z"
-            order: 1
-          - id: "TICKET-002"
-            title: "Design dashboard mockups"
-            description: "Create wireframes for main dashboard"
-            state: "doing"
-            priority: "medium"
-            assignee: "bob"
-            created_at: "2025-01-01T11:00:00Z"
-            updated_at: "2025-01-02T09:00:00Z"
-            order: 2
+```
 
-    get_ticket:
-      description: Get a specific ticket by ID
-      inputSchema:
-        type: object
-        properties:
-          id:
-            type: string
-            description: Ticket ID
-        required: [id]
-        additionalProperties: false
-      script:
-        Output:
-          id: "TICKET-001"
-          title: "Implement user authentication"
-          description: "Add login and registration functionality"
-          state: "todo"
-          priority: "high"
-          assignee: "alice"
-          created_at: "2025-01-01T10:00:00Z"
-          updated_at: "2025-01-01T10:00:00Z"
-          order: 1
+## Ticket Listing Tools
 
-    create_ticket:
-      description: Create a new ticket
-      inputSchema:
-        type: object
-        properties:
-          title:
-            type: string
-            description: Ticket title
-          description:
-            type: string
-            description: Detailed ticket description
-          priority:
-            type: string
-            enum: [low, medium, high]
-            description: Ticket priority level
-            default: medium
-          assignee:
-            type: string
-            description: Person assigned to this ticket
-        required: [title, description]
-        additionalProperties: false
-      script:
-        Output:
-          id: "TICKET-003"
-          title: "${input.title}"
-          description: "${input.description}"
-          state: "todo"
-          priority: "${input.priority}"
-          assignee: "${input.assignee}"
-          created_at: "2025-01-13T09:22:00Z"
-          updated_at: "2025-01-13T09:22:00Z"
-          order: 3
+Tools for retrieving and viewing tickets with filtering and backlog management capabilities.
 
-    update_ticket:
-      description: Update an existing ticket
-      inputSchema:
-        type: object
-        properties:
-          id:
-            type: string
-            description: Ticket ID to update
-          title:
-            type: string
-            description: New ticket title
-          description:
-            type: string
-            description: New ticket description
-          state:
-            type: string
-            enum: [todo, doing, done]
-            description: New ticket state
-          priority:
-            type: string
-            enum: [low, medium, high]
-            description: New priority level
-          assignee:
-            type: string
-            description: New assignee
-        required: [id]
-        additionalProperties: false
-      script:
-        Output:
-          id: "${input.id}"
-          title: "${input.title}"
-          description: "${input.description}"
-          state: "${input.state}"
-          priority: "${input.priority}"
-          assignee: "${input.assignee}"
-          updated_at: "2025-01-13T09:22:00Z"
+### List tickets
 
-    delete_ticket:
-      description: Delete a ticket by ID
-      inputSchema:
-        type: object
-        properties:
-          id:
-            type: string
-            description: Ticket ID to delete
-        required: [id]
-        additionalProperties: false
-      script:
-        Output:
-          success: true
-          message: "Ticket ${input.id} deleted successfully"
+Retrieves all tickets with optional filtering by state and assignee.
 
-    move_ticket:
-      description: Change the order of a ticket in the backlog
-      inputSchema:
-        type: object
-        properties:
-          id:
-            type: string
-            description: Ticket ID to move
-          new_order:
-            type: integer
-            description: New position in backlog (1-based)
-        required: [id, new_order]
-        additionalProperties: false
-      script:
-        Output:
-          id: "${input.id}"
-          old_order: 2
-          new_order: "${input.new_order}"
-          message: "Ticket moved successfully"
+```yaml specscript
+Mcp tool:
+  name: list_tickets
+  description: List all tickets with optional filtering
+  inputSchema:
+    type: object
+    properties:
+      state:
+        type: string
+        enum: [todo, doing, done]
+        description: Filter tickets by state
+      assignee:
+        type: string
+        description: Filter tickets by assignee
+    additionalProperties: false
+  script: list-tickets.cli
 
-    get_backlog:
-      description: Get the complete backlog ordered by priority
-      inputSchema:
-        type: object
-        properties:
-          limit:
-            type: integer
-            description: Maximum number of tickets to return
-            default: 50
-        additionalProperties: false
-      script:
-        Output:
-          total_tickets: 2
-          tickets:
-            - id: "TICKET-001"
-              title: "Implement user authentication"
-              state: "todo"
-              priority: "high"
-              assignee: "alice"
-              order: 1
-            - id: "TICKET-002"
-              title: "Design dashboard mockups"
-              state: "doing"
-              priority: "medium"
-              assignee: "bob"
-              order: 2
+```
+
+### Get specific ticket
+
+Retrieves a single ticket by its unique identifier.
+
+```yaml specscript
+Mcp tool:
+  name: get_ticket
+  description: Get a specific ticket by ID
+  inputSchema:
+    type: object
+    properties:
+      id:
+        type: string
+        description: Ticket ID
+    required: [id]
+    additionalProperties: false
+  script: get-ticket.cli
+
+```
+
+### Get backlog overview
+
+Retrieves the complete backlog ordered by priority with optional limit.
+
+```yaml specscript
+Mcp tool:
+  name: get_backlog
+  description: Get the complete backlog ordered by priority
+  inputSchema:
+    type: object
+    properties:
+      limit:
+        type: integer
+        description: Maximum number of tickets to return
+        default: 50
+    additionalProperties: false
+  script: get-backlog.cli
+```
+
+## Ticket Management Tools
+
+CRUD operations for creating, updating, and deleting tickets.
+
+### Create new ticket
+
+Creates a new ticket with the provided details. New tickets start in "todo" state.
+
+```yaml specscript
+Mcp tool:
+  name: create_ticket
+  description: Create a new ticket
+  inputSchema:
+    type: object
+    properties:
+      title:
+        type: string
+        description: Ticket title
+      description:
+        type: string
+        description: Detailed ticket description
+      priority:
+        type: string
+        enum: [low, medium, high]
+        description: Ticket priority level
+        default: medium
+      assignee:
+        type: string
+        description: Person assigned to this ticket
+    required: [title, description]
+    additionalProperties: false
+  script: create-ticket.cli
+
+```
+
+### Update existing ticket
+
+Updates an existing ticket's properties including state transitions.
+
+```yaml specscript
+Mcp tool:
+  name: update_ticket
+  description: Update an existing ticket
+  inputSchema:
+    type: object
+    properties:
+      id:
+        type: string
+        description: Ticket ID to update
+      title:
+        type: string
+        description: New ticket title
+      description:
+        type: string
+        description: New ticket description
+      state:
+        type: string
+        enum: [todo, doing, done]
+        description: New ticket state
+      priority:
+        type: string
+        enum: [low, medium, high]
+        description: New priority level
+      assignee:
+        type: string
+        description: New assignee
+    required: [id]
+    additionalProperties: false
+  script: update-ticket.cli
+
+```
+
+### Delete ticket
+
+Permanently removes a ticket from the backlog.
+
+```yaml specscript
+Mcp tool:
+  name: delete_ticket
+  description: Delete a ticket by ID
+  inputSchema:
+    type: object
+    properties:
+      id:
+        type: string
+        description: Ticket ID to delete
+    required: [id]
+    additionalProperties: false
+  script: delete-ticket.cli
+
+```
+
+## Backlog Organization Tools
+
+Tools for organizing and prioritizing tickets within the backlog.
+
+### Move ticket position
+
+Changes the order of a ticket in the backlog for priority management.
+
+```yaml specscript
+Mcp tool:
+  name: move_ticket
+  description: Change the order of a ticket in the backlog
+  inputSchema:
+    type: object
+    properties:
+      id:
+        type: string
+        description: Ticket ID to move
+      new_order:
+        type: integer
+        description: New position in backlog (1-based)
+    required: [id, new_order]
+    additionalProperties: false
+  script: move-ticket.cli
+
 ```
 
 ## Usage Examples
