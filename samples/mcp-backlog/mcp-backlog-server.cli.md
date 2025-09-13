@@ -1,3 +1,16 @@
+# MCP Backlog Server
+
+A Model Context Protocol (MCP) server for managing ticket backlogs and sprint planning.
+
+## Overview
+
+The MCP Backlog server provides tools for managing software development tickets with full CRUD operations, state transitions, and backlog ordering. It supports the standard ticket lifecycle: "todo" → "doing" → "done".
+
+## Server Configuration
+
+The backlog server runs as an MCP server with the following tools:
+
+```yaml specscript
 Mcp server:
   name: mcp-backlog
   version: 1.0.0
@@ -189,3 +202,44 @@ Mcp server:
               priority: "medium"
               assignee: "bob"
               order: 2
+```
+
+## Usage Examples
+
+### Starting the Server
+
+To start the MCP backlog server:
+
+```shell cli
+cli samples/mcp-backlog/mcp-backlog-server.cli.md
+```
+
+The server will start and wait for MCP client connections.
+
+### Ticket Data Model
+
+Each ticket contains the following properties:
+
+- **id**: Unique ticket identifier (string)
+- **title**: Brief ticket summary (string, required)
+- **description**: Detailed ticket description (string, required)
+- **state**: Current state - "todo", "doing", or "done" (string)
+- **priority**: Priority level - "low", "medium", or "high" (string)
+- **assignee**: Person assigned to the ticket (string, optional)
+- **created_at**: Timestamp when ticket was created (ISO 8601 string)
+- **updated_at**: Timestamp when ticket was last modified (ISO 8601 string)
+- **order**: Position in backlog for ordering (integer)
+
+### State Transitions
+
+Tickets follow the standard development workflow:
+
+1. **todo**: Ticket is ready for work but not started
+2. **doing**: Ticket is currently being worked on
+3. **done**: Ticket has been completed
+
+State transitions can be made using the `update_ticket` tool by changing the `state` property.
+
+### Backlog Management
+
+The backlog maintains an ordered list of tickets using the `order` property. Use the `move_ticket` tool to reorder tickets based on changing priorities or sprint planning needs.
