@@ -175,6 +175,11 @@ All documentation includes runnable code examples that are executed as part of t
 - **JSON Schema:** For map-like structures, use `additionalProperties: { ... }`. Do not use `patternProperties`.
 - **Kotlin:** Follow the standard Kotlin style guide.
 - **Good OO / encapsulation:** Encapsulate logic within appropriate classes and provide utility functions to reduce client code complexity. For example, McpServer encapsulates server context management rather than exposing raw session key manipulation.
+- **File Structure Convention:** In command handler files, organize code in this order:
+  1. **Object definition first** - The main command handler object at the top
+  2. **Extension functions in the middle** - Any extension methods after the object  
+  3. **Data classes at the bottom** - Supporting data classes at the end
+  - This convention ensures consistent code organization and readability across all command handlers
 - **Sparse commenting:** Most code should be self-explanatory. Avoid verbose comments that describe implementation details. Use comments only for:
   - TODOs indicating known limitations or future improvements
   - Non-obvious business logic that cannot be expressed clearly in code
