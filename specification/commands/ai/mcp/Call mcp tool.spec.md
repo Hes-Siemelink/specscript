@@ -37,7 +37,8 @@ Mcp server:
 # Call the tool using MCP client
 Call mcp tool:
   server: demo-server
-  transport: stdio
+  transport:
+    type: internal
   tool: greet
   arguments:
     name: Alice
@@ -66,12 +67,12 @@ Call mcp tool:
 
 The `transport` property defines how to connect to the MCP server:
 
-### Stdio transport
+### Internal transport
 
-For connecting to running servers started by `Mcp server`:
+For connecting to running servers started by `Mcp server` (Phase 1 implementation):
 
 ```yaml specscript
-Code example: Stdio transport connection
+Code example: Internal transport connection
 
 Mcp server:
   name: local-server
@@ -91,7 +92,8 @@ Mcp server:
 
 Call mcp tool:
   server: local-server
-  transport: stdio  # Simple stdio connection
+  transport:
+    type: internal  # Internal connection for Phase 1
   tool: echo
   arguments:
     message: "Test message"
@@ -99,17 +101,17 @@ Call mcp tool:
 Expected output: Test message
 ```
 
-### Process transport
+### Stdio transport (Future - Phase 2)
 
-For spawning external MCP server processes:
+For spawning external MCP server processes via shell commands:
 
 ```yaml
+# This will be implemented in Phase 2
 Call mcp tool:
   server: external-tool-server
   transport:
-    type: process
-    command: ["node", "mcp-server.js"]
-    args: ["--port", "3000"]
+    type: stdio
+    command: "node mcp-server.js --port 3000"
   tool: process_data
   arguments:
     data: "sample input"
@@ -140,7 +142,8 @@ Mcp server:
 
 Call mcp tool:
   server: error-server
-  transport: stdio
+  transport:
+    type: internal
   tool: failing_tool
   arguments:
     input: "test"
