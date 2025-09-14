@@ -26,7 +26,8 @@ sealed class TransportConfig {
      */
     data class Http(
         val url: String,
-        val headers: Map<String, String> = emptyMap()
+        val headers: Map<String, String> = emptyMap(),
+        val authToken: String? = null
     ) : TransportConfig()
 
     companion object {
@@ -60,7 +61,8 @@ sealed class TransportConfig {
                                     }
                                 }
                             } ?: emptyMap()
-                            Http(url, headers)
+                            val authToken = transportNode.get("auth_token")?.textValue()
+                            Http(url, headers, authToken)
                         }
                         else -> throw IllegalArgumentException("Unknown transport type: $type")
                     }

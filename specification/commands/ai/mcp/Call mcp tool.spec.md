@@ -122,6 +122,27 @@ Expected output: Mock server response
 
 Note: Stdio transport enables connection to external MCP-compliant servers. The example uses a simple mock server - real usage works with `python my-mcp-server.py` or any MCP server process.
 
+### HTTP transport
+
+For connecting to HTTP-based MCP servers:
+
+```yaml
+# Example of HTTP transport usage (requires running HTTP MCP server)
+Call mcp tool:
+  server: http-server
+  transport:
+    type: http
+    url: "https://api.example.com/mcp"
+    headers:
+      Authorization: "Bearer ${API_TOKEN}"
+      Content-Type: "application/json"
+  tool: analyze_data
+  arguments:
+    data: "sample input"
+```
+
+Note: HTTP transport enables connection to MCP servers over HTTP. Supports authentication via Bearer tokens and custom headers. The server must implement the MCP HTTP protocol.
+
 ## Error handling
 
 Tool execution errors are properly reported:

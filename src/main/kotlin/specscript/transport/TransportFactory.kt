@@ -26,7 +26,7 @@ object TransportFactory {
                 StdioTransport(config.command)
             }
             is TransportConfig.Http -> {
-                HttpTransport(config.url, config.headers)
+                HttpTransport(config.url, config.headers, config.authToken)
             }
         }
     }

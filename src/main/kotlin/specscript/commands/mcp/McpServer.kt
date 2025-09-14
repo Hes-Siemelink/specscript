@@ -12,17 +12,24 @@ import io.modelcontextprotocol.kotlin.sdk.*
 import io.modelcontextprotocol.kotlin.sdk.server.Server
 import io.modelcontextprotocol.kotlin.sdk.server.ServerOptions
 import io.modelcontextprotocol.kotlin.sdk.server.StdioServerTransport
+import io.modelcontextprotocol.kotlin.sdk.server.mcp
+import io.ktor.server.engine.*
+import io.ktor.server.netty.*
+import io.ktor.server.routing.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.runBlocking
 import kotlinx.io.asSink
 import kotlinx.io.buffered
 import kotlin.concurrent.thread
 
+private typealias HttpMcpServer = EmbeddedServer<NettyApplicationEngine, NettyApplicationEngine.Configuration>
+
 object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, DelayedResolver {
 
     private const val CURRENT_MCP_SERVER_KEY = "currentMcpServer"
     
     val servers = mutableMapOf<String, Server>()
+    private val httpServers = mutableMapOf<String, HttpMcpServer>()
     
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val info = data.toDomainObject(McpServerInfo::class)
@@ -67,20 +74,27 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
         // Store current server name in session context for Mcp tool command
         setCurrentServer(context, info.name)
         
-        // Listen to standard IO
-        startServer(info.name, server)
+        // Start server with appropriate transport
+        startServer(info, server)
 
         return null
     }
 
-    private fun startServer(name: String, server: Server) {
+    private fun startServer(info: McpServerInfo, server: Server) {
+        when (info.transport) {
+            TransportType.STDIO -> startStdioServer(info.name, server)
+            TransportType.HTTP -> startHttpServer(info, server)
+        }
+    }
+
+    private fun startStdioServer(name: String, server: Server) {
         val transport = StdioServerTransport(
             System.`in`.asInput(),
             System.out.asSink().buffered()
         )
 
         thread(start = true, isDaemon = false, name = "MCP Server - $name") {
-            System.err.println("[${Thread.currentThread().name}] Starting server ")
+            System.err.println("[${Thread.currentThread().name}] Starting stdio server ")
             runBlocking {
                 server.connect(transport)
 
@@ -90,7 +104,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
                 }
                 if (servers.contains(name)) {
                     done.join()
-                    System.err.println("[${Thread.currentThread().name}] Stopping server ")
+                    System.err.println("[${Thread.currentThread().name}] Stopping stdio server ")
                 } else {
                     System.err.println("[${Thread.currentThread().name}] Server stopped before it could start")
                 }
@@ -98,10 +112,51 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
         }
     }
 
+    private fun startHttpServer(info: McpServerInfo, server: Server) {
+        val port = info.port ?: 8080
+        val path = info.path ?: "/"
+        
+        thread(start = true, isDaemon = false, name = "MCP HTTP Server - ${info.name}") {
+            System.err.println("[${Thread.currentThread().name}] Starting HTTP server on port $port at path $path")
+            
+            val ktorServer = embeddedServer(Netty, port = port) {
+                routing {
+                    route(path) {
+                        mcp { server }
+                    }
+                }
+            }
+            
+            // Store HTTP server reference for shutdown
+            httpServers[info.name] = ktorServer
+            
+            runBlocking {
+                try {
+                    ktorServer.start(wait = true)
+                    System.err.println("[${Thread.currentThread().name}] HTTP server stopped")
+                } catch (e: Exception) {
+                    System.err.println("[${Thread.currentThread().name}] HTTP server error: ${e.message}")
+                } finally {
+                    httpServers.remove(info.name)
+                }
+            }
+        }
+    }
+
     fun stopServer(name: String) {
-        val server = servers.remove(name) ?: return
-        runBlocking {
-            server.close()
+        val server = servers.remove(name)
+        val httpServer = httpServers.remove(name)
+        
+        if (server != null) {
+            runBlocking {
+                server.close()
+            }
+        }
+        
+        if (httpServer != null) {
+            runBlocking {
+                httpServer.stop(1000, 2000)
+            }
         }
     }
 
@@ -218,6 +273,9 @@ data class McpServerInfo(
     val name: String,
     val version: String,
     val stop: Boolean = false,
+    val transport: TransportType = TransportType.STDIO,
+    val port: Int? = null,
+    val path: String? = null,
 
     @JsonAnySetter
     val tools: MutableMap<String, ToolInfo> = mutableMapOf(),
@@ -228,6 +286,11 @@ data class McpServerInfo(
     @JsonAnySetter
     val prompts: MutableMap<String, PromptInfo> = mutableMapOf()
 )
+
+enum class TransportType {
+    STDIO,
+    HTTP
+}
 
 data class ToolInfo(
     val description: String,

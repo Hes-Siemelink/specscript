@@ -55,6 +55,37 @@ The external script file should contain the SpecScript commands to execute when 
 
 <!-- TODO: Need to stop the file-server after Mcp tool command is implemented to avoid interference with other tests -->
 
+## HTTP transport
+
+Start an HTTP-based MCP server using Server-Sent Events (SSE) for bidirectional communication:
+
+```yaml specscript
+Code example: HTTP MCP server
+
+Mcp server:
+  name: http-server
+  version: "1.0.0"
+  transport: HTTP
+  port: 8090
+  path: "/mcp"
+  tools:
+    greet:
+      description: Generate a greeting over HTTP
+      inputSchema:
+        name:
+          type: string
+          description: Name to greet
+      script:
+        Output: Hello ${input.name} via HTTP!
+```
+
+The HTTP server supports:
+- **transport**: Set to `HTTP` to enable HTTP transport (default: `STDIO`)
+- **port**: Port number for the HTTP server (default: `8080`)
+- **path**: Base path for MCP endpoints (default: `/`)
+
+HTTP clients can connect to `http://localhost:8090/mcp` for SSE and POST messages.
+
 ### Stop the server
 
 Stop and remove the server with the `stop` command:
@@ -67,3 +98,15 @@ Mcp server:
   version: "1.0.0"
   stop: true
 ```
+
+<!-- yaml specscript
+Mcp server:
+  name: file-server
+  version: "1.0.0"
+  stop: true
+
+Mcp server:
+  name: http-server
+  version: "1.0.0"
+  stop: true
+-->

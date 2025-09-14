@@ -8,6 +8,16 @@ properties:
     type: string
   stop:
     type: boolean
+  transport:
+    type: string
+    enum: [STDIO, HTTP]
+    description: Transport type for the MCP server
+  port:
+    type: integer
+    description: Port number for HTTP transport (default 8080)
+  path:
+    type: string
+    description: Base path for HTTP transport endpoints (default /)
   tools:
     type: object
     additionalProperties:
