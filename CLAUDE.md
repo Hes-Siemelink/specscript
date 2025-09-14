@@ -368,6 +368,29 @@ Specification-first ensures:
 
 This process ensures new commands integrate seamlessly with the existing SpecScript ecosystem while maintaining consistency and testability.
 
+### CRITICAL: Common Failures to Avoid
+Based on real development sessions, these are the most common and serious mistakes:
+
+1. **NEVER skip spec-first development** - Implementation without specification violates SpecScript's core philosophy
+   - Even if you see existing patterns to copy, always write the specification first
+   - The user will be extremely frustrated if you jump to code implementation
+   - This is a fundamental violation of the project's development methodology
+
+2. **ALWAYS follow established documentation patterns** - Don't invent your own format
+   - Study existing `.spec.md` files (especially `Mcp tool.spec.md` and `Mcp server.spec.md`) before writing new ones
+   - Use the exact same structure: title format, content type table, schema reference, code example captions
+   - Start servers once, add commands in separate blocks, stop in hidden comments
+
+3. **NEVER forget `Code example:` captions** - ALL executable code blocks must start with descriptive captions
+   - This is now rule #1 in the critical documentation rules
+   - Examples: "Code example: Adding a greeting tool to the server"
+   - This is like captions for illustrations in a book
+
+4. **Memory and consistency failures** - Key information from the same conversation was forgotten
+   - The spec-first development process was discussed extensively but then ignored
+   - Established patterns were available but not consulted
+   - This suggests need for better pattern recognition and following established workflows
+
 ## Spec-First Development Philosophy
 
 SpecScript enables true **specification-driven development** where the specification IS the implementation:

@@ -175,7 +175,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
         }
     }
 
-    private fun Server.addPrompt(promptName: String, prompt: PromptInfo, localContext: ScriptContext) {
+    fun Server.addPrompt(promptName: String, prompt: PromptInfo, localContext: ScriptContext) {
         addPrompt(
             name = promptName,
             description = prompt.description,
