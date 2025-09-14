@@ -150,7 +150,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
         }
     }
 
-    private fun Server.addResource(resourceURI: String, resource: ResourceInfo, localContext: ScriptContext) {
+    fun Server.addResource(resourceURI: String, resource: ResourceInfo, localContext: ScriptContext) {
         addResource(
             uri = resourceURI,
             name = resource.name,

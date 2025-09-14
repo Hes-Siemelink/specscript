@@ -13,6 +13,7 @@ import specscript.commands.files.RunScript
 import specscript.commands.files.TempFile
 import specscript.commands.files.WriteFile
 import specscript.commands.http.*
+import specscript.commands.mcp.McpResource
 import specscript.commands.mcp.McpServer
 import specscript.commands.mcp.McpTool
 import specscript.commands.schema.ValidateSchema
@@ -131,6 +132,7 @@ object CommandLibrary {
         Store,
 
         // AI
+        McpResource,
         McpServer,
         McpTool
     )

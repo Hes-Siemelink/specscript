@@ -15,16 +15,18 @@
 Use **Mcp tool** to define tools that can be added to an MCP server. This command is typically used in conjunction with `Mcp server` to modularize tool definitions.
 
 ```yaml specscript
-Code example: Basic tool definition
+Code example: MCP server without definitions
 
 Mcp server:
   name: test-server
   version: "1.0.0"
 ```
 
-Now that we have a server running, we can add tools to it:
+Now that we have a server running, we can add tools to it.
 
 ```yaml specscript
+Code example: Adding a tool to an MCP server
+
 Mcp tool:
   greet:
     description: Generate a personalized greeting
@@ -45,6 +47,8 @@ Mcp tool:
 You can reference external SpecScript files in the `script` property by providing a filename:
 
 ```yaml specscript
+Code example: Tool backed by external script
+
 Mcp tool:
   process:
     description: Process some data

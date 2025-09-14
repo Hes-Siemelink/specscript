@@ -1,6 +1,10 @@
-# AGENTS.md
+# CLAUDE.md
 
-This file provides guidance to AI assistants (Claude Code, GitHub Copilot, etc.) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+**CRITICAL: Always follow spec-first development. See "Adding New SpecScript Commands: Complete Development Process" below.**
+
+For complete project context, build commands, architecture details, and coding guidelines, see [AGENTS.md](./AGENTS.md).
 
 ## Project Overview
 
@@ -268,14 +272,27 @@ When committing changes to the project, follow these rules:
 - ````yaml` - **ILLUSTRATIVE**: Shows syntax without execution (for invalid/example code)
 - ````yaml file=filename.cli` - **FILE CREATION**: Creates temporary files during test execution
 
+### Code Block Caption Rule:
+- **ALL** executable code blocks (````yaml specscript`) must start with `Code example: [concise description]`
+- This serves as a caption for the code block, like an illustration in a book
+- Example format:
+  ```yaml specscript
+  Code example: Adding a greeting tool to the server
+  
+  Mcp tool:
+    greet:
+      description: Generate a personalized greeting
+  ```
+
 ### Critical Rules for SpecScript Documentation:
-1. **All `yaml specscript` blocks must be valid, working code** - they execute during tests
-2. **Use `localhost:2525` endpoints** - sample-server.cli runs automatically during tests providing real HTTP endpoints
-3. **Invalid examples must use plain `yaml`** - never `yaml specscript` for broken/incorrect code
-4. **You cannot lie in documentation** - if you write it, it must work or tests fail
-5. **Docs stay current automatically** - because they're executable, they can't become outdated
-6. **Use sentence case for section titles** - e.g., "Reading temp files created in Markdown", not "Reading Temp Files Created In Markdown"
-7. **Multiple commands require `---` separators** - YAML doesn't allow duplicate keys, so use `---` between commands or list syntax for repetition
+1. **All `yaml specscript` blocks must start with `Code example:`** - This serves as a caption describing the code block
+2. **All `yaml specscript` blocks must be valid, working code** - they execute during tests
+3. **Use `localhost:2525` endpoints** - sample-server.cli runs automatically during tests providing real HTTP endpoints
+4. **Invalid examples must use plain `yaml`** - never `yaml specscript` for broken/incorrect code
+5. **You cannot lie in documentation** - if you write it, it must work or tests fail
+6. **Docs stay current automatically** - because they're executable, they can't become outdated
+7. **Use sentence case for section titles** - e.g., "Reading temp files created in Markdown", not "Reading Temp Files Created In Markdown"
+8. **Multiple commands require `---` separators** - YAML doesn't allow duplicate keys, so use `---` between commands or list syntax for repetition
 
 ### Sample Server Endpoints (available during tests):
 - `POST /greeting` - accepts `name` and `language`, returns formatted greeting
