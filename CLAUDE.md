@@ -335,7 +335,8 @@ This section documents the complete process used to create the `Mcp tool` comman
 2. **Design data classes**: Reuse existing classes where possible (good OO/encapsulation principle)
 3. **Implement business logic**: Focus on core functionality, delegate to existing utility methods
 4. **Add to CommandLibrary**: Register the new command in the centralized command registry
-5. **Handle shared concerns**: Utilize existing patterns for context management, server registries, etc.
+5. **Update command reference**: Add the new command to `specification/commands/README.md` in the appropriate section
+6. **Handle shared concerns**: Utilize existing patterns for context management, server registries, etc.
 
 ### Phase 4: Integration and Testing
 1. **Build and test**: Use `./gradlew build fatJar -x test -x specificationTest` for rapid iteration

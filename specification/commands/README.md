@@ -6,8 +6,7 @@ Overview of standard commands in SpecScript.
 
 ### Script definition
 
-* [Script info](core/script-info/Script%20info.spec.md) - Contains script description and input parameter
-  definitions.
+* [Script info](core/script-info/Script%20info.spec.md) - Contains script description and input parameter definitions.
 
 ### Variables
 
@@ -54,8 +53,8 @@ Overview of standard commands in SpecScript.
 
 * [Confirm](core/user-interaction/Confirm.spec.md) - Asks the user for confirmation
 * [Prompt](core/user-interaction/Prompt.spec.md) - Asks the user for input with an interactive prompt
-* [Prompt object](core/user-interaction/Prompt%20object.spec.md) - Asks multiple questions and stores the answers
-  into one object
+* [Prompt object](core/user-interaction/Prompt%20object.spec.md) - Asks multiple questions and stores the answers into
+  one object
 
 ### Util
 
@@ -89,24 +88,34 @@ Overview of standard commands in SpecScript.
 * [PUT](core/http/PUT.spec.md) - Sends a PUT request to an HTTP endpoint
 * [PATCH](core/http/PATCH.spec.md) - Sends a PATCH request to an HTTP endpoint
 * [DELETE](core/http/DELETE.spec.md) - Sends a DELETE request to an HTTP endpoint
-* [Http request defaults](core/http/Http%20request%20defaults.spec.md) - Sets the default parameters for all
-  subsequent HTTP commands.
+* [Http request defaults](core/http/Http%20request%20defaults.spec.md) - Sets the default parameters for all subsequent
+  HTTP commands.
 
 ### Http server
 
-* [Http server](core/http/Http%20server.spec.md) - Starts an embedded HTTP server, based on an OpenAPI-flavored spec
-  and backed by SpecScript commands.
+* [Http server](core/http/Http%20server.spec.md) - Starts an embedded HTTP server, based on an OpenAPI-flavored spec and
+  backed by SpecScript commands.
 
 ### Manage credentials
 
 * [Connect to](core/connections/Connect%20to.spec.md) - Sets up a connection to a named endpoint
 * [Create credentials](core/connections/Create%20credentials.spec.md) - Configures a credentials for an endpoint and
   saves it in the user's preferences.
-* [Credentials](core/connections/Credentials.spec.md) - Use a different credentials file than the default one from
-  the home directory
+* [Credentials](core/connections/Credentials.spec.md) - Use a different credentials file than the default one from the
+  home directory
 * [Get credentials](core/connections/Get%20credentials.spec.md) - Gets the default credentials for an endpoint
 * [Get all credentials](core/connections/Get%20all%20credentials.spec.md) - Gets all credential for an endpoint
-* [Set default credentials](core/connections/Set%20default%20credentials.spec.md) - Sets the default credentials for
-  an endpoint
+* [Set default credentials](core/connections/Set%20default%20credentials.spec.md) - Sets the default credentials for an
+  endpoint
 * [Delete credentials](core/connections/Delete%20credentials.spec.md) - Deletes credentials for an endpoint
+
+## AI
+
+### Model Context Protocol (MCP)
+
+* [Call mcp tool](ai/mcp/Call%20mcp%20tool.spec.md) - Executes tools on MCP servers via various transports
+* [Mcp server](ai/mcp/Mcp%20server.spec.md) - Starts an MCP server with tools, resources, and prompts
+* [Mcp tool](ai/mcp/Mcp%20tool.spec.md) - Defines tools for an MCP server
+* [Mcp prompt](ai/mcp/Mcp%20prompt.spec.md) - Defines prompts for an MCP server
+* [Mcp resource](ai/mcp/Mcp%20resource.spec.md) - Defines resources for an MCP server
 
