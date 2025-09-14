@@ -13,6 +13,7 @@ import specscript.commands.files.RunScript
 import specscript.commands.files.TempFile
 import specscript.commands.files.WriteFile
 import specscript.commands.http.*
+import specscript.commands.mcp.CallMcpTool
 import specscript.commands.mcp.McpPrompt
 import specscript.commands.mcp.McpResource
 import specscript.commands.mcp.McpServer
@@ -133,6 +134,7 @@ object CommandLibrary {
         Store,
 
         // AI
+        CallMcpTool,
         McpPrompt,
         McpResource,
         McpServer,
