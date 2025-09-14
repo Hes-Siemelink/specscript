@@ -93,7 +93,7 @@ Mcp server:
 Call mcp tool:
   server: local-server
   transport:
-    type: internal  # Internal connection for Phase 1
+    type: internal
   tool: echo
   arguments:
     message: "Test message"
@@ -101,21 +101,26 @@ Call mcp tool:
 Expected output: Test message
 ```
 
-### Stdio transport (Future - Phase 2)
+### Stdio transport
 
 For spawning external MCP server processes via shell commands:
 
-```yaml
-# This will be implemented in Phase 2
+```yaml specscript
+Code example: Stdio transport with mock MCP server
+
 Call mcp tool:
-  server: external-tool-server
+  server: mock-stdio-server
   transport:
     type: stdio
-    command: "node mcp-server.js --port 3000"
-  tool: process_data
+    command: "specification/commands/ai/mcp/mock-mcp-server.sh"
+  tool: any_tool
   arguments:
     data: "sample input"
+
+Expected output: Mock server response
 ```
+
+Note: Stdio transport enables connection to external MCP-compliant servers. The example uses a simple mock server - real usage works with `python my-mcp-server.py` or any MCP server process.
 
 ## Error handling
 

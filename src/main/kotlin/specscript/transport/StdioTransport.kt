@@ -4,6 +4,13 @@ import io.modelcontextprotocol.kotlin.sdk.CallToolRequest
 import io.modelcontextprotocol.kotlin.sdk.CallToolResult
 import io.modelcontextprotocol.kotlin.sdk.ListToolsResult
 import io.modelcontextprotocol.kotlin.sdk.TextContent
+import io.modelcontextprotocol.kotlin.sdk.client.Client
+import io.modelcontextprotocol.kotlin.sdk.client.StdioClientTransport
+import io.modelcontextprotocol.kotlin.sdk.Implementation
+import kotlinx.io.asSource
+import kotlinx.io.asSink
+import kotlinx.io.buffered
+import java.util.concurrent.TimeUnit
 
 /**
  * Stdio transport for communication with MCP servers via shell commands.
@@ -15,23 +22,88 @@ class StdioTransport(
     private val command: String
 ) : McpClientTransport {
 
-    private var connected = false
+    private var process: Process? = null
+    private var client: Client? = null
 
     override suspend fun connect(): Boolean {
-        // TODO: Implement in Phase 2
-        throw UnsupportedOperationException("Stdio transport not implemented yet - planned for Phase 2")
+        return try {
+            // Execute shell command - let shell handle parsing and execution
+            println("DEBUG: Starting process with command: $command")
+            process = ProcessBuilder("sh", "-c", command).start()
+
+            // Create MCP client with stdio transport
+            client = Client(clientInfo = Implementation("specscript-client", "1.0.0"))
+            val transport = StdioClientTransport(
+                input = process!!.inputStream.asSource().buffered(),
+                output = process!!.outputStream.asSink().buffered()
+            )
+
+            client!!.connect(transport)
+            println("DEBUG: Successfully connected to MCP server via stdio")
+            true
+        } catch (e: Exception) {
+            println("DEBUG: Failed to connect via stdio: ${e.message}")
+            e.printStackTrace()
+            cleanup()
+            false
+        }
     }
 
     override suspend fun callTool(request: CallToolRequest): CallToolResult {
-        throw UnsupportedOperationException("Stdio transport not implemented yet - planned for Phase 2")
+        val mcpClient = client ?: throw IllegalStateException("Transport not connected. Call connect() first.")
+
+        return try {
+            mcpClient.callTool(request) as CallToolResult
+        } catch (e: Exception) {
+            // Re-throw SpecScriptCommandError to preserve error handling behavior
+            if (e is specscript.language.SpecScriptCommandError) {
+                throw e
+            }
+            throw Exception("Stdio tool call failed: ${e.message}", e)
+        }
     }
 
     override suspend fun listTools(): ListToolsResult {
-        throw UnsupportedOperationException("Stdio transport not implemented yet - planned for Phase 2")
+        val mcpClient = client ?: throw IllegalStateException("Transport not connected. Call connect() first.")
+
+        return try {
+            mcpClient.listTools() ?: ListToolsResult(tools = emptyList(), nextCursor = null)
+        } catch (e: Exception) {
+            // Fallback for failed tool listing
+            ListToolsResult(tools = emptyList(), nextCursor = null)
+        }
     }
 
     override suspend fun close() {
-        connected = false
-        // TODO: Cleanup process resources when implemented
+        cleanup()
+    }
+
+    private fun cleanup() {
+        println("DEBUG: Cleaning up stdio transport resources")
+        try {
+            client?.let {
+                kotlinx.coroutines.runBlocking {
+                    it.close()
+                }
+            }
+        } catch (e: Exception) {
+            println("DEBUG: Error closing MCP client: ${e.message}")
+        }
+
+        try {
+            process?.let { proc ->
+                proc.destroy()
+                val terminated = proc.waitFor(5, TimeUnit.SECONDS)
+                if (!terminated) {
+                    println("DEBUG: Process didn't terminate gracefully, force killing")
+                    proc.destroyForcibly()
+                }
+            }
+        } catch (e: Exception) {
+            println("DEBUG: Error cleaning up process: ${e.message}")
+        } finally {
+            process = null
+            client = null
+        }
     }
 }
