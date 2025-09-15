@@ -8,11 +8,12 @@
 | List         | no        |
 | Object       | yes       |
 
-[McpServer.schema.yaml](schema/McpServer.schema.yaml)
+[Mcp server.schema.yaml](schema/Mcp%20server.schema.yaml)
 
 ## Basic usage
 
-Use **Mcp server** to start a server with tools, resources and prompts.
+Use **Mcp server** to start a server with tools, resources and prompts. Define the behavior of each item in SpecScript
+using the `script` property.
 
 ```yaml specscript
 Code example: Simple MCP server
@@ -23,12 +24,20 @@ Mcp server:
   tools:
     hello:
       description: Get a greeting
-      inputSchema:
-        name:
-          type: string
-          description: Your name
       script:
-        Output: Hello ${input.name}!
+        Output: Hello world!
+  resources:
+    welcome-message:
+      name: Welcome Message
+      description: A friendly welcome message
+      script:
+        Output: Welcome to the MCP server!
+  prompts:
+    farewell:
+      name: Farewell Prompt
+      description: A prompt for saying goodbye
+      script:
+        Output: Goodbye! Have a great day!
 ```
 
 ### External script files
@@ -80,6 +89,7 @@ Mcp server:
 ```
 
 The HTTP server supports:
+
 - **transport**: Set to `HTTP` to enable HTTP transport (default: `STDIO`)
 - **port**: Port number for the HTTP server (default: `8080`)
 - **path**: Base path for MCP endpoints (default: `/`)

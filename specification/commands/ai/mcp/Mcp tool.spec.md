@@ -8,11 +8,12 @@
 | List         | implicit  |
 | Object       | yes       |
 
-[McpTool.schema.yaml](schema/McpTool.schema.yaml)
+[Mcp tool.schema.yaml](schema/Mcp%20tool.schema.yaml)
 
 ## Basic usage
 
-Use **Mcp tool** to define tools that can be added to an MCP server. This command is typically used in conjunction with `Mcp server` to modularize tool definitions.
+Use **Mcp tool** to define tools that can be added to an MCP server. This command is typically used in conjunction with
+`Mcp server` to modularize tool definitions.
 
 ```yaml specscript
 Code example: MCP server without definitions
@@ -36,7 +37,7 @@ Mcp tool:
         name:
           type: string
           description: Name of the person to greet
-      required: [name]
+      required: [ name ]
       additionalProperties: false
     script:
       Output: Hello ${input.name}!
@@ -58,7 +59,7 @@ Mcp tool:
         data:
           type: string
           description: Data to process
-      required: [data]
+      required: [ data ]
       additionalProperties: false
     script: process-data.cli
 ```

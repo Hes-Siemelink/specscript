@@ -11,8 +11,9 @@ import specscript.language.*
 import specscript.transport.TransportConfig
 import specscript.transport.TransportFactory
 import specscript.util.toDomainObject
+import specscript.util.toKotlinx
 
-object CallMcpTool : CommandHandler("Call mcp tool", "ai/mcp"), ObjectHandler, DelayedResolver {
+object CallMcpTool : CommandHandler("Call Mcp tool", "ai/mcp"), ObjectHandler, DelayedResolver {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val info = data.toDomainObject(CallMcpToolInfo::class)
@@ -36,11 +37,11 @@ object CallMcpTool : CommandHandler("Call mcp tool", "ai/mcp"), ObjectHandler, D
 
             val request = CallToolRequest(
                 name = info.tool,
-                arguments = info.arguments?.toMcp() ?: kotlinx.serialization.json.JsonObject(emptyMap())
+                arguments = info.arguments?.toKotlinx() ?: kotlinx.serialization.json.JsonObject(emptyMap())
             )
 
             val result = transport.callTool(request)
-            result.toJsonNode()
+            result.firstTextAsJson()
 
         } catch (e: SpecScriptCommandError) {
             throw e
@@ -52,63 +53,25 @@ object CallMcpTool : CommandHandler("Call mcp tool", "ai/mcp"), ObjectHandler, D
     }
 
 
-
 }
 
-/**
- * Converts JsonNode arguments to MCP-compatible kotlinx.serialization JsonObject.
- */
-fun JsonNode.toMcp(): kotlinx.serialization.json.JsonObject {
-    val arguments = if (this.isObject) {
-        buildMap {
-            this@toMcp.fields().forEach { field ->
-                put(
-                    field.key, when {
-                        field.value.isTextual -> field.value.asText()
-                        field.value.isNumber -> field.value.asDouble()
-                        field.value.isBoolean -> field.value.asBoolean()
-                        field.value.isNull -> null
-                        else -> field.value.toString()
-                    }
-                )
-            }
-        }
-    } else {
-        emptyMap()
+fun CallToolResult.firstTextAsJson(): JsonNode {
+    if (content.isEmpty()) {
+        return TextNode("Tool executed but returned no content")
     }
 
-    return kotlinx.serialization.json.JsonObject(
-        arguments.mapValues { (_, value) ->
-            when (value) {
-                is String -> kotlinx.serialization.json.JsonPrimitive(value)
-                is Number -> kotlinx.serialization.json.JsonPrimitive(value)
-                is Boolean -> kotlinx.serialization.json.JsonPrimitive(value)
-                null -> kotlinx.serialization.json.JsonNull
-                else -> kotlinx.serialization.json.JsonPrimitive(value.toString())
-            }
-        }
-    )
-}
-
-/**
- * Converts MCP CallToolResult to JsonNode for SpecScript consumption.
- */
-fun CallToolResult.toJsonNode(): JsonNode {
-    return when {
-        content?.isNotEmpty() == true -> {
-            val content = content.firstOrNull()
-            when (content) {
-                is TextContent -> TextNode(content.text ?: "Tool executed (empty text content)")
-                else -> TextNode("Tool executed successfully")
-            }
-        }
-        else -> TextNode("Tool executed but returned no content")
+    // TODO handle lists and other content types
+    val first = content.first()
+    return when (first) {
+        is TextContent -> TextNode(first.text)
+        else -> TextNode("Tool executed successfully with result of type ${first.type}")
     }
 }
+
 
 data class CallMcpToolInfo(
-    val server: String,
+    val server: String?,
     val tool: String,
     val transport: JsonNode,
-    val arguments: JsonNode? = null
+    val arguments: ObjectNode? = null
 )

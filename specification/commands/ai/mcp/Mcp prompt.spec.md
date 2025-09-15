@@ -8,11 +8,12 @@
 | List         | implicit  |
 | Object       | yes       |
 
-[McpPrompt.schema.yaml](schema/McpPrompt.schema.yaml)
+[Mcp prompt.schema.yaml](schema/Mcp%20prompt.schema.yaml)
 
 ## Basic usage
 
-Use **Mcp prompt** to define prompts that can be added to an MCP server. This command is typically used in conjunction with `Mcp server` to modularize prompt definitions.
+Use **Mcp prompt** to define prompts that can be added to an MCP server. This command is typically used in conjunction
+with `Mcp server` to modularize prompt definitions.
 
 ```yaml specscript
 Code example: MCP server without definitions

@@ -1,6 +1,7 @@
 package specscript.transport
 
 import com.fasterxml.jackson.databind.JsonNode
+import specscript.language.getTextParameter
 
 /**
  * Configuration for MCP client transports.
@@ -40,17 +41,20 @@ sealed class TransportConfig {
                     // Simple stdio transport
                     Stdio("cli ${serverName}.spec.md") // Default command
                 }
+
                 transportNode.isObject -> {
                     val type = transportNode.get("type")?.textValue()
                     when (type) {
                         "internal" -> Internal(
-                            serverName = serverName ?: throw IllegalArgumentException("serverName required for internal transport")
+                            serverName = transportNode.getTextParameter("server")
                         )
+
                         "stdio" -> {
                             val command = transportNode.get("command")?.textValue()
                                 ?: throw IllegalArgumentException("command required for stdio transport")
                             Stdio(command)
                         }
+
                         "http" -> {
                             val url = transportNode.get("url")?.textValue()
                                 ?: throw IllegalArgumentException("url required for http transport")
@@ -64,9 +68,11 @@ sealed class TransportConfig {
                             val authToken = transportNode.get("auth_token")?.textValue()
                             Http(url, headers, authToken)
                         }
+
                         else -> throw IllegalArgumentException("Unknown transport type: $type")
                     }
                 }
+
                 else -> throw IllegalArgumentException("Invalid transport configuration")
             }
         }

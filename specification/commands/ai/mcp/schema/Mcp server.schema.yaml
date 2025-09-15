@@ -1,0 +1,91 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+
+type: object
+properties:
+  name:
+    type: string
+  version:
+    type: string
+  stop:
+    type: boolean
+  transport:
+    type: string
+    enum: [ STDIO, HTTP ]
+    description: Transport type for the MCP server
+  port:
+    type: integer
+    description: Port number for HTTP transport (default 8080)
+  path:
+    type: string
+    description: Base path for HTTP transport endpoints (default /)
+  tools:
+    type: object
+    additionalProperties:
+      type: object
+      properties:
+        description:
+          type: string
+        inputSchema:
+          type: object
+          additionalProperties: true
+        script:
+          type:
+            - object
+            - string
+      required:
+        - description
+        - script
+      additionalProperties: false
+  resources:
+    type: object
+    additionalProperties:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        mimeType:
+          type: string
+        script:
+          type:
+            - object
+            - string
+      required:
+        - name
+        - description
+        - script
+  prompts:
+    type: object
+    additionalProperties:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        arguments:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              description:
+                type: string
+              required:
+                type: boolean
+            required:
+              - name
+              - description
+        script:
+          type:
+            - object
+            - string
+      required:
+        - name
+        - description
+        - script
+required:
+  - name
+  - version

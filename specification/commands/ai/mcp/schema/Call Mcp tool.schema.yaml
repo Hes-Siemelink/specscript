@@ -2,31 +2,26 @@ $schema: https://json-schema.org/draft/2020-12/schema
 
 type: object
 properties:
-  server:
-    type: string
-    description: Name of the MCP server to connect to
   transport:
     oneOf:
-      - type: string
-        enum: [stdio]
-        description: Simple stdio transport for local servers
       - type: object
         properties:
           type:
             type: string
-            enum: [stdio, process]
+            enum: [ internal, stdio, http ]
             description: Transport type
+          server:
+            type: string
+            description: Name of the MCP server to connect to
           command:
-            type: array
-            items:
-              type: string
+            type: string
             description: Command and arguments to spawn MCP server process
           args:
             type: array
             items:
               type: string
             description: Additional arguments for the process
-        required: [type]
+        required: [ type ]
         additionalProperties: false
   tool:
     type: string
@@ -36,6 +31,5 @@ properties:
     description: Arguments to pass to the tool
     additionalProperties: true
 required:
-  - server
   - transport
   - tool

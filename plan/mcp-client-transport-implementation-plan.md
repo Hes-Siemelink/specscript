@@ -2,17 +2,21 @@
 
 ## Executive Summary
 
-This plan outlines the implementation of proper MCP client transport mechanisms in SpecScript, addressing the challenges of stdio communication when client and server run in the same process, and expanding to support multiple transport types including process-based stdio and streamable HTTP.
+This plan outlines the implementation of proper MCP client transport mechanisms in SpecScript, addressing the challenges
+of stdio communication when client and server run in the same process, and expanding to support multiple transport types
+including process-based stdio and streamable HTTP.
 
 ## Current State Analysis
 
 ### What We Have (In-Process Communication)
+
 - ✅ **Direct method calls** using Kotlin reflection to invoke server's `handleCallTool`
 - ✅ **Proper MCP protocol structures** (CallToolRequest, CallToolResult)
 - ✅ **Real tool execution** with actual SpecScript execution
 - ✅ **Works for testing** - validates MCP server functionality within same JVM
 
 ### Limitations of Current Approach
+
 - ❌ **Not true MCP protocol** - bypasses JSON-RPC transport layer
 - ❌ **Cannot connect to external servers** - only works with in-process servers
 - ❌ **Stdio conflict** - both client and server compete for stdin/stdout in same process
@@ -29,7 +33,7 @@ This plan outlines the implementation of proper MCP client transport mechanisms 
 ### Transport Selection Strategy
 
 ```yaml specscript
-Call mcp tool:
+Call Mcp tool:
   server: my-server
   transport:
     # Option 1: Internal (testing/validation)
@@ -52,15 +56,18 @@ Call mcp tool:
 ## Implementation Phases
 
 ### Phase 1: Transport Abstraction Layer
+
 **Duration**: 1-2 weeks
 
 **Deliverables**:
+
 - `McpClientTransport` interface abstraction
 - `InProcessTransport` (current implementation, cleaned up)
 - Transport registry and lifecycle management
 - Connection pooling for session-based transports
 
 **Technical Design**:
+
 ```kotlin
 interface McpClientTransport {
     suspend fun connect(): Boolean
@@ -75,19 +82,23 @@ class HttpTransport(val baseUrl: String) : McpClientTransport
 ```
 
 **Success Criteria**:
+
 - Existing in-process functionality works through abstraction
 - Clear interface for adding new transport types
 - Proper resource cleanup and error handling
 
 ### Phase 2: Stdio Transport
+
 **Duration**: 1-2 weeks
 
 **Deliverables**:
+
 - Shell command execution with stdio pipe management
 - Long-lived session support with connection pooling
 - Graceful process startup/shutdown
 
 **Implementation**:
+
 ```kotlin
 class StdioTransport(
     private val command: String  // Shell command to execute
@@ -119,9 +130,10 @@ class StdioTransport(
 ```
 
 **Usage Examples**:
+
 ```yaml specscript
 # Connect to SpecScript MCP server file
-Call mcp tool:
+Call Mcp tool:
   transport:
     type: stdio
     command: cli my-mcp-server.spec.md
@@ -130,7 +142,7 @@ Call mcp tool:
     name: Alice
 
 # Connect to Python MCP server
-Call mcp tool:
+Call Mcp tool:
   transport:
     type: stdio
     command: python /path/to/mcp-server.py
@@ -139,7 +151,7 @@ Call mcp tool:
     code: "def hello(): pass"
 
 # Connect to Node.js MCP server with args
-Call mcp tool:
+Call Mcp tool:
   transport:
     type: stdio
     command: node /path/to/server.js --verbose
@@ -149,15 +161,18 @@ Call mcp tool:
 ```
 
 **Success Criteria**:
+
 - Can execute any shell command and connect via stdio
 - Proper stdio communication with JSON-RPC protocol
 - Connection pooling for multiple tool calls
 - Resource cleanup when connections close
 
 ### Phase 3: HTTP Transport
+
 **Duration**: 1-2 weeks
 
 **Deliverables**:
+
 - HTTP-based MCP client transport using MCP Kotlin SDK
 - HTTP support in the `Mcp server` command for bidirectional HTTP MCP servers
 - Authentication and header management
@@ -168,6 +183,7 @@ Call mcp tool:
 The MCP Kotlin SDK provides HTTP transport support via `StreamableHttpClientTransport`.
 
 **Implementation**:
+
 ```kotlin
 class HttpMcpTransport(
     private val baseUrl: String,
@@ -208,9 +224,10 @@ class HttpMcpTransport(
 ```
 
 **Usage Examples**:
+
 ```yaml specscript
 # HTTP transport
-Call mcp tool:
+Call Mcp tool:
   transport:
     type: http
     url: "https://api.example.com/mcp"
@@ -222,7 +239,7 @@ Call mcp tool:
     prompt: "Write a hello world function"
 
 # HTTP with custom headers
-Call mcp tool:
+Call Mcp tool:
   transport:
     type: http
     url: "http://localhost:8080/mcp"
@@ -234,15 +251,18 @@ Call mcp tool:
 ```
 
 **Success Criteria**:
+
 - HTTP transport works with real MCP servers
 - Proper authentication and header handling
 - Streaming responses handled correctly
 - Connection retry and error recovery
 
 ### Phase 4: Cleanup and Polish
+
 **Duration**: 1 week
 
 **Deliverables**:
+
 - Resource cleanup and leak prevention for all transport types
 - Error handling refinement and comprehensive error messages
 - Performance optimization for transport layer
@@ -250,6 +270,7 @@ Call mcp tool:
 - Integration testing across all transport types
 
 **Resource Management**:
+
 ```kotlin
 interface McpClientTransport {
     suspend fun connect(): Boolean
@@ -269,6 +290,7 @@ class StdioTransport : McpClientTransport {
 ```
 
 **Error Handling Improvements**:
+
 - Standardized error messages across all transport types
 - Proper exception chaining with original cause preservation
 - Timeout handling with graceful degradation
@@ -278,15 +300,16 @@ class StdioTransport : McpClientTransport {
 
 ### Command Enhancements
 
-**Enhanced `Call mcp tool` Command**:
+**Enhanced `Call Mcp tool` Command**:
+
 ```yaml specscript
-Call mcp tool:
+Call Mcp tool:
   # Connection specification
   server: my-server              # For in-process or registered servers
 
   # Transport options
   transport:
-    type: [internal|stdio|http]
+    type: [ internal|stdio|http ]
 
     # Stdio-specific
     command: python server.py --verbose
@@ -303,17 +326,19 @@ Call mcp tool:
   arguments: { key: value }
 
   # Output options
-  format: [json|yaml|text]      # Response format
+  format: [ json|yaml|text ]      # Response format
 ```
 
 ### Error Handling Strategy
 
 **Transport-Specific Error Handling**:
+
 - **Stdio Transport**: Handle process startup failures, stdio communication errors
 - **HTTP Transport**: Handle network timeouts, authentication failures, HTTP status codes
 - **Resource Management**: Handle connection drops, cleanup on failures
 
 **Error Categories**:
+
 1. **Transport Errors**: Connection failures, protocol errors
 2. **Server Errors**: MCP server errors, tool not found, invalid arguments
 3. **Tool Execution Errors**: SpecScript errors within tool execution
@@ -322,23 +347,27 @@ Call mcp tool:
 ## Testing Strategy
 
 ### Unit Testing
+
 - Transport abstraction interfaces
 - Error handling scenarios
 - Resource cleanup verification
 
 ### Integration Testing
+
 - Real MCP server communication across all transport types
 - Server export and process spawning
 - Long-running connection scenarios
 - Performance under load
 
 ### Specification Testing
+
 - All transport types with working examples
 - Error scenarios with proper error propagation
 - Connection lifecycle management
 - Performance benchmarks
 
 ### Test Infrastructure Setup
+
 ```yaml specscript
 # Test servers for different transports
 Test case: Process transport with SpecScript server
@@ -348,7 +377,7 @@ Test case: Process transport with SpecScript server
       tools: { echo: { script: "Output: ${input.message}" } }
 
   test:
-    Call mcp tool:
+    Call Mcp tool:
       server: test-process-server
       transport: { type: process }
       tool: echo
@@ -366,7 +395,7 @@ Test case: HTTP transport with mock server
       port: 18080
 
   test:
-    Call mcp tool:
+    Call Mcp tool:
       transport:
         type: http
         url: "http://localhost:18080/mcp"
@@ -382,16 +411,19 @@ Test case: HTTP transport with mock server
 ### Technical Risks
 
 **Risk**: Process spawning complexity and resource management
+
 - **Likelihood**: Medium
 - **Impact**: High
 - **Mitigation**: Comprehensive process lifecycle management, resource cleanup, timeouts
 
 **Risk**: HTTP transport compatibility with various MCP server implementations
+
 - **Likelihood**: Medium
 - **Impact**: Medium
 - **Mitigation**: Use official MCP Kotlin SDK transports, extensive testing with real servers
 
 **Risk**: Connection pooling and session management complexity
+
 - **Likelihood**: High
 - **Impact**: Medium
 - **Mitigation**: Simple connection registry initially, iterate based on usage patterns
@@ -399,11 +431,13 @@ Test case: HTTP transport with mock server
 ### Integration Risks
 
 **Risk**: Breaking existing in-process functionality during refactoring
+
 - **Likelihood**: Low
 - **Impact**: High
 - **Mitigation**: Transport abstraction preserves existing behavior, comprehensive regression testing
 
 **Risk**: Performance degradation with multiple transport types
+
 - **Likelihood**: Medium
 - **Impact**: Low
 - **Mitigation**: Performance benchmarking, connection reuse, lazy initialization
@@ -411,6 +445,7 @@ Test case: HTTP transport with mock server
 ## Success Criteria
 
 ### Functional Success
+
 - [ ] All four transport types (internal, process, http, sse) work with real MCP servers
 - [ ] Can spawn SpecScript servers as separate processes with stdio communication
 - [ ] Can connect to external MCP servers (Python, Node.js, etc.)
@@ -418,6 +453,7 @@ Test case: HTTP transport with mock server
 - [ ] Proper resource cleanup prevents memory/process leaks
 
 ### Quality Success
+
 - [ ] Comprehensive specification documentation with working examples
 - [ ] Unit and integration test coverage > 90%
 - [ ] Performance meets or exceeds HTTP client patterns
@@ -425,6 +461,7 @@ Test case: HTTP transport with mock server
 - [ ] No resource leaks under normal and error conditions
 
 ### Adoption Success
+
 - [ ] MCP server testing workflows utilize process-based stdio transport
 - [ ] External MCP server integration examples work out of the box
 - [ ] HTTP-based MCP services can be consumed declaratively
@@ -440,6 +477,7 @@ Test case: HTTP transport with mock server
 - **Phase 4** (Week 5): Cleanup and polish
 
 **Milestone Checkpoints**:
+
 - Week 2: Transport abstraction complete, internal transport refactored
 - Week 3: Shell command execution with stdio MCP protocol communication
 - Week 4: HTTP transport working with real MCP servers, HTTP MCP server support
@@ -448,26 +486,34 @@ Test case: HTTP transport with mock server
 ## Future Considerations
 
 ### WebSocket Transport (Future)
+
 - Add WebSocket transport for bidirectional communication if needed
 - Support for server-initiated notifications and updates
 
 ### Authentication & Security
+
 - OAuth2 flow support for HTTP transports
 - Certificate-based authentication for secure environments
 - API key management and rotation
 
 ### Performance Optimizations (Future)
+
 - Connection pooling across multiple SpecScript executions
 - Persistent connection daemon for development workflows
 - Batch request support for multiple tool calls
 
 ### Monitoring & Observability (Future)
+
 - Connection metrics and health checks
 - Request/response logging and tracing
 - Performance profiling and bottleneck identification
 
 ## Conclusion
 
-This plan provides a comprehensive approach to implementing proper MCP client transport support while addressing the unique challenges of SpecScript's dynamic server definitions and same-process execution model. The phased approach minimizes risk while delivering incremental value, and the transport abstraction ensures extensibility for future transport types.
+This plan provides a comprehensive approach to implementing proper MCP client transport support while addressing the
+unique challenges of SpecScript's dynamic server definitions and same-process execution model. The phased approach
+minimizes risk while delivering incremental value, and the transport abstraction ensures extensibility for future
+transport types.
 
-The implementation will transform SpecScript from having basic MCP server testing capabilities to being a full-featured MCP client that can integrate with the entire MCP ecosystem, including external servers and HTTP-based services.
+The implementation will transform SpecScript from having basic MCP server testing capabilities to being a full-featured
+MCP client that can integrate with the entire MCP ecosystem, including external servers and HTTP-based services.

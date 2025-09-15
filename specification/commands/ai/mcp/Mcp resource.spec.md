@@ -8,11 +8,12 @@
 | List         | implicit  |
 | Object       | yes       |
 
-[McpResource.schema.yaml](schema/McpResource.schema.yaml)
+[Mcp resource.schema.yaml](schema/Mcp%20resource.schema.yaml)
 
 ## Basic usage
 
-Use **Mcp resource** to define resources that can be added to an MCP server. This command is typically used in conjunction with `Mcp server` to modularize resource definitions.
+Use **Mcp resource** to define resources that can be added to an MCP server. This command is typically used in
+conjunction with `Mcp server` to modularize resource definitions.
 
 ```yaml specscript
 Code example: MCP server without definitions
@@ -103,7 +104,7 @@ Mcp resource:
 You can reference external SpecScript files in the `script` property by providing a filename:
 
 ```yaml specscript
-Code example: MCP resource referencing external script 
+Code example: MCP resource referencing external script
 
 Mcp resource:
   database-backup:

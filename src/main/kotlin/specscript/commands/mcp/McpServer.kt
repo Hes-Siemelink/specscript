@@ -4,22 +4,23 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.node.TextNode
-import specscript.files.CliFile
-import specscript.language.*
-import specscript.util.*
+import io.ktor.server.engine.*
+import io.ktor.server.netty.*
+import io.ktor.server.routing.*
 import io.ktor.utils.io.streams.*
 import io.modelcontextprotocol.kotlin.sdk.*
 import io.modelcontextprotocol.kotlin.sdk.server.Server
 import io.modelcontextprotocol.kotlin.sdk.server.ServerOptions
 import io.modelcontextprotocol.kotlin.sdk.server.StdioServerTransport
 import io.modelcontextprotocol.kotlin.sdk.server.mcp
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
-import io.ktor.server.routing.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.runBlocking
 import kotlinx.io.asSink
 import kotlinx.io.buffered
+import kotlinx.serialization.json.buildJsonObject
+import specscript.files.CliFile
+import specscript.language.*
+import specscript.util.*
 import kotlin.concurrent.thread
 
 private typealias HttpMcpServer = EmbeddedServer<NettyApplicationEngine, NettyApplicationEngine.Configuration>
@@ -27,10 +28,10 @@ private typealias HttpMcpServer = EmbeddedServer<NettyApplicationEngine, NettyAp
 object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, DelayedResolver {
 
     private const val CURRENT_MCP_SERVER_KEY = "currentMcpServer"
-    
+
     val servers = mutableMapOf<String, Server>()
     private val httpServers = mutableMapOf<String, HttpMcpServer>()
-    
+
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val info = data.toDomainObject(McpServerInfo::class)
 
@@ -73,7 +74,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
 
         // Store current server name in session context for Mcp tool command
         setCurrentServer(context, info.name)
-        
+
         // Start server with appropriate transport
         startServer(info, server)
 
@@ -115,10 +116,10 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
     private fun startHttpServer(info: McpServerInfo, server: Server) {
         val port = info.port ?: 8080
         val path = info.path ?: "/"
-        
+
         thread(start = true, isDaemon = false, name = "MCP HTTP Server - ${info.name}") {
             System.err.println("[${Thread.currentThread().name}] Starting HTTP server on port $port at path $path")
-            
+
             val ktorServer = embeddedServer(Netty, port = port) {
                 routing {
                     route(path) {
@@ -126,10 +127,10 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
                     }
                 }
             }
-            
+
             // Store HTTP server reference for shutdown
             httpServers[info.name] = ktorServer
-            
+
             runBlocking {
                 try {
                     ktorServer.start(wait = true)
@@ -146,13 +147,13 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
     fun stopServer(name: String) {
         val server = servers.remove(name)
         val httpServer = httpServers.remove(name)
-        
+
         if (server != null) {
             runBlocking {
                 server.close()
             }
         }
-        
+
         if (httpServer != null) {
             runBlocking {
                 httpServer.stop(1000, 2000)
@@ -162,8 +163,8 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
 
     fun getCurrentServer(context: ScriptContext): Server {
         val currentServerName = context.session[CURRENT_MCP_SERVER_KEY] as String
-        return servers[currentServerName] ?:
-        throw IllegalStateException("No MCP server found in current context. An MCP server must be started before defining tools.")
+        return servers[currentServerName]
+            ?: throw IllegalStateException("No MCP server found in current context. An MCP server must be started before defining tools.")
     }
 
     private fun setCurrentServer(context: ScriptContext, serverName: String) {
@@ -181,7 +182,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
             toolName,
             tool.description,
             Tool.Input(
-                properties = tool.inputSchema.toKotlinx()
+                properties = tool.inputSchema?.toKotlinx() ?: buildJsonObject { }
             ),
         ) { request ->
             // Set up context for the tool execution
@@ -294,7 +295,7 @@ enum class TransportType {
 
 data class ToolInfo(
     val description: String,
-    val inputSchema: ObjectNode,
+    val inputSchema: ObjectNode?,
     val script: JsonNode
 )
 
@@ -308,7 +309,7 @@ data class ResourceInfo(
 data class PromptInfo(
     val name: String,
     val description: String,
-    val arguments: List<PromptArgumentInfo>,
+    val arguments: List<PromptArgumentInfo> = emptyList(),
     val script: JsonNode
 )
 
