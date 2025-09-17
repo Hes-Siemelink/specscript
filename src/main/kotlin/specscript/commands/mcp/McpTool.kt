@@ -15,7 +15,7 @@ object McpTool : CommandHandler("Mcp tool", "ai/mcp"), ObjectHandler, DelayedRes
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
 
         val toolsData = data.toDomainObject(McpToolsData::class)
-        val server = McpServer.getCurrentServer(context)
+        val server = McpServer.getDefaultServer(context)
 
         // Add each tool to the running server
         toolsData.tools.forEach { (toolName, toolInfo) ->

@@ -23,11 +23,9 @@ import specscript.language.*
 import specscript.util.*
 import kotlin.concurrent.thread
 
-private typealias HttpMcpServer = EmbeddedServer<NettyApplicationEngine, NettyApplicationEngine.Configuration>
-
 object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, DelayedResolver {
 
-    private const val CURRENT_MCP_SERVER_KEY = "currentMcpServer"
+    private const val DEFAULT_MCP_SERVER = "mcp.server.default"
 
     val servers = mutableMapOf<String, Server>()
     private val httpServers = mutableMapOf<String, HttpMcpServer>()
@@ -73,7 +71,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
         }
 
         // Store current server name in session context for Mcp tool command
-        setCurrentServer(context, info.name)
+        setDefaultServer(context, info.name)
 
         // Start server with appropriate transport
         startServer(info, server)
@@ -161,18 +159,18 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
         }
     }
 
-    fun getCurrentServer(context: ScriptContext): Server {
-        val currentServerName = context.session[CURRENT_MCP_SERVER_KEY] as String
+    fun getDefaultServer(context: ScriptContext): Server {
+        val currentServerName = context.session[DEFAULT_MCP_SERVER] as String
         return servers[currentServerName]
             ?: throw IllegalStateException("No MCP server found in current context. An MCP server must be started before defining tools.")
     }
 
-    private fun setCurrentServer(context: ScriptContext, serverName: String) {
-        context.session[CURRENT_MCP_SERVER_KEY] = serverName
+    private fun setDefaultServer(context: ScriptContext, serverName: String) {
+        context.session[DEFAULT_MCP_SERVER] = serverName
     }
 
     private fun clearCurrentServer(context: ScriptContext) {
-        context.session.remove(CURRENT_MCP_SERVER_KEY)
+        context.session.remove(DEFAULT_MCP_SERVER)
     }
 
     fun Server.addTool(toolName: String, tool: ToolInfo, localContext: ScriptContext) {
@@ -269,6 +267,8 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
         }
     }
 }
+
+private typealias HttpMcpServer = EmbeddedServer<NettyApplicationEngine, NettyApplicationEngine.Configuration>
 
 data class McpServerInfo(
     val name: String,
