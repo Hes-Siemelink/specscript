@@ -37,7 +37,7 @@ dependencies {
     implementation("com.github.kotlin-inquirer:kotlin-inquirer:0.1.0")
     implementation("org.jline:jline:3.27.+")
     implementation("org.fusesource.jansi:jansi:2.4.1")
-    implementation("io.javalin:javalin:6.7.+")
+    // Removed Javalin dependency after migrating HttpServer to Ktor
     implementation("org.xerial:sqlite-jdbc:3.47.0.0")
 
     // Model Context Protocol dependencies
@@ -110,13 +110,13 @@ tasks.jar {
 tasks.register<Jar>("fatJar") {
     archiveClassifier.set("full")
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    
+
     manifest {
         attributes["Main-Class"] = "specscript.cli.MainKt"
     }
-    
+
     from(sourceSets.main.get().output)
-    
+
     dependsOn(configurations.runtimeClasspath)
     from({
         configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
@@ -165,26 +165,26 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             from(components["java"])
-            
+
             pom {
                 name.set("SpecScript")
                 description.set("Spec your projects the human and AI-friendly way using Markdown and Yaml")
                 url.set("https://github.com/Hes-Siemelink/specscript")
-                
+
                 licenses {
                     license {
                         name.set("Custom License - View Only")
                         url.set("https://github.com/Hes-Siemelink/specscript/blob/main/LICENSE")
                     }
                 }
-                
+
                 developers {
                     developer {
                         id.set("Hes-Siemelink")
                         name.set("Hes Siemelink")
                     }
                 }
-                
+
                 scm {
                     connection.set("scm:git:git://github.com/Hes-Siemelink/specscript.git")
                     developerConnection.set("scm:git:ssh://github.com/Hes-Siemelink/specscript.git")
@@ -193,7 +193,7 @@ publishing {
             }
         }
     }
-    
+
     repositories {
         mavenLocal()
     }

@@ -5,176 +5,165 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.node.TextNode
+import io.ktor.http.*
+import io.ktor.server.application.*
+import io.ktor.server.engine.*
+import io.ktor.server.netty.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import specscript.files.CliFile
 import specscript.language.*
 import specscript.util.Json
 import specscript.util.Yaml
-import io.javalin.Javalin
-import io.javalin.http.Context
-import io.javalin.http.HandlerType
-import io.javalin.http.bodyAsClass
 import kotlin.io.path.name
+
 
 object HttpServer : CommandHandler("Http server", "core/http"), ObjectHandler, DelayedResolver {
 
-    private val servers = mutableMapOf<Int, Javalin>()
+    // Active servers
+    private val servers = mutableMapOf<Int, HttpServerInstance>()
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val port = data.getParameter("port").intValue()
 
-        // Stop server
+        // Stop request
         data["stop"]?.let {
             if (it.booleanValue()) {
-                stop(port)
-                return null
+                stop(port); return null
             }
         }
 
-        // Add endpoints
+        // Register endpoints
         val serveData: Endpoints = Yaml.parse(data.getParameter("endpoints"))
-        serveData.paths.forEach {
-            addHandler(port, it.key, it.value, context)
-        }
-
+        serveData.paths.forEach { (path, endpointData) -> addHandler(port, path, endpointData, context) }
         return null
     }
 
     fun stop(port: Int) {
-        print("Stopping SpecScript Http Server on port $port\")")
-        servers[port]?.stop()
-        servers.remove(port)
+        println("Stopping SpecScript Http Server on port $port")
+        // Immediate shutdown (no graceful delay) for fast test cycles
+        servers.remove(port)?.stop(0, 0)
     }
 
-    private fun addHandler(port: Int, path: String, data: EndpointData, context: ScriptContext) {
+    private fun addHandler(port: Int, rawPath: String, data: EndpointData, context: ScriptContext) {
+        // Start (or reuse) server for this port
         val server = servers.getOrPut(port) {
             println("Starting SpecScript Http Server for ${context.cliFile.name} on port $port")
-            Javalin.create().start(port)
+            embeddedServer(Netty, port = port) { }.also { it.start(wait = false) }
         }
 
-        data.methodHandlers.forEach {
-            server.addHandler(path, it.key, it.value, context)
+        // Normalize Javalin style ":id" into Ktor style "{id}" so existing specs continue to work.
+        val normalizedPath = normalizePath(rawPath)
+        val pathParamNames = extractPathParamNames(normalizedPath)
+
+        // Install all method handlers for this path in one routing block.
+        server.application.routing {
+            route(normalizedPath) {
+                data.methodHandlers.forEach { (methodName, handlerData) ->
+                    val httpMethod = methods[methodName]
+                        ?: throw CommandFormatException("Unsupported HTTP method: $methodName")
+                    method(httpMethod) {
+                        handle { handleRequest(handlerData, call, context, pathParamNames) }
+                    }
+                }
+            }
         }
     }
 }
 
-const val REQUEST_VARIABLE = "request"
+private fun normalizePath(path: String): String =
+    path.replace(Regex(":(\\w+)")) { "{" + it.groupValues[1] + "}" }
+
+private fun extractPathParamNames(path: String): List<String> =
+    Regex("\\{(\\w+)}").findAll(path).map { it.groupValues[1] }.toList()
 
 private val methods = mapOf(
-    "get" to HandlerType.GET,
-    "post" to HandlerType.POST,
-    "put" to HandlerType.PUT,
-    "patch" to HandlerType.PATCH,
-    "delete" to HandlerType.DELETE
+    "get" to HttpMethod.Get,
+    "post" to HttpMethod.Post,
+    "put" to HttpMethod.Put,
+    "patch" to HttpMethod.Patch,
+    "delete" to HttpMethod.Delete
 )
 
-fun Javalin.addHandler(path: String, method: String, data: MethodHandlerData, scriptContext: ScriptContext) {
-    val methodType = methods[method] ?: throw CommandFormatException("Unsupported HTTP method: $method")
-    this.addHttpHandler(methodType, path) { httpContext ->
-//        println("$method ${httpContext.path()}")
-        handleRequest(data, httpContext, scriptContext)
-    }
-}
-
-private fun handleRequest(
+private suspend fun handleRequest(
     data: MethodHandlerData,
-    httpContext: Context,
-    scriptContext: ScriptContext
+    call: ApplicationCall,
+    scriptContext: ScriptContext,
+    pathParamNames: List<String>
 ) {
-
     val localContext = scriptContext.clone()
-    localContext.addInputVariable(httpContext)
-    localContext.addRequestVariable(httpContext)
 
-    // Execute script
-    val output =
-        when {
-            data.output != null -> {
-                data.output.resolve(localContext)
-            }
+    // Read body once (important: receiveText() consumes the channel)
+    val bodyText = runCatching { call.receiveText() }.getOrNull().orEmpty()
 
-            data.script != null -> {
-                data.script.run(localContext)
-            }
+    // Populate script context variables used by downstream scripts
+    localContext.addInputVariable(call, bodyText)
+    localContext.addRequestVariable(call, bodyText, pathParamNames)
 
-            data.file != null -> {
-                val file = localContext.scriptDir.resolve(data.file)
-                CliFile(file).run(localContext)
-            }
-
-            else -> {
-                throw ScriptingException("No handler action defined")
-            }
-        }
-
-    // Return result of script
-    output?.let {
-        httpContext.json(it)
+    // Resolve output via (priority) output -> script -> file
+    val output = when {
+        data.output != null -> data.output.resolve(localContext)
+        data.script != null -> data.script.run(localContext)
+        data.file != null -> CliFile(localContext.scriptDir.resolve(data.file)).run(localContext)
+        else -> throw ScriptingException("No handler action defined")
     }
+
+    // Return JSON (output already a JsonNode)
+    output?.let { call.respondText(it.toString(), ContentType.Application.Json) }
 }
 
-private fun ScriptContext.addInputVariable(httpContext: Context) {
-
-    // Use body to populate input variable
-    if (httpContext.body().isNotEmpty()) {
-        variables[INPUT_VARIABLE] = httpContext.bodyAsJson()
+private fun ScriptContext.addInputVariable(call: ApplicationCall, bodyText: String) {
+    // Body takes precedence
+    if (bodyText.isNotBlank()) {
+        variables[INPUT_VARIABLE] = runCatching { Json.mapper.readTree(bodyText) }.getOrElse { TextNode(bodyText) }
         return
     }
-
-    // If there is no body, use query parameters.
-    if (httpContext.queryParamMap().isNotEmpty()) {
-        variables[INPUT_VARIABLE] = httpContext.queryParametersAsJson()
+    // Fallback to query parameters if present
+    val qp = call.request.queryParameters
+    if (!qp.isEmpty()) {
+        variables[INPUT_VARIABLE] = Json.newObject(qp.names().associateWith { qp[it] ?: "" })
     }
 }
 
-private fun ScriptContext.addRequestVariable(httpContext: Context) {
-
+private fun ScriptContext.addRequestVariable(
+    call: ApplicationCall,
+    bodyText: String,
+    pathParamNames: List<String>
+) {
     val requestData = Json.newObject()
-
-    requestData.set<JsonNode>("headers", httpContext.headersAsJson())
-    requestData.set<JsonNode>("path", TextNode(httpContext.path()))
-    requestData.set<JsonNode>("pathParameters", httpContext.pathParametersAsJson())
-    requestData.set<JsonNode>("query", TextNode(httpContext.queryString() ?: ""))
-    requestData.set<JsonNode>("queryParameters", httpContext.queryParametersAsJson())
-    requestData.set<JsonNode>("body", httpContext.bodyAsJson())
-    requestData.set<JsonNode>("cookies", httpContext.cookiesAsJson())
-
-    variables[REQUEST_VARIABLE] = requestData
+    requestData.set<JsonNode>("headers", call.headersAsJson())
+    requestData.set<JsonNode>("path", TextNode(call.request.path()))
+    requestData.set<JsonNode>("pathParameters", call.pathParametersAsJson(pathParamNames))
+    requestData.set<JsonNode>("query", TextNode(call.request.queryString().orEmpty()))
+    requestData.set<JsonNode>("queryParameters", call.queryParametersAsJson())
+    requestData.set<JsonNode>("body", bodyText.toBodyJson())
+    requestData.set<JsonNode>("cookies", call.cookiesAsJson())
+    variables["request"] = requestData
 }
 
-fun Context.headersAsJson(): ObjectNode {
-    return Json.newObject(headerMap())
-}
+private fun ApplicationCall.headersAsJson(): ObjectNode =
+    Json.newObject(request.headers.names().associateWith { request.headers[it] ?: "" })
 
-fun Context.pathParametersAsJson(): ObjectNode {
-    return Json.newObject(pathParamMap())
-}
+private fun ApplicationCall.pathParametersAsJson(pathParamNames: List<String>): ObjectNode =
+    Json.newObject(pathParamNames.associateWith { parameters[it] ?: "" })
 
-fun Context.queryParametersAsJson(): ObjectNode {
-    val queryParameters = Json.newObject()
-    for (variable in queryParamMap()) {
-        queryParameters.set<JsonNode>(variable.key, TextNode(variable.value[0]))  // FIXME deal with list properly
-    }
-    return queryParameters
-}
+private fun ApplicationCall.queryParametersAsJson(): ObjectNode =
+    Json.newObject(request.queryParameters.names().associateWith { request.queryParameters[it] ?: "" })
 
-fun Context.bodyAsJson(): JsonNode {
-    return if (body().isNotEmpty()) {
-        bodyAsClass()
-    } else {
-        Json.newObject()
-    }
-}
+private fun ApplicationCall.cookiesAsJson(): ObjectNode =
+    Json.newObject(request.cookies.rawCookies)
 
-fun Context.cookiesAsJson(): ObjectNode {
-    return Json.newObject(cookieMap())
-}
+private fun String.toBodyJson(): JsonNode =
+    if (isBlank()) Json.newObject() else runCatching { Json.mapper.readTree(this) }.getOrElse { TextNode(this) }
 
+
+private typealias HttpServerInstance = EmbeddedServer<NettyApplicationEngine, NettyApplicationEngine.Configuration>
 
 data class Endpoints(
     @get:JsonAnyGetter
     val paths: MutableMap<String, EndpointData> = mutableMapOf()
 )
-
 
 data class EndpointData(
     @get:JsonAnyGetter
