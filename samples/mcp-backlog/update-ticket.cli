@@ -1,8 +1,82 @@
-Output:
-  id: "${input.id}"
-  title: "${input.title}"
-  description: "${input.description}"
-  state: "${input.state}"
-  priority: "${input.priority}"
-  assignee: "${input.assignee}"
-  updated_at: "2025-01-13T09:22:00Z"
+Input parameters:
+  id:
+    description: Full ticket identifier (e.g. TICKET-007)
+  title:
+    description: New title (optional)
+    default: NULL
+  description:
+    description: New description (optional)
+    default: NULL
+  state:
+    description: New state (todo, doing, done) optional
+    default: NULL
+  priority:
+    description: New priority (low, medium, high) optional
+    default: NULL
+  assignee:
+    description: New assignee (optional)
+    default: NULL
+
+SQLite:
+  file: db/sample.db
+  update:
+    - |
+      -- Update ticket fields only when a non-empty value is provided.
+      -- Only bump updated_at if at least one updatable field param is non-empty.
+      UPDATE ticket
+      SET
+        title = CASE WHEN '${input.title}' IS NULL OR '${input.title}' = '' THEN title ELSE '${input.title}' END,
+        description = CASE WHEN '${input.description}' IS NULL OR '${input.description}' = '' THEN description ELSE '${input.description}' END,
+        state = CASE WHEN '${input.state}' IS NULL OR '${input.state}' = '' THEN state ELSE '${input.state}' END,
+        priority = CASE WHEN '${input.priority}' IS NULL OR '${input.priority}' = '' THEN priority ELSE '${input.priority}' END,
+        assignee = CASE WHEN '${input.assignee}' IS NULL OR '${input.assignee}' = '' THEN assignee ELSE '${input.assignee}' END,
+        updated_at = CASE
+          WHEN (
+            ('${input.title}' IS NOT NULL AND '${input.title}' <> '') OR
+            ('${input.description}' IS NOT NULL AND '${input.description}' <> '') OR
+            ('${input.state}' IS NOT NULL AND '${input.state}' <> '') OR
+            ('${input.priority}' IS NOT NULL AND '${input.priority}' <> '') OR
+            ('${input.assignee}' IS NOT NULL AND '${input.assignee}' <> '')
+          ) THEN strftime('%Y-%m-%dT%H:%M:%fZ','now')
+          ELSE updated_at
+        END
+      WHERE id = '${input.id}';
+  query: |
+    -- Return updated ticket (if exists) plus change status.
+    WITH input_params AS (
+      SELECT
+        '${input.title}' AS new_title,
+        '${input.description}' AS new_description,
+        '${input.state}' AS new_state,
+        '${input.priority}' AS new_priority,
+        '${input.assignee}' AS new_assignee
+    ),
+    change_intent AS (
+      SELECT (
+        (new_title IS NOT NULL AND new_title <> '') OR
+        (new_description IS NOT NULL AND new_description <> '') OR
+        (new_state IS NOT NULL AND new_state <> '') OR
+        (new_priority IS NOT NULL AND new_priority <> '') OR
+        (new_assignee IS NOT NULL AND new_assignee <> '')
+      ) AS any_param FROM input_params
+    ),
+    row AS (
+      SELECT * FROM ticket t WHERE t.id = '${input.id}'
+    )
+    SELECT
+      '${input.id}' AS id,
+      CASE WHEN EXISTS (SELECT 1 FROM row) THEN 1 ELSE 0 END AS found,
+      (SELECT any_param FROM change_intent) AS attempted_change,
+      CASE
+        WHEN NOT EXISTS (SELECT 1 FROM row) THEN 'Ticket not found'
+        WHEN (SELECT any_param FROM change_intent) = 0 THEN 'No changes applied'
+        ELSE 'Ticket updated'
+      END AS message,
+      (SELECT title FROM row) AS title,
+      (SELECT description FROM row) AS description,
+      (SELECT state FROM row) AS state,
+      (SELECT priority FROM row) AS priority,
+      (SELECT assignee FROM row) AS assignee,
+      (SELECT created_at FROM row) AS created_at,
+      (SELECT updated_at FROM row) AS updated_at,
+      (SELECT backlog_order FROM row) AS "order";

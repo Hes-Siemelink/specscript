@@ -4,7 +4,8 @@ A Model Context Protocol (MCP) server for managing ticket backlogs and sprint pl
 
 ## Overview
 
-The MCP Backlog server provides tools for managing software development tickets with full CRUD operations, state transitions, and backlog ordering. It supports the standard ticket lifecycle: "todo" → "doing" → "done".
+The MCP Backlog server provides tools for managing software development tickets with full CRUD operations, state
+transitions, and backlog ordering. It supports the standard ticket lifecycle: "todo" → "doing" → "done".
 
 ## Server Configuration
 
@@ -31,11 +32,13 @@ Mcp tool:
     properties:
       state:
         type: string
-        enum: [todo, doing, done]
-        description: Filter tickets by state
+        enum: [ all, todo, doing, done ]
+        description: Filter tickets by state (use 'all' or omit for no filtering)
+        default: all
       assignee:
         type: string
-        description: Filter tickets by assignee
+        description: Filter tickets by assignee (use 'all' or omit for no filtering)
+        default: all
     additionalProperties: false
   script: list-tickets.cli
 
@@ -55,29 +58,10 @@ Mcp tool:
       id:
         type: string
         description: Ticket ID
-    required: [id]
+    required: [ id ]
     additionalProperties: false
   script: get-ticket.cli
 
-```
-
-### Get backlog overview
-
-Retrieves the complete backlog ordered by priority with optional limit.
-
-```yaml specscript
-Mcp tool:
-  name: get_backlog
-  description: Get the complete backlog ordered by priority
-  inputSchema:
-    type: object
-    properties:
-      limit:
-        type: integer
-        description: Maximum number of tickets to return
-        default: 50
-    additionalProperties: false
-  script: get-backlog.cli
 ```
 
 ## Ticket Management Tools
@@ -103,13 +87,13 @@ Mcp tool:
         description: Detailed ticket description
       priority:
         type: string
-        enum: [low, medium, high]
+        enum: [ low, medium, high ]
         description: Ticket priority level
         default: medium
       assignee:
         type: string
         description: Person assigned to this ticket
-    required: [title, description]
+    required: [ title, description ]
     additionalProperties: false
   script: create-ticket.cli
 
@@ -137,16 +121,16 @@ Mcp tool:
         description: New ticket description
       state:
         type: string
-        enum: [todo, doing, done]
+        enum: [ todo, doing, done ]
         description: New ticket state
       priority:
         type: string
-        enum: [low, medium, high]
+        enum: [ low, medium, high ]
         description: New priority level
       assignee:
         type: string
         description: New assignee
-    required: [id]
+    required: [ id ]
     additionalProperties: false
   script: update-ticket.cli
 
@@ -159,14 +143,14 @@ Permanently removes a ticket from the backlog.
 ```yaml specscript
 Mcp tool:
   name: delete_ticket
-  description: Delete a ticket by ID
+  description: Delete a ticket by full ticket ID
   inputSchema:
     type: object
     properties:
       id:
         type: string
-        description: Ticket ID to delete
-    required: [id]
+        description: Full ticket identifier (e.g. TICKET-007)
+    required: [ id ]
     additionalProperties: false
   script: delete-ticket.cli
 
@@ -183,17 +167,19 @@ Changes the order of a ticket in the backlog for priority management.
 ```yaml specscript
 Mcp tool:
   name: move_ticket
-  description: Change the order of a ticket in the backlog
+  description: Move a ticket in the backlog (up, down, top, bottom)
   inputSchema:
     type: object
     properties:
       id:
         type: string
         description: Ticket ID to move
-      new_order:
-        type: integer
-        description: New position in backlog (1-based)
-    required: [id, new_order]
+      action:
+        type: string
+        enum: [ up, down, top, bottom ]
+        description: Move action (relative or absolute positioning)
+        default: up
+    required: [ id ]
     additionalProperties: false
   script: move-ticket.cli
 
@@ -205,7 +191,7 @@ Mcp tool:
 
 To start the MCP backlog server:
 
-```shell cli
+```shell
 cli samples/mcp-backlog/mcp-backlog-server.spec.md
 ```
 
@@ -237,4 +223,5 @@ State transitions can be made using the `update_ticket` tool by changing the `st
 
 ### Backlog Management
 
-The backlog maintains an ordered list of tickets using the `order` property. Use the `move_ticket` tool to reorder tickets based on changing priorities or sprint planning needs.
+The backlog maintains an ordered list of tickets using the `order` property. Use the `move_ticket` tool to reorder
+tickets based on changing priorities or sprint planning needs.

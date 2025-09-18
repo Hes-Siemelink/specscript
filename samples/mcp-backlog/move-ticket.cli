@@ -1,5 +1,50 @@
-Output:
-  id: "${input.id}"
-  old_order: 2
-  new_order: "${input.new_order}"
-  message: "Ticket moved successfully"
+Input parameters:
+  id:
+    description: Full ticket identifier (e.g. TICKET-007)
+  action:
+    description: Move action (one of up, down, top, bottom)
+    enum: [ up, down, top, bottom ]
+    default: up
+
+SQLite:
+  file: db/sample.db
+  update:
+    - |
+      -- Up / Down swap logic (single UPDATE handles both by swapping with neighbor)
+      UPDATE ticket
+      SET backlog_order = CASE
+        WHEN '${input.action}'='up' AND id='${input.id}' AND backlog_order > 1 THEN backlog_order - 1
+        WHEN '${input.action}'='up' AND backlog_order = (SELECT backlog_order - 1 FROM ticket WHERE id='${input.id}') THEN backlog_order + 1
+        WHEN '${input.action}'='down' AND id='${input.id}' AND backlog_order < (SELECT MAX(backlog_order) FROM ticket) THEN backlog_order + 1
+        WHEN '${input.action}'='down' AND backlog_order = (SELECT backlog_order + 1 FROM ticket WHERE id='${input.id}') THEN backlog_order - 1
+        ELSE backlog_order
+      END
+      WHERE '${input.action}' IN ('up','down');
+    - |
+      -- Move to top: assign a new minimal order (min-1) without shifting others (reorder tool can compact later)
+      UPDATE ticket
+      SET backlog_order = (SELECT MIN(backlog_order) - 1 FROM ticket)
+      WHERE '${input.action}'='top' AND id='${input.id}';
+    - |
+      -- Move to bottom: assign a new maximal order (max+1)
+      UPDATE ticket
+      SET backlog_order = (SELECT MAX(backlog_order) + 1 FROM ticket)
+      WHERE '${input.action}'='bottom' AND id='${input.id}';
+  query: |
+    -- Report result. We can't reliably show old_order without pre-capture; message indicates possible no-op at boundaries.
+    WITH cur AS (SELECT id, backlog_order FROM ticket WHERE id='${input.id}')
+    SELECT
+      '${input.id}' AS id,
+      '${input.action}' AS action,
+      (SELECT backlog_order FROM cur) AS "order",
+      CASE
+        WHEN (SELECT id FROM cur) IS NULL THEN 'Ticket not found'
+        WHEN '${input.action}'='up' AND (SELECT backlog_order FROM cur)=1 THEN 'Already at top or no change'
+        WHEN '${input.action}'='down' AND (SELECT backlog_order FROM cur)=(SELECT MAX(backlog_order) FROM ticket) THEN 'Already at bottom or no change'
+        WHEN '${input.action}'='top' THEN 'Moved to top (will compact on reorder)'
+        WHEN '${input.action}'='bottom' THEN 'Moved to bottom'
+        WHEN '${input.action}'='up' THEN 'Moved up 1 position'
+        WHEN '${input.action}'='down' THEN 'Moved down 1 position'
+        ELSE 'No action'
+      END AS message;
+
