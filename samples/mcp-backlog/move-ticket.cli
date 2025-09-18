@@ -10,28 +10,66 @@ SQLite:
   file: db/sample.db
   update:
     - |
-      -- Up / Down swap logic (single UPDATE handles both by swapping with neighbor)
+      -- UP: swap with neighbor above (if any)
+      -- Step 1: Move neighbor above to temp value
       UPDATE ticket
-      SET backlog_order = CASE
-        WHEN '${input.action}'='up' AND id='${input.id}' AND backlog_order > 1 THEN backlog_order - 1
-        WHEN '${input.action}'='up' AND backlog_order = (SELECT backlog_order - 1 FROM ticket WHERE id='${input.id}') THEN backlog_order + 1
-        WHEN '${input.action}'='down' AND id='${input.id}' AND backlog_order < (SELECT MAX(backlog_order) FROM ticket) THEN backlog_order + 1
-        WHEN '${input.action}'='down' AND backlog_order = (SELECT backlog_order + 1 FROM ticket WHERE id='${input.id}') THEN backlog_order - 1
-        ELSE backlog_order
-      END
-      WHERE '${input.action}' IN ('up','down');
+      SET backlog_order = -99999
+      WHERE '${input.action}'='up'
+        AND id = (
+          SELECT id FROM ticket WHERE backlog_order = (
+            SELECT backlog_order-1 FROM ticket WHERE id='${input.id}'
+          )
+        );
     - |
-      -- Move to top: assign a new minimal order (min-1) without shifting others (reorder tool can compact later)
+      -- Step 2: Move target up to neighbor's original order
+      UPDATE ticket
+      SET backlog_order = backlog_order - 1
+      WHERE '${input.action}'='up'
+        AND id='${input.id}'
+        AND backlog_order > (SELECT MIN(backlog_order) FROM ticket);
+    - |
+      -- Step 3: Move neighbor to target's original order
+      UPDATE ticket
+      SET backlog_order = (SELECT backlog_order+1 FROM ticket WHERE id='${input.id}')
+      WHERE '${input.action}'='up'
+        AND backlog_order = -99999;
+    - |
+      -- DOWN: swap with neighbor below (if any)
+      -- Step 1: Move neighbor below to temp value
+      UPDATE ticket
+      SET backlog_order = -99999
+      WHERE '${input.action}'='down'
+        AND id = (
+          SELECT id FROM ticket WHERE backlog_order = (
+            SELECT backlog_order+1 FROM ticket WHERE id='${input.id}'
+          )
+        );
+    - |
+      -- Step 2: Move target down to neighbor's original order
+      UPDATE ticket
+      SET backlog_order = backlog_order + 1
+      WHERE '${input.action}'='down'
+        AND id='${input.id}'
+        AND backlog_order < (SELECT MAX(backlog_order) FROM ticket);
+    - |
+      -- Step 3: Move neighbor to target's original order
+      UPDATE ticket
+      SET backlog_order = (SELECT backlog_order-1 FROM ticket WHERE id='${input.id}')
+      WHERE '${input.action}'='down'
+        AND backlog_order = -99999;
+    - |
+      -- TOP: move above current min (no swap)
       UPDATE ticket
       SET backlog_order = (SELECT MIN(backlog_order) - 1 FROM ticket)
-      WHERE '${input.action}'='top' AND id='${input.id}';
+      WHERE '${input.action}'='top'
+        AND id='${input.id}';
     - |
-      -- Move to bottom: assign a new maximal order (max+1)
+      -- BOTTOM: move below current max (no swap)
       UPDATE ticket
       SET backlog_order = (SELECT MAX(backlog_order) + 1 FROM ticket)
-      WHERE '${input.action}'='bottom' AND id='${input.id}';
+      WHERE '${input.action}'='bottom'
+        AND id='${input.id}';
   query: |
-    -- Report result. We can't reliably show old_order without pre-capture; message indicates possible no-op at boundaries.
     WITH cur AS (SELECT id, backlog_order FROM ticket WHERE id='${input.id}')
     SELECT
       '${input.id}' AS id,
@@ -39,12 +77,12 @@ SQLite:
       (SELECT backlog_order FROM cur) AS "order",
       CASE
         WHEN (SELECT id FROM cur) IS NULL THEN 'Ticket not found'
-        WHEN '${input.action}'='up' AND (SELECT backlog_order FROM cur)=1 THEN 'Already at top or no change'
-        WHEN '${input.action}'='down' AND (SELECT backlog_order FROM cur)=(SELECT MAX(backlog_order) FROM ticket) THEN 'Already at bottom or no change'
-        WHEN '${input.action}'='top' THEN 'Moved to top (will compact on reorder)'
+        WHEN '${input.action}'='up' AND (SELECT backlog_order FROM cur) = (SELECT MIN(backlog_order) FROM ticket) THEN 'Already at top (no move)'
+        WHEN '${input.action}'='down' AND (SELECT backlog_order FROM cur) = (SELECT MAX(backlog_order) FROM ticket) THEN 'Already at bottom (no move)'
+        WHEN '${input.action}'='top' THEN 'Moved to top'
         WHEN '${input.action}'='bottom' THEN 'Moved to bottom'
-        WHEN '${input.action}'='up' THEN 'Moved up 1 position'
-        WHEN '${input.action}'='down' THEN 'Moved down 1 position'
+        WHEN '${input.action}'='up' THEN 'Swapped with previous ticket'
+        WHEN '${input.action}'='down' THEN 'Swapped with next ticket'
         ELSE 'No action'
-      END AS message;
-
+      END AS message,
+      'Run reorder_backlog to compact and re-sequence if needed.' AS hint;

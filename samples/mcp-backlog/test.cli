@@ -1,0 +1,89 @@
+Shell: rm -f db/sample.db
+
+Create db: { }
+
+---
+Create ticket:
+  title: Ticket 1
+  description: Just for testing
+---
+Create ticket:
+  title: Ticket 2
+  description: Another one
+---
+Create ticket:
+  title: Ticket 3
+  description: Its The final ticket
+
+
+---
+# Move ticket TICKET-002 up
+
+Move ticket:
+  id: TICKET-002
+  action: up
+
+List tickets:
+  state: all
+
+For each:
+  Output: ${item.id}
+
+Expected output:
+  - TICKET-002
+  - TICKET-001
+  - TICKET-003
+
+---
+# Move ticket TICKET-001 down
+
+Move ticket:
+  id: TICKET-001
+  action: down
+
+List tickets:
+  state: all
+
+For each:
+  Output: ${item.id}
+
+Expected output:
+  - TICKET-002
+  - TICKET-003
+  - TICKET-001
+
+---
+# Move ticket TICKET-001 to top
+
+Move ticket:
+  id: TICKET-001
+  action: top
+
+List tickets:
+  state: all
+
+For each:
+  Output: ${item.id}
+
+Expected output:
+  - TICKET-001
+  - TICKET-002
+  - TICKET-003
+
+---
+# Move ticket TICKET-001 to bottom
+
+Move ticket:
+  id: TICKET-001
+  action: bottom
+
+List tickets:
+  state: all
+
+For each:
+  Output: ${item.id}
+
+Expected output:
+  - TICKET-002
+  - TICKET-003
+  - TICKET-001

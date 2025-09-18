@@ -25,23 +25,22 @@ Retrieves all tickets with optional filtering by state and assignee.
 
 ```yaml specscript
 Mcp tool:
-  name: list_tickets
-  description: List all tickets with optional filtering
-  inputSchema:
-    type: object
-    properties:
-      state:
-        type: string
-        enum: [ all, todo, doing, done ]
-        description: Filter tickets by state (use 'all' or omit for no filtering)
-        default: all
-      assignee:
-        type: string
-        description: Filter tickets by assignee (use 'all' or omit for no filtering)
-        default: all
-    additionalProperties: false
-  script: list-tickets.cli
-
+  list_tickets:
+    description: List all tickets with optional filtering
+    inputSchema:
+      type: object
+      properties:
+        state:
+          type: string
+          enum: [ all, todo, doing, done ]
+          description: Filter tickets by state (use 'all' or omit for no filtering)
+          default: all
+        assignee:
+          type: string
+          description: Filter tickets by assignee (use 'all' or omit for no filtering)
+          default: all
+      additionalProperties: false
+    script: list-tickets.cli
 ```
 
 ### Get specific ticket
@@ -50,17 +49,17 @@ Retrieves a single ticket by its unique identifier.
 
 ```yaml specscript
 Mcp tool:
-  name: get_ticket
-  description: Get a specific ticket by ID
-  inputSchema:
-    type: object
-    properties:
-      id:
-        type: string
-        description: Ticket ID
-    required: [ id ]
-    additionalProperties: false
-  script: get-ticket.cli
+  get_ticket:
+    description: Get a specific ticket by ID
+    inputSchema:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Ticket ID
+      required: [ id ]
+      additionalProperties: false
+    script: get-ticket.cli
 
 ```
 
@@ -74,28 +73,28 @@ Creates a new ticket with the provided details. New tickets start in "todo" stat
 
 ```yaml specscript
 Mcp tool:
-  name: create_ticket
-  description: Create a new ticket
-  inputSchema:
-    type: object
-    properties:
-      title:
-        type: string
-        description: Ticket title
-      description:
-        type: string
-        description: Detailed ticket description
-      priority:
-        type: string
-        enum: [ low, medium, high ]
-        description: Ticket priority level
-        default: medium
-      assignee:
-        type: string
-        description: Person assigned to this ticket
-    required: [ title, description ]
-    additionalProperties: false
-  script: create-ticket.cli
+  create_ticket:
+    description: Create a new ticket
+    inputSchema:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Ticket title
+        description:
+          type: string
+          description: Detailed ticket description
+        priority:
+          type: string
+          enum: [ low, medium, high ]
+          description: Ticket priority level
+          default: medium
+        assignee:
+          type: string
+          description: Person assigned to this ticket
+      required: [ title, description ]
+      additionalProperties: false
+    script: create-ticket.cli
 
 ```
 
@@ -105,34 +104,34 @@ Updates an existing ticket's properties including state transitions.
 
 ```yaml specscript
 Mcp tool:
-  name: update_ticket
-  description: Update an existing ticket
-  inputSchema:
-    type: object
-    properties:
-      id:
-        type: string
-        description: Ticket ID to update
-      title:
-        type: string
-        description: New ticket title
-      description:
-        type: string
-        description: New ticket description
-      state:
-        type: string
-        enum: [ todo, doing, done ]
-        description: New ticket state
-      priority:
-        type: string
-        enum: [ low, medium, high ]
-        description: New priority level
-      assignee:
-        type: string
-        description: New assignee
-    required: [ id ]
-    additionalProperties: false
-  script: update-ticket.cli
+  update_ticket:
+    description: Update an existing ticket
+    inputSchema:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Ticket ID to update
+        title:
+          type: string
+          description: New ticket title
+        description:
+          type: string
+          description: New ticket description
+        state:
+          type: string
+          enum: [ todo, doing, done ]
+          description: New ticket state
+        priority:
+          type: string
+          enum: [ low, medium, high ]
+          description: New priority level
+        assignee:
+          type: string
+          description: New assignee
+      required: [ id ]
+      additionalProperties: false
+    script: update-ticket.cli
 
 ```
 
@@ -142,18 +141,17 @@ Permanently removes a ticket from the backlog.
 
 ```yaml specscript
 Mcp tool:
-  name: delete_ticket
-  description: Delete a ticket by full ticket ID
-  inputSchema:
-    type: object
-    properties:
-      id:
-        type: string
-        description: Full ticket identifier (e.g. TICKET-007)
-    required: [ id ]
-    additionalProperties: false
-  script: delete-ticket.cli
-
+  delete_ticket:
+    description: Delete a ticket by full ticket ID
+    inputSchema:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Full ticket identifier (e.g. TICKET-007)
+      required: [ id ]
+      additionalProperties: false
+    script: delete-ticket.cli
 ```
 
 ## Backlog Organization Tools
@@ -166,22 +164,22 @@ Changes the order of a ticket in the backlog for priority management.
 
 ```yaml specscript
 Mcp tool:
-  name: move_ticket
-  description: Move a ticket in the backlog (up, down, top, bottom)
-  inputSchema:
-    type: object
-    properties:
-      id:
-        type: string
-        description: Ticket ID to move
-      action:
-        type: string
-        enum: [ up, down, top, bottom ]
-        description: Move action (relative or absolute positioning)
-        default: up
-    required: [ id ]
-    additionalProperties: false
-  script: move-ticket.cli
+  move_ticket:
+    description: Move a ticket in the backlog (up, down, top, bottom)
+    inputSchema:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Ticket ID to move
+        action:
+          type: string
+          enum: [ up, down, top, bottom ]
+          description: Move action (relative or absolute positioning)
+          default: up
+      required: [ id ]
+      additionalProperties: false
+    script: move-ticket.cli
 
 ```
 
@@ -191,7 +189,7 @@ Mcp tool:
 
 To start the MCP backlog server:
 
-```shell
+```shell ignore
 cli samples/mcp-backlog/mcp-backlog-server.spec.md
 ```
 

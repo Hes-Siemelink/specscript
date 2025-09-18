@@ -179,9 +179,10 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
         addTool(
             toolName,
             tool.description,
-            Tool.Input(
-                properties = tool.inputSchema?.toKotlinx() ?: buildJsonObject { }
-            ),
+            inputSchema =
+                Tool.Input(
+                    properties = tool.inputSchema?.toKotlinx() ?: buildJsonObject { }
+                ),
         ) { request ->
             // Set up context for the tool execution
             localContext.variables[INPUT_VARIABLE] = request.arguments.toJackson()
