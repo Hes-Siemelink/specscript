@@ -123,6 +123,11 @@ tasks.register<Jar>("fatJar") {
     })
 }
 
+// Make sure the standard build produces the fat jar
+tasks.named("build") {
+    dependsOn("fatJar")
+}
+
 //
 // Release
 //
