@@ -2,7 +2,9 @@ package specscript.commands.db
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ObjectNode
-import specscript.language.*
+import specscript.language.CommandHandler
+import specscript.language.ObjectHandler
+import specscript.language.ScriptContext
 import specscript.util.Json.newArray
 import specscript.util.Json.newObject
 import specscript.util.Yaml
@@ -10,13 +12,13 @@ import specscript.util.toDomainObject
 import java.lang.String.valueOf
 import java.sql.Connection
 import java.sql.DriverManager
-import kotlin.use
 
 object SQLite : CommandHandler("SQLite", "core/db"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val sql = data.toDomainObject(SQLiteData::class)
 
+        // FIXME Use prepared statements to avoid SQL injection
         DriverManager.getConnection("jdbc:sqlite:${sql.file}").use { connection ->
             sql.update.forEach {
                 connection.doUpdate(it)
