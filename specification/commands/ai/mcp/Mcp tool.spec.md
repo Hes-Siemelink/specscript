@@ -38,7 +38,6 @@ Mcp tool:
           type: string
           description: Name of the person to greet
       required: [ name ]
-      additionalProperties: false
     script:
       Output: Hello ${input.name}!
 ```
@@ -60,7 +59,6 @@ Mcp tool:
           type: string
           description: Data to process
       required: [ data ]
-      additionalProperties: false
     script: process-data.cli
 ```
 

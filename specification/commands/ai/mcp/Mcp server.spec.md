@@ -54,9 +54,10 @@ Mcp server:
     process_data:
       description: Process some data
       inputSchema:
-        data:
-          type: string
-          description: Data to process
+        properties:
+          data:
+            type: string
+            description: Data to process
       script: process-data.cli
 ```
 
@@ -81,9 +82,10 @@ Mcp server:
     greet:
       description: Generate a greeting over HTTP
       inputSchema:
-        name:
-          type: string
-          description: Name to greet
+        properties:
+          name:
+            type: string
+            description: Name to greet
       script:
         Output: Hello ${input.name} via HTTP!
 ```

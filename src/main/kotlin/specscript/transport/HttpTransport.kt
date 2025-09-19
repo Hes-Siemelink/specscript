@@ -1,16 +1,15 @@
 package specscript.transport
 
-import io.modelcontextprotocol.kotlin.sdk.CallToolRequest
-import io.modelcontextprotocol.kotlin.sdk.CallToolResult
-import io.modelcontextprotocol.kotlin.sdk.ListToolsResult
-import io.modelcontextprotocol.kotlin.sdk.client.Client
-import io.modelcontextprotocol.kotlin.sdk.client.StreamableHttpClientTransport
-import io.modelcontextprotocol.kotlin.sdk.Implementation
 import io.ktor.client.*
-import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.auth.providers.*
 import io.ktor.client.request.*
+import io.modelcontextprotocol.kotlin.sdk.CallToolRequest
+import io.modelcontextprotocol.kotlin.sdk.CallToolResult
+import io.modelcontextprotocol.kotlin.sdk.Implementation
+import io.modelcontextprotocol.kotlin.sdk.ListToolsResult
+import io.modelcontextprotocol.kotlin.sdk.client.Client
+import io.modelcontextprotocol.kotlin.sdk.client.StreamableHttpClientTransport
 
 /**
  * HTTP transport for communication with HTTP-based MCP servers.
@@ -32,7 +31,7 @@ class HttpTransport(
             println("DEBUG: Connecting to HTTP MCP server at: $baseUrl")
 
             // Create HTTP client with optional authentication
-            httpClient = HttpClient(CIO) {
+            httpClient = HttpClient() {
                 if (authToken != null) {
                     install(Auth) {
                         bearer {
@@ -86,9 +85,9 @@ class HttpTransport(
         val mcpClient = client ?: throw IllegalStateException("Transport not connected. Call connect() first.")
 
         return try {
-            mcpClient.listTools() ?: ListToolsResult(tools = emptyList(), nextCursor = null)
-        } catch (e: Exception) {
-            // Fallback for failed tool listing
+            mcpClient.listTools()
+        } catch (_: IllegalStateException) {
+            // Server does not support tools
             ListToolsResult(tools = emptyList(), nextCursor = null)
         }
     }

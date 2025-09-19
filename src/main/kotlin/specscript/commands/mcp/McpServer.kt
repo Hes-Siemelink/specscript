@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.node.TextNode
+import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.routing.*
+import io.ktor.server.sse.*
 import io.ktor.utils.io.streams.*
 import io.modelcontextprotocol.kotlin.sdk.*
 import io.modelcontextprotocol.kotlin.sdk.server.Server
@@ -17,7 +19,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.runBlocking
 import kotlinx.io.asSink
 import kotlinx.io.buffered
-import kotlinx.serialization.json.buildJsonObject
 import specscript.files.CliFile
 import specscript.language.*
 import specscript.util.*
@@ -119,6 +120,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
             System.err.println("[${Thread.currentThread().name}] Starting HTTP server on port $port at path $path")
 
             val ktorServer = embeddedServer(Netty, port = port) {
+                install(SSE)
                 routing {
                     route(path) {
                         mcp { server }
@@ -181,7 +183,8 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
             tool.description,
             inputSchema =
                 Tool.Input(
-                    properties = tool.inputSchema?.toKotlinx() ?: buildJsonObject { }
+                    properties = tool.inputSchema?.properties?.toKotlinx() ?: EmptyJsonObject,
+                    required = tool.inputSchema?.required ?: emptyList()
                 ),
         ) { request ->
             // Set up context for the tool execution
@@ -296,8 +299,14 @@ enum class TransportType {
 
 data class ToolInfo(
     val description: String,
-    val inputSchema: ObjectNode?,
+    val inputSchema: InputSchema?,
     val script: JsonNode
+)
+
+data class InputSchema(
+    val type: String = "object",
+    val properties: ObjectNode,
+    val required: List<String> = emptyList()
 )
 
 data class ResourceInfo(

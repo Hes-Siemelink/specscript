@@ -160,7 +160,6 @@ Mcp server:
           input:
             type: string
         required: [ input ]
-        additionalProperties: false
       script:
         Error: This tool intentionally fails
 

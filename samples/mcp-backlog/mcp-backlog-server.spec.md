@@ -13,6 +13,7 @@ transitions, and backlog ordering. It supports the standard ticket lifecycle: "t
 Mcp server:
   name: mcp-backlog
   version: 1.0.0
+  transport: HTTP
 ```
 
 ## Ticket Listing Tools
@@ -39,7 +40,6 @@ Mcp tool:
           type: string
           description: Filter tickets by assignee (use 'all' or omit for no filtering)
           default: all
-      additionalProperties: false
     script: list-tickets.cli
 ```
 
@@ -58,7 +58,6 @@ Mcp tool:
           type: string
           description: Ticket ID
       required: [ id ]
-      additionalProperties: false
     script: get-ticket.cli
 
 ```
@@ -93,7 +92,6 @@ Mcp tool:
           type: string
           description: Person assigned to this ticket
       required: [ title, description ]
-      additionalProperties: false
     script: create-ticket.cli
 
 ```
@@ -130,7 +128,6 @@ Mcp tool:
           type: string
           description: New assignee
       required: [ id ]
-      additionalProperties: false
     script: update-ticket.cli
 
 ```
@@ -150,7 +147,6 @@ Mcp tool:
           type: string
           description: Full ticket identifier (e.g. TICKET-007)
       required: [ id ]
-      additionalProperties: false
     script: delete-ticket.cli
 ```
 
@@ -178,7 +174,6 @@ Mcp tool:
           description: Move action (relative or absolute positioning)
           default: up
       required: [ id ]
-      additionalProperties: false
     script: move-ticket.cli
 
 ```

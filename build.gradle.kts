@@ -41,7 +41,7 @@ dependencies {
     implementation("org.xerial:sqlite-jdbc:3.47.0.0")
 
     // Model Context Protocol dependencies
-    implementation("io.modelcontextprotocol:kotlin-sdk:0.6.0")
+    implementation("io.modelcontextprotocol:kotlin-sdk:0.7.0")
     implementation("io.github.oshai:kotlin-logging:5.0.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")

@@ -7,18 +7,20 @@ Mcp server:
     hello:
       description: Get a greeting
       inputSchema:
-        name:
-          type: string
-          description: Your name
+        properties:
+          name:
+            type: string
+            description: Your name
       script:
         Output: Hello ${input.name}!
 
     get_alerts:
       description: Get weather alerts for a US state. Input is Two-letter US state code (e.g. CA, NY)
       inputSchema:
-        state:
-          type: string
-          description: Two-letter US state code (e.g. CA, NY)
+        properties:
+          state:
+            type: string
+            description: Two-letter US state code (e.g. CA, NY)
       script:
         GET: https://api.weather.gov/alerts/active/area/${input.state}
         For each:
@@ -33,18 +35,20 @@ Mcp server:
     get_alerts2:
       description: Get weather alerts for a US state. Input is Two-letter US state code (e.g. CA, NY)
       inputSchema:
-        state:
-          type: string
-          description: Two-letter US state code (e.g. CA, NY)
+        properties:
+          state:
+            type: string
+            description: Two-letter US state code (e.g. CA, NY)
       script: get-alert.cli
 
     get_forecast:
       description: Get weather forecast for a specific latitude/longitude
       inputSchema:
-        latitude:
-          type: number
-        longitude:
-          type: number
+        properties:
+          latitude:
+            type: number
+          longitude:
+            type: number
       script:
         Output: Forecast not implemented yet
 
