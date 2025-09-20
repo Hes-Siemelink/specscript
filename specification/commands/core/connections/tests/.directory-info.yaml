@@ -2,4 +2,4 @@ connections:
   SpecScript Sample Server:
     Http request defaults:
       url: http://localhost:2525
-  SpecScript Sample Server with script: connect.cli
+  SpecScript Sample Server with script: connect.spec.yaml

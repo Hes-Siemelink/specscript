@@ -9,7 +9,7 @@ Http server:
         output: Hello from SpecScript!
 
     /greeting:
-      post: handlers/create-greeting.cli
+      post: handlers/create-greeting.spec.yaml
 
     /greetings:
       get:

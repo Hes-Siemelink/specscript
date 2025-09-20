@@ -28,17 +28,18 @@ For more information on the options, see [Command line options](Command%20line%2
 
 ### Running a single file
 
-In the **[samples](/samples)** directory, there is a file **[hello.cli](/samples/hello.cli)** that contains a simple "
+In the **[samples](/samples)** directory, there is a file **[hello.spec.yaml](/samples/hello.spec.yaml)** that contains
+a simple "
 Hello World" command:
 
-```yaml file=hello.cli
+```yaml file=hello.spec.yaml
 Print: Hello from SpecScript!
 ```
 
 After [installing SpecScript](/README.md#build--run), run it with the following command
 
 ```shell cli cd=samples
-cli hello.cli
+cli hello.spec.yaml
 ```
 
 And you will see this output:
@@ -47,7 +48,7 @@ And you will see this output:
 Hello from SpecScript!
 ```
 
-You can omit the `.cli` extension to make it look more like a "cli command":
+You can omit the `.spec.yaml` extension to make it look more like a "cli command":
 
 ```shell cli cd=samples
 cli hello
@@ -79,7 +80,7 @@ Simple SpecScript example scripts
 ```
 
 Once you know which script you want to execute, simply chain them as commands on the command line. For example, to
-execute the `greet.cli` script in the `basic` directory, do:
+execute the `greet.spec.yaml` script in the `basic` directory, do:
 
 ```shell cli cd=samples
 cli basic greet
@@ -126,8 +127,9 @@ Hello, Alice!
 Some SpecScript commands produce output. By default, the SpecScript cli does not print the output. Use
 the [--output](Command%20line%20options.spec.md#--output) option to see it.
 
-For example, the **[greet](/samples/basic/greet.cli)** script uses a **Print** command to show the greeting, whereas
-**[create-greeting](/samples/basic/create-greeting.cli)** does not print anything but creates output to be used by
+For example, the **[greet](/samples/basic/greet.spec.yaml)** script uses a **Print** command to show the greeting,
+whereas
+**[create-greeting](/samples/basic/create-greeting.spec.yaml)** does not print anything but creates output to be used by
 another script.
 
 Running `create-greeting` like this will show nothing:

@@ -58,7 +58,7 @@ Mcp server:
           data:
             type: string
             description: Data to process
-      script: process-data.cli
+      script: process-data.spec.yaml
 ```
 
 The external script file should contain the SpecScript commands to execute when the tool is called.

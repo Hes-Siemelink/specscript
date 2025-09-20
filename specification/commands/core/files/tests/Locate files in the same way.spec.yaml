@@ -26,7 +26,7 @@ Expected output:
 ---
 Test case: Run script from same directory (short way)
 
-Run script: greet.cli
+Run script: greet.spec.yaml
 
 Expected output: Hello world!
 
@@ -34,7 +34,7 @@ Expected output: Hello world!
 Test case: Run script from working directory (file property)
 
 Run script:
-  file: specification/commands/core/files/tests/greet.cli
+  file: specification/commands/core/files/tests/greet.spec.yaml
   input:
     name: Fay
 
@@ -44,7 +44,7 @@ Expected output: Hello Fay!
 Test case: Run script relative to script
 
 Run script:
-  resource: greet.cli
+  resource: greet.spec.yaml
   input:
     name: Ray
 

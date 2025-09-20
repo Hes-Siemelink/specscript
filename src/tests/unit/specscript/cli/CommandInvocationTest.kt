@@ -1,27 +1,29 @@
 package specscript.cli
 
-import specscript.TestPaths
-import specscript.files.DirectoryInfo
-import specscript.language.CommandInfo
-import specscript.language.Script
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import specscript.TestPaths
+import specscript.files.DirectoryInfo
+import specscript.language.CommandInfo
+import specscript.language.Script
 
 
 class MockOutput : ConsoleOutput {
     var scriptInfoPrinted: Script? = null
     var outputPrinted: String? = null
     var usagePrinted: CommandLineParameters? = null
-    
+
     override fun printUsage(globalOptions: CommandLineParameters) {
         usagePrinted = globalOptions
     }
+
     override fun printScriptInfo(script: Script) {
         scriptInfoPrinted = script
     }
+
     override fun printCommands(commands: List<CommandInfo>) {}
     override fun printDirectoryInfo(info: DirectoryInfo) {}
     override fun printOutput(output: String) {
@@ -65,7 +67,7 @@ class CommandInvocationTest {
     @Test
     fun `Execute simple file successfully`() {
         // Given
-        val session = SpecScriptMain("-q", "simple.cli", workingDir = TestPaths.RESOURCES, output = out)
+        val session = SpecScriptMain("-q", "simple.spec.yaml", workingDir = TestPaths.RESOURCES, output = out)
 
         // When
         session.run()
@@ -77,7 +79,7 @@ class CommandInvocationTest {
     @Test
     fun `Print script info with help flag`() {
         // Given
-        val session = SpecScriptMain("--help", "simple.cli", workingDir = TestPaths.RESOURCES, output = out)
+        val session = SpecScriptMain("--help", "simple.spec.yaml", workingDir = TestPaths.RESOURCES, output = out)
 
         // When
         session.run()
@@ -98,14 +100,15 @@ class CommandInvocationTest {
         val exception = assertThrows<CliInvocationException> {
             session.run()
         }
-        
+
         exception.message shouldBe "Could not find file: nonexistent"
     }
 
     @Test
     fun `Print output - YAML format`() {
         // Given
-        val session = SpecScriptMain("--output", "print-output.cli", workingDir = TestPaths.RESOURCES, output = out)
+        val session =
+            SpecScriptMain("--output", "print-output.spec.yaml", workingDir = TestPaths.RESOURCES, output = out)
 
         // When
         session.run()
@@ -117,7 +120,8 @@ class CommandInvocationTest {
     @Test
     fun `Print output - JSON format`() {
         // Given
-        val session = SpecScriptMain("--output-json", "print-output.cli", workingDir = TestPaths.RESOURCES, output = out)
+        val session =
+            SpecScriptMain("--output-json", "print-output.spec.yaml", workingDir = TestPaths.RESOURCES, output = out)
 
         // When
         session.run()

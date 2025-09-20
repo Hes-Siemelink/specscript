@@ -10,9 +10,9 @@ You can run any SpecScript file in the same directory as a regular command
 
 ## Basic usage
 
-Suppose you have a cli file `generate-greeting.cli`
+Suppose you have a cli file `generate-greeting.spec.yaml`
 
-```yaml file=generate-greeting.cli
+```yaml file=generate-greeting.spec.yaml
 Output: Hello ${input.name}!
 ```
 

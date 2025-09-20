@@ -27,8 +27,8 @@ Script info: A script containing a code example
 # Do some stuff
 ```
 
-When running SpecScript from the command line with the `cli` command, this is the description that is given. For example,
-when listing the commands in a directory
+When running SpecScript from the command line with the `cli` command, this is the description that is given. For
+example, when listing the commands in a directory
 
 ```
 $ cli script-info-samples 
@@ -55,9 +55,9 @@ When invoking SpecScript interactively, `cli --help` will show the contents of t
 want to expose a script this way, for example a helper script, then you can hide it with the `hide` property in **Script
 info**.
 
-For example, consider the file `helper.cli`:
+For example, consider the file `helper.spec.yaml`:
 
-```yaml file=helper.cli
+```yaml file=helper.spec.yaml
 Script info:
   description: Helper script
   hidden: true

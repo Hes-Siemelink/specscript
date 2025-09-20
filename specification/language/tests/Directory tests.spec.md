@@ -28,17 +28,17 @@ No commands available.
 
 ## Imported helper scripts
 
-Suppose you have a main script `main.cli` in the directory `main`:
+Suppose you have a main script `main.spec.yaml` in the directory `main`:
 
-```yaml file=main/main.cli
+```yaml file=main/main.spec.yaml
 Script info: Main script
 
 Say something: { }
 ```
 
-And a helper script `say-something.cli` in the `helper` directory:
+And a helper script `say-something.spec.yaml` in the `helper` directory:
 
-```yaml file=helper/helper.cli
+```yaml file=helper/helper.spec.yaml
 Output: Hello
 ```
 
@@ -47,7 +47,7 @@ You can import the say-something script by way of the `.directory-info.yaml` fil
 ```yaml file=main/.directory-info.yaml
 Script info: Main directory
 imports:
-  - ../helper/say-something.cli
+  - ../helper/say-something.spec.yaml
 ```
 
 Then the `helper` script will be available in the main directory, but will not show up when printing the contents

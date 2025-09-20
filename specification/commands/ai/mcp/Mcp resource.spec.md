@@ -110,7 +110,7 @@ Mcp resource:
   database-backup:
     name: Database Backup
     description: Latest database backup information
-    script: backup-info.cli
+    script: backup-info.spec.yaml
 ```
 
 The external script file should contain the SpecScript commands to execute when the resource is accessed.

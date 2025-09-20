@@ -66,8 +66,8 @@ Assert equals:
     expected: 2
 ```
 
-Since we know that there will always an output variable, there is some special support for it in SpecScript. For example,
-we can rewrite the above example as
+Since we know that there will always an output variable, there is some special support for it in SpecScript. For
+example, we can rewrite the above example as
 
 ```yaml specscript
 Code example: The output variable
@@ -79,8 +79,8 @@ Add:
 Expected output: 2
 ```
 
-This uses the built-in **[Expected output](../commands/core/testing/Expected%20output.spec.md)** command that makes
-the script more readable.
+This uses the built-in **[Expected output](../commands/core/testing/Expected%20output.spec.md)** command that makes the
+script more readable.
 
 The output variable behaves as any variable. You can also set it:
 
@@ -138,9 +138,9 @@ Assert equals:
 
 The **Output** command is often used at the end of a script to explicitly set the return value.
 
-Suppose you have a file `simple-greeting.cli`
+Suppose you have a file `simple-greeting.spec.yaml`
 
-```yaml file=simple-greeting.cli
+```yaml file=simple-greeting.spec.yaml
 Script info: A simple greeting
 
 Output: Hello World!
@@ -151,7 +151,7 @@ If we call this script from another script, we get the result in the`${output}` 
 ```yaml specscript
 Code example: Get the output of another script
 
-Run script: simple-greeting.cli
+Run script: simple-greeting.spec.yaml
 
 Expected output: Hello World!
 ```
@@ -178,9 +178,9 @@ Assert equals:
 
 ## Script Input & Output
 
-Take a look at the example file `greet.cli` to see how you can define input and output of a script.
+Take a look at the example file `greet.spec.yaml` to see how you can define input and output of a script.
 
-```yaml file=greet.cli
+```yaml file=greet.spec.yaml
 Code example: Input and output when defining a script
 
 Script info: Creates a greeting

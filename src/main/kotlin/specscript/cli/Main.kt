@@ -147,8 +147,8 @@ fun resolveCommand(command: String, workingDir: Path): Path {
         }
     }
 
-    // Try with .cli extension
-    workingDir.resolve("$command.cli").let {
+    // Try with .spec.yaml extension
+    workingDir.resolve("$command.spec.yaml").let {
         if (it.exists()) {
             return it
         }

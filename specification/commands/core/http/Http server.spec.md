@@ -77,8 +77,8 @@ Http server:
 
 This will only stop the server running on the specified port, other servers will continue operating.
 
-If the server is still running at the end of the script, SpecScript will not exit and keep serving requests until you stop
-the process -- for example by pressing `^C` from the command line.
+If the server is still running at the end of the script, SpecScript will not exit and keep serving requests until you
+stop the process -- for example by pressing `^C` from the command line.
 
 ## Supplied variables
 
@@ -163,9 +163,9 @@ Http server:
 
 You can also specify a SpecScript file to run.
 
-Suppose you have a file `greet.cli`
+Suppose you have a file `greet.spec.yaml`
 
-```yaml file=greet.cli
+```yaml file=greet.spec.yaml
 Script info: Creates a greeting
 
 Input parameters:
@@ -185,7 +185,7 @@ Http server:
   endpoints:
     /greet:
       get:
-        file: greet.cli
+        file: greet.spec.yaml
 
 GET: http://localhost:25001/greet?name=Alice
 

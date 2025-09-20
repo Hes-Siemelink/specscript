@@ -1,4 +1,4 @@
 Script info: Spotify API examples
 
 connections:
-  Spotify: connect.cli
+  Spotify: connect.spec.yaml

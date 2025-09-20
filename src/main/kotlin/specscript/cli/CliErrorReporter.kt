@@ -8,14 +8,14 @@ import specscript.util.toDisplayYaml
 
 /**
  * Utility class for consistent error reporting.
- * 
+ *
  * Provides standardized error formatting and output handling.
  */
 object CliErrorReporter {
 
     /**
      * Reports a SpecScriptLanguageException with optional stack trace.
-     * 
+     *
      * @param exception The language exception to report
      * @param printStackTrace Whether to include stack traces in debug mode
      */

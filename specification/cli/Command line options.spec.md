@@ -47,8 +47,8 @@ Available commands:
   prompt            Simple interactive prompt
 ```
 
-Using `--help` on the **[greet](/samples/basic/greet.cli)** command will give us a description and show which command
-line options it supports
+Using `--help` on the **[greet](/samples/basic/greet.spec.yaml)** command will give us a description and show which
+command line options it supports
 
 ```shell cli cd=samples
 cli --help basic greet
@@ -75,11 +75,13 @@ Hello, Alice!
 
 ### --output
 
-Some SpecScript scripts will produce output. By default, the `cli` command does not print the output. You can turn it on with the
+Some SpecScript scripts will produce output. By default, the `cli` command does not print the output. You can turn it on
+with the
 `--output` option.
 
-For example, the **[greet](/samples/basic/greet.cli)** script uses a **Print** command to show the greeting, whereas
-**[create-greeting](/samples/basic/create-greeting.cli)** does not print anything but creates output to be used by
+For example, the **[greet](/samples/basic/greet.spec.yaml)** script uses a **Print** command to show the greeting,
+whereas
+**[create-greeting](/samples/basic/create-greeting.spec.yaml)** does not print anything but creates output to be used by
 another script.
 
 Running `create-greeting` like this will show nothing
@@ -120,16 +122,16 @@ cli --output-json basic create-greeting --name Bob
 Use this option to see stacktraces from the underlying runtime when an internal error occurs. This option is meant for
 troubleshooting the SpecScript runtime.
 
-For example, the file `error-in-add.cli` has an error in it that is not handled by SpecScript.
+For example, the file `error-in-add.spec.yaml` has an error in it that is not handled by SpecScript.
 
-```yaml file=script-with-error.cli
+```yaml file=script-with-error.spec.yaml
 GET: http:\\localhost  # Malformed URL - not caught by SpecScript runtime
 ```
 
 Without debug mode you get the following error message
 
 ```shell cli
-cli script-with-error.cli
+cli script-with-error.spec.yaml
 ```
 
 ```output
@@ -137,7 +139,7 @@ Instacli scripting error
 
 Caused by: java.net.URISyntaxException: Illegal character in opaque part at index 5: http:\\localhost
 
-In script-with-error.cli:
+In script-with-error.spec.yaml:
 
   GET: http:\\localhost
 ```
@@ -146,7 +148,7 @@ With the `--debug` option you will see more of the internals. For example, the K
 debugging the implementation.
 
 ```shell cli
-cli --debug script-with-error.cli
+cli --debug script-with-error.spec.yaml
 ```
 
 May print something like
@@ -174,7 +176,7 @@ Caused by: java.net.URISyntaxException: Illegal character in opaque part at inde
 	at instacli.cli.InstacliMain$Companion.main$default(Main.kt:151)
 	at instacli.cli.MainKt.main(Main.kt:21)
 
-In error.cli:
+In error.spec.yaml:
 
   GET: http:\\localhost
 ```

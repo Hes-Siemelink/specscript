@@ -1,7 +1,7 @@
 Test case: Run another SpecScript file
 
 Run script:
-  resource: greet.cli
+  resource: greet.spec.yaml
   input:
     name: Jay
 

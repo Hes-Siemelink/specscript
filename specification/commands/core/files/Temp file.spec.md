@@ -75,7 +75,7 @@ property to control this.
 Code example: Temporary file with variables not resolved
 
 Temp file:
-  filename: goodbye.cli
+  filename: goodbye.spec.yaml
   resolve: false
   content:
     Output: Adios ${input.name}

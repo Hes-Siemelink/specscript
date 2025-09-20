@@ -1,5 +1,5 @@
 imports:
-  - ../create-db.cli
-  - ../create-ticket.cli
-  - ../list-tickets.cli
-  - ../move-ticket.cli
+  - ../create-db.spec.yaml
+  - ../create-ticket.spec.yaml
+  - ../list-tickets.spec.yaml
+  - ../move-ticket.spec.yaml

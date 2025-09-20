@@ -78,7 +78,7 @@ When:
           Content-Type: application/x-www-form-urlencoded
         body:
           grant_type: client_credentials
-          client_id: ${input.client_id}
-          client_secret: ${input.client_secret}
+          client_id: ${input.spec.yamlent_id}
+          client_secret: ${input.spec.yamlent_secret}
           scope: "openid dai-svc"
 

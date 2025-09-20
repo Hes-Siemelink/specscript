@@ -2,13 +2,14 @@
 
 Write executable specifications that serve as both documentation and tests using Markdown and YAML.
 
-SpecScript lets you create human-readable specifications that actually run, validate behavior, and stay up-to-date. No more documentation that's out of sync with reality.
+SpecScript lets you create human-readable specifications that actually run, validate behavior, and stay up-to-date. No
+more documentation that's out of sync with reality.
 
 ## Quick Example
 
-Here's a complete API testing specification in `user-api.cli`:
+Here's a complete API testing specification in `user-api.spec.yaml`:
 
-```yaml file=user-api.cli
+```yaml file=user-api.spec.yaml
 Script info:
   description: User API validation
 
@@ -28,7 +29,7 @@ Print: ${output}
 Run it to test your API:
 
 ```shell cli
-cli user-api.cli --name Alice --language English
+cli user-api.spec.yaml --name Alice --language English
 ```
 
 This should produce the following output:
@@ -38,23 +39,31 @@ Hi Alice!
 ```
 
 This single file is simultaneously:
+
 - **Documentation** of how your API works
-- **Test suite** that validates the API behavior  
+- **Test suite** that validates the API behavior
 - **Specification** that defines expected behavior
 - **Runnable code** that executes real API calls
 
 ## Key Features
 
 ### Executable Documentation
-SpecScript documentation IS the test suite. Every code example in specification documents literally executes during tests. Write specifications in Markdown with embedded YAML that runs as part of your build, ensuring docs never go stale.
+
+SpecScript documentation IS the test suite. Every code example in specification documents literally executes during
+tests. Write specifications in Markdown with embedded YAML that runs as part of your build, ensuring docs never go
+stale.
 
 ### Built-in Testing
-Test assertions, HTTP requests, data validation, and control flow - all in readable YAML syntax. Documentation that lies will cause your build to fail.
+
+Test assertions, HTTP requests, data validation, and control flow - all in readable YAML syntax. Documentation that lies
+will cause your build to fail.
 
 ### Human-Friendly Syntax
+
 No complex programming constructs. Use simple YAML declarations that business stakeholders can read and understand.
 
 ### Quick Prototyping
+
 Rapidly prototype APIs, test data pipelines, validate configurations, or create interactive command-line tools.
 
 ## More Examples
@@ -129,7 +138,7 @@ Print: Deploying to ${output} environment
 
 ## How It Works
 
-1. **Write specifications** in `.cli` files using YAML syntax
+1. **Write specifications** in `.spec.yaml` files using YAML syntax
 2. **Run them directly** with the `cli` command
 3. **Embed in Markdown** for rich documentation that stays current
 4. **Organize in directories** for subcommand support
@@ -138,20 +147,24 @@ Print: Deploying to ${output} environment
 ## Getting Started
 
 ### Install
+
 ```shell ignore
 ./gradlew build fatJar
 alias cli="java -jar `pwd`/build/libs/specscript-*-full.jar"
 ```
 
 ### Hello World
-Create `hello.cli`:
-```yaml file=hello.cli
+
+Create `hello.spec.yaml`:
+
+```yaml file=hello.spec.yaml
 Print: Hello from SpecScript!
 ```
 
 Run it:
+
 ```shell cli
-cli hello.cli
+cli hello.spec.yaml
 ```
 
 ```output
@@ -159,9 +172,10 @@ Hello from SpecScript!
 ```
 
 ### Explore Examples
+
 ```shell ignore
 cli samples              # Interactive selection
-cli samples/hello.cli    # Run specific example  
+cli samples/hello.spec.yaml    # Run specific example  
 cli samples/http-server  # API server example
 ```
 
@@ -171,14 +185,15 @@ Complete language specification and command reference:
 
 - **[Language Guide](specification/language/README.md)** - Core SpecScript syntax and concepts
 - **[Command Reference](specification/commands/README.md)** - All available commands with examples
-- **[CLI Usage](specification/cli/README.md)** - Command-line tool documentation  
+- **[CLI Usage](specification/cli/README.md)** - Command-line tool documentation
 
-All documentation is executable - every code example literally runs during `./gradlew specificationTest`. This ensures documentation cannot become outdated because it validates real behavior.
+All documentation is executable - every code example literally runs during `./gradlew specificationTest`. This ensures
+documentation cannot become outdated because it validates real behavior.
 
 ## Use Cases
 
 - **API Testing** - Validate REST APIs with readable specifications
-- **Configuration Validation** - Ensure configs are correct across environments  
+- **Configuration Validation** - Ensure configs are correct across environments
 - **Data Pipeline Testing** - Test ETL processes and data transformations
 - **Integration Testing** - End-to-end workflow validation
 - **Prototyping** - Quickly mock APIs and interactive tools
@@ -187,17 +202,20 @@ All documentation is executable - every code example literally runs during `./gr
 ## Why SpecScript?
 
 **Traditional approaches:**
-- Documentation ❌ often outdated  
+
+- Documentation ❌ often outdated
 - Tests ❌ hard to read
 - Specifications ❌ separate from implementation
 - Prototyping ❌ requires full development setup
 
 **SpecScript approach:**
+
 - Documentation ✅ always current (it's executable and tested)
-- Tests ✅ readable by humans and stakeholders  
+- Tests ✅ readable by humans and stakeholders
 - Specifications ✅ are the implementation and the tests
 - Prototyping ✅ just write YAML and run
 
-**The Magic**: Documentation that can't lie because it executes. If your examples don't work, your build fails. This is spec-driven development where documentation validates behavior.
+**The Magic**: Documentation that can't lie because it executes. If your examples don't work, your build fails. This is
+spec-driven development where documentation validates behavior.
 
 Everything is Markdown and YAML. Keep it simple.

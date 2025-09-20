@@ -16,8 +16,8 @@ Connect to: Digital.ai Release
 ### Input properties
 
 These are the input properties for the script. They may be superfluous here, because they are already defined in
-the [mcp-relelese.cli](mcp-release.cli) server specification. Technically you can leave them out, but when defined here
-it makes it easier the test the script in isolation and reuse it in other contexts.
+the [mcp-relelese.spec.yaml](mcp-release.spec.yaml) server specification. Technically you can leave them out, but when
+defined here it makes it easier the test the script in isolation and reuse it in other contexts.
 
 ```yaml specscript
 Input parameters:

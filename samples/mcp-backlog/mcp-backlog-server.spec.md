@@ -40,7 +40,7 @@ Mcp tool:
           type: string
           description: Filter tickets by assignee (use 'all' or omit for no filtering)
           default: all
-    script: list-tickets.cli
+    script: list-tickets.spec.yaml
 ```
 
 ### Get specific ticket
@@ -58,7 +58,7 @@ Mcp tool:
           type: string
           description: Ticket ID
       required: [ id ]
-    script: get-ticket.cli
+    script: get-ticket.spec.yaml
 
 ```
 
@@ -92,7 +92,7 @@ Mcp tool:
           type: string
           description: Person assigned to this ticket
       required: [ title, description ]
-    script: create-ticket.cli
+    script: create-ticket.spec.yaml
 ```
 
 ### Create a batch of tickets
@@ -120,7 +120,7 @@ Mcp tool:
           description: Ticket title
       required:
         - batch
-    script: create-ticket-batch.cli
+    script: create-ticket-batch.spec.yaml
 ```
 
 ### Update existing ticket
@@ -155,7 +155,7 @@ Mcp tool:
           type: string
           description: New assignee
       required: [ id ]
-    script: update-ticket.cli
+    script: update-ticket.spec.yaml
 
 ```
 
@@ -174,7 +174,7 @@ Mcp tool:
           type: string
           description: Full ticket identifier (e.g. TICKET-007)
       required: [ id ]
-    script: delete-ticket.cli
+    script: delete-ticket.spec.yaml
 ```
 
 ## Backlog Organization Tools
@@ -201,7 +201,7 @@ Mcp tool:
           description: Move action (relative or absolute positioning)
           default: up
       required: [ id ]
-    script: move-ticket.cli
+    script: move-ticket.spec.yaml
 
 ```
 

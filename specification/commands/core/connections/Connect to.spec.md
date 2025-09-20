@@ -16,14 +16,14 @@ the scenes.
 **Connect to** takes a symbolic name and usually
 configures [Http request defaults](../http/Http%20request%20defaults.spec.md) for subsequent REST API calls.
 
-A script `connect-to.cli` would look like this:
+A script `connect-to.spec.yaml` would look like this:
 
 <!-- yaml specscript
 Http request defaults:
   url: http://localhost:2525
 -->
 
-```yaml file=connect-to.cli
+```yaml file=connect-to.spec.yaml
 Code example: Use a connection
 
 Connect to: SpecScript Samples
@@ -41,15 +41,15 @@ this in the  `.directory-info.yaml` file in the same directory
 
 ```yaml file=.directory-info.yaml
 connections:
-  SpecScript Samples: connect.cli
+  SpecScript Samples: connect.spec.yaml
 ```
 
-The connect script `connect.cli` will be responsible for selecting the account. This way the main script does not need
-to know the user credentials and other connection logic.
+The connect script `connect.spec.yaml` will be responsible for selecting the account. This way the main script does not
+need to know the user credentials and other connection logic.
 
 Here's an example connection script:
 
-```yaml file=connect.cli
+```yaml file=connect.spec.yaml
 # Set up endpoint for subsequent HTTP calls
 Http request defaults:
   url: http://localhost:2525

@@ -62,15 +62,15 @@ code blocks to execute.
 
 Here is an overview of the constructs you can use to embed SpecScript code in Markdown documents.
 
-| Description                                               | Markdown directive    |
-|-----------------------------------------------------------|-----------------------|
+| Description                                               | Markdown directive      |
+|-----------------------------------------------------------|-------------------------|
 | [SpecScript code](#specscript-code)                       | ` ```yaml specscript`   | 
 | [Hidden code](#hidden-code)                               | ` <!-- yaml specscript` | 
-| [Predefined answers](#predefined-answers)                 | ` <!-- answers`       | 
-| [Checking output](#checking-output)                       | ` ```output`          | 
-| [Helper files](#helper-files)                             | ` ```yaml file`       | 
-| [Shell commands](#shell-commands)                         | ` ```shell`           | 
-| [Invoking SpecScript itself](#invoking-specscript-itself) | ` ```shell cli`       | 
+| [Predefined answers](#predefined-answers)                 | ` <!-- answers`         | 
+| [Checking output](#checking-output)                       | ` ```output`            | 
+| [Helper files](#helper-files)                             | ` ```yaml file`         | 
+| [Shell commands](#shell-commands)                         | ` ```shell`             | 
+| [Invoking SpecScript itself](#invoking-specscript-itself) | ` ```shell cli`         | 
 
 ## SpecScript code
 
@@ -163,8 +163,8 @@ Print: Hello, ${name}!
 
 ### Cleanup code
 
-You can also use `<!-- yaml specscript` to provide hidden cleanup code by putting a code block after the code example that
-is displayed. The yaml code from the comment will be appended to script.
+You can also use `<!-- yaml specscript` to provide hidden cleanup code by putting a code block after the code example
+that is displayed. The yaml code from the comment will be appended to script.
 
 ## Predefined answers
 
@@ -207,12 +207,12 @@ Print: Hello, ${name}!
 ## Checking output
 
 You can check the console output of a code block using the ` ```output` directive. This is equivalent to using the
-command [**Expected console output**](../commands/core/testing/Expected%20console%20output.spec.md). If the output
-of the command is not the same as specified in the ` ````output` block, the script will fail.
+command [**Expected console output**](../commands/core/testing/Expected%20console%20output.spec.md). If the output of
+the command is not the same as specified in the ` ````output` block, the script will fail.
 
 For checking the output of a command within a script, use the
-[**Expected output**](../commands/core/testing/Expected%20output.spec.md) command inside the script. Note: there is
-no Markdown shortcut for **Expected output**.
+[**Expected output**](../commands/core/testing/Expected%20output.spec.md) command inside the script. Note: there is no
+Markdown shortcut for **Expected output**.
 
 #### Markdown format
 
@@ -621,9 +621,9 @@ execution of the current script. This is where temporary files are stored that a
 #### Markdown format
 
 ~~~markdown
-Create a file `hello.cli`:
+Create a file `hello.spec.yaml`:
 
-```yaml file=hello.cli
+```yaml file=hello.spec.yaml
 Print: Hello world!
 ```
 
@@ -642,9 +642,9 @@ Hello world!
 
 #### Display example
 
-Create a file `hello.cli`:
+Create a file `hello.spec.yaml`:
 
-```yaml file=hello.cli
+```yaml file=hello.spec.yaml
 Print: Hello world!
 ```
 
@@ -664,8 +664,8 @@ Hello world!
 
 You can also use `ignore` on `shell cli`. This willl not trigger execution.
 
-In the following example, `cli unknown-command` would raise an error, but this command is never executed by SpecScript so
-we can continue safely.
+In the following example, `cli unknown-command` would raise an error, but this command is never executed by SpecScript
+so we can continue safely.
 
 <!-- yaml specscript
 Code example: Ignore shell command

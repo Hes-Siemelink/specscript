@@ -7,12 +7,12 @@ For this example we run from the **[samples](/samples)** directory. It contains 
 files:
 
 ```
-create-greeting.cli
-greet.cli
+create-greeting.spec.yaml
+greet.spec.yaml
 greeting.yaml
-multiple-choice.cli
-output.cli
-simple-question.cli
+multiple-choice.spec.yaml
+output.spec.yaml
+simple-question.spec.yaml
 ```
 
 We can now run `basic` as a cli command with subcommands for each of the files. First, let's use the `--help` option to
@@ -45,18 +45,18 @@ With the expected output:
 Hello, World!
 ```
 
-Note that it's optional to specify the `.cli` extension. The following three commands are equivalent:
+Note that it's optional to specify the `.spec.yaml` extension. The following three commands are equivalent:
 
 ```shell cli cd=samples
 cli basic greet
 ```
 
 ```shell cli cd=samples
-cli basic greet.cli
+cli basic greet.spec.yaml
 ```
 
 ```shell cli cd=samples
-cli basic/greet.cli
+cli basic/greet.spec.yaml
 ```
 
 ### Interactive command chooser
@@ -90,9 +90,9 @@ Another way is to use it as a regular command. SpecScript reads all cli files in
 available as commands in the current script. While doing so, it transforms file names in "kebab-style" to "Sentence
 style".
 
-For example, suppose we have a file `create-greeting.cli`, that creates a greeting and puts it in the output:
+For example, suppose we have a file `create-greeting.spec.yaml`, that creates a greeting and puts it in the output:
 
-```yaml file=create-greeting.cli
+```yaml file=create-greeting.spec.yaml
 Script info: Creates a greeting
 
 Input parameters:
@@ -156,8 +156,8 @@ Available commands:
   create-greeting   Creates a greeting
 ```
 
-If there is no `.directory-info.yaml` file, or it doesn't have a description, SpecScript will use the first sentence of the
-README.md file in the directory.
+If there is no `.directory-info.yaml` file, or it doesn't have a description, SpecScript will use the first sentence of
+the README.md file in the directory.
 <!-- TODO: Add example and test cases -->
 
 ### Hidden directory
@@ -188,12 +188,12 @@ Out-of-the-box, you
 can [call a script from within the same directory](Organizing%20SpecScript%20files%20in%20directories.spec.md#calling-another-script)
 as a regular SpecScript command.
 
-To call a script from another directory, you can import it in the `.directory-info.yaml` file. This will import it for all
-scripts in that directory.
+To call a script from another directory, you can import it in the `.directory-info.yaml` file. This will import it for
+all scripts in that directory.
 
-For example, if we have the file `helper/say-something.cli`:
+For example, if we have the file `helper/say-something.spec.yaml`:
 
-```yaml file=helper/say-something.cli
+```yaml file=helper/say-something.spec.yaml
 Output: Something ${input.what}
 ```
 
@@ -203,12 +203,12 @@ And we have it in the `.directory-info.yaml` file as follows:
 Script info: This is an example directory
 
 imports:
-  - helper/say-something.cli
+  - helper/say-something.spec.yaml
 ```
 
-Then you can call it like this from your script `call-helper.cli`:
+Then you can call it like this from your script `call-helper.spec.yaml`:
 
-```yaml file=call-helper.cli
+```yaml file=call-helper.spec.yaml
 Code example: Calling a script that was imported from another directory
 
 Say something:
@@ -231,5 +231,6 @@ Something funny
 
 ### Specifying connection data
 
-The `.directory-info.yaml` file also contains a `connections` settings for retrieving HTTP connection credentials. See the
+The `.directory-info.yaml` file also contains a `connections` settings for retrieving HTTP connection credentials. See
+the
 **[Connect to](../commands/core/connections/Connect%20to.spec.md)** command for more details.

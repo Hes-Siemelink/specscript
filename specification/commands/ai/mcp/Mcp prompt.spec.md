@@ -116,7 +116,7 @@ Mcp prompt:
       - name: format
         description: Documentation format (markdown, rst, etc.)
         required: false
-    script: generate-docs.cli
+    script: generate-docs.spec.yaml
 ```
 
 The external script file should contain the SpecScript commands to execute when the prompt is invoked.

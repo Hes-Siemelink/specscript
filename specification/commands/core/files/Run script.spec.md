@@ -13,9 +13,9 @@ also [SpecScript files as commands](SpecScript%20files%20as%20commands.spec.md)
 
 ## Basic usage
 
-Suppose you have a cli file `do-something.cli`
+Suppose you have a cli file `do-something.spec.yaml`
 
-```yaml file=do-something.cli
+```yaml file=do-something.spec.yaml
 Output: Something done!
 ```
 
@@ -26,16 +26,16 @@ Pass the name of the script in the current working directory as a single text pa
 ```yaml specscript
 Code example: Call another instacli
 
-Run script: do-something.cli
+Run script: do-something.spec.yaml
 
 Expected output: Something done!
 ```
 
 ## Passing input parameters
 
-Suppose you have a cli file `create-greeting.cli`
+Suppose you have a cli file `create-greeting.spec.yaml`
 
-```yaml file=create-greeting.cli
+```yaml file=create-greeting.spec.yaml
 Output: Hello ${input.name}!
 ```
 
@@ -46,7 +46,7 @@ the `resource` property.
 Code example: Call another SpecScript file
 
 Run script:
-  resource: create-greeting.cli
+  resource: create-greeting.spec.yaml
   input:
     name: Alice
 
@@ -59,7 +59,7 @@ You can also pass a list and the script will be called once for each item in the
 Code example: Call another SpecScript file with a list
 
 Run script:
-  resource: create-greeting.cli
+  resource: create-greeting.spec.yaml
   input:
     - name: Alice
     - name: Bob
@@ -80,7 +80,7 @@ Use the `file` property to look for a script in the directory that you are calli
 Code example: Call another SpecScript file from working dir
 
 Run script:
-  file: samples/basic/create-greeting.cli
+  file: samples/basic/create-greeting.spec.yaml
   input:
     name: Clarice
 

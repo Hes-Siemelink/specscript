@@ -8,9 +8,9 @@ As-code, but without the complexity of actual code.
 
 ## Example
 
-Get a flavor of SpecScript with this example file `greetings.cli`:
+Get a flavor of SpecScript with this example file `greetings.spec.yaml`:
 
-```yaml file=greetings.cli
+```yaml file=greetings.spec.yaml
 Script info:
   description: Multi-language greeting
 
@@ -40,7 +40,7 @@ Select a language: English
 -->
 
 ```shell cli
-cli greetings.cli --name Hes --language English
+cli greetings.spec.yaml --name Hes --language English
 ```
 
 When running it, we get prompted for input before a POST request is made to the server. The greeting that we get back is
@@ -53,7 +53,7 @@ Hi Hes!
 You can specify the parameters as arguments. Find out what to pass with the `--help` option:
 
 ```shell cli
-cli --help greetings.cli
+cli --help greetings.spec.yaml
 ```
 
 Will print:
@@ -69,7 +69,7 @@ Options:
 We can call the example again with the parameters filled in:
 
 ```shell cli
-cli greetings.cli --name Hes --language Spanish
+cli greetings.spec.yaml --name Hes --language Spanish
 ```
 
 And we get the result in Spanish:
@@ -104,7 +104,7 @@ alias cli="java -jar `pwd`/build/libs/specscript-*-full.jar"
 Run the "Hello world" example:
 
 ```shell ignore
-cli samples/hello.cli
+cli samples/hello.spec.yaml
 ```
 
 See [Running SpecScript files](specification/cli/Running%20SpecScript%20files.spec.md) for more information on the `cli`
@@ -127,7 +127,7 @@ cli samples/spotify
 ```
 
 When connecting to Spotify for the first time, the script will ask you for your login credentials: App Client ID and
-Client secret -- you should already have those. 
+Client secret -- you should already have those.
 
 # Highlight Reel
 
@@ -138,16 +138,16 @@ SpecScript has two main ideas:
 
 ## Hello world
 
-This is the simplest SpecScript progam, **[hello.cli](samples/hello.cli)**:
+This is the simplest SpecScript progam, **[hello.spec.yaml](samples/hello.spec.yaml)**:
 
-```yaml file=hello.cli
+```yaml file=hello.spec.yaml
 Print: Hello from SpecScript!
 ```
 
 Invoke it with
 
 ```shell cli
-cli hello.cli
+cli hello.spec.yaml
 ```
 
 And it will print the expected message:
@@ -179,9 +179,9 @@ POST:
 
 ## Define input
 
-Define all command-line options in Yaml. Take this file `simple-options.cli`
+Define all command-line options in Yaml. Take this file `simple-options.spec.yaml`
 
-```yaml file=simple-options.cli
+```yaml file=simple-options.spec.yaml
 Script info:
   description: Call Acme
 
@@ -193,7 +193,7 @@ Input parameters:
 This will automatically generate a command description and command line options:
 
 ```shell cli
-cli --help simple-options.cli
+cli --help simple-options.spec.yaml
 ```
 
 ```output
@@ -207,10 +207,10 @@ Options:
 ## Input options
 
 SpecScript allows you to specify the type and format
-of [input properties](specification/commands/core/user-interaction/Prompt.spec.md#prompt-properties). Here's an
-example file `input-options.cli`
+of [input properties](specification/commands/core/user-interaction/Prompt.spec.md#prompt-properties). Here's an example
+file `input-options.spec.yaml`
 
-```yaml file=input-options.cli
+```yaml file=input-options.spec.yaml
 Script info:
   description: Different input options
 
@@ -225,7 +225,7 @@ Input parameters:
 ```
 
 ```shell cli
-cli --help input-options.cli
+cli --help input-options.spec.yaml
 ```
 
 ```output
@@ -297,9 +297,9 @@ Available commands:
 
 Easily construct [user prompts](specification/commands/core/user-interaction/Prompt.spec.md) with SpecScript.
 
-Here's an example of how to ask the user to pick something from a list, in a file called `prompt.cli`:
+Here's an example of how to ask the user to pick something from a list, in a file called `prompt.spec.yaml`:
 
-```yaml file=prompt.cli 
+```yaml file=prompt.spec.yaml 
 Prompt:
   description: Select a language
   enum:
@@ -314,7 +314,7 @@ Print:
 You will be presented with an interactive selector when running it:
 
 ```shell cli
-cli prompt.cli
+cli prompt.spec.yaml
 ```
 
 <!-- answers
@@ -403,9 +403,8 @@ Print:
 
 ## Http Server
 
-For quick API prototyping, SpecScript will run
-an [HTTP server](specification/commands/core/http/Http%20server.spec.md) for you. Define some endpoints and back
-them by SpecScript Yaml scripts:
+For quick API prototyping, SpecScript will run an [HTTP server](specification/commands/core/http/Http%20server.spec.md)
+for you. Define some endpoints and back them by SpecScript Yaml scripts:
 
 ```yaml specscript
 Code example: Running an HTTP server
@@ -419,8 +418,8 @@ Http server:
           Output: Hello from SpecScript!
 ```
 
-Take a look at the [sample server](samples/http-server/sample-server/sample-server.cli) that serves all requests from
-the SpecScript documentation and test suite.
+Take a look at the [sample server](samples/http-server/sample-server/sample-server.spec.yaml) that serves all requests
+from the SpecScript documentation and test suite.
 
 ## If statement
 
@@ -440,8 +439,8 @@ If:
 
 ## For each
 
-With **[For each](specification/commands/core/control-flow/For%20each.spec.md)** you can loop over collections and
-do stuff.
+With **[For each](specification/commands/core/control-flow/For%20each.spec.md)** you can loop over collections and do
+stuff.
 
 ```yaml specscript
 Code example: For each statement
@@ -463,8 +462,8 @@ Hello Carol!
 ```
 
 You can use **For each**
-to [transform a list](specification/commands/core/control-flow/For%20each.spec.md#transform-a-list) into something
-else, like the `map()` function in some programming languages.
+to [transform a list](specification/commands/core/control-flow/For%20each.spec.md#transform-a-list) into something else,
+like the `map()` function in some programming languages.
 
 ```yaml specscript
 Code example: For each to transform a list
@@ -496,7 +495,7 @@ Assert that:
 
 In fact, all tests for the SpecScript language and commands are written in SpecScript itself and can be found in the
 **[specification](specification)** directory, in the `tests` subfolders. For example, take a look at
-the [tests for assertions](specification/commands/core/testing/tests/Assert%20tests.cli)
+the [tests for assertions](specification/commands/core/testing/tests/Assert%20tests.spec.yaml)
 
 ## Documenting SpecScript
 
@@ -514,7 +513,7 @@ Here's an example of SpecScript documentation:
     Print: Hello from SpecScript!
     ```
 
-You can do 'Spec-driven development' with SpecScript. For new features, write the documentation first, then run it. Since
-you haven't implemented anything yet, the test suite will fail. Then write the implementation, and once the tests are
-green, you're done!
+You can do 'Spec-driven development' with SpecScript. For new features, write the documentation first, then run it.
+Since you haven't implemented anything yet, the test suite will fail. Then write the implementation, and once the tests
+are green, you're done!
 

@@ -1,2 +1,2 @@
 connections:
-  Digital.ai Release: ../login/connect.cli
+  Digital.ai Release: ../login/connect.spec.yaml

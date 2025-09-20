@@ -6,17 +6,17 @@
 
 This is the simplest SpecScript file:
 
-```yaml file=hello-world.cli
+```yaml file=hello-world.spec.yaml
 Print: Hello world
 ```
 
 SpecScript files are a list of **commands**. In this case the file contains a single `Print` command. By convention,
 commands start with a capital letter.
 
-If we store it in a file `hello-world.cli`, we can run it with the following command:
+If we store it in a file `hello-world.spec.yaml`, we can run it with the following command:
 
 ```shell cli
-cli hello-world.cli
+cli hello-world.spec.yaml
 ```
 
 And get the expected output:
@@ -40,10 +40,13 @@ Another advantage of SpecScript syntax being Yaml is familiarity: if you have wo
 structure (and pitfalls) already, and you get editor support out-of-the-box. It's also way easier for the implementation
 to parse it than a custom format.
 
-> **⚠️ YAML Pitfall**: Since SpecScript uses YAML, you cannot repeat command names because they are dictionary keys. Use list syntax or `---` separators for multiple commands. See [Multiple commands and `---`](#multiple-commands-and---) for details.
+> **⚠️ YAML Pitfall**: Since SpecScript uses YAML, you cannot repeat command names because they are dictionary keys. Use
+> list syntax or `---` separators for multiple commands. See [Multiple commands and `---`](#multiple-commands-and---) for
+> details.
 
-SpecScript files have `.cli` file extension. Within SpecScript, the convention is that `.yaml` files are for static data and
-`.cli` files are SpecScript files that contain commands. Tip: Map your editor to recognize `.cli`
+SpecScript files have `.spec.yaml` file extension. Within SpecScript, the convention is that `.yaml` files are for
+static data and
+`.spec.yaml` files are SpecScript files that contain commands. Tip: Map your editor to recognize `.spec.yaml`
 as `.yaml`.
 
 SpecScript's Yaml flavor does not rely on special Yaml features like directives. It is used as a human-friendly way of
@@ -55,20 +58,20 @@ SpecScript does add some additional formatting on top of Yaml, for example the v
 
 You can have multiple commands in a file, and they will be executed in order:
 
-```yaml file=prompt.cli
+```yaml file=prompt.spec.yaml
 Prompt: What is your name?
 
 Print: Hello ${output}!
 ```
 
-When storing this in a file `prompt.cli` and running it with the following command,
+When storing this in a file `prompt.spec.yaml` and running it with the following command,
 
 <!-- answers
 What is your name?: Hes
 -->
 
 ```shell cli
-cli prompt.cli
+cli prompt.spec.yaml
 ```
 
 you would get the following:
@@ -128,9 +131,9 @@ separator helps you to visually divide sections in your code if placed strategic
 You can specify the description of your script with the
 **[Script info](../commands/core/script-info/Script%20info.spec.md)** command.
 
-Take this file `simple-greeting.cli`:
+Take this file `simple-greeting.spec.yaml`:
 
-```yaml file=simple-greeting.cli
+```yaml file=simple-greeting.spec.yaml
 Script info: Prints a simple greeting
 
 Print: Hi there!
@@ -139,7 +142,7 @@ Print: Hi there!
 When running it with the `--help` flag, the description is printed:
 
 ```shell cli
-cli --help simple-greeting.cli
+cli --help simple-greeting.spec.yaml
 ```
 
 ```output
@@ -148,9 +151,9 @@ Prints a simple greeting
 
 ### Defining script input
 
-**Input parameters** is used to specify the script's input. Here's `greet.cli`:
+**Input parameters** is used to specify the script's input. Here's `greet.spec.yaml`:
 
-```yaml file=greeting.cli
+```yaml file=greeting.spec.yaml
 Script info: Prints a personalized greeting
 
 Input parameters:
@@ -162,7 +165,7 @@ Print: Hello ${name}!
 It has input parameter `name`:
 
 ```shell cli
-cli --help greeting.cli
+cli --help greeting.spec.yaml
 ```
 
 ```output
@@ -175,7 +178,7 @@ Options:
 And you can invoke it as follows.
 
 ```shell cli
-cli greeting.cli --name Bob
+cli greeting.spec.yaml --name Bob
 ```
 
 ```output
@@ -188,9 +191,9 @@ For more information, refer to the **[Script info](../commands/core/script-info/
 
 You can set the output of the script with the **[Output](../commands/core/variables/Output.spec.md)** command.
 
-For example, with script `hello.cli`
+For example, with script `hello.spec.yaml`
 
-```yaml file=hello.cli
+```yaml file=hello.spec.yaml
 Output:
   a: one
   b: two
@@ -201,7 +204,7 @@ The output is stored in the `${output}` variable. When invoking SpecScript with 
 **[--output](../cli/Command%20line%20options.spec.md#--output)** option, it will be printed:
 
 ```shell cli
-cli --output hello.cli
+cli --output hello.spec.yaml
 ```
 
 ```output
@@ -213,7 +216,7 @@ c: three
 You also get it when calling a script from another script:
 
 ```yaml specscript
-Run script: hello.cli
+Run script: hello.spec.yaml
 
 Expected output:
   a: one

@@ -37,7 +37,7 @@ fun Path.getTests(): List<DynamicNode> {
             }
         }
     } else {
-        if (name.endsWith(CLI_SCRIPT_EXTENSION)) {
+        if (name.endsWith(YAML_SPEC_EXTENSION)) {
             return SpecScriptFile(this).getTestCases()
         } else if (name.endsWith(MARKDOWN_SPEC_EXTENSION)) {
             return SpecScriptFile(this).getCodeExamples()
