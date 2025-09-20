@@ -93,7 +93,34 @@ Mcp tool:
           description: Person assigned to this ticket
       required: [ title, description ]
     script: create-ticket.cli
+```
 
+### Create a batch of tickets
+
+You can create multiple tickets at once using the **create_ticket_batch** tool. Simply provide a list of tickets
+according to the schema defined in the `create_ticket` tool.
+
+```yaml specscript
+Mcp tool:
+  create_ticket_batch:
+    description: |
+      You can create multiple tickets at once.
+
+      Important: don't pass an array directly, since it is probable that it will confuse either agent client or server. Instead, wrap the array in an object with a property named `batch`.
+
+      The items of the array in the `batch` property must follow the same schema as defined in the `create_ticket` tool.
+
+    inputSchema:
+      type: object
+      properties:
+        batch:
+          type: array
+          items:
+            type: object
+          description: Ticket title
+      required:
+        - batch
+    script: create-ticket-batch.cli
 ```
 
 ### Update existing ticket

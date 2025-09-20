@@ -15,3 +15,5 @@ SQLite:
       );
     - CREATE INDEX idx_ticket_assignee ON ticket(assignee);
     - CREATE INDEX idx_ticket_state ON ticket(state);
+
+Output: Database created in db/sample.db

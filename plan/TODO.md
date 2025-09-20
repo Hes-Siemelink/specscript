@@ -1,7 +1,16 @@
 # On my mind
 
+* BUG: exceptions in scripts are reported in CLI as raw stacktraces
+* Rename 'cli' command to 'spec'
 * Remove all references to Instacli from SpecScript
-* Make SpecScript work and move interaction to Instacli project
+* Reintroduce 'interactive mode' to SpecScirpt CLI
+* Remove versions from scripts and directories
+* Remove new type system
+
+* Use Connections for SQLiite database
+* Merge tests into CLI so you can run cli --test <comething>
+* Rethink connections: make it simpler to use
+
 
 
 ## MCP
