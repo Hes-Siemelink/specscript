@@ -12,7 +12,7 @@ import io.ktor.server.netty.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import specscript.files.CliFile
+import specscript.files.SpecScriptFile
 import specscript.language.*
 import specscript.util.Json
 import specscript.util.Yaml
@@ -49,7 +49,7 @@ object HttpServer : CommandHandler("Http server", "core/http"), ObjectHandler, D
     private fun addHandler(port: Int, rawPath: String, data: EndpointData, context: ScriptContext) {
         // Start (or reuse) server for this port
         val server = servers.getOrPut(port) {
-            println("Starting SpecScript Http Server for ${context.cliFile.name} on port $port")
+            println("Starting SpecScript Http Server for ${context.scriptFile.name} on port $port")
             embeddedServer(Netty, port = port) { }.also { it.start(wait = false) }
         }
 
@@ -105,7 +105,7 @@ private suspend fun handleRequest(
     val output = when {
         data.output != null -> data.output.resolve(localContext)
         data.script != null -> data.script.run(localContext)
-        data.file != null -> CliFile(localContext.scriptDir.resolve(data.file)).run(localContext)
+        data.file != null -> SpecScriptFile(localContext.scriptDir.resolve(data.file)).run(localContext)
         else -> throw ScriptingException("No handler action defined")
     }
 

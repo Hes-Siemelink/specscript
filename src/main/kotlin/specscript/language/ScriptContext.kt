@@ -10,7 +10,7 @@ interface ScriptContext {
     val interactive: Boolean
     val variables: MutableMap<String, JsonNode>
     val session: MutableMap<String, Any?>
-    val cliFile: Path
+    val scriptFile: Path
     val scriptDir: Path
     val workingDir: Path
     val tempDir: Path

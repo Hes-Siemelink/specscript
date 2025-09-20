@@ -1,10 +1,10 @@
 package specscript.spec
 
+import org.junit.jupiter.api.*
 import specscript.commands.http.HttpServer
 import specscript.commands.userinteraction.TestPrompt
 import specscript.commands.userinteraction.UserPrompt
-import specscript.files.CliFile
-import org.junit.jupiter.api.*
+import specscript.files.SpecScriptFile
 import java.nio.file.Path
 
 class SpecScriptTestSuite {
@@ -16,7 +16,7 @@ class SpecScriptTestSuite {
 
     @TestFactory
     fun `Main README_md`(): List<DynamicNode> {
-        return CliFile(TestPaths.README).getCodeExamples() + CliFile(Path.of("README-2.md")).getCodeExamples()
+        return SpecScriptFile(TestPaths.README).getCodeExamples() + SpecScriptFile(Path.of("README-2.md")).getCodeExamples()
     }
 
     @TestFactory
@@ -29,7 +29,7 @@ class SpecScriptTestSuite {
         @BeforeAll
         @JvmStatic
         fun startTestServer() {
-            CliFile(TestPaths.SAMPLE_SERVER).run()
+            SpecScriptFile(TestPaths.SAMPLE_SERVER).run()
         }
 
         @AfterAll

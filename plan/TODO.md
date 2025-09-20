@@ -1,6 +1,5 @@
 # On my mind
 
-* BUG: exceptions in scripts are reported in CLI as raw stacktraces
 * Rename 'cli' command to 'spec'
 * Remove all references to Instacli from SpecScript
 * Reintroduce 'interactive mode' to SpecScirpt CLI

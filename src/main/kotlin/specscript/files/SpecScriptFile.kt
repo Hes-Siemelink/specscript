@@ -7,7 +7,7 @@ import specscript.util.Yaml
 import java.nio.file.Path
 import kotlin.io.path.name
 
-class CliFile(val file: Path) : CommandInfo, CommandHandler(asScriptCommand(file.name), null), ObjectHandler {
+class SpecScriptFile(val file: Path) : CommandInfo, CommandHandler(asScriptCommand(file.name), null), ObjectHandler {
 
     override val name: String = asCliCommand(file.name)
     override val description: String by lazy {
@@ -34,12 +34,12 @@ class CliFile(val file: Path) : CommandInfo, CommandHandler(asScriptCommand(file
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val input = mutableMapOf<String, JsonNode>(INPUT_VARIABLE to data)
-        val localContext = CliFileContext(file, context, variables = input)
+        val localContext = FileContext(file, context, variables = input)
 
         return script.run(localContext)
     }
 
-    fun run(context: ScriptContext = CliFileContext(file)): JsonNode? {
+    fun run(context: ScriptContext = FileContext(file)): JsonNode? {
         return script.run(context)
     }
 }
@@ -48,7 +48,7 @@ private fun Path.isMarkdownScript(): Boolean {
     return this.name.endsWith(".md")
 }
 
-fun CliFile.splitMarkdown(): List<Script> {
+fun SpecScriptFile.splitMarkdown(): List<Script> {
 
     val document = markdown ?: return listOf()
 

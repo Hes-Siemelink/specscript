@@ -19,11 +19,11 @@ const val CLI_SCRIPT_EXTENSION = ".cli"
 const val MARKDOWN_SPEC_EXTENSION = ".spec.md"
 
 /**
- * Context for running  SpecScript  script inside a directory.
+ * Context for running a SpecScript script inside a directory.
  * It will scan the directory for other scripts and expose them as commands.
  */
-class CliFileContext(
-    override val cliFile: Path,
+class FileContext(
+    override val scriptFile: Path,
     override val variables: MutableMap<String, JsonNode> = mutableMapOf(),
     override val session: MutableMap<String, Any?> = mutableMapOf(),
     override val interactive: Boolean = false,
@@ -38,14 +38,14 @@ class CliFileContext(
     )
 
     override fun clone(): ScriptContext {
-        return CliFileContext(cliFile, variables.toMutableMap(), session.toMutableMap(), interactive, workingDir)
+        return FileContext(scriptFile, variables.toMutableMap(), session.toMutableMap(), interactive, workingDir)
     }
 
     override val scriptDir: Path by lazy {
-        if (cliFile.isDirectory()) {
-            cliFile
+        if (scriptFile.isDirectory()) {
+            scriptFile
         } else {
-            cliFile.toAbsolutePath().normalize().parent
+            scriptFile.toAbsolutePath().normalize().parent
         }
     }
 
@@ -73,8 +73,8 @@ class CliFileContext(
     val name: String
         get() = scriptDir.name
 
-    private val localFileCommands: Map<String, CliFile> by lazy { findLocalFileCommands() }
-    private val importedFileCommands: Map<String, CliFile> by lazy { findImportedCommands() }
+    private val localFileCommands: Map<String, SpecScriptFile> by lazy { findLocalFileCommands() }
+    private val importedFileCommands: Map<String, SpecScriptFile> by lazy { findImportedCommands() }
     private val subdirectoryCommands: Map<String, DirectoryInfo> by lazy { findSubcommands() }
 
     override val types: TypeRegistry by lazy {
@@ -110,9 +110,9 @@ class CliFileContext(
         throw ScriptingException("Unknown command: $command")
     }
 
-    private fun findLocalFileCommands(): Map<String, CliFile> {
+    private fun findLocalFileCommands(): Map<String, SpecScriptFile> {
 
-        val commands = mutableMapOf<String, CliFile>()
+        val commands = mutableMapOf<String, SpecScriptFile>()
 
         for (file in scriptDir.toFile().listFiles()!!) {
             addCommand(commands, file.toPath())
@@ -121,9 +121,9 @@ class CliFileContext(
         return commands
     }
 
-    private fun findImportedCommands(): Map<String, CliFile> {
+    private fun findImportedCommands(): Map<String, SpecScriptFile> {
 
-        val commands = mutableMapOf<String, CliFile>()
+        val commands = mutableMapOf<String, SpecScriptFile>()
 
         for (cliFile in info.imports) {
             addCommand(commands, scriptDir.resolve(cliFile))
@@ -132,12 +132,12 @@ class CliFileContext(
         return commands
     }
 
-    private fun addCommand(commands: MutableMap<String, CliFile>, file: Path) {
+    private fun addCommand(commands: MutableMap<String, SpecScriptFile>, file: Path) {
         if (file.isDirectory()) return
         if (!(file.name.endsWith(CLI_SCRIPT_EXTENSION) || file.name.endsWith(MARKDOWN_SPEC_EXTENSION))) return
 
         val name = asScriptCommand(file.name)
-        commands[name] = CliFile(file)
+        commands[name] = SpecScriptFile(file)
     }
 
     private fun findSubcommands(): Map<String, DirectoryInfo> {
@@ -160,7 +160,7 @@ class CliFileContext(
         return commands.sortedBy { it.name }
     }
 
-    fun getCliScriptFile(rawCommand: String): CliFile? {
+    fun getCliScriptFile(rawCommand: String): SpecScriptFile? {
         val command = asScriptCommand(rawCommand)
         return localFileCommands[command]
     }

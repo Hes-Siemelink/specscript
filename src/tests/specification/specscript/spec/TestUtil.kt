@@ -1,5 +1,10 @@
 package specscript.spec
 
+import org.junit.jupiter.api.DynamicContainer.dynamicContainer
+import org.junit.jupiter.api.DynamicNode
+import org.junit.jupiter.api.DynamicTest
+import org.junit.jupiter.api.DynamicTest.dynamicTest
+import org.junit.jupiter.api.function.Executable
 import specscript.cli.reportError
 import specscript.commands.testing.CodeExample
 import specscript.commands.testing.TestCase
@@ -8,11 +13,6 @@ import specscript.commands.userinteraction.UserPrompt
 import specscript.files.*
 import specscript.language.*
 import specscript.util.toDisplayYaml
-import org.junit.jupiter.api.DynamicContainer.dynamicContainer
-import org.junit.jupiter.api.DynamicNode
-import org.junit.jupiter.api.DynamicTest
-import org.junit.jupiter.api.DynamicTest.dynamicTest
-import org.junit.jupiter.api.function.Executable
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.isDirectory
@@ -38,9 +38,9 @@ fun Path.getTests(): List<DynamicNode> {
         }
     } else {
         if (name.endsWith(CLI_SCRIPT_EXTENSION)) {
-            return CliFile(this).getTestCases()
+            return SpecScriptFile(this).getTestCases()
         } else if (name.endsWith(MARKDOWN_SPEC_EXTENSION)) {
-            return CliFile(this).getCodeExamples()
+            return SpecScriptFile(this).getCodeExamples()
         }
     }
     return emptyList()
@@ -72,8 +72,8 @@ class TestCaseRunner(
 /**
  * Extracts the test cases from a script file as individual tests.
  */
-fun CliFile.getTestCases(): List<DynamicTest> {
-    val context = CliFileContext(file)
+fun SpecScriptFile.getTestCases(): List<DynamicTest> {
+    val context = FileContext(file)
 
     return script.splitTestCases().map { script ->
         dynamicTest(script.getTestTitle(TestCase), file.toUri(), TestCaseRunner(context, script))
@@ -83,12 +83,12 @@ fun CliFile.getTestCases(): List<DynamicTest> {
 /**
  * Extracts the yaml code from Markdown sections as individual tests.
  */
-fun CliFile.getCodeExamples(): List<DynamicTest> {
+fun SpecScriptFile.getCodeExamples(): List<DynamicTest> {
 
     // Set up test dir
     val testDir = Files.createTempDirectory("instacli-")
     testDir.toFile().deleteOnExit()
-    val context = CliFileContext(testDir)
+    val context = FileContext(testDir)
     context.setTempDir(testDir)
 
     val scripts = splitMarkdown()

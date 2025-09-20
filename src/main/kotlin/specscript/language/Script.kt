@@ -40,7 +40,7 @@ class Script(val commands: List<Command>, val title: String? = null) {
         } catch (a: Break) {
             a.output
         } catch (e: SpecScriptException) {
-            e.context = e.context ?: context.cliFile.name
+            e.context = e.context ?: context.scriptFile.name
             throw e
         }
     }

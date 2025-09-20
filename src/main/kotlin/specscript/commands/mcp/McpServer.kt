@@ -19,7 +19,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.runBlocking
 import kotlinx.io.asSink
 import kotlinx.io.buffered
-import specscript.files.CliFile
+import specscript.files.SpecScriptFile
 import specscript.language.*
 import specscript.util.*
 import kotlin.concurrent.thread
@@ -194,7 +194,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
             val result: JsonNode? = if (tool.script is TextNode) {
                 // Local script file
                 val file = localContext.scriptDir.resolve(tool.script.textValue())
-                CliFile(file).run(localContext)
+                SpecScriptFile(file).run(localContext)
             } else {
                 // Inline script
                 tool.script.run(localContext)
@@ -219,7 +219,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
             val result: JsonNode? = if (resource.script is TextNode) {
                 // Local script file
                 val file = localContext.scriptDir.resolve(resource.script.textValue())
-                CliFile(file).run(localContext)
+                SpecScriptFile(file).run(localContext)
             } else {
                 // Inline script
                 resource.script.run(localContext)
@@ -252,7 +252,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
             val result: JsonNode? = if (prompt.script is TextNode) {
                 // Local script file
                 val file = localContext.scriptDir.resolve(prompt.script.textValue())
-                CliFile(file).run(localContext)
+                SpecScriptFile(file).run(localContext)
             } else {
                 // Inline script
                 prompt.script.run(localContext)

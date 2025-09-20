@@ -1,12 +1,15 @@
 package specscript.cli
 
-import specscript.files.CliFileContext
-import specscript.language.MissingParameterException
-import specscript.language.ScriptContext
-import specscript.language.SpecScriptCommandError
-import specscript.language.SpecScriptException
+import com.fasterxml.jackson.databind.JsonNode
+import specscript.files.FileContext
+import specscript.files.SpecScriptFile
+import specscript.language.*
 import specscript.language.types.toDisplayString
+import specscript.util.add
+import specscript.util.toDisplayJson
+import specscript.util.toDisplayYaml
 import java.nio.file.Path
+import kotlin.io.path.exists
 import kotlin.io.path.isDirectory
 import kotlin.io.path.name
 
@@ -36,33 +39,32 @@ class SpecScriptMain(
         }
 
         // Resolve file using shared utility
-        val filename = options.commands[0]
+        val command = options.commands[0]
         val resolvedFile = try {
-            CliFileUtils.resolveFile(filename, workingDir)
+            resolveCommand(command, workingDir)
         } catch (e: CliInvocationException) {
-            throw CliInvocationException("Could not find file: $filename")
+            throw CliInvocationException("Could not find file: $command")
         }
 
         // Create context for execution
         val context = if (parent == null) {
-            CliFileContext(resolvedFile, interactive = false, workingDir = workingDir)
+            FileContext(resolvedFile, interactive = false, workingDir = workingDir)
         } else {
-            CliFileContext(resolvedFile, parent)
+            FileContext(resolvedFile, parent)
         }
 
         // Handle both files and directories (non-interactively)
         if (resolvedFile.isDirectory()) {
             invokeDirectory(resolvedFile, options.commands.drop(1), context, options)
         } else {
-            // Execute using shared utility
-            CliFileUtils.executeFile(resolvedFile, options, context, output)
+            executeFile(resolvedFile, options, context, output)
         }
     }
 
     private fun invokeDirectory(
         cliDir: Path,
         args: List<String>,
-        context: CliFileContext,
+        context: FileContext,
         options: CliCommandLineOptions
     ) {
         // Parse command
@@ -71,14 +73,14 @@ class SpecScriptMain(
         // Run script
         val script = context.getCliScriptFile(rawCommand)
         if (script != null) {
-            CliFileUtils.executeFile(script.file, options, CliFileContext(script.file, context), output)
+            executeFile(script.file, options, FileContext(script.file, context), output)
             return
         }
 
         // Run subcommand
         val subcommand = context.getSubcommand(rawCommand)
         if (subcommand != null) {
-            invokeDirectory(subcommand.dir, args.drop(1), CliFileContext(subcommand.dir, context), options)
+            invokeDirectory(subcommand.dir, args.drop(1), FileContext(subcommand.dir, context), options)
             return
         }
 
@@ -86,7 +88,7 @@ class SpecScriptMain(
         throw CliInvocationException("Command '$rawCommand' not found in ${cliDir.name}")
     }
 
-    private fun getCommand(args: List<String>, context: CliFileContext): String? {
+    private fun getCommand(args: List<String>, context: FileContext): String? {
         // Return the command if specified
         if (args.isNotEmpty()) {
             return args[0]
@@ -135,4 +137,52 @@ class SpecScriptMain(
             return 0
         }
     }
+}
+
+fun resolveCommand(command: String, workingDir: Path): Path {
+    // Try exact filename first
+    workingDir.resolve(command).let {
+        if (it.exists()) {
+            return it
+        }
+    }
+
+    // Try with .cli extension
+    workingDir.resolve("$command.cli").let {
+        if (it.exists()) {
+            return it
+        }
+    }
+
+    throw CliInvocationException("Could not find command: $command")
+}
+
+fun executeFile(
+    file: Path,
+    options: CliCommandLineOptions,
+    context: FileContext,
+    output: ConsoleOutput
+): JsonNode? {
+    val scriptFile = SpecScriptFile(file)
+
+    // Handle help request
+    if (options.help) {
+        output.printScriptInfo(scriptFile.script)
+        return null
+    }
+
+    // Set up parameters
+    context.getInputVariables().add(options.commandParameters)
+
+    // Execute script
+    val result = scriptFile.script.run(context)
+
+    // Handle output based on options
+    when (options.printOutput) {
+        OutputOption.YAML -> output.printOutput(result.toDisplayYaml())
+        OutputOption.JSON -> output.printOutput(result.toDisplayJson())
+        else -> {} // No output
+    }
+
+    return result
 }
