@@ -49,9 +49,24 @@ Run script:
   resource: create-greeting.cli
   input:
     name: Alice
-    default: World
 
 Expected output: Hello Alice!
+```
+
+You can also pass a list and the script will be called once for each item in the list.
+
+```yaml specscript
+Code example: Call another SpecScript file with a list
+
+Run script:
+  resource: create-greeting.cli
+  input:
+    - name: Alice
+    - name: Bob
+
+Expected output:
+  - Hello Alice!
+  - Hello Bob!
 ```
 
 ## Finding the script

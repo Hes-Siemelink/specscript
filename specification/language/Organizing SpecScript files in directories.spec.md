@@ -112,6 +112,22 @@ Create greeting:
 Expected output: Hello Cray!
 ```
 
+Scripts take object parameters. If you pass a list, the script will be executed for each item in the list.
+
+```yaml specscript
+Code example: Calling another cli file with a list of parameters
+
+Create greeting:
+  - name: Alice
+  - name: Bob
+  - name: Carol
+
+Expected output:
+  - Hello Alice!
+  - Hello Bob!
+  - Hello Carol!
+```
+
 ## The .directory-info.yaml file
 
 Each directory can have a `.directory-info.yaml` file that contains metadata about the directory.
