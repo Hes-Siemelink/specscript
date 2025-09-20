@@ -101,7 +101,7 @@ class CommandInvocationTest {
             session.run()
         }
 
-        exception.message shouldBe "Could not find file: nonexistent"
+        exception.message shouldBe "Could not find spec file for: nonexistent"
     }
 
     @Test

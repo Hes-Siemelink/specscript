@@ -40,11 +40,7 @@ class SpecScriptMain(
 
         // Resolve file using shared utility
         val command = options.commands[0]
-        val resolvedFile = try {
-            resolveCommand(command, workingDir)
-        } catch (e: CliInvocationException) {
-            throw CliInvocationException("Could not find file: $command")
-        }
+        val resolvedFile = resolveCommand(command, workingDir)
 
         // Create context for execution
         val context = if (parent == null) {
@@ -154,7 +150,7 @@ fun resolveCommand(command: String, workingDir: Path): Path {
         }
     }
 
-    throw CliInvocationException("Could not find command: $command")
+    throw CliInvocationException("Could not find spec file for: $command")
 }
 
 fun executeFile(

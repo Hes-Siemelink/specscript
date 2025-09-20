@@ -207,8 +207,8 @@ Options:
 ## Input options
 
 SpecScript allows you to specify the type and format
-of [input properties](specification/commands/core/user-interaction/Prompt.spec.md#prompt-properties). Here's an example
-file `input-options.spec.yaml`
+of [input parameters](specification/commands/core/script-info/Input%20parameters.spec.md). Here's an example file
+`input-options.spec.yaml`
 
 ```yaml file=input-options.spec.yaml
 Script info:
