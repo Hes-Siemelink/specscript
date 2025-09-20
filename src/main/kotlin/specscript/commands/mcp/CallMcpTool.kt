@@ -8,9 +8,9 @@ import io.modelcontextprotocol.kotlin.sdk.CallToolResult
 import io.modelcontextprotocol.kotlin.sdk.TextContent
 
 import kotlinx.coroutines.runBlocking
+import specscript.commands.mcp.transport.TransportConfig
+import specscript.commands.mcp.transport.TransportFactory
 import specscript.language.*
-import specscript.transport.TransportConfig
-import specscript.transport.TransportFactory
 import specscript.util.toDomainObject
 import specscript.util.toKotlinx
 
@@ -20,16 +20,15 @@ object CallMcpTool : CommandHandler("Call Mcp tool", "ai/mcp"), ObjectHandler, D
         val info = data.toDomainObject(CallMcpToolInfo::class)
 
         return runBlocking {
-            callToolWithTransport(info, context)
+            callToolWithTransport(info)
         }
     }
 
     private suspend fun callToolWithTransport(
         info: CallMcpToolInfo,
-        context: ScriptContext
     ): JsonNode? {
         val transportConfig = TransportConfig.fromJson(info.transport, info.server)
-        val transport = TransportFactory.createTransport(transportConfig, context)
+        val transport = TransportFactory.createTransport(transportConfig)
 
         return try {
             if (!transport.connect()) {

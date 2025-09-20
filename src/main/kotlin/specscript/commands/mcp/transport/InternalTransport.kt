@@ -1,10 +1,11 @@
-package specscript.transport
+package specscript.commands.mcp.transport
 
 import io.modelcontextprotocol.kotlin.sdk.CallToolRequest
 import io.modelcontextprotocol.kotlin.sdk.CallToolResult
 import io.modelcontextprotocol.kotlin.sdk.ListToolsResult
+import io.modelcontextprotocol.kotlin.sdk.TextContent
 import io.modelcontextprotocol.kotlin.sdk.server.Server
-import specscript.language.ScriptContext
+import specscript.language.SpecScriptCommandError
 import kotlin.reflect.KFunction
 import kotlin.reflect.full.callSuspend
 import kotlin.reflect.jvm.isAccessible
@@ -18,7 +19,6 @@ import kotlin.reflect.jvm.isAccessible
  */
 class InternalTransport(
     private val server: Server,
-    private val context: ScriptContext
 ) : McpClientTransport {
 
     private var connected = false
@@ -33,10 +33,10 @@ class InternalTransport(
             throw IllegalStateException("Transport not connected. Call connect() first.")
         }
 
-        return callToolDirectly(server, request, context)
+        return callToolDirectly(server, request)
             ?: CallToolResult(
                 content = listOf(
-                    io.modelcontextprotocol.kotlin.sdk.TextContent("Tool execution failed")
+                    TextContent("Tool execution failed")
                 ),
                 isError = true
             )
@@ -76,7 +76,6 @@ class InternalTransport(
     private suspend fun callToolDirectly(
         server: Server,
         request: CallToolRequest,
-        context: ScriptContext
     ): CallToolResult? {
         return try {
             println("DEBUG: Attempting to call tool '${request.name}' via reflection")
@@ -96,7 +95,7 @@ class InternalTransport(
                 // Method not found, create fallback response
                 CallToolResult(
                     content = listOf(
-                        io.modelcontextprotocol.kotlin.sdk.TextContent("Direct tool call (method not found): '${request.name}' with arguments: ${request.arguments}")
+                        TextContent("Direct tool call (method not found): '${request.name}' with arguments: ${request.arguments}")
                     ),
                     isError = false
                 )
@@ -107,14 +106,14 @@ class InternalTransport(
             e.printStackTrace()
 
             // Re-throw SpecScriptCommandError to preserve error handling behavior
-            if (e.cause is specscript.language.SpecScriptCommandError) {
+            if (e.cause is SpecScriptCommandError) {
                 throw e.cause!!
             }
 
             // For other exceptions, fall back to a basic response
             CallToolResult(
                 content = listOf(
-                    io.modelcontextprotocol.kotlin.sdk.TextContent("Direct tool call (fallback): '${request.name}' with arguments: ${request.arguments} (${e.message})")
+                    TextContent("Direct tool call (fallback): '${request.name}' with arguments: ${request.arguments} (${e.message})")
                 ),
                 isError = false
             )

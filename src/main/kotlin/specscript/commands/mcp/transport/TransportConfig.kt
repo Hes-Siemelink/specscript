@@ -1,4 +1,4 @@
-package specscript.transport
+package specscript.commands.mcp.transport
 
 import com.fasterxml.jackson.databind.JsonNode
 import specscript.language.getTextParameter

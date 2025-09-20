@@ -1,4 +1,4 @@
-package specscript.transport
+package specscript.commands.mcp.transport
 
 import io.ktor.client.*
 import io.ktor.client.plugins.auth.*
@@ -10,6 +10,8 @@ import io.modelcontextprotocol.kotlin.sdk.Implementation
 import io.modelcontextprotocol.kotlin.sdk.ListToolsResult
 import io.modelcontextprotocol.kotlin.sdk.client.Client
 import io.modelcontextprotocol.kotlin.sdk.client.StreamableHttpClientTransport
+import kotlinx.coroutines.runBlocking
+import specscript.language.SpecScriptCommandError
 
 /**
  * HTTP transport for communication with HTTP-based MCP servers.
@@ -74,7 +76,7 @@ class HttpTransport(
             mcpClient.callTool(request) as CallToolResult
         } catch (e: Exception) {
             // Re-throw SpecScriptCommandError to preserve error handling behavior
-            if (e is specscript.language.SpecScriptCommandError) {
+            if (e is SpecScriptCommandError) {
                 throw e
             }
             throw Exception("HTTP tool call failed: ${e.message}", e)
@@ -100,7 +102,7 @@ class HttpTransport(
         println("DEBUG: Cleaning up HTTP transport resources")
         try {
             client?.let {
-                kotlinx.coroutines.runBlocking {
+                runBlocking {
                     it.close()
                 }
             }

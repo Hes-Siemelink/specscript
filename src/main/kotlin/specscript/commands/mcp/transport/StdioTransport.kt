@@ -1,15 +1,16 @@
-package specscript.transport
+package specscript.commands.mcp.transport
 
 import io.modelcontextprotocol.kotlin.sdk.CallToolRequest
 import io.modelcontextprotocol.kotlin.sdk.CallToolResult
+import io.modelcontextprotocol.kotlin.sdk.Implementation
 import io.modelcontextprotocol.kotlin.sdk.ListToolsResult
-import io.modelcontextprotocol.kotlin.sdk.TextContent
 import io.modelcontextprotocol.kotlin.sdk.client.Client
 import io.modelcontextprotocol.kotlin.sdk.client.StdioClientTransport
-import io.modelcontextprotocol.kotlin.sdk.Implementation
-import kotlinx.io.asSource
+import kotlinx.coroutines.runBlocking
 import kotlinx.io.asSink
+import kotlinx.io.asSource
 import kotlinx.io.buffered
+import specscript.language.SpecScriptCommandError
 import java.util.concurrent.TimeUnit
 
 /**
@@ -56,7 +57,7 @@ class StdioTransport(
             mcpClient.callTool(request) as CallToolResult
         } catch (e: Exception) {
             // Re-throw SpecScriptCommandError to preserve error handling behavior
-            if (e is specscript.language.SpecScriptCommandError) {
+            if (e is SpecScriptCommandError) {
                 throw e
             }
             throw Exception("Stdio tool call failed: ${e.message}", e)
@@ -82,7 +83,7 @@ class StdioTransport(
         println("DEBUG: Cleaning up stdio transport resources")
         try {
             client?.let {
-                kotlinx.coroutines.runBlocking {
+                runBlocking {
                     it.close()
                 }
             }

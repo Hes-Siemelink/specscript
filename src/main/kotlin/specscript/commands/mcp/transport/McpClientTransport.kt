@@ -1,4 +1,4 @@
-package specscript.transport
+package specscript.commands.mcp.transport
 
 import io.modelcontextprotocol.kotlin.sdk.CallToolRequest
 import io.modelcontextprotocol.kotlin.sdk.CallToolResult
