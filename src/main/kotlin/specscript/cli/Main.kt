@@ -1,7 +1,10 @@
 package specscript.cli
 
 import specscript.files.CliFileContext
-import specscript.language.*
+import specscript.language.MissingParameterException
+import specscript.language.ScriptContext
+import specscript.language.SpecScriptCommandError
+import specscript.language.SpecScriptException
 import specscript.language.types.toDisplayString
 import java.nio.file.Path
 import kotlin.io.path.isDirectory
@@ -13,15 +16,6 @@ fun main(args: Array<String>) {
     SpecScriptMain.main(args)
 }
 
-/**
- * Simple CLI.
- * 
- * This CLI is optimized for:
- * - Non-interactive directory listing and file execution
- * - Library integration (minimal overhead)
- * - Simple error handling (fail fast)
- * - Programmatic usage
- */
 class SpecScriptMain(
     private val options: CliCommandLineOptions,
     private val workingDir: Path = Path.of("."),
@@ -124,7 +118,6 @@ class SpecScriptMain(
                 return 1
 
             } catch (e: MissingParameterException) {
-                e.printStackTrace()
                 System.err.println("Missing parameter: --${e.name}")
                 System.err.println("\nOptions:")
                 System.err.println(e.parameters.toDisplayString())
