@@ -434,7 +434,7 @@ Hello
 The above example is equivalent to the following SpecScript script in Yaml:
 
 ```yaml specscript
-Code example: Shell command with output check in Instacli
+Code example: Shell command with output check
 
 Shell:
   command: echo Hello

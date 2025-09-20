@@ -5,11 +5,6 @@
 /out
 /.kotlin
 
-# Intacli runtime files
-.instacli
-
-install-cloud-connector.sh
-
 # AI tooling
 .aider.*
 .specstory/*

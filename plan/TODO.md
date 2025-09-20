@@ -1,6 +1,5 @@
 # On my mind
 
-* Remove all references to Instacli from SpecScript
 * Reintroduce 'interactive mode' to SpecScript CLI
 * Remove versions from scripts and directories
 * Remove new type system

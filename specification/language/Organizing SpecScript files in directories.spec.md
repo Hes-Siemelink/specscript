@@ -173,9 +173,9 @@ Script info:
 
 It will not show up as a subcommand when invoking `cli --help`.
 
-### Instacli version
+### SpecScript version
 
-You can indicate the version of the Instacli spec that the script is using.
+You can indicate the version of the SpecScript spec that the script is using.
 
 ```yaml specscript
 Script info:

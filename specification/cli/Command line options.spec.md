@@ -135,7 +135,7 @@ cli script-with-error.spec.yaml
 ```
 
 ```output
-Instacli scripting error
+Scripting error
 
 Caused by: java.net.URISyntaxException: Illegal character in opaque part at index 5: http:\\localhost
 
@@ -154,27 +154,27 @@ cli --debug script-with-error.spec.yaml
 May print something like
 
 ```
-Instacli scripting error
+Scripting error
 
 Caused by: java.net.URISyntaxException: Illegal character in opaque part at index 5: http:\\localhost
 	at java.base/java.net.URI$Parser.fail(URI.java:2976)
 	at java.base/java.net.URI$Parser.checkChars(URI.java:3147)
 	at java.base/java.net.URI$Parser.parse(URI.java:3183)
 	at java.base/java.net.URI.<init>(URI.java:623)
-	at instacli.commands.HttpCommandsKt.processRequestWithoutBody(HttpCommands.kt:150)
-	at instacli.commands.HttpCommandsKt.access$processRequestWithoutBody(HttpCommands.kt:1)
-	at instacli.commands.HttpGet.execute(HttpCommands.kt:52)
-	at instacli.script.CommandExecutionKt.handleCommand(CommandExecution.kt:82)
-	at instacli.script.CommandExecutionKt.runSingleCommand(CommandExecution.kt:59)
-	at instacli.script.CommandExecutionKt.runCommand(CommandExecution.kt:20)
-	at instacli.script.Script.runScript(Script.kt:23)
-	at instacli.files.CliFile.run(CliFile.kt:30)
-	at instacli.cli.InstacliMain.invokeFile(Main.kt:88)
-	at instacli.cli.InstacliMain.run(Main.kt:61)
-	at instacli.cli.InstacliMain.run$default(Main.kt:39)
-	at instacli.cli.InstacliMain$Companion.main(Main.kt:161)
-	at instacli.cli.InstacliMain$Companion.main$default(Main.kt:151)
-	at instacli.cli.MainKt.main(Main.kt:21)
+	at specscript.commands.HttpCommandsKt.processRequestWithoutBody(HttpCommands.kt:150)
+	at specscript.commands.HttpCommandsKt.access$processRequestWithoutBody(HttpCommands.kt:1)
+	at specscript.commands.HttpGet.execute(HttpCommands.kt:52)
+	at specscript.script.CommandExecutionKt.handleCommand(CommandExecution.kt:82)
+	at specscript.script.CommandExecutionKt.runSingleCommand(CommandExecution.kt:59)
+	at specscript.script.CommandExecutionKt.runCommand(CommandExecution.kt:20)
+	at specscript.script.Script.runScript(Script.kt:23)
+	at specscript.files.CliFile.run(CliFile.kt:30)
+	at specscript.cli.SpecScriptMain.invokeFile(Main.kt:88)
+	at specscript.cli.SpecScriptMain.run(Main.kt:61)
+	at specscript.cli.SpecScriptMain.run$default(Main.kt:39)
+	at specscript.cli.SpecScriptMain$Companion.main(Main.kt:161)
+	at specscript.cli.SpecScriptMain$Companion.main$default(Main.kt:151)
+	at specscript.cli.MainKt.main(Main.kt:21)
 
 In error.spec.yaml:
 

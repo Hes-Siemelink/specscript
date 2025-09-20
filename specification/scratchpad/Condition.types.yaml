@@ -1,7 +1,7 @@
-$schema: "https://spec.it/schemas/instacli-types/v1-beta"
+$schema: "https://spec.it/schemas/types/v1-beta"
 
 imports:
-  - InstacliScript
+  - SpecScript
 
 types:
 
@@ -24,14 +24,14 @@ types:
     type: object
     properties:
       then:
-        type: InstacliScript
+        type: SpecScript
         required: true
 
   Else:
     type: object
     properties:
       else:
-        type: InstacliScript
+        type: SpecScript
         required: true
 
   ConditionBase:

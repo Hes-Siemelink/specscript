@@ -1,4 +1,4 @@
-# Instacli configuration files
+# SpecScript configuration files
 
 ## `~/.specscript` folder
 

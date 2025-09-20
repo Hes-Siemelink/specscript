@@ -20,7 +20,7 @@ object CliErrorReporter {
      * @param printStackTrace Whether to include stack traces in debug mode
      */
     fun reportLanguageError(exception: SpecScriptException, printStackTrace: Boolean) {
-        System.err.println("\nInstacli scripting error")
+        System.err.println("\nScripting error")
 
         // Exception caused by incorrect SpecScript script
         if (exception.cause == null || exception.cause is SpecScriptException) {
