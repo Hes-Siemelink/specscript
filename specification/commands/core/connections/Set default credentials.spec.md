@@ -15,7 +15,7 @@ Sets the default credentials for an endpoint.
 Use **Set default credentials** to set the defeult credentials that will be used
 for [Get credentials](Get%20credentials.spec.md) when there are multiple available.
 
-Given the following connections in `~/.instacli/credentials.yaml`:
+Given the following connections in `~/.specscript/credentials.yaml`:
 
 ```yaml file=credentials.yaml
 SpecScript Sample Server:

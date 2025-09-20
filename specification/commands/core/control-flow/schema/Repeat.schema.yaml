@@ -1,4 +1,4 @@
-$id: "https://instacli.spec.it/v1/commands/core/control-flow/Repeat"
+$id: "https://specscript.info/v1/commands/core/control-flow/Repeat"
 $schema: https://json-schema.org/draft/2020-12/schema
 
 type: object

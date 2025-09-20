@@ -12,11 +12,11 @@ class SpecScriptFile(val file: Path) : CommandInfo, CommandHandler(asScriptComma
     override val name: String = asCliCommand(file.name)
     override val description: String by lazy {
         markdown?.description
-            ?: script.info?.description
+            ?: script.info.description
             ?: asScriptCommand(name)
     }
-    override val hidden: Boolean by lazy { script.info?.hidden == true }
-    override val instacliSpec: String by lazy { script.info?.instacliSpec ?: "unknown" }
+    override val hidden: Boolean by lazy { script.info.hidden }
+    override val specScriptVersion: String by lazy { script.info.specScriptVersion ?: "unknown" }
 
     val script by lazy {
         markdown?.blocks?.toScript()

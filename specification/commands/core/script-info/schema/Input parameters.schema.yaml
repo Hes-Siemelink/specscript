@@ -1,4 +1,4 @@
-$id: "https://instacli.spec.it/v1/commands/core/script-info/Input_parameters"
+$id: "https://specscript.info/v1/commands/core/script-info/Input_parameters"
 $schema: https://json-schema.org/draft/2020-12/schema
 
 type: object

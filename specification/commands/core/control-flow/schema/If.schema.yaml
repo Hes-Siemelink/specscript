@@ -1,4 +1,4 @@
-$id: "https://instacli.spec.it/v1/commands/core/control-flow/If"
+$id: "https://specscript.info/v1/commands/core/control-flow/If"
 $schema: "https://json-schema.org/draft/2020-12/schema"
 
 $ref: "/v1/commands/core/Conditions.schema.yaml#/definitions/ConditionBase"

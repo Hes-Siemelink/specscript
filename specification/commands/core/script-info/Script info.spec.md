@@ -81,7 +81,7 @@ You can indicate the version of the Instacli spec that the script is using.
 
 ```yaml specscript
 Script info:
-  instacli-spec: 0.5.1
+  specscript-version: 0.5.1
 ```
 
 ## Script input

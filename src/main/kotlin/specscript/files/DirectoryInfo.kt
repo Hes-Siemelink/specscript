@@ -20,8 +20,8 @@ class DirectoryInfo : CommandInfo {
     @JsonProperty("Script info")
     override var description: String = ""
 
-    @JsonProperty("instacli-spec")
-    override var instacliSpec: String = "unknown"
+    @JsonProperty("specscript-version")
+    override var specScriptVersion: String = "unknown"
 
     val imports = mutableListOf<String>()
     val connections = Json.newObject()

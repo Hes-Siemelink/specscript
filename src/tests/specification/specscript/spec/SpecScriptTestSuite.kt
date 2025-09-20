@@ -16,7 +16,7 @@ class SpecScriptTestSuite {
 
     @TestFactory
     fun `Main README_md`(): List<DynamicNode> {
-        return SpecScriptFile(TestPaths.README).getCodeExamples() + SpecScriptFile(Path.of("README-2.md")).getCodeExamples()
+        return SpecScriptFile(TestPaths.README).getCodeExamplesAsTests() + SpecScriptFile(Path.of("README-2.md")).getCodeExamplesAsTests()
     }
 
     @TestFactory

@@ -24,7 +24,7 @@ Then you can call it from another SpecScript file using **Run script**.
 Pass the name of the script in the current working directory as a single text parameter.
 
 ```yaml specscript
-Code example: Call another instacli
+Code example: Call another SpecScript file
 
 Run script: do-something.spec.yaml
 

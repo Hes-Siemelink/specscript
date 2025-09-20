@@ -1,4 +1,4 @@
-$id: "https://instacli.spec.it/v1/commands/core/script-info/Script_info"
+$id: "https://specscript.info/v1/commands/core/script-info/Script_info"
 $schema: https://json-schema.org/draft/2020-12/schema
 
 oneOf:
@@ -9,7 +9,7 @@ oneOf:
         type: string
       "hidden":
         type: boolean
-      "instacli-spec":
+      "specscript-version":
         type: string
       "input":
         type: object

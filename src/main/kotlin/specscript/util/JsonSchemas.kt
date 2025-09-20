@@ -13,7 +13,7 @@ object JsonSchemas {
 
     val factory: JsonSchemaFactory = JsonSchemaFactory.getInstance(VersionFlag.V202012) {
         it.schemaMappers { schemaMappers ->
-            schemaMappers.mapPrefix("https://instacli.spec.it/v1/commands", "classpath:commands")
+            schemaMappers.mapPrefix("https://specscript.info/v1/commands", "classpath:commands")
         }
     }
 

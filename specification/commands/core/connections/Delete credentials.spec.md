@@ -14,7 +14,7 @@ Deletes credentials for an endpoint.
 
 With **Delete credentials** you get rid of previously configured credentials.
 
-Given the following list of credentials in `~/.instacli/credentials.yaml`:
+Given the following list of credentials in `~/.specscript/credentials.yaml`:
 
 ```yaml file=credentials.yaml
 SpecScript Sample Server:

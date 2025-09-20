@@ -13,8 +13,8 @@ data class ScriptInfoData(
     @JsonProperty("input type")
     val inputType: TypeSpecification? = null,
     val hidden: Boolean = false,
-    @JsonProperty("instacli-spec")
-    val instacliSpec: String? = null
+    @JsonProperty("specscript-version")
+    val specScriptVersion: String? = null
 ) : ObjectDefinition {
 
     @JsonCreator

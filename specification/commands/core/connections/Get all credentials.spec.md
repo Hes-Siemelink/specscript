@@ -14,7 +14,7 @@ Gets all credentials for an endpoint.
 
 With **Get all credentials** you get the list of connection details for a certain endpoint.
 
-Given the following list of credentials in `~/.instacli/credentials.yaml`:
+Given the following list of credentials in `~/.specscript/credentials.yaml`:
 
 ```yaml file=credentials.yaml
 SpecScript Sample Server:
@@ -34,7 +34,7 @@ Credentials: ${SCRIPT_TEMP_DIR}/credentials.yaml
 
 You can retrieve all credentials with the following snippet:
 
-```yaml FIXME instacli -- there was a hack in TestUtil to use mock credentials specified above but now it doesn't work anymore
+```yaml FIXME specscript -- there was a hack in TestUtil to use mock credentials specified above but now it doesn't work anymore
 Code example: Get all credentials for an endpoint
 
 Get all credentials: SpecScript Sample Server

@@ -49,7 +49,7 @@ object TempFile : CommandHandler("Temp file", "core/files"), ObjectHandler, Valu
 
     fun tempFile(dir: Path, filename: String? = null): Path {
         val tempFile = if (filename == null) {
-            Files.createTempFile(dir, "instacli-temp-file-", "")
+            Files.createTempFile(dir, "specscript-temp-file-", "")
         } else {
             dir.resolve(filename).apply {
                 Files.createDirectories(parent)

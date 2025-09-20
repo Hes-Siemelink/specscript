@@ -1,6 +1,6 @@
 # Command: Credentials
 
-Use a different credentials file than the default `~/.instacli/credentials.yaml`.
+Use a different credentials file than the default `~/.specscript/credentials.yaml`.
 
 | Content type | Supported |
 |--------------|-----------|
@@ -12,8 +12,8 @@ Use a different credentials file than the default `~/.instacli/credentials.yaml`
 
 ## Basic usage
 
-By default, credentials are stored in the `~/.instacli/credentials.yaml` file. You can use the `Credentials` command to
-specify a different file.
+By default, credentials are stored in the `~/.specscript/credentials.yaml` file. You can use the `Credentials` command
+to specify a different file.
 
 Given the following file `my_credentials.yaml` in the `SCRIPT_TEMP_DIR` directory:
 

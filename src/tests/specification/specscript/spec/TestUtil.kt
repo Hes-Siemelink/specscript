@@ -40,7 +40,7 @@ fun Path.getTests(): List<DynamicNode> {
         if (name.endsWith(YAML_SPEC_EXTENSION)) {
             return SpecScriptFile(this).getTestCases()
         } else if (name.endsWith(MARKDOWN_SPEC_EXTENSION)) {
-            return SpecScriptFile(this).getCodeExamples()
+            return SpecScriptFile(this).getCodeExamplesAsTests()
         }
     }
     return emptyList()
@@ -83,21 +83,21 @@ fun SpecScriptFile.getTestCases(): List<DynamicTest> {
 /**
  * Extracts the yaml code from Markdown sections as individual tests.
  */
-fun SpecScriptFile.getCodeExamples(): List<DynamicTest> {
+fun SpecScriptFile.getCodeExamplesAsTests(): List<DynamicTest> {
 
     // Set up test dir
-    val testDir = Files.createTempDirectory("instacli-")
+    val testDir = Files.createTempDirectory("specscript-")
     testDir.toFile().deleteOnExit()
     val context = FileContext(testDir)
     context.setTempDir(testDir)
 
     val scripts = splitMarkdown()
-    val instacliTests: List<DynamicTest> = scripts
+    val tests: List<DynamicTest> = scripts
         .mapNotNull {
             toTestFromScript(file, it, context)
         }
 
-    return instacliTests
+    return tests
 }
 
 private fun toTestFromScript(

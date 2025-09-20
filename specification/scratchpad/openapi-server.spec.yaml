@@ -19,7 +19,7 @@ Http server:
       get:
         summary: Returns a list of users.
         description: All the users that are present and active
-        x-instacli:
+        x-specscript:
           Print: Got request
           Output: Hello from Server!
 
@@ -28,7 +28,7 @@ Http server:
   endpoints:
     /users:
       get:
-        x-instacli:
+        x-specscript:
           Print: Got request
           Output: Hello from Server!
         summary: Returns a list of users.

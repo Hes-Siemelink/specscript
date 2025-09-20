@@ -7,7 +7,7 @@ import specscript.files.SpecScriptFile
 import specscript.language.*
 import specscript.util.Json
 
-object RunScript : CommandHandler("Run script", "instacli.files"), ObjectHandler, ValueHandler {
+object RunScript : CommandHandler("Run script", "core.files"), ObjectHandler, ValueHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
 

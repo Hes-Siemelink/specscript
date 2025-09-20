@@ -1,8 +1,8 @@
 # Instacli configuration files
 
-## `~/.instacli` folder
+## `~/.specscript` folder
 
-Commands may write files in the `.instacli` folder in your home directory.
+Commands may write files in the `.specscript` folder in your home directory.
 
 ### Connection management
 

@@ -179,7 +179,7 @@ You can indicate the version of the Instacli spec that the script is using.
 
 ```yaml specscript
 Script info:
-  instacli-spec: v0.1
+  specscript-version: v0.1
 ```
 
 ### Importing files from another directory

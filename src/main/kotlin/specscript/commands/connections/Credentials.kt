@@ -21,7 +21,7 @@ import kotlin.io.path.exists
 object Credentials : CommandHandler("Credentials", "core/shell"), ValueHandler {
 
     const val FILENAME = "credentials.yaml"
-    private val DEFAULT_FILE: Path = Path.of(System.getProperty("user.home"), ".instacli").resolve(FILENAME)
+    private val DEFAULT_FILE: Path = Path.of(System.getProperty("user.home"), ".specscript").resolve(FILENAME)
 
     fun fromFile(file: Path = DEFAULT_FILE): CredentialsFile {
 

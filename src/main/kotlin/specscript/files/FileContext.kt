@@ -54,7 +54,7 @@ class FileContext(
             return if (variables.containsKey(SCRIPT_TEMP_DIR_VARIABLE)) {
                 Path.of(variables[SCRIPT_TEMP_DIR_VARIABLE]!!.textValue())
             } else {
-                Files.createTempDirectory("instacli-").apply {
+                Files.createTempDirectory("specscript-").apply {
                     toFile().deleteOnExit()
                     variables[SCRIPT_TEMP_DIR_VARIABLE] = TextNode(toAbsolutePath().toString())
                 }

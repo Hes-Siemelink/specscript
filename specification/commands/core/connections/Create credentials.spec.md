@@ -33,7 +33,7 @@ Create credentials:
 The endpoint is identified by the `target` parameter. You can put arbitrary data in the `credentials` section, but it
 should have a `name` field to identify it,
 
-The account data is stored in the `~/.instacli/credentials.yaml` file like this:
+The account data is stored in the `~/.specscript/credentials.yaml` file like this:
 
 ```yaml
 SpecScript Sample Server:
