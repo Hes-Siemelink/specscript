@@ -189,32 +189,27 @@ Types are defined in the file `types.yaml`, in the same directory as the script.
 
 ```yaml file=types.yaml
 FullName:
-  base: object
   properties:
     first_name:
       description: First name
-      type: string
+      default: Alice
     last_name:
       description: Last name
+      default: Wonderland
 ```
 
 You can use the type name in the input parameters of a script.
-
-<!-- yaml specscript
-${input}:
-  first_name: Alice
-  last_name: Wonderland
--->
 
 ```yaml specscript
 Code example: Define input parameters with types
 
 Input parameters: FullName
+
+Assert that:
+  item: ${input}
+  equals:
+    first_name: Alice
+    last_name: Wonderland
 ```
 
-<!-- yaml specscript
-Output: Hello, ${input.first_name} ${input.last_name}
-
-Expected output: Hello, Alice Wonderland
--->
 

@@ -53,6 +53,7 @@ class TestCaseRunner(
 
     override fun execute() {
         context.error = null
+        context.variables.remove(INPUT_VARIABLE)
         try {
             script.run(context)
         } catch (a: Break) {

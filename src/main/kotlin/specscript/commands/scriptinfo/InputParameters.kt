@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.node.ValueNode
 import com.fasterxml.jackson.module.kotlin.contains
+import specscript.commands.testing.Answers
 import specscript.commands.toCondition
 import specscript.commands.userinteraction.prompt
 import specscript.language.*
@@ -59,13 +60,18 @@ object InputParameters : CommandHandler("Input parameters", "core/script-info"),
             }
 
             // Find answer
+            val question = info.description ?: name
             val answer: JsonNode = when {
 
                 // Get default value
                 info.default != null -> info.default!!
 
+                // Get from answers
+                Answers.hasRecordedAnswer(question) -> Answers.getRecordedAnswer(question)
+
                 // Ask user
                 context.interactive -> info.prompt(name)
+
 
                 else -> throw MissingParameterException(
                     "No value provided for: $name",

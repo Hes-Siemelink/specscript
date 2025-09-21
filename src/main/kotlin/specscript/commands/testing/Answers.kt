@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import specscript.language.CommandHandler
 import specscript.language.ObjectHandler
 import specscript.language.ScriptContext
+import specscript.language.ScriptingException
 
 /**
  * Records answers to be replayed in test cases for user input commands.
@@ -20,5 +21,14 @@ object Answers : CommandHandler("Answers", "core/testing"), ObjectHandler {
         }
 
         return null
+    }
+
+    fun hasRecordedAnswer(question: String): Boolean {
+        return recordedAnswers.containsKey(question)
+    }
+
+    fun getRecordedAnswer(question: String): JsonNode {
+        return recordedAnswers[question] ?: throw ScriptingException("No recorded answer for: $question")
+
     }
 }
