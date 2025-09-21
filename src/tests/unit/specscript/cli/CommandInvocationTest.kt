@@ -43,7 +43,7 @@ class CommandInvocationTest {
     @Test
     fun `Show usage when no arguments provided`() {
         // Given
-        val session = SpecScriptMain("-q", workingDir = TestPaths.RESOURCES, output = out)
+        val session = SpecScriptCli("-q", workingDir = TestPaths.RESOURCES, output = out)
 
         // When - Should not throw exception, just show usage
         session.run()
@@ -55,7 +55,7 @@ class CommandInvocationTest {
     @Test
     fun `Handle directories by listing contents non-interactively`() {
         // Given
-        val session = SpecScriptMain("-q", "sample", workingDir = TestPaths.RESOURCES, output = out)
+        val session = SpecScriptCli("-q", "sample", workingDir = TestPaths.RESOURCES, output = out)
 
         // When - Should not throw exception, just list directory contents
         session.run()
@@ -67,7 +67,7 @@ class CommandInvocationTest {
     @Test
     fun `Execute simple file successfully`() {
         // Given
-        val session = SpecScriptMain("-q", "simple.spec.yaml", workingDir = TestPaths.RESOURCES, output = out)
+        val session = SpecScriptCli("-q", "simple.spec.yaml", workingDir = TestPaths.RESOURCES, output = out)
 
         // When
         session.run()
@@ -79,7 +79,7 @@ class CommandInvocationTest {
     @Test
     fun `Print script info with help flag`() {
         // Given
-        val session = SpecScriptMain("--help", "simple.spec.yaml", workingDir = TestPaths.RESOURCES, output = out)
+        val session = SpecScriptCli("--help", "simple.spec.yaml", workingDir = TestPaths.RESOURCES, output = out)
 
         // When
         session.run()
@@ -94,7 +94,7 @@ class CommandInvocationTest {
     @Test
     fun `Handle file not found with clear error`() {
         // Given
-        val session = SpecScriptMain("-q", "nonexistent", workingDir = TestPaths.RESOURCES, output = out)
+        val session = SpecScriptCli("-q", "nonexistent", workingDir = TestPaths.RESOURCES, output = out)
 
         // When & Then
         val exception = assertThrows<CliInvocationException> {
@@ -108,7 +108,7 @@ class CommandInvocationTest {
     fun `Print output - YAML format`() {
         // Given
         val session =
-            SpecScriptMain("--output", "print-output.spec.yaml", workingDir = TestPaths.RESOURCES, output = out)
+            SpecScriptCli("--output", "print-output.spec.yaml", workingDir = TestPaths.RESOURCES, output = out)
 
         // When
         session.run()
@@ -121,7 +121,7 @@ class CommandInvocationTest {
     fun `Print output - JSON format`() {
         // Given
         val session =
-            SpecScriptMain("--output-json", "print-output.spec.yaml", workingDir = TestPaths.RESOURCES, output = out)
+            SpecScriptCli("--output-json", "print-output.spec.yaml", workingDir = TestPaths.RESOURCES, output = out)
 
         // When
         session.run()

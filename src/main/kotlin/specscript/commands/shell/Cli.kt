@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.node.TextNode
 import com.fasterxml.jackson.databind.node.ValueNode
-import specscript.cli.SpecScriptMain
+import specscript.cli.SpecScriptCli
 import specscript.commands.testing.ExpectedConsoleOutput
 import specscript.language.CommandHandler
 import specscript.language.ObjectHandler
@@ -33,7 +33,7 @@ object Cli : CommandHandler("Cli", "core/shell"), ValueHandler, ObjectHandler {
 
         // Capture console output
         val (stdout, stderr) = IO.captureSystemOutAndErr {
-            SpecScriptMain.main(args, workingDir = workingDir)
+            SpecScriptCli.main(args, workingDir = workingDir)
         }
 
         // Make sure we can check the output

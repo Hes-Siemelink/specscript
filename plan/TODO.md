@@ -2,7 +2,6 @@
 
 * Reintroduce 'interactive mode' to SpecScript CLI
 * Remove versions from scripts and directories
-* Remove new type system
 
 * Use Connections for SQLiite database
 * Merge tests into CLI so you can run cli --test <comething>

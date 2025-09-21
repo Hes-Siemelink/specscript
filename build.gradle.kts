@@ -112,7 +112,7 @@ tasks.register<Jar>("fatJar") {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     manifest {
-        attributes["Main-Class"] = "specscript.cli.MainKt"
+        attributes["Main-Class"] = "specscript.cli.SpecScriptCliKt"
     }
 
     from(sourceSets.main.get().output)

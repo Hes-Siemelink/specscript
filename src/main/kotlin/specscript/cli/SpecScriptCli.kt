@@ -16,10 +16,10 @@ import kotlin.io.path.name
 class CliInvocationException(message: String) : Exception(message)
 
 fun main(args: Array<String>) {
-    SpecScriptMain.main(args)
+    SpecScriptCli.main(args)
 }
 
-class SpecScriptMain(
+class SpecScriptCli(
     private val options: CliCommandLineOptions,
     private val workingDir: Path = Path.of("."),
     private val output: ConsoleOutput = StandardOutput
@@ -32,24 +32,24 @@ class SpecScriptMain(
     ) : this(CliCommandLineOptions(args.toList()), workingDir, output)
 
     fun run(parent: ScriptContext? = null) {
-        // Show usage when no commands are given (library compatibility)
+        // Show usage when no commands are given
         if (options.commands.isEmpty()) {
             output.printUsage(CliCommandLineOptions.definedOptions)
             return
         }
 
-        // Resolve file using shared utility
+        // Find command file
         val command = options.commands[0]
         val resolvedFile = resolveCommand(command, workingDir)
 
-        // Create context for execution
+        // Create context
         val context = if (parent == null) {
             FileContext(resolvedFile, interactive = false, workingDir = workingDir)
         } else {
             FileContext(resolvedFile, parent)
         }
 
-        // Handle both files and directories (non-interactively)
+        // Handle file or directory
         if (resolvedFile.isDirectory()) {
             invokeDirectory(resolvedFile, options.commands.drop(1), context, options)
         } else {
@@ -63,7 +63,6 @@ class SpecScriptMain(
         context: FileContext,
         options: CliCommandLineOptions
     ) {
-        // Parse command
         val rawCommand = getCommand(args, context) ?: return
 
         // Run script
@@ -73,7 +72,7 @@ class SpecScriptMain(
             return
         }
 
-        // Run subcommand
+        // Recursively run subcommand in subdirectory
         val subcommand = context.getSubcommand(rawCommand)
         if (subcommand != null) {
             invokeDirectory(subcommand.dir, args.drop(1), FileContext(subcommand.dir, context), options)
@@ -85,17 +84,16 @@ class SpecScriptMain(
     }
 
     private fun getCommand(args: List<String>, context: FileContext): String? {
-        // Return the command if specified
+
         if (args.isNotEmpty()) {
             return args[0]
         }
 
-        // Print info non-interactively
+        // Print available commands and exit
         output.printDirectoryInfo(context.info)
-
-        // Print available commands and exit (non-interactive)
         val commands = context.getAllCommands().filter { !it.hidden }
         output.printCommands(commands)
+
         return null
     }
 
@@ -109,7 +107,7 @@ class SpecScriptMain(
             }
 
             try {
-                SpecScriptMain(options, workingDir = workingDir).run()
+                SpecScriptCli(options, workingDir = workingDir).run()
 
             } catch (e: CliInvocationException) {
                 CliErrorReporter.reportInvocationError(e)
