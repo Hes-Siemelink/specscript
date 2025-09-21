@@ -181,3 +181,40 @@ Assert equals:
     property-A: Ananas
 ```
 
+## Using types
+
+You can define the input parameters of a Script as types.
+
+Types are defined in the file `types.yaml`, in the same directory as the script.
+
+```yaml file=types.yaml
+FullName:
+  base: object
+  properties:
+    first_name:
+      description: First name
+      type: string
+    last_name:
+      description: Last name
+```
+
+You can use the type name in the input parameters of a script.
+
+<!-- yaml specscript
+${input}:
+  first_name: Alice
+  last_name: Wonderland
+-->
+
+```yaml specscript
+Code example: Define input parameters with types
+
+Input parameters: FullName
+```
+
+<!-- yaml specscript
+Output: Hello, ${input.first_name} ${input.last_name}
+
+Expected output: Hello, Alice Wonderland
+-->
+

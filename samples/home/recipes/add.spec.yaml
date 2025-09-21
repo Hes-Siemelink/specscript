@@ -1,6 +1,6 @@
 Script info:
   description: Adds a recipe
-  input type: Recipe
+Input parameters: Recipe
 
 ---
 Read file: db/recipes.yaml

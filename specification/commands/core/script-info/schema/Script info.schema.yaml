@@ -11,20 +11,4 @@ oneOf:
         type: boolean
       "specscript-version":
         type: string
-      "input":
-        type: object
-        additionalProperties:
-          $ref: "/v1/commands/core/ParameterData.schema.yaml"
-      "input type":
-        type:
-          - string
-          - object
-        properties:
-          "type":
-            type: string
-          "properties":
-            additionalProperties:
-              $ref: "/v1/commands/core/ParameterData.schema.yaml"
-            unevaluatedProperties: false
-          additionalProperties: false
     additionalProperties: false

@@ -1,6 +1,8 @@
 $id: "https://specscript.info/v1/commands/core/script-info/Input_parameters"
 $schema: https://json-schema.org/draft/2020-12/schema
 
-type: object
+type:
+  - object
+  - string
 additionalProperties:
   $ref: "/v1/commands/core/ParameterData.schema.yaml"
