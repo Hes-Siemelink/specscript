@@ -1,13 +1,13 @@
 Test case: String type
 
-Validate type:
+Check type:
   item: Hes
   type: string
 
 ---
 Test case: Object type
 
-Validate type:
+Check type:
   item:
     name: Hes
   type: object
@@ -15,7 +15,7 @@ Validate type:
 ---
 Test case: Array type
 
-Validate type:
+Check type:
   item:
     - name: Hes
   type: array
@@ -23,7 +23,7 @@ Validate type:
 ---
 Test case: Not a string
 
-Validate type:
+Check type:
   item:
     - Hes
   type: string
@@ -34,7 +34,7 @@ Expected error:
 ---
 Test case: Not an object
 
-Validate type:
+Check type:
   item: Hes
   type: object
 
@@ -44,7 +44,7 @@ Expected error:
 ---
 Test case: Not an array
 
-Validate type:
+Check type:
   item:
     name: Hes
   type: array
@@ -55,7 +55,7 @@ Expected error:
 ---
 Test case: Object properties
 
-Validate type:
+Check type:
   item:
     name: Hes
   type:
@@ -66,7 +66,7 @@ Validate type:
 ---
 Test case: Implicit object definition
 
-Validate type:
+Check type:
   item:
     name: Hes
   type:
@@ -76,7 +76,7 @@ Validate type:
 ---
 Test case: Invalid object property
 
-Validate type:
+Check type:
   item:
     name: Hes
   type:
@@ -90,7 +90,7 @@ Expected error:
 ---
 Test case: Define a list
 
-Validate type:
+Check type:
   item:
     - name: Alice
     - name: Bob
@@ -101,7 +101,7 @@ Validate type:
 ---
 Test case: Faulty object
 
-Validate type:
+Check type:
   item:
     name-x: Alice
   type: Person
@@ -112,7 +112,7 @@ Expected error:
 ---
 Test case: Optional property
 
-Validate type:
+Check type:
   item:
     name-x: Alice
   type:
@@ -125,7 +125,7 @@ Validate type:
 ---
 Test case: Faulty list
 
-Validate type:
+Check type:
   item:
     - name-x: Alice
   type:
@@ -138,7 +138,7 @@ Expected error:
 ---
 Test case: Recursive object
 
-Validate type:
+Check type:
   item:
     name: Alice
     child:

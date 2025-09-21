@@ -13,13 +13,9 @@ import specscript.commands.files.RunScript
 import specscript.commands.files.TempFile
 import specscript.commands.files.WriteFile
 import specscript.commands.http.*
-import specscript.commands.mcp.CallMcpTool
-import specscript.commands.mcp.McpPrompt
-import specscript.commands.mcp.McpResource
-import specscript.commands.mcp.McpServer
-import specscript.commands.mcp.McpTool
+import specscript.commands.mcp.*
+import specscript.commands.schema.CheckType
 import specscript.commands.schema.ValidateSchema
-import specscript.commands.schema.ValidateType
 import specscript.commands.scriptinfo.InputParameters
 import specscript.commands.scriptinfo.ScriptInfo
 import specscript.commands.shell.Cli
@@ -127,7 +123,7 @@ object CommandLibrary {
         ValidateSchema,
 
         // Types
-        ValidateType,
+        CheckType,
 
         // Database
         SQLite,

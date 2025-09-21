@@ -4,14 +4,11 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.node.TextNode
 import specscript.language.*
-import specscript.language.types.Type
-import specscript.language.types.TypeRegistry
-import specscript.language.types.TypeSpecification
-import specscript.language.types.resolve
-import specscript.language.types.validate
-import specscript.util.*
+import specscript.language.types.*
+import specscript.util.toDomainObject
+import specscript.util.toJson
 
-object ValidateType : CommandHandler("Validate type", "core/schema"), ObjectHandler {
+object CheckType : CommandHandler("Check type", "core/schema"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val json = data.getParameter("item")

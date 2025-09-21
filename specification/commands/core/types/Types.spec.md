@@ -17,7 +17,7 @@ To show types in action, we can validate given data against a type definition.
 ```yaml specscript
 Code example: Validate data with inline type
 
-Validate type:
+Check type:
   item:
     name: Hes
   type: object
@@ -28,7 +28,7 @@ If the validation is false, you will get an error,
 ```yaml specscript
 Code example: Invalid type
 
-Validate type:
+Check type:
   item:
     name: Hes
   type: string

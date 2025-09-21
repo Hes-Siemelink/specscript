@@ -96,8 +96,7 @@ As an alternative, you can define the input and output of a Script as types.
 > [!NOTE]
 > This is an experimental feature, and may change in future versions of SpecScript.
 
-First you need to define the types in the file, and then you can use them in the script. Types are defined in the file
-`types.yaml`, in the same directory as the script.
+Types are defined in the file `types.yaml`, in the same directory as the script.
 
 ```yaml file=types.yaml
 FullName:
