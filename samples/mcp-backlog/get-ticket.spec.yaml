@@ -1,9 +1,12 @@
 Input parameters:
   id:
     description: Full ticket identifier (e.g. TICKET-007)
+  db:
+    description: The SQLite database
+    default: db/tickets.db
 
 SQLite:
-  file: db/sample.db
+  file: ${db}
   query: |
     -- Retrieve a single ticket by id, returning a status message and all fields if found.
     WITH input(id) AS (VALUES('${input.id}')),

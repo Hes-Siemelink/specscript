@@ -8,6 +8,9 @@ Input parameters:
   assignee:
     description: Assigned to
     default: unassigned
+  db:
+    description: The SQLite database
+    default: db/tickets.db
 
 # Escape single quotes
 Replace:
@@ -20,7 +23,7 @@ Replace:
 As: ${escaped}
 
 SQLite:
-  file: db/sample.db
+  file: ${db}
   update:
     - |
       -- Insert a new ticket with sequential ID (TICKET-###) and next backlog_order

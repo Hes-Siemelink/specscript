@@ -1,5 +1,10 @@
+Input parameters:
+  db:
+    description: The SQLite database
+    default: db/tickets.db
+
 SQLite:
-  file: db/sample.db
+  file: ${db}
   update:
     - |
       -- Compact backlog_order so it becomes a dense 1..N sequence without gaps

@@ -16,14 +16,14 @@ the scenes.
 **Connect to** takes a symbolic name and usually
 configures [Http request defaults](../http/Http%20request%20defaults.spec.md) for subsequent REST API calls.
 
-A script `connect-to.spec.yaml` would look like this:
+A script `get-items.spec.yaml` would look like this:
 
 <!-- yaml specscript
 Http request defaults:
   url: http://localhost:2525
 -->
 
-```yaml file=connect-to.spec.yaml
+```yaml file=get-items.spec.yaml
 Code example: Use a connection
 
 Connect to: SpecScript Samples
@@ -37,7 +37,7 @@ Expected output:
 ```
 
 In order for this to work, you need to configure a _connection script_ for the **SpecScript Samples** endpoint. You do
-this in the  `.directory-info.yaml` file in the same directory
+this in the  `.directory-info.yaml` file in the same directory:
 
 ```yaml file=.directory-info.yaml
 connections:
@@ -58,7 +58,7 @@ Http request defaults:
 Now we can run it
 
 ```shell cli
-cli -o connect-to
+cli -o get-items
 ```
 
 and it will output:

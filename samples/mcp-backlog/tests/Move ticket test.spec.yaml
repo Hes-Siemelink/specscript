@@ -1,29 +1,32 @@
-Shell: rm -f db/sample.db
+${test_database}: db/test.db
 
-Create db: { }
+Shell: rm -f ${test_database}
 
----
+Create db:
+  db: ${test_database}
+
 Create ticket:
-  title: Ticket 1
-  description: Just for testing
----
-Create ticket:
-  title: Ticket 2
-  description: Another one
----
-Create ticket:
-  title: Ticket 3
-  description: Its The final ticket
+  - db: ${test_database}
+    title: Ticket 1
+    description: Just for testing
+  - db: ${test_database}
+    title: Ticket 2
+    description: Another one
+  - db: ${test_database}
+    title: Ticket 3
+    description: Its The final ticket
 
 
 ---
 # Move ticket TICKET-002 up
 
 Move ticket:
+  db: ${test_database}
   id: TICKET-002
   action: up
 
 List tickets:
+  db: ${test_database}
   state: all
 
 For each:
@@ -38,10 +41,12 @@ Expected output:
 # Move ticket TICKET-001 down
 
 Move ticket:
+  db: ${test_database}
   id: TICKET-001
   action: down
 
 List tickets:
+  db: ${test_database}
   state: all
 
 For each:
@@ -56,10 +61,12 @@ Expected output:
 # Move ticket TICKET-001 to top
 
 Move ticket:
+  db: ${test_database}
   id: TICKET-001
   action: top
 
 List tickets:
+  db: ${test_database}
   state: all
 
 For each:
@@ -74,10 +81,12 @@ Expected output:
 # Move ticket TICKET-001 to bottom
 
 Move ticket:
+  db: ${test_database}
   id: TICKET-001
   action: bottom
 
 List tickets:
+  db: ${test_database}
   state: all
 
 For each:

@@ -5,9 +5,12 @@ Input parameters:
   assignee:
     description: Optional assignee filter ('all' for no filtering)
     default: all
+  db:
+    description: The SQLite database
+    default: db/tickets.db
 
 SQLite:
-  file: db/sample.db
+  file: ${db}
   query: |
     -- List tickets with optional filtering by state and assignee.
     -- 'all' (default) or empty/null means no filtering for that field.

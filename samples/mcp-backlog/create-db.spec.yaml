@@ -1,5 +1,10 @@
+Input parameters:
+  db:
+    description: The SQLite database
+    default: db/tickets.db
+
 SQLite:
-  file: db/sample.db
+  file: ${db}
   update:
     - |
       CREATE TABLE ticket (
