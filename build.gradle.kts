@@ -107,7 +107,7 @@ tasks.jar {
     }
 }
 
-tasks.register<Jar>("fatJar") {
+tasks.register<Jar>("fullJar") {
     archiveClassifier.set("full")
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
@@ -125,7 +125,7 @@ tasks.register<Jar>("fatJar") {
 
 // Make sure the standard build produces the fat jar
 tasks.named("build") {
-    dependsOn("fatJar")
+    dependsOn("fullJar")
 }
 
 //
@@ -150,7 +150,7 @@ githubRelease {
 }
 
 tasks.named("githubRelease") {
-    dependsOn(tasks.named("build"), tasks.named("fatJar"))
+    dependsOn(tasks.named("build"), tasks.named("fullJar"))
 }
 
 tasks.register("release") {
