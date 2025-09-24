@@ -27,11 +27,11 @@ Expected console output: |
      spec [global options] file | directory [command options]
 
   Global options:
-    --help, -h          Print help on a script or directory and does not run anything
-    --output, -o        Print the output at the end of the script in Yaml format
+    --help, -h      Print help on a script or directory and does not run anything
+    --output, -o    Print the output at the end of the script in Yaml format
     --output-json, -j   Print the output at the end of the script in Json format
-    --non-interactive, -q   Indicates that SpecScript should not prompt for user input
-    --debug, -d         Run in debug mode. Prints stacktraces when an error occurs.
+    --interactive, -i   SpecScript may prompt for user input if it needs more information
+    --debug, -d     Run in debug mode. Prints stacktraces when an error occurs.
 ```
 
 ## Specifying the working dir
@@ -43,7 +43,7 @@ directory than the one where the script is located.
 Code example: Cli in a different directory
 
 Cli:
-  command: spec -q basic
+  command: spec basic
   cd: samples
 
 Expected console output: |

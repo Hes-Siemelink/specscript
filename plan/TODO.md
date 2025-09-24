@@ -1,30 +1,17 @@
 # On my mind
 
 * Reintroduce 'interactive mode' to SpecScript CLI
-* Remove versions from scripts and directories
 
-* Use Connections for SQLiite database
 * Merge tests into CLI so you can run cli --test <comething>
-* Rethink connections: make it simpler to use
-
-
 
 ## MCP
 
-* Make MCP server like HTTP server. (Consistent use of script, file, output, starting stoppping, port numbers etc)
-* Make MCP server composable in Yaml with 'Mcp tool' command.
 * TODOs in MCP server.
 * Process MCP result as list
 
 ## AI agents
 
 * https://github.com/JetBrains/koog
-* Move `Script info: input` to top level of script for better AI processing. Names:
-    * `Input` -- nice and clean name but it is not literally input, it is more like a schema
-    * `Input schema`
-    * `Input parameters`
-    * `Input variables`
-    * `Script input`
 
 ## In general
 
@@ -49,12 +36,9 @@
 # SpecScript
 
 * Naming alternatives
-    * Easyspec.ai
-    * Easyspec
-    * Quickspec
     * Spec.it
-* Add test support in cli command 
-    * `spec run` vs `spec test`
+* Add test support in cli command
+    * `spec --run` vs `spec --test`
 
 # SpecScript language
 
@@ -94,8 +78,8 @@
 * Configuring connections out of the box with packaged scripts
 * Clean up Connect to: be smart about multiple connections and tokens. Currently `connect-to` script in Digital.ai only
   checks if something has been set as Http defaults
-* Built-in OAuth. It's kinda cool that you can do it in SpecScript but not that you should... Makes the script 'turn into
-  code'.
+* Built-in OAuth. It's kinda cool that you can do it in SpecScript but not that you should... Makes the script 'turn
+  into code'.
 
 ## Shell & Files
 

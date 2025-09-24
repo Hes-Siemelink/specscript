@@ -251,33 +251,15 @@ with output:
 Hello, World!
 ```
 
-You can interactively select which command to run.
+SpecScript will show the commands if you pass a directory.
 
-```shell ignore
+For example:
+
+```shell cli cd=.
 spec samples
 ```
 
-Use the cursor to select a command
-
-```
-samples has several subcommands.
-
-* Available commands: 
- > basic         Simple SpecScript example scripts
-   digitalai     Interact with Digital.ai products and services.
-   hello         Hello
-   http-server   Use SpecScript to run a web server
-   programming   Programming examples in SpecScript
-   spotify       Spotify API examples
-```
-
-Use the `-q` option for non-interacivte mode
-
-```shell cli cd=.
-spec -q samples
-```
-
-will just print the info message:
+will print the info message:
 
 ```
 samples has several subcommands.
