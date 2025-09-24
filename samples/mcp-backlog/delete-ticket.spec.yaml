@@ -1,12 +1,10 @@
 Input parameters:
   id:
     description: Full ticket identifier (e.g. TICKET-007)
-  db:
-    description: The SQLite database
-    default: db/tickets.db
+
+Connect to: Ticket DB
 
 SQLite:
-  file: ${db}
   update:
     - |
       -- Delete the ticket matching the provided full id

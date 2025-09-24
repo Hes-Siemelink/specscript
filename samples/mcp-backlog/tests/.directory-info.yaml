@@ -3,3 +3,8 @@ imports:
   - ../create-ticket.spec.yaml
   - ../list-tickets.spec.yaml
   - ../move-ticket.spec.yaml
+
+connections:
+  Ticket DB:
+    SQLite defaults:
+      file: test.db

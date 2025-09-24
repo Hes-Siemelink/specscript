@@ -4,6 +4,7 @@ import specscript.commands.connections.*
 import specscript.commands.controlflow.*
 import specscript.commands.datamanipulation.*
 import specscript.commands.db.SQLite
+import specscript.commands.db.SQLiteDefaults
 import specscript.commands.db.Store
 import specscript.commands.errors.ErrorCommand
 import specscript.commands.errors.OnError
@@ -127,6 +128,7 @@ object CommandLibrary {
 
         // Database
         SQLite,
+        SQLiteDefaults,
         Store,
 
         // AI

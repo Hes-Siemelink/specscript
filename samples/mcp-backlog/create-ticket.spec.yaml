@@ -8,11 +8,10 @@ Input parameters:
   assignee:
     description: Assigned to
     default: unassigned
-  db:
-    description: The SQLite database
-    default: db/tickets.db
 
-# Escape single quotes
+Connect to: Ticket DB
+
+# Sanitize input by escaping single quotes
 Replace:
   text: "'"
   in:
@@ -23,7 +22,6 @@ Replace:
 As: ${escaped}
 
 SQLite:
-  file: ${db}
   update:
     - |
       -- Insert a new ticket with sequential ID (TICKET-###) and next backlog_order
@@ -61,4 +59,3 @@ SQLite:
     WHERE id = (
       SELECT 'TICKET-' || printf('%03d', MAX(CAST(substr(id,8) AS INTEGER))) FROM ticket
     );
-

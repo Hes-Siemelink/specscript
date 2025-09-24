@@ -16,10 +16,10 @@ Input parameters:
   assignee:
     description: New assignee (optional)
     default: NULL
-  file: ${db}
+
+Connect to: Ticket DB
 
 SQLite:
-  file: ${db}
   update:
     - |
       -- Update ticket fields only when a non-empty value is provided.

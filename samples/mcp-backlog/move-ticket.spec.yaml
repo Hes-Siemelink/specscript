@@ -5,12 +5,10 @@ Input parameters:
     description: Move action (one of up, down, top, bottom)
     enum: [ up, down, top, bottom ]
     default: up
-  db:
-    description: The SQLite database
-    default: db/tickets.db
+
+Connect to: Ticket DB
 
 SQLite:
-  file: ${db}
   update:
     - |
       -- UP: swap with neighbor above (if any)

@@ -1,0 +1,16 @@
+Test case: SQLite defaults
+
+Shell: rm -f out/sample.db
+
+SQLite defaults:
+  file: out/sample.db
+
+SQLite:
+  update:
+    - create table users (id integer primary key, name text)
+    - insert into users (name) values ('Alice')
+  query: select * from users
+
+Expected output:
+  - id: 1
+    name: Alice

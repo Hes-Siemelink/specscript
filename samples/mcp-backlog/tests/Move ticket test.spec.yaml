@@ -1,18 +1,16 @@
-${test_database}: db/test.db
+Connect to: Ticket DB
 
-Shell: rm -f ${test_database}
+Shell: rm -f test.db
 
-Create db:
-  db: ${test_database}
+Create db: { }
 
 Create ticket:
-  - db: ${test_database}
-    title: Ticket 1
+  - title: Ticket 1
     description: Just for testing
-  - db: ${test_database}
+  - db: test.db
     title: Ticket 2
     description: Another one
-  - db: ${test_database}
+  - db: test.db
     title: Ticket 3
     description: Its The final ticket
 
@@ -21,12 +19,12 @@ Create ticket:
 # Move ticket TICKET-002 up
 
 Move ticket:
-  db: ${test_database}
+  db: test.db
   id: TICKET-002
   action: up
 
 List tickets:
-  db: ${test_database}
+  db: test.db
   state: all
 
 For each:
@@ -41,12 +39,12 @@ Expected output:
 # Move ticket TICKET-001 down
 
 Move ticket:
-  db: ${test_database}
+  db: test.db
   id: TICKET-001
   action: down
 
 List tickets:
-  db: ${test_database}
+  db: test.db
   state: all
 
 For each:
@@ -61,12 +59,12 @@ Expected output:
 # Move ticket TICKET-001 to top
 
 Move ticket:
-  db: ${test_database}
+  db: test.db
   id: TICKET-001
   action: top
 
 List tickets:
-  db: ${test_database}
+  db: test.db
   state: all
 
 For each:
@@ -81,12 +79,12 @@ Expected output:
 # Move ticket TICKET-001 to bottom
 
 Move ticket:
-  db: ${test_database}
+  db: test.db
   id: TICKET-001
   action: bottom
 
 List tickets:
-  db: ${test_database}
+  db: test.db
   state: all
 
 For each:

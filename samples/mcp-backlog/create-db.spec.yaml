@@ -1,10 +1,6 @@
-Input parameters:
-  db:
-    description: The SQLite database
-    default: db/tickets.db
+Connect to: Ticket DB
 
 SQLite:
-  file: ${db}
   update:
     - |
       CREATE TABLE ticket (
