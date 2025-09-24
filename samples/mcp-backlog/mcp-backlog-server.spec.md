@@ -212,7 +212,7 @@ Mcp tool:
 To start the MCP backlog server:
 
 ```shell ignore
-cli samples/mcp-backlog/mcp-backlog-server.spec.md
+spec samples/mcp-backlog/mcp-backlog-server.spec.md
 ```
 
 The server will start and wait for MCP client connections.

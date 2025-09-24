@@ -38,7 +38,7 @@ Your document will look like
 And when you run it, SpecScript will execute the code in the `yaml specscript` block and print the output:
 
 ```shell ignore
-cli hello
+spec hello
 ```
 
 ```
@@ -566,7 +566,7 @@ See [Calling another script](Organizing%20SpecScript%20files%20in%20directories.
 Show `cli` usage with the `--help` option:
 
 ```shell cli
-cli --help
+spec --help
 ```
 
 The output should be:
@@ -575,7 +575,7 @@ The output should be:
 SpecScript -- Create instantly runnable specs using Yaml and Markdown!
 
 Usage:
-   cli [global options] file | directory [command options]
+   spec [global options] file | directory [command options]
 
 Global options:
   --help, -h          Print help on a script or directory and does not run anything
@@ -591,7 +591,7 @@ Global options:
 Show `cli` usage with the `--help` option:
 
 ```shell cli
-cli --help
+spec --help
 ```
 
 The output should be:
@@ -600,7 +600,7 @@ The output should be:
 SpecScript -- Create instantly runnable specs using Yaml and Markdown!
 
 Usage:
-   cli [global options] file | directory [command options]
+   spec [global options] file | directory [command options]
 
 Global options:
   --help, -h          Print help on a script or directory and does not run anything
@@ -630,7 +630,7 @@ Print: Hello world!
 And then run it:
 
 ```shell cli cd=${SCRIPT_TEMP_DIR}
-cli hello
+spec hello
 ```
 
 The output should be:
@@ -651,7 +651,7 @@ Print: Hello world!
 And then run it:
 
 ```shell cli cd=${SCRIPT_TEMP_DIR}
-cli hello
+spec hello
 ```
 
 The output should be:
@@ -676,8 +676,8 @@ Code example: Ignore shell command
 ~~~markdown
 SpecScript will not execute this command:
 
-  ```shell cli ignore
-  cli unknown-command
+```shell cli ignore
+spec unknown-command
 ```
 
 So there should be no output:
@@ -691,7 +691,7 @@ So there should be no output:
 SpecScript will not execute this command:
 
 ```shell cli ignore
-cli unknown-command
+spec unknown-command
 ```
 
 So there should be no output:

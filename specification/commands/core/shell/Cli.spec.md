@@ -24,7 +24,7 @@ Expected console output: |
   SpecScript -- Create instantly runnable specs using Yaml and Markdown!
 
   Usage:
-     cli [global options] file | directory [command options]
+     spec [global options] file | directory [command options]
 
   Global options:
     --help, -h          Print help on a script or directory and does not run anything
@@ -43,7 +43,7 @@ directory than the one where the script is located.
 Code example: Cli in a different directory
 
 Cli:
-  command: cli -q basic
+  command: spec -q basic
   cd: samples
 
 Expected console output: |

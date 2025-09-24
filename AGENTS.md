@@ -29,17 +29,15 @@ user interaction, testing, and more.
 
 ```bash
 ./gradlew build fatJar
-# Thin JAR (requires classpath)
-alias cli-thin="java -jar `pwd`/build/libs/specscript-*.jar"
 # Fat JAR (self-contained)
-alias cli="java -jar `pwd`/build/libs/specscript-*-full.jar"
+alias spec="java -jar `pwd`/build/libs/specscript-*-full.jar"
 ```
 
 ### Run examples
 
 ```bash
-cli samples/hello.spec.yaml
-cli samples                       # Interactive selection
+spec samples/hello.spec.yaml
+spec samples                       # Interactive selection
 ```
 
 ### Release process
@@ -138,7 +136,7 @@ Test case: MCP operation
       name: test-server
       tools: { ... }
   test:
-    # Test operations
+  # Test operations
   cleanup:
     Stop mcp server:
       name: test-server
@@ -440,7 +438,7 @@ SpecScript enables true **specification-driven development** where the specifica
 
 ```markdown
 1. Write `mcp-server.spec.md` with complete MCP tool definitions using `yaml specscript` blocks
-2. Implement tools with `script: Output: { mock: "data" }` 
+2. Implement tools with `script: Output: { mock: "data" }`
 3. Test with `cli mcp-server.spec.md`
 4. Iterate on tool schemas and responses
 5. Replace `Output` with real logic when spec is solid

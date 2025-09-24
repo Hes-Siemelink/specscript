@@ -60,7 +60,7 @@ Print: Hello, ${name}!
 Then running
 
 ```shell cli
-cli --help input.spec.yaml
+spec --help input.spec.yaml
 ```
 
 Should print:

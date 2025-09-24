@@ -29,7 +29,7 @@ Print: ${output}
 Run it to test your API:
 
 ```shell cli
-cli user-api.spec.yaml --name Alice --language English
+spec user-api.spec.yaml --name Alice --language English
 ```
 
 This should produce the following output:
@@ -99,10 +99,10 @@ Read file:
 As: ${config}
 
 Assert that:
-- not:
-    empty: ${config.database.host}
-- item: ${config.features.authentication}
-  equals: true
+  - not:
+      empty: ${config.database.host}
+  - item: ${config.features.authentication}
+    equals: true
 
 Print: Configuration validation passed
 ```
@@ -130,7 +130,7 @@ Prompt:
   description: Select deployment environment
   enum:
     - development
-    - staging  
+    - staging
     - production
 
 Print: Deploying to ${output} environment
@@ -150,7 +150,7 @@ Print: Deploying to ${output} environment
 
 ```shell ignore
 ./gradlew build fatJar
-alias cli="java -jar `pwd`/build/libs/specscript-*-full.jar"
+alias spec="java -jar `pwd`/build/libs/specscript-*-full.jar"
 ```
 
 ### Hello World
@@ -164,7 +164,7 @@ Print: Hello from SpecScript!
 Run it:
 
 ```shell cli
-cli hello.spec.yaml
+spec hello.spec.yaml
 ```
 
 ```output
@@ -174,9 +174,9 @@ Hello from SpecScript!
 ### Explore Examples
 
 ```shell ignore
-cli samples              # Interactive selection
-cli samples/hello.spec.yaml    # Run specific example  
-cli samples/http-server  # API server example
+spec samples              # Interactive selection
+spec samples/hello.spec.yaml    # Run specific example  
+spec samples/http-server  # API server example
 ```
 
 ## Documentation

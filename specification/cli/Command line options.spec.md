@@ -5,17 +5,17 @@ in [specscript-command-line-options.yaml](specscript-command-line-options.yaml) 
 
 ## Global options
 
-When running `cli` or `cli --help`, the global options will be printed
+When running `spec` or `spec --help`, the global options will be printed
 
 ```shell cli
-cli
+spec
 ```
 
 ```output
 SpecScript -- Create instantly runnable specs using Yaml and Markdown!
 
 Usage:
-   cli [global options] file | directory [command options]
+   spec [global options] file | directory [command options]
 
 Global options:
   --help, -h          Print help on a script or directory and does not run anything
@@ -33,7 +33,7 @@ For this example we run from the **[samples](/samples)** directory. It contains 
 `--help` option to see what SpecScript commands it contains
 
 ```shell cli cd=samples
-cli --help basic
+spec --help basic
 ```
 
 ```output
@@ -51,7 +51,7 @@ Using `--help` on the **[greet](/samples/basic/greet.spec.yaml)** command will g
 command line options it supports
 
 ```shell cli cd=samples
-cli --help basic greet
+spec --help basic greet
 ```
 
 ```output
@@ -64,7 +64,7 @@ Options:
 With that information we can call it with a parameter that is specific to that command:
 
 ```shell cli cd=samples
-cli basic greet --name Alice
+spec basic greet --name Alice
 ```
 
 With the expected output:
@@ -87,7 +87,7 @@ another script.
 Running `create-greeting` like this will show nothing
 
 ```shell cli cd=samples
-cli basic create-greeting --name Bob
+spec basic create-greeting --name Bob
 ```
 
 Output:
@@ -98,7 +98,7 @@ Output:
 We will see the output when passing the `--output` parameter, or its shortcut `-o`:
 
 ```shell cli cd=samples
-cli -o basic create-greeting --name Bob
+spec -o basic create-greeting --name Bob
 ```
 
 ```output
@@ -110,7 +110,7 @@ Hello Bob!
 To show the output in the script in Json format, use `--output-json` or the shortcut  `-j`:
 
 ```shell cli cd=samples
-cli --output-json basic create-greeting --name Bob
+spec --output-json basic create-greeting --name Bob
 ```
 
 ```output
@@ -131,7 +131,7 @@ GET: http:\\localhost  # Malformed URL - not caught by SpecScript runtime
 Without debug mode you get the following error message
 
 ```shell cli
-cli script-with-error.spec.yaml
+spec script-with-error.spec.yaml
 ```
 
 ```output
@@ -148,7 +148,7 @@ With the `--debug` option you will see more of the internals. For example, the K
 debugging the implementation.
 
 ```shell cli
-cli --debug script-with-error.spec.yaml
+spec --debug script-with-error.spec.yaml
 ```
 
 May print something like

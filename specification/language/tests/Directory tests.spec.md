@@ -15,7 +15,7 @@ Script info: This is an example directory
 There are no scripts in the `empty` directory.
 
 ```shell cli
-cli --help empty
+spec --help empty
 ```
 
 Will say:
@@ -53,7 +53,7 @@ imports:
 Then the `helper` script will be available in the main directory, but will not show up when printing the contents
 
 ```shell cli
-cli --help main
+spec --help main
 ```
 
 ```output

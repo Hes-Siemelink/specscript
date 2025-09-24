@@ -7,14 +7,14 @@ You run an SpecScript file with the `cli` command.
 When running `cli` or `cli --help`, the global options will be printed
 
 ```shell cli
-cli
+spec
 ```
 
 ```output
 SpecScript -- Create instantly runnable specs using Yaml and Markdown!
 
 Usage:
-   cli [global options] file | directory [command options]
+   spec [global options] file | directory [command options]
 
 Global options:
   --help, -h          Print help on a script or directory and does not run anything
@@ -39,7 +39,7 @@ Print: Hello from SpecScript!
 After [installing SpecScript](/README.md#build--run), run it with the following command
 
 ```shell cli cd=samples
-cli hello.spec.yaml
+spec hello.spec.yaml
 ```
 
 And you will see this output:
@@ -51,7 +51,7 @@ Hello from SpecScript!
 You can omit the `.spec.yaml` extension to make it look more like a "cli command":
 
 ```shell cli cd=samples
-cli hello
+spec hello
 ```
 
 ```output
@@ -65,7 +65,7 @@ In the samples directory, there is a subdirectory **[basic](/samples/basic)** wi
 Running SpecScript on a directory show the commands that are available in that directory.
 
 ```shell ignore
-cli basic
+spec basic
 ```
 
 ```
@@ -83,7 +83,7 @@ Once you know which script you want to execute, simply chain them as commands on
 execute the `greet.spec.yaml` script in the `basic` directory, do:
 
 ```shell cli cd=samples
-cli basic greet
+spec basic greet
 ```
 
 This will give the expected output:
@@ -100,7 +100,7 @@ Some scripts take input. Use the [--help](Command%20line%20options.spec.md#--hel
 parameters
 
 ```shell cli cd=samples
-cli --help basic greet
+spec --help basic greet
 ```
 
 ```output
@@ -113,7 +113,7 @@ Options:
 With that information we can give the script some custom input:
 
 ```shell cli cd=samples
-cli basic greet --name Alice
+spec basic greet --name Alice
 ```
 
 This will print:
@@ -135,7 +135,7 @@ another script.
 Running `create-greeting` like this will show nothing:
 
 ```shell cli cd=samples
-cli basic create-greeting --name Bob
+spec basic create-greeting --name Bob
 ```
 
 The output is empty:
@@ -146,7 +146,7 @@ The output is empty:
 We will only see the output when passing the `--output` parameter, or its shortcut `-o`:
 
 ```shell cli cd=samples
-cli -o basic create-greeting --name Bob
+spec -o basic create-greeting --name Bob
 ```
 
 ```output

@@ -16,7 +16,7 @@ commands start with a capital letter.
 If we store it in a file `hello-world.spec.yaml`, we can run it with the following command:
 
 ```shell cli
-cli hello-world.spec.yaml
+spec hello-world.spec.yaml
 ```
 
 And get the expected output:
@@ -41,7 +41,8 @@ structure (and pitfalls) already, and you get editor support out-of-the-box. It'
 to parse it than a custom format.
 
 > **⚠️ YAML Pitfall**: Since SpecScript uses YAML, you cannot repeat command names because they are dictionary keys. Use
-> list syntax or `---` separators for multiple commands. See [Multiple commands and `---`](#multiple-commands-and---) for
+> list syntax or `---` separators for multiple commands. See [Multiple commands and `---`](#multiple-commands-and---)
+> for
 > details.
 
 SpecScript files have `.spec.yaml` file extension. Within SpecScript, the convention is that `.yaml` files are for
@@ -71,7 +72,7 @@ What is your name?: Hes
 -->
 
 ```shell cli
-cli prompt.spec.yaml
+spec prompt.spec.yaml
 ```
 
 you would get the following:
@@ -142,7 +143,7 @@ Print: Hi there!
 When running it with the `--help` flag, the description is printed:
 
 ```shell cli
-cli --help simple-greeting.spec.yaml
+spec --help simple-greeting.spec.yaml
 ```
 
 ```output
@@ -165,7 +166,7 @@ Print: Hello ${name}!
 It has input parameter `name`:
 
 ```shell cli
-cli --help greeting.spec.yaml
+spec --help greeting.spec.yaml
 ```
 
 ```output
@@ -178,7 +179,7 @@ Options:
 And you can invoke it as follows.
 
 ```shell cli
-cli greeting.spec.yaml --name Bob
+spec greeting.spec.yaml --name Bob
 ```
 
 ```output
@@ -204,7 +205,7 @@ The output is stored in the `${output}` variable. When invoking SpecScript with 
 **[--output](../cli/Command%20line%20options.spec.md#--output)** option, it will be printed:
 
 ```shell cli
-cli --output hello.spec.yaml
+spec --output hello.spec.yaml
 ```
 
 ```output

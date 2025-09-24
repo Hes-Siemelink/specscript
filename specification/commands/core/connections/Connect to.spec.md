@@ -58,7 +58,7 @@ Http request defaults:
 Now we can run it
 
 ```shell cli
-cli -o get-items
+spec -o get-items
 ```
 
 and it will output:

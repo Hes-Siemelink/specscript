@@ -19,7 +19,7 @@ We can now run `basic` as a cli command with subcommands for each of the files. 
 see some more descriptions
 
 ```shell cli cd=samples
-cli --help basic
+spec --help basic
 ```
 
 ```output
@@ -36,7 +36,7 @@ Available commands:
 We can now invoke the **greet** command like this:
 
 ```shell cli cd=samples
-cli basic greet
+spec basic greet
 ```
 
 With the expected output:
@@ -48,15 +48,15 @@ Hello, World!
 Note that it's optional to specify the `.spec.yaml` extension. The following three commands are equivalent:
 
 ```shell cli cd=samples
-cli basic greet
+spec basic greet
 ```
 
 ```shell cli cd=samples
-cli basic greet.spec.yaml
+spec basic greet.spec.yaml
 ```
 
 ```shell cli cd=samples
-cli basic/greet.spec.yaml
+spec basic/greet.spec.yaml
 ```
 
 ### Interactive command chooser
@@ -67,7 +67,7 @@ prompt. This is a great way to explore the commands and subcommands!
 <!-- Insert gif here -->
 
 ```shell ignore
-cli basic       
+spec basic       
 ```
 
 ```
@@ -146,7 +146,7 @@ Script info: This is an example directory
 The information is printed when displaying help for the directory:
 
 ```shell cli
-cli --help .
+spec --help .
 ```
 
 ```output
@@ -220,7 +220,7 @@ Expected output: Something funny
 Run it
 
 ```shell cli
-cli -o call-helper
+spec -o call-helper
 ```
 
 And it will output:

@@ -68,7 +68,7 @@ Output: Something useful
 It is not included in the directory listing:
 
 ```shell cli
-cli --help .
+spec --help .
 ```
 
 ```output

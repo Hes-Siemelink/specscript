@@ -11,8 +11,7 @@ As-code, but without the complexity of actual code.
 Get a flavor of SpecScript with this example file `greetings.spec.yaml`:
 
 ```yaml file=greetings.spec.yaml
-Script info:
-  description: Multi-language greeting
+Script info: Multi-language greeting
 
 Input parameters:
   name: Your name
@@ -40,7 +39,7 @@ Select a language: English
 -->
 
 ```shell cli
-cli greetings.spec.yaml --name Hes --language English
+spec greetings.spec.yaml --name Hes --language English
 ```
 
 When running it, we get prompted for input before a POST request is made to the server. The greeting that we get back is
@@ -53,7 +52,7 @@ Hi Hes!
 You can specify the parameters as arguments. Find out what to pass with the `--help` option:
 
 ```shell cli
-cli --help greetings.spec.yaml
+spec --help greetings.spec.yaml
 ```
 
 Will print:
@@ -69,7 +68,7 @@ Options:
 We can call the example again with the parameters filled in:
 
 ```shell cli
-cli greetings.spec.yaml --name Hes --language Spanish
+spec greetings.spec.yaml --name Hes --language Spanish
 ```
 
 And we get the result in Spanish:
@@ -96,7 +95,7 @@ The SpecScript implementation is in Kotlin.
 
 ```shell ignore
 ./gradlew build fatJar
-alias cli="java -jar `pwd`/build/libs/specscript-*-full.jar"
+alias spec="java -jar `pwd`/build/libs/specscript-*-full.jar"
 ```
 
 ## Run it
@@ -104,7 +103,7 @@ alias cli="java -jar `pwd`/build/libs/specscript-*-full.jar"
 Run the "Hello world" example:
 
 ```shell ignore
-cli samples/hello.spec.yaml
+spec samples/hello.spec.yaml
 ```
 
 See [Running SpecScript files](specification/cli/Running%20SpecScript%20files.spec.md) for more information on the `cli`
@@ -117,13 +116,13 @@ There are more examples in the **[samples](samples)** directory - check them out
 Explore them all with the command:
 
 ```shell ignore
-cli samples
+spec samples
 ```
 
 The following example will provide an interactive experience and connect to the Spotify API:
 
 ```shell ignore
-cli samples/spotify
+spec samples/spotify
 ```
 
 When connecting to Spotify for the first time, the script will ask you for your login credentials: App Client ID and
@@ -147,7 +146,7 @@ Print: Hello from SpecScript!
 Invoke it with
 
 ```shell cli
-cli hello.spec.yaml
+spec hello.spec.yaml
 ```
 
 And it will print the expected message:
@@ -193,7 +192,7 @@ Input parameters:
 This will automatically generate a command description and command line options:
 
 ```shell cli
-cli --help simple-options.spec.yaml
+spec --help simple-options.spec.yaml
 ```
 
 ```output
@@ -225,7 +224,7 @@ Input parameters:
 ```
 
 ```shell cli
-cli --help input-options.spec.yaml
+spec --help input-options.spec.yaml
 ```
 
 ```output
@@ -243,7 +242,7 @@ Easily provide subcommand support by organizing your cli files in directories.
 For example, to run the greeting example from the **[samples](samples)** directory, you can write
 
 ```shell cli cd=.
-cli samples basic greet
+spec samples basic greet
 ```
 
 with output:
@@ -255,7 +254,7 @@ Hello, World!
 You can interactively select which command to run.
 
 ```shell ignore
-cli samples
+spec samples
 ```
 
 Use the cursor to select a command
@@ -275,7 +274,7 @@ samples has several subcommands.
 Use the `-q` option for non-interacivte mode
 
 ```shell cli cd=.
-cli -q samples
+spec -q samples
 ```
 
 will just print the info message:
@@ -314,7 +313,7 @@ Print:
 You will be presented with an interactive selector when running it:
 
 ```shell cli
-cli prompt.spec.yaml
+spec prompt.spec.yaml
 ```
 
 <!-- answers

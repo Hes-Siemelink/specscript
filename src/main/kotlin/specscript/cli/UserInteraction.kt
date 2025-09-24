@@ -83,7 +83,7 @@ object StandardOutput : ConsoleOutput {
     override fun printUsage(globalOptions: CommandLineParameters) {
         println("SpecScript -- Create instantly runnable specs using Yaml and Markdown!")
         println()
-        println("Usage:\n   cli [global options] file | directory [command options]")
+        println("Usage:\n   spec [global options] file | directory [command options]")
         println("\nGlobal options:")
         println(globalOptions.toDisplayString())
     }
