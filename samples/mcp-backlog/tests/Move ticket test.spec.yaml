@@ -12,7 +12,7 @@ Create ticket:
     description: Another one
   - db: test.db
     title: Ticket 3
-    description: Its The final ticket
+    description: It's the final ticket
 
 
 ---

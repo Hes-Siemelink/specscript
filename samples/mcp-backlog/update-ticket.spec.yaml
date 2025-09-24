@@ -19,6 +19,13 @@ Input parameters:
 
 Connect to: Ticket DB
 
+# Sanitize input by escaping single quotes
+Replace:
+  text: "'"
+  in: ${input}
+  with: "''"
+As: ${input}
+
 SQLite:
   update:
     - |

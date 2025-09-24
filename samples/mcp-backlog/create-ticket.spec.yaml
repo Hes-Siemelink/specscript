@@ -14,12 +14,9 @@ Connect to: Ticket DB
 # Sanitize input by escaping single quotes
 Replace:
   text: "'"
-  in:
-    title: ${input.title}
-    description: ${input.description}
-    assignee: ${input.assignee}
+  in: ${input}
   with: "''"
-As: ${escaped}
+As: ${input}
 
 SQLite:
   update:
@@ -34,11 +31,11 @@ SQLite:
       )
       SELECT
         'TICKET-' || printf('%03d', n) AS id,
-        '${escaped.title}' AS title,
-        '${escaped.description}' AS description,
+        '${input.title}' AS title,
+        '${input.description}' AS description,
         'todo' AS state,
         COALESCE(NULLIF('${input.priority}',''), 'medium') AS priority,
-        NULLIF('${escaped.assignee}','') AS assignee,
+        NULLIF('${input.assignee}','') AS assignee,
         strftime('%Y-%m-%dT%H:%M:%fZ','now') AS created_at,
         strftime('%Y-%m-%dT%H:%M:%fZ','now') AS updated_at,
         (SELECT COALESCE(MAX(backlog_order),0)+1 FROM ticket) AS backlog_order
