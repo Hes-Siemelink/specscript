@@ -4,23 +4,12 @@ Input parameters:
 
 Connect to: Ticket DB
 
-SQLite:
-  query: |
-    -- Retrieve a single ticket by id, returning a status message and all fields if found.
-    WITH input(id) AS (VALUES('${input.id}')),
-    row AS (
-      SELECT * FROM ticket t WHERE t.id = (SELECT id FROM input)
-    )
-    SELECT
-      (SELECT id FROM input) AS id,
-      CASE WHEN EXISTS (SELECT 1 FROM row) THEN 1 ELSE 0 END AS found,
-      CASE WHEN EXISTS (SELECT 1 FROM row) THEN 'Ticket retrieved' ELSE 'Ticket not found' END AS message,
-      (SELECT title FROM row) AS title,
-      (SELECT description FROM row) AS description,
-      (SELECT state FROM row) AS state,
-      (SELECT priority FROM row) AS priority,
-      (SELECT assignee FROM row) AS assignee,
-      (SELECT created_at FROM row) AS created_at,
-      (SELECT updated_at FROM row) AS updated_at,
-      (SELECT backlog_order FROM row) AS "order";
+Print: Getting ticket ${id}
 
+SQLite:
+  file: db/tickets.db
+  query: |
+    SELECT
+      *
+    FROM ticket
+    WHERE id = '${id}'  

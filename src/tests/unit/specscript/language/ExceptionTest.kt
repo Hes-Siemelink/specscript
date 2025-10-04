@@ -12,7 +12,7 @@ class ExceptionTest {
 
         // Given - Use direct file path instead of directory navigation
         val session = SpecScriptCli(
-            "-q", "exceptions/command-format-exception.spec.yaml",
+            "exceptions/command-format-exception.spec.yaml",
             workingDir = TestPaths.RESOURCES
         )
 

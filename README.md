@@ -94,7 +94,7 @@ The SpecScript implementation is in Kotlin.
 * Install a current JDK
 
 ```shell ignore
-./gradlew build fatJar
+./gradlew build
 alias spec="java -jar `pwd`/build/libs/specscript-*-full.jar"
 ```
 

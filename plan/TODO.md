@@ -1,8 +1,9 @@
 # On my mind
 
-* Reintroduce 'interactive mode' to SpecScript CLI
-
-* Merge tests into CLI so you can run cli --test <comething>
+* Interactive and test mode
+    * Reintroduce 'interactive mode' to SpecScript CLI
+    * Merge tests into CLI so you can run cli --test <comething>
+* Rewrite README
 
 ## MCP
 
