@@ -15,7 +15,7 @@ in [.SpecScript/wrapper.conf](.SpecScript/wrapper.conf) and run it.
 
 You can use the wrapper script in your SpecScript project by copying the following files:
 
-    .SpecScript/wrapper.conf
+    .specscript/wrapper.conf
     cli
 
 ## SpecScript versions

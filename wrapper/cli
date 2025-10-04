@@ -27,10 +27,10 @@ if [ ! -d "${SPECSCRIPT_HOME}" ] ; then
 fi
 
 # Download SpecScript jar if it does not exist
-SPECSCRIPT_JAR="${SPECSCRIPT_HOME}/specscript-${SPECSCRIPT_VERSION}.jar"
+SPECSCRIPT_JAR="${SPECSCRIPT_HOME}/specscript-${SPECSCRIPT_VERSION}-full.jar"
 if [ ! -f "${SPECSCRIPT_JAR}" ] ; then
   echo "Downloading specscript to ${SPECSCRIPT_JAR}"
-  DOWNLOAD_URL="${SPECSCRIPT_BASE_URL}/${SPECSCRIPT_VERSION}/specscript-${SPECSCRIPT_VERSION}.jar"
+  DOWNLOAD_URL="${SPECSCRIPT_BASE_URL}/${SPECSCRIPT_VERSION}/specscript-${SPECSCRIPT_VERSION}-full.jar"
   curl -fLsSo "${SPECSCRIPT_JAR}.$$" "${DOWNLOAD_URL}" || die "Could not download SpecScript jar from: $DOWNLOAD_URL"
   mv "${SPECSCRIPT_JAR}.$$" "${SPECSCRIPT_JAR}" || die "Could not move SpecScript jar to home folder"
 fi
