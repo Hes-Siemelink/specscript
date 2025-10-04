@@ -133,7 +133,7 @@ tasks.named("build") {
 //
 
 githubRelease {
-    token(System.getenv("GITHUB_TOKEN") ?: throw IllegalStateException("GITHUB_TOKEN is not set"))
+    token(System.getenv("GITHUB_TOKEN"))
     repo = "specscript"
     owner = "Hes-Siemelink"
     tagName = "${project.version}"

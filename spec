@@ -2,7 +2,7 @@
 
 ##############################################################################
 ##
-##  specscript wrapper script for Linux/Darwin
+##  SpecScript CLI wrapper script for Linux and Macos
 ##
 ##############################################################################
 
@@ -18,12 +18,12 @@ command -v java &> /dev/null || die "Please install Java"
 PROG_DIR="$(cd "$(dirname "${0:-$PWD}")" 2>/dev/null 1>&2 && pwd)"
 
 # Get version and download URL
-source "${PROG_DIR}/.specscript/wrapper.conf" || die "Could not read .specscript/wrapper.conf"
+source "${PROG_DIR}/specscript.conf" || die "Could not read specscript.conf"
 
 # Find target location
 SPECSCRIPT_HOME="${HOME}/.specscript/lib"
 if [ ! -d "${SPECSCRIPT_HOME}" ] ; then
-  mkdir -p "${SPECSCRIPT_HOME}" || die "Could not create wrapper home at: $SPECSCRIPT_HOME"
+  mkdir -p "${SPECSCRIPT_HOME}" || die "Could not create SpecScript configuration directory at: $SPECSCRIPT_HOME"
 fi
 
 # Download SpecScript jar if it does not exist

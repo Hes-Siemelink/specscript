@@ -39,7 +39,7 @@ Select a language: English
 -->
 
 ```shell cli
-spec greetings.spec.yaml --name Hes --language English
+./spec greetings.spec.yaml --name Hes --language English
 ```
 
 When running it, we get prompted for input before a POST request is made to the server. The greeting that we get back is
@@ -52,7 +52,7 @@ Hi Hes!
 You can specify the parameters as arguments. Find out what to pass with the `--help` option:
 
 ```shell cli
-spec --help greetings.spec.yaml
+./spec --help greetings.spec.yaml
 ```
 
 Will print:
@@ -68,7 +68,7 @@ Options:
 We can call the example again with the parameters filled in:
 
 ```shell cli
-spec greetings.spec.yaml --name Hes --language Spanish
+./spec greetings.spec.yaml --name Hes --language Spanish
 ```
 
 And we get the result in Spanish:
@@ -85,22 +85,36 @@ All of SpecScript is defined in the **[specification](specification)** directory
 * [Language](specification/language/README.md) defines the structure of the SpecScript scripting language
 * [Command reference](specification/commands/README.md) defines all commands with descriptions, code examples and tests.
 
-# Build & Run
+## SpecScript versions
+
+For the latest versions, check the [SpecScript Releases](https://github.com/Hes-Siemelink/specscript/releases) page on
+GitHub.
+
+## Running SpecScript
+
+Run SpecScript by invoking the wrapper script:
+
+    ./spec
+
+This will download the version of SpecScript specified in [specscript.conf](specscript.conf) and run it.
+
+You can use the `spec` wrapper script in your project by copying the following files:
+
+    spec
+    specscriptr.conf
+
+# Build form source
 
 The SpecScript implementation is in Kotlin.
 
-## Build it
-
-* Install a current JDK
+Install a current JDK, and build with Gradle:
 
 ```shell ignore
 ./gradlew build
 alias spec="java -jar `pwd`/build/libs/specscript-*-full.jar"
 ```
 
-## Run it
-
-Run the "Hello world" example:
+This will run the "Hello world" example:
 
 ```shell ignore
 spec samples/hello.spec.yaml
@@ -116,13 +130,13 @@ There are more examples in the **[samples](samples)** directory - check them out
 Explore them all with the command:
 
 ```shell ignore
-spec samples
+./spec samples
 ```
 
 The following example will provide an interactive experience and connect to the Spotify API:
 
 ```shell ignore
-spec samples/spotify
+./spec samples/spotify
 ```
 
 When connecting to Spotify for the first time, the script will ask you for your login credentials: App Client ID and
@@ -146,7 +160,7 @@ Print: Hello from SpecScript!
 Invoke it with
 
 ```shell cli
-spec hello.spec.yaml
+./spec hello.spec.yaml
 ```
 
 And it will print the expected message:
@@ -192,7 +206,7 @@ Input parameters:
 This will automatically generate a command description and command line options:
 
 ```shell cli
-spec --help simple-options.spec.yaml
+./spec --help simple-options.spec.yaml
 ```
 
 ```output
@@ -224,7 +238,7 @@ Input parameters:
 ```
 
 ```shell cli
-spec --help input-options.spec.yaml
+./spec --help input-options.spec.yaml
 ```
 
 ```output
@@ -242,7 +256,7 @@ Easily provide subcommand support by organizing your cli files in directories.
 For example, to run the greeting example from the **[samples](samples)** directory, you can write
 
 ```shell cli cd=.
-spec samples basic greet
+./spec samples basic greet
 ```
 
 with output:
@@ -256,7 +270,7 @@ SpecScript will show the commands if you pass a directory.
 For example:
 
 ```shell cli cd=.
-spec samples
+./spec samples
 ```
 
 will print the info message:
@@ -295,7 +309,7 @@ Print:
 You will be presented with an interactive selector when running it:
 
 ```shell cli
-spec prompt.spec.yaml
+./spec prompt.spec.yaml
 ```
 
 <!-- answers
