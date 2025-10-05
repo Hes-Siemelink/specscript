@@ -27,12 +27,12 @@ dependencies {
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.17.+")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.+")
     implementation("com.networknt:json-schema-validator:1.4.0")
-    implementation("io.ktor:ktor-client-core:3.0.+")
-    implementation("io.ktor:ktor-client-java:3.0+")
-    implementation("io.ktor:ktor-client-auth:3.0+")
-    implementation("io.ktor:ktor-server-core:3.0.+")
-    implementation("io.ktor:ktor-server-netty:3.0.+")
-    implementation("io.ktor:ktor-server-sse:3.0.+")
+    implementation("io.ktor:ktor-client-core:3.3.+")
+    implementation("io.ktor:ktor-client-java:3.3+")
+    implementation("io.ktor:ktor-client-auth:3.3+")
+    implementation("io.ktor:ktor-server-core:3.3.+")
+    implementation("io.ktor:ktor-server-netty:3.3.+")
+    implementation("io.ktor:ktor-server-sse:3.3.+")
     implementation("org.slf4j:slf4j-simple:2.0.+")
     implementation("com.github.kotlin-inquirer:kotlin-inquirer:0.1.0")
     implementation("org.jline:jline:3.27.+")
@@ -41,7 +41,7 @@ dependencies {
     implementation("org.xerial:sqlite-jdbc:3.47.0.0")
 
     // Model Context Protocol dependencies
-    implementation("io.modelcontextprotocol:kotlin-sdk:0.7.0")
+    implementation("io.modelcontextprotocol:kotlin-sdk:0.7.2")
     implementation("io.github.oshai:kotlin-logging:5.0.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
