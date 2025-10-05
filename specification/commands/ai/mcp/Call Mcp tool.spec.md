@@ -127,9 +127,9 @@ HTTP transport enables connection to MCP servers over HTTP. Supports authenticat
 headers.
 
 ```yaml
-# Example of HTTP transport usage (requires running HTTP MCP server)
+Code example: HTTP transport
+
 Call Mcp tool:
-  server: http-server
   transport:
     type: http
     url: "https://api.example.com/mcp"

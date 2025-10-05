@@ -16,6 +16,15 @@ properties:
           command:
             type: string
             description: Command and arguments to spawn MCP server process
+          url:
+            type: string
+            description: Http address of the MCP server
+          headers:
+            type: object
+            description: Additional HTTP headers to include in requests
+          auth_token:
+            type: string
+            description: Authentication token for the MCP server
           args:
             type: array
             items:

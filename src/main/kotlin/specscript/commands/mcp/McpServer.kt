@@ -190,21 +190,27 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
             // Set up context for the tool execution
             localContext.variables[INPUT_VARIABLE] = request.arguments.toJackson()
 
-            // Run script
-            val result: JsonNode? = if (tool.script is TextNode) {
-                // Local script file
-                val file = localContext.scriptDir.resolve(tool.script.textValue())
-                SpecScriptFile(file).run(localContext)
-            } else {
-                // Inline script
-                tool.script.run(localContext)
-            }
 
-            // Process result
             // TODO handle lists
-            // TODO handle errors
-            val output = result.toDisplayYaml()
-            CallToolResult(content = listOf(TextContent(output)))
+            try {
+                // Run script
+                val result: JsonNode? = if (tool.script is TextNode) {
+                    // Local script file
+                    val file = localContext.scriptDir.resolve(tool.script.textValue())
+                    SpecScriptFile(file).run(localContext)
+                } else {
+                    // Inline script
+                    tool.script.run(localContext)
+                }
+
+                // Process result
+                val output = result.toDisplayYaml()
+                CallToolResult(content = listOf(TextContent(output)))
+            } catch (e: SpecScriptException) {
+                System.err.println("Tool '$toolName' execution error: ${e.message}")
+                e.printStackTrace()
+                CallToolResult(content = listOf(TextContent(e.toString())), isError = true)
+            }
         }
     }
 

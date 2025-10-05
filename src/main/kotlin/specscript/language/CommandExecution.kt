@@ -104,7 +104,7 @@ fun handleCommand(handler: CommandHandler, data: JsonNode, context: ScriptContex
         e.data = asCommand(handler, data)
         throw e
     } catch (e: Exception) {
-        throw SpecScriptImplementationException("", asCommand(handler, data), e)
+        throw SpecScriptImplementationException(e.message ?: e.toString(), asCommand(handler, data), e)
     }
 }
 

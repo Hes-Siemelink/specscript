@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.node.TextNode
 import io.modelcontextprotocol.kotlin.sdk.CallToolRequest
 import io.modelcontextprotocol.kotlin.sdk.CallToolResult
 import io.modelcontextprotocol.kotlin.sdk.TextContent
-
 import kotlinx.coroutines.runBlocking
 import specscript.commands.mcp.transport.TransportConfig
 import specscript.commands.mcp.transport.TransportFactory
@@ -29,7 +28,6 @@ object CallMcpTool : CommandHandler("Call Mcp tool", "ai/mcp"), ObjectHandler, D
     ): JsonNode? {
         val transportConfig = TransportConfig.fromJson(info.transport, info.server)
         val transport = TransportFactory.createTransport(transportConfig)
-
         return try {
             if (!transport.connect()) {
                 throw SpecScriptCommandError("Failed to connect to MCP server '${info.server}'")
@@ -41,7 +39,12 @@ object CallMcpTool : CommandHandler("Call Mcp tool", "ai/mcp"), ObjectHandler, D
             )
 
             val result = transport.callTool(request)
-            result.firstTextAsJson()
+            val firstMessage: JsonNode = result.firstTextAsJson()
+            if (result.isError!!) {
+                throw SpecScriptCommandError("MCP Server error", "Tool '${info.tool}' call failed", data = firstMessage)
+            }
+
+            firstMessage
 
         } catch (e: SpecScriptCommandError) {
             throw e
