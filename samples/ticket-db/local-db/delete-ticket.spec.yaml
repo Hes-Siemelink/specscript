@@ -1,0 +1,20 @@
+Input parameters:
+  id:
+    description: Full ticket identifier (e.g. TICKET-007)
+
+SQLite:
+  file: /Users/hes/Code/specscript/samples/ticket-db/tickets.db
+  update:
+    - |
+      -- Delete the ticket matching the provided full id
+      DELETE FROM ticket
+      WHERE id = '${input.id}';
+  query: |
+    SELECT
+      '${input.id}' AS id,
+      changes() AS rows_affected,
+      CASE
+        WHEN '${input.id}' IS NULL OR '${input.id}' = '' THEN 'Invalid ticket id'
+        WHEN changes() > 0 THEN 'Ticket deleted successfully'
+        ELSE 'Ticket not found'
+      END AS message;

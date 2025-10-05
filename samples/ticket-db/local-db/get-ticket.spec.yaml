@@ -1,0 +1,13 @@
+Input parameters:
+  id:
+    description: Full ticket identifier (e.g. TICKET-007)
+
+Print: Getting ticket ${id}
+
+SQLite:
+  file: /Users/hes/Code/specscript/samples/ticket-db/tickets.db
+  query: |
+    SELECT
+      *
+    FROM ticket
+    WHERE id = '${id}'  

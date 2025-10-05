@@ -1,0 +1,14 @@
+Call Mcp tool:
+  transport:
+    type: http
+    url: http://localhost:8080
+  tool: list_tickets
+
+---
+Call Mcp tool:
+  transport:
+    type: http
+    url: http://localhost:8080
+  tool: list_tickets
+  arguments:
+    id: TICKET-001

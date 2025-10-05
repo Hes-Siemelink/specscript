@@ -1,0 +1,28 @@
+Input parameters:
+  state:
+    description: Optional state filter (todo, doing, done, or 'all' for no filtering)
+    default: all
+  assignee:
+    description: Optional assignee filter ('all' for no filtering)
+    default: all
+
+Connect to: Ticket DB
+
+SQLite:
+  query: |
+    -- List tickets with optional filtering by state and assignee.
+    -- 'all' (default) or empty/null means no filtering for that field.
+    SELECT
+      id,
+      title,
+      description,
+      state,
+      priority,
+      assignee,
+      created_at,
+      updated_at,
+      backlog_order AS "order"
+    FROM ticket
+    WHERE ( ('${input.state}' IS NULL) OR ('${input.state}' IN ('', 'all')) OR state = '${input.state}' )
+      AND ( ('${input.assignee}' IS NULL) OR ('${input.assignee}' IN ('', 'all')) OR assignee = '${input.assignee}' )
+    ORDER BY backlog_order ASC;
