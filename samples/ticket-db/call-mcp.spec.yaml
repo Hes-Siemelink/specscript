@@ -1,7 +1,7 @@
 ---
 Call Mcp tool:
   transport:
-    type: http
+    type: sse
     url: http://localhost:8080
   tool: get_ticket
   arguments:
@@ -13,7 +13,7 @@ Print:
 ---
 Call Mcp tool:
   transport:
-    type: http
+    type: sse
     url: http://localhost:8080
   tool: list_tickets
 

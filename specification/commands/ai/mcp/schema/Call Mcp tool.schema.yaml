@@ -8,7 +8,7 @@ properties:
         properties:
           type:
             type: string
-            enum: [ internal, stdio, http ]
+            enum: [ internal, stdio, http, sse ]
             description: Transport type
           server:
             type: string

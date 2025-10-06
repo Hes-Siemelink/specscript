@@ -11,6 +11,7 @@ import io.modelcontextprotocol.kotlin.sdk.Implementation
 import io.modelcontextprotocol.kotlin.sdk.ListToolsResult
 import io.modelcontextprotocol.kotlin.sdk.client.Client
 import io.modelcontextprotocol.kotlin.sdk.client.SseClientTransport
+import io.modelcontextprotocol.kotlin.sdk.client.StreamableHttpClientTransport
 import kotlinx.coroutines.runBlocking
 import specscript.language.SpecScriptCommandError
 
@@ -20,10 +21,11 @@ import specscript.language.SpecScriptCommandError
  * This transport uses HTTP requests to communicate with MCP servers
  * that expose their functionality over HTTP endpoints.
  */
-class HttpTransport(
+class NetworkTransport(
     private val baseUrl: String,
     private val headers: Map<String, String> = emptyMap(),
-    private val authToken: String? = null
+    private val authToken: String? = null,
+    private val type: String = "http"
 ) : McpClientTransport {
 
     private val httpClient: HttpClient = HttpClient() {
@@ -40,33 +42,39 @@ class HttpTransport(
 
     override suspend fun connect(): Boolean {
         return try {
-            println("DEBUG: Connecting to HTTP MCP server at: $baseUrl")
+            println("DEBUG: Connecting to ${type.uppercase()} MCP server at: $baseUrl")
 
-            // Create MCP client with HTTP transport
-//            val transport = StreamableHttpClientTransport(
-//                client = httpClient,
-//                url = baseUrl,
-//                requestBuilder = {
-//                    // Add custom headers
-//                    this@HttpTransport.headers.forEach { (key, value) ->
-//                        headers {
-//                            append(key, value)
-//                        }
-//                    }
-//                }
-//            )
-            val transport = SseClientTransport(
-                client = httpClient,
-                urlString = baseUrl,
-                requestBuilder = {
-                    // Add custom headers
-                    this@HttpTransport.headers.forEach { (key, value) ->
-                        headers {
-                            append(key, value)
+            val transport = when (type.lowercase()) {
+                "sse" -> {
+                    SseClientTransport(
+                        client = httpClient,
+                        urlString = baseUrl,
+                        requestBuilder = {
+                            // Add custom headers
+                            this@NetworkTransport.headers.forEach { (key, value) ->
+                                headers {
+                                    append(key, value)
+                                }
+                            }
                         }
-                    }
+                    )
                 }
-            )
+
+                else -> {
+                    StreamableHttpClientTransport(
+                        client = httpClient,
+                        url = baseUrl,
+                        requestBuilder = {
+                            // Add custom headers
+                            this@NetworkTransport.headers.forEach { (key, value) ->
+                                headers {
+                                    append(key, value)
+                                }
+                            }
+                        })
+                }
+
+            }
 
             client.connect(transport)
             println("DEBUG: Successfully connected to HTTP MCP server")
