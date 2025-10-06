@@ -1,4 +1,0 @@
-connections:
-  Ticket DB:
-    SQLite defaults:
-      file: local-tickets.db

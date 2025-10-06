@@ -1,7 +1,0 @@
-Input parameters:
-  batch:
-    description: The list of tickets
-
-For each:
-  ${ticket} in: ${batch}
-  Create ticket: ${ticket}
