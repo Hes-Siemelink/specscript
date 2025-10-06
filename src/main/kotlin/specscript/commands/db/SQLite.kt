@@ -61,7 +61,7 @@ fun List<Map<String, Any>>.toNode(): JsonNode {
     this.forEach { row ->
         val rowNode = newObject()
         row.forEach { (key, value) ->
-            rowNode.set<JsonNode>(key, Yaml.parse(valueOf(value)))
+            rowNode.set<JsonNode>(key, Yaml.parseIfPossible(valueOf(value)))
         }
         node.add(rowNode)
     }

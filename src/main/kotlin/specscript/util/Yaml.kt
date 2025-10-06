@@ -3,6 +3,7 @@ package specscript.util
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.node.TextNode
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
@@ -46,6 +47,16 @@ object Yaml {
 
     fun parse(source: String): JsonNode {
         return mapper.readValue(source, JsonNode::class.java)
+    }
+
+    fun parseIfPossible(source: String?): JsonNode {
+        source ?: return TextNode("")
+
+        return try {
+            parse(source)
+        } catch (_: Exception) {
+            TextNode(source)
+        }
     }
 
     inline fun <reified T> parse(node: JsonNode): T {

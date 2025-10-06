@@ -91,3 +91,21 @@ Expected output:
         language: English
       - greeting: Hola
         language: Spanish
+
+---
+Test case: JSON / YAML conversion
+
+Shell: rm -f out/sample.db
+
+SQLite:
+  file: out/sample.db
+  update:
+    - create table data (id integer primary key, json text)
+    - "insert into data (json) values ('{\"hello\": \"world\"}')"
+    - "insert into data (json) values ('one: two: three')"
+  query: select json from data
+
+Expected output:
+  - json:
+      hello: world
+  - json: "one: two: three"

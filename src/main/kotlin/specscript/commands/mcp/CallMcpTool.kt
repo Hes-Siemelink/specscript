@@ -10,6 +10,7 @@ import kotlinx.coroutines.runBlocking
 import specscript.commands.mcp.transport.TransportConfig
 import specscript.commands.mcp.transport.TransportFactory
 import specscript.language.*
+import specscript.util.Yaml
 import specscript.util.toDomainObject
 import specscript.util.toKotlinx
 
@@ -66,7 +67,10 @@ fun CallToolResult.firstTextAsJson(): JsonNode {
     // TODO handle lists and other content types
     val first = content.first()
     return when (first) {
-        is TextContent -> TextNode(first.text)
+        is TextContent -> {
+            Yaml.parseIfPossible(first.text)
+        }
+
         else -> TextNode("Tool executed successfully with result of type ${first.type}")
     }
 }
