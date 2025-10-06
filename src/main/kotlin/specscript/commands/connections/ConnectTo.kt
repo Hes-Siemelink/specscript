@@ -9,8 +9,6 @@ import kotlin.io.path.name
 
 object ConnectTo : CommandHandler("Connect to", "core/connections"), ValueHandler {
 
-    val alreadyConnected: MutableMap<String, JsonNode?> = mutableMapOf()
-
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
 
         if (context !is FileContext) {
@@ -19,8 +17,8 @@ object ConnectTo : CommandHandler("Connect to", "core/connections"), ValueHandle
 
         // Already connected, return previous result from connection script
         val target = data.textValue()
-        if (alreadyConnected.contains(target)) {
-            return alreadyConnected[target]
+        if (context.getCache().contains(target)) {
+            return context.getCache()[target]
         }
 
         // Find script
@@ -30,9 +28,15 @@ object ConnectTo : CommandHandler("Connect to", "core/connections"), ValueHandle
         // Execute script
         val result = connect(connectScript, context)
 
-        alreadyConnected[target] = result
+        context.getCache()[target] = result
 
         return result
+    }
+
+
+    @Suppress("UNCHECKED_CAST")
+    private fun ScriptContext.getCache(): MutableMap<String, JsonNode?> {
+        return this.session.getOrPut("connect-to.cache") { mutableMapOf<String, JsonNode?>() } as MutableMap<String, JsonNode?>
     }
 }
 

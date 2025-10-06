@@ -1,8 +1,14 @@
+---
 Call Mcp tool:
   transport:
     type: http
     url: http://localhost:8080
-  tool: list_tickets
+  tool: get_ticket
+  arguments:
+    id: TICKET-001
+
+Print:
+  The ticket we asked for: ${output}
 
 ---
 Call Mcp tool:
@@ -10,5 +16,6 @@ Call Mcp tool:
     type: http
     url: http://localhost:8080
   tool: list_tickets
-  arguments:
-    id: TICKET-001
+
+Print:
+  All tickets: ${output}

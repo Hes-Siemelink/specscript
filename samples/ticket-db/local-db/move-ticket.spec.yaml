@@ -6,8 +6,9 @@ Input parameters:
     enum: [ up, down, top, bottom ]
     default: up
 
+Connect to: Ticket DB
+
 SQLite:
-  file: /Users/hes/Code/specscript/samples/ticket-db/tickets.db
   update:
     - |
       -- UP: swap with neighbor above (if any)

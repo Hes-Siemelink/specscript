@@ -1,5 +1,6 @@
+Connect to: Ticket DB
+
 SQLite:
-  file: /Users/hes/Code/specscript/samples/ticket-db/tickets.db
   update:
     - |
       CREATE TABLE ticket (

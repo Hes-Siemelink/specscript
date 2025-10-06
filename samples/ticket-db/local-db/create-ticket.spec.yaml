@@ -17,8 +17,9 @@ Replace:
   with: "''"
 As: ${input}
 
+Connect to: Ticket DB
+
 SQLite:
-  file: /Users/hes/Code/specscript/samples/ticket-db/tickets.db
   update:
     - |
       -- Insert a new ticket with sequential ID (TICKET-###) and next backlog_order

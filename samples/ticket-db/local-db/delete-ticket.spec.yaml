@@ -2,8 +2,9 @@ Input parameters:
   id:
     description: Full ticket identifier (e.g. TICKET-007)
 
+Connect to: Ticket DB
+
 SQLite:
-  file: /Users/hes/Code/specscript/samples/ticket-db/tickets.db
   update:
     - |
       -- Delete the ticket matching the provided full id

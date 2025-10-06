@@ -1,4 +1,4 @@
 connections:
   Ticket DB:
     SQLite defaults:
-      file: /Users/hes/Code/specscript/samples/ticket-db/tickets.db
+      file: tickets.db
