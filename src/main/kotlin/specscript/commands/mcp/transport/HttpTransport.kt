@@ -12,16 +12,14 @@ import io.modelcontextprotocol.kotlin.sdk.ListToolsResult
 import io.modelcontextprotocol.kotlin.sdk.client.Client
 import io.modelcontextprotocol.kotlin.sdk.client.SseClientTransport
 import io.modelcontextprotocol.kotlin.sdk.client.StreamableHttpClientTransport
+import io.modelcontextprotocol.kotlin.sdk.shared.AbstractTransport
 import kotlinx.coroutines.runBlocking
 import specscript.language.SpecScriptCommandError
 
 /**
- * HTTP transport for communication with HTTP-based MCP servers.
- *
- * This transport uses HTTP requests to communicate with MCP servers
- * that expose their functionality over HTTP endpoints.
+ * Transport for communication with HTTP or SSE based MCP servers.
  */
-class NetworkTransport(
+class HttpTransport(
     private val baseUrl: String,
     private val headers: Map<String, String> = emptyMap(),
     private val authToken: String? = null,
@@ -42,48 +40,47 @@ class NetworkTransport(
 
     override suspend fun connect(): Boolean {
         return try {
-            println("DEBUG: Connecting to ${type.uppercase()} MCP server at: $baseUrl")
+            println("Connecting to ${type.uppercase()} MCP server at: $baseUrl")
 
-            val transport = when (type.lowercase()) {
-                "sse" -> {
-                    SseClientTransport(
-                        client = httpClient,
-                        urlString = baseUrl,
-                        requestBuilder = {
-                            // Add custom headers
-                            this@NetworkTransport.headers.forEach { (key, value) ->
-                                headers {
-                                    append(key, value)
-                                }
-                            }
-                        }
-                    )
-                }
-
-                else -> {
-                    StreamableHttpClientTransport(
-                        client = httpClient,
-                        url = baseUrl,
-                        requestBuilder = {
-                            // Add custom headers
-                            this@NetworkTransport.headers.forEach { (key, value) ->
-                                headers {
-                                    append(key, value)
-                                }
-                            }
-                        })
-                }
-
-            }
+            val transport = createTransport()
 
             client.connect(transport)
-            println("DEBUG: Successfully connected to HTTP MCP server")
             true
         } catch (e: Exception) {
-            println("DEBUG: Failed to connect to HTTP MCP server: ${e.message}")
+            println("Failed to connect to MCP server: ${e.message}")
             e.printStackTrace()
             cleanup()
             false
+        }
+    }
+
+    private fun createTransport(): AbstractTransport = when (type.lowercase()) {
+        "sse" -> {
+            SseClientTransport(
+                client = httpClient,
+                urlString = baseUrl,
+                requestBuilder = {
+                    this@HttpTransport.headers.forEach { (key, value) ->
+                        headers {
+                            append(key, value)
+                        }
+                    }
+                }
+            )
+        }
+
+        else -> {
+            StreamableHttpClientTransport(
+                client = httpClient,
+                url = baseUrl,
+                requestBuilder = {
+                    this@HttpTransport.headers.forEach { (key, value) ->
+                        headers {
+                            append(key, value)
+                        }
+                    }
+                }
+            )
         }
     }
 
@@ -115,19 +112,18 @@ class NetworkTransport(
     }
 
     private fun cleanup() {
-        println("DEBUG: Cleaning up HTTP transport resources")
         try {
             runBlocking {
                 client.close()
             }
         } catch (e: Exception) {
-            println("DEBUG: Error closing MCP client: ${e.message}")
+            println("Error closing MCP client: $e")
         }
 
         try {
             httpClient.close()
         } catch (e: Exception) {
-            println("DEBUG: Error closing HTTP client: ${e.message}")
+            println("Error closing HTTP client: $e")
         }
     }
 }

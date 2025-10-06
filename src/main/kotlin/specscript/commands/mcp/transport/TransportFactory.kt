@@ -25,7 +25,7 @@ object TransportFactory {
             }
 
             is TransportConfig.Http -> {
-                NetworkTransport(config.url, config.headers, config.authToken, config.type)
+                HttpTransport(config.url, config.headers, config.authToken, config.type)
             }
         }
     }
