@@ -7,8 +7,10 @@ import io.modelcontextprotocol.kotlin.sdk.CallToolRequest
 import io.modelcontextprotocol.kotlin.sdk.CallToolResult
 import io.modelcontextprotocol.kotlin.sdk.TextContent
 import kotlinx.coroutines.runBlocking
-import specscript.commands.mcp.transport.TransportConfig
-import specscript.commands.mcp.transport.TransportFactory
+import specscript.commands.mcp.transport.HttpClient
+import specscript.commands.mcp.transport.McpClient
+import specscript.commands.mcp.transport.StdioClient
+import specscript.commands.mcp.transport.callTool
 import specscript.language.*
 import specscript.util.Yaml
 import specscript.util.toDomainObject
@@ -20,26 +22,24 @@ object CallMcpTool : CommandHandler("Call Mcp tool", "ai/mcp"), ObjectHandler, D
         val info = data.toDomainObject(CallMcpToolInfo::class)
 
         return runBlocking {
-            callToolWithTransport(info)
+            callTool(info)
         }
     }
 
-    private suspend fun callToolWithTransport(
+    private suspend fun callTool(
         info: CallMcpToolInfo,
     ): JsonNode? {
-        val transportConfig = TransportConfig.fromJson(info.transport, info.server)
-        val transport = TransportFactory.createTransport(transportConfig)
+        val mcpClient = createMcpClient(info.transport)
+
         return try {
-            if (!transport.connect()) {
-                throw SpecScriptCommandError("Failed to connect to MCP server '${info.server}'")
-            }
+            mcpClient.connect()
 
             val request = CallToolRequest(
                 name = info.tool,
                 arguments = info.arguments?.toKotlinx() ?: kotlinx.serialization.json.JsonObject(emptyMap())
             )
 
-            val result = transport.callTool(request)
+            val result = mcpClient.callTool(request)
             val firstMessage: JsonNode = result.firstTextAsJson()
             if (result.isError!!) {
                 throw SpecScriptCommandError("MCP Server error", "Tool '${info.tool}' call failed", data = firstMessage)
@@ -52,7 +52,7 @@ object CallMcpTool : CommandHandler("Call Mcp tool", "ai/mcp"), ObjectHandler, D
         } catch (e: Exception) {
             throw SpecScriptCommandError("Tool '${info.tool}' call failed: ${e.message}")
         } finally {
-            transport.close()
+            mcpClient.close()
         }
     }
 
@@ -75,10 +75,35 @@ fun CallToolResult.firstTextAsJson(): JsonNode {
     }
 }
 
+fun createMcpClient(
+    transport: TransportInfo,
+): McpClient {
+    return when (transport.type) {
+        "stdio" -> {
+            StdioClient(transport.command!!)
+        }
+
+        "http", "sse" -> {
+            HttpClient(transport.url!!, transport.headers, transport.auth_token!!, transport.type)
+        }
+
+        else -> throw SpecScriptCommandError("Unknown transport type: ${transport.type}")
+    }
+}
+
 
 data class CallMcpToolInfo(
-    val server: String?,
+    val server: String?,  // XXX Needed?
     val tool: String,
-    val transport: JsonNode,
-    val arguments: ObjectNode? = null
+    val transport: TransportInfo,
+    val arguments: ObjectNode? = null  // TODO: rename to 'input'
+)
+
+data class TransportInfo(
+    val type: String,
+    val server: String? = null,
+    val command: String? = null,
+    val url: String?,
+    val headers: Map<String, String> = emptyMap(),
+    val auth_token: String? = null,  // TODO: rename to token
 )
