@@ -1,6 +1,6 @@
-# Command: Call Mcp tool
+# Command: Mcp tool call
 
-`Call Mcp tool` executes a tool on an MCP server.
+`Mcp tool call` executes a tool on an MCP server.
 
 | Content type | Supported |
 |--------------|-----------|
@@ -12,7 +12,7 @@
 
 ## Basic usage
 
-Use **Call Mcp tool** to execute tools on MCP servers.
+Use **Mcp tool call** to execute tools on MCP servers.
 
 Suppose we have this simple MCP server that provides a welcome message through the  `hello` tool:
 
@@ -36,9 +36,9 @@ Then we can call the MCP `greet` tool like this:
 ```yaml specscript
 Code example: Basic Mcp tool call
 
-Call Mcp tool:
+Mcp tool call:
   tool: hello
-  transport:
+  server:
     type: sse
     url: "http://localhost:8091"
 
@@ -68,11 +68,11 @@ Mcp tool:
       Output: Hello ${input.name}!
 
 
-Call Mcp tool:
+Mcp tool call:
   tool: greet
-  arguments:
+  input:
     name: Alice
-  transport:
+  server:
     type: sse
     url: "http://localhost:8091"
 
@@ -80,39 +80,39 @@ Expected output: Hello Alice!
 
 ```
 
-## Transport types
+## Server types
 
-The `transport` property defines how to connect to the MCP server. There are three supported transport types:
+The `server` property defines how to connect to the MCP server. There are three supported transport types:
 `stdio`, `http` and `sse`.
 
-### Stdio transport
+### Stdio
 
-Stdio transport enables connection to external MCP-compliant servers over standard input/output streams. This is useful
-for connecting to MCP servers implemented in any programming language that can run on your local machine.
+Stdio enables connection to external MCP-compliant servers over standard input/output streams. This is useful for
+connecting to MCP servers implemented in any programming language that can run on your local machine.
 
 ```yaml FIXME specscript  ==> Example hangs after running HTTP client before it
 Code example: Stdio transport with external process
 
-Call Mcp tool:
+Mcp tool call:
   tool: any_tool
-  arguments:
+  input:
     data: sample input
-  transport:
+  server:
     type: stdio
     command: bash specification/commands/ai/mcp/mock-mcp-server.sh
 
 Expected output: Mock server response
 ```
 
-### HTTP transport
+### HTTP
 
-HTTP transport enables connection to MCP servers over HTTP. Supports authentication via Bearer tokens and custom
+HTTP server type enables connection to MCP servers over HTTP. Supports authentication via Bearer tokens and custom
 headers.
 
 ```yaml
 Code example: HTTP transport
 
-Call Mcp tool:
+Mcp tool call:
   transport:
     type: http
     url: "https://api.example.com/mcp"
@@ -124,47 +124,9 @@ Call Mcp tool:
     data: "sample input"
 ```
 
-## Error handling
-
-Tool execution errors are properly reported:
-
-```yaml specscript
-Code example: Tool error handling
-
-Mcp server:
-  name: error-server
-  version: "1.0.0"
-  tools:
-    failing_tool:
-      description: A tool that always fails
-      inputSchema:
-        type: object
-        properties:
-          input:
-            type: string
-        required: [ input ]
-      script:
-        Error: This tool intentionally fails
-
-Call Mcp tool:
-  tool: failing_tool
-  arguments:
-    input: "test"
-  transport:
-    type: internal
-    server: error-server
-
-Expected error: This tool intentionally fails
-```
-
 <!-- yaml specscript
 Mcp server:
   name: demo-server
-  version: "1.0.0"
-  stop: true
-
-Mcp server:
-  name: error-server
   version: "1.0.0"
   stop: true
 -->

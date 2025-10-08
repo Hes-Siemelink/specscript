@@ -113,7 +113,7 @@ Overview of standard commands in SpecScript.
 
 ### Model Context Protocol (MCP)
 
-* [Call Mcp tool](ai/mcp/Call%20Mcp%20tool.spec.md) - Executes tools on MCP servers via various transports
+* [Mcp tool call](ai/mcp/Mcp%20tool%20call.spec.md) - Executes tools on MCP servers via various transports
 * [Mcp server](ai/mcp/Mcp%20server.spec.md) - Starts an MCP server with tools, resources, and prompts
 * [Mcp tool](ai/mcp/Mcp%20tool.spec.md) - Defines tools for an MCP server
 * [Mcp prompt](ai/mcp/Mcp%20prompt.spec.md) - Defines prompts for an MCP server

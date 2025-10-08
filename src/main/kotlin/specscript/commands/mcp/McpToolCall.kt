@@ -16,7 +16,7 @@ import specscript.util.Yaml
 import specscript.util.toDomainObject
 import specscript.util.toKotlinx
 
-object CallMcpTool : CommandHandler("Call Mcp tool", "ai/mcp"), ObjectHandler, DelayedResolver {
+object McpToolCall : CommandHandler("Mcp tool call", "ai/mcp"), ObjectHandler, DelayedResolver {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val info = data.toDomainObject(CallMcpToolInfo::class)
@@ -29,14 +29,14 @@ object CallMcpTool : CommandHandler("Call Mcp tool", "ai/mcp"), ObjectHandler, D
     private suspend fun callTool(
         info: CallMcpToolInfo,
     ): JsonNode? {
-        val mcp = createMcpClient(info.transport)
+        val mcp = createMcpClient(info.server)
 
         return try {
             mcp.connect()
 
             val request = CallToolRequest(
                 name = info.tool,
-                arguments = info.arguments?.toKotlinx() ?: kotlinx.serialization.json.JsonObject(emptyMap())
+                arguments = info.input?.toKotlinx() ?: kotlinx.serialization.json.JsonObject(emptyMap())
             )
 
             val result = mcp.client.callTool(request) as CallToolResult
@@ -75,37 +75,37 @@ fun CallToolResult.firstTextAsJson(): JsonNode {
 }
 
 fun createMcpClient(
-    transport: TransportInfo,
+    server: TargetServerInfo,
 ): McpClientWrapper {
-    return when (transport.type) {
+    return when (server.type) {
         "stdio" -> {
-            StdioClient(transport.command!!)
+            StdioClient(server.command!!)
         }
 
         "http" -> {
-            HttpClient(transport.url!!, transport.headers, transport.auth_token, transport.type)
+            HttpClient(server.url!!, server.headers, server.token, server.type)
         }
 
         "sse" -> {
-            SseClient(transport.url!!, transport.headers, transport.auth_token, transport.type)
+            SseClient(server.url!!, server.headers, server.token, server.type)
         }
 
-        else -> throw SpecScriptCommandError("Unknown transport type: ${transport.type}")
+        else -> throw SpecScriptCommandError("Unknown MCP server type: ${server.type}")
     }
 }
 
 
 data class CallMcpToolInfo(
     val tool: String,
-    val transport: TransportInfo,
-    val arguments: ObjectNode? = null  // TODO: rename to 'input'
+    val server: TargetServerInfo,
+    val input: ObjectNode? = null
 )
 
-data class TransportInfo(
+data class TargetServerInfo(
     val type: String,
     val server: String? = null,
     val command: String? = null,
     val url: String?,
     val headers: Map<String, String> = emptyMap(),
-    val auth_token: String? = null,  // TODO: rename to token
+    val token: String? = null,
 )

@@ -1,5 +1,5 @@
 ---
-Call Mcp tool:
+Mcp tool call:
   transport:
     type: sse
     url: http://localhost:8080
@@ -11,7 +11,7 @@ Print:
   The ticket we asked for: ${output}
 
 ---
-Call Mcp tool:
+Mcp tool call:
   transport:
     type: sse
     url: http://localhost:8080
