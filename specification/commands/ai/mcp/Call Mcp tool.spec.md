@@ -22,6 +22,8 @@ Code example: Simple MCP server
 Mcp server:
   name: demo-server
   version: "1.0.0"
+  transport: SSE
+  port: 8091
   tools:
     hello:
       description: Generate a personalized greeting
@@ -37,8 +39,8 @@ Code example: Basic Mcp tool call
 Call Mcp tool:
   tool: hello
   transport:
-    type: internal
-    server: demo-server
+    type: sse
+    url: "http://localhost:8091"
 
 Expected output: Hello there!
 ```
@@ -71,8 +73,8 @@ Call Mcp tool:
   arguments:
     name: Alice
   transport:
-    type: internal
-    server: demo-server
+    type: sse
+    url: "http://localhost:8091"
 
 Expected output: Hello Alice!
 
@@ -81,33 +83,14 @@ Expected output: Hello Alice!
 ## Transport types
 
 The `transport` property defines how to connect to the MCP server. There are three supported transport types:
-`internal`, `stdio`, and `http`.
-
-### Internal transport
-
-When testing out an MCP server, it is convenient to use the `internal` transport type. This allows connecting to MCP
-servers that are defined in the same SpecScript session.
-
-Set `type: internal` and put the server name in the `server` property.
-
-```yaml specscript
-Code example: Internal transport connection
-
-Call Mcp tool:
-  tool: hello
-  transport:
-    type: internal
-    server: demo-server
-
-Expected output: Hello there!
-```
+`stdio`, `http` and `sse`.
 
 ### Stdio transport
 
 Stdio transport enables connection to external MCP-compliant servers over standard input/output streams. This is useful
 for connecting to MCP servers implemented in any programming language that can run on your local machine.
 
-```yaml specscript
+```yaml FIXME specscript  ==> Example hangs after running HTTP client before it
 Code example: Stdio transport with external process
 
 Call Mcp tool:

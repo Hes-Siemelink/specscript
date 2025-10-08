@@ -10,31 +10,27 @@ import specscript.language.SpecScriptImplementationException
 
 /**
  * Stdio transport for communication with MCP servers via shell commands.
- *
- * This transport executes shell commands and communicates with the spawned
- * processes using standard input/output pipes following the MCP protocol.
  */
 class StdioClient(
     private val command: String
-) : McpClient {
+) : McpClientWrapper {
+
+    override val client: Client = Client(clientInfo = Implementation("specscript-client", "1.0.0"))
 
     private var process: Process? = null
-    override val client: Client = Client(clientInfo = Implementation("specscript-client", "1.0.0"))
 
     override suspend fun connect() {
         return try {
-            // Execute shell command - let shell handle parsing and execution
-            println("DEBUG: Starting process with command: $command")
+            // Run shell command for server process
             process = ProcessBuilder("sh", "-c", command).start()
 
-            // Create MCP client with stdio transport
+            // Connect to process streams
             val transport = StdioClientTransport(
                 input = process!!.inputStream.asSource().buffered(),
                 output = process!!.outputStream.asSink().buffered()
             )
 
             client.connect(transport)
-            println("DEBUG: Successfully connected to MCP server via stdio")
         } catch (e: Exception) {
             throw SpecScriptImplementationException("Failed to start MCP process: $command", cause = e)
         }
@@ -44,5 +40,4 @@ class StdioClient(
         client.close()
         process?.destroy()
     }
-
 }

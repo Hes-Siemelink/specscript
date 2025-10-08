@@ -7,17 +7,19 @@ import io.ktor.client.plugins.sse.*
 import io.ktor.client.request.*
 import io.modelcontextprotocol.kotlin.sdk.Implementation
 import io.modelcontextprotocol.kotlin.sdk.client.Client
-import io.modelcontextprotocol.kotlin.sdk.client.StreamableHttpClientTransport
+import io.modelcontextprotocol.kotlin.sdk.client.SseClientTransport
 
 /**
- * Transport for communication with HTTP-based MCP server.
+ * Transport for communication with SSE-based MCP server.
  */
-class HttpClient(
+class SseClient(
     val url: String,
     val headers: Map<String, String> = emptyMap(),
     val authToken: String? = null,
     val type: String = "http"
 ) : McpClientWrapper {
+
+    override val client = Client(clientInfo = Implementation("specscript-client", "1.0.0"))
 
     val httpClient = HttpClient() {
         if (authToken != null) {
@@ -29,16 +31,15 @@ class HttpClient(
         }
         install(SSE)
     }
-    override val client: Client = Client(clientInfo = Implementation("specscript-client", "1.0.0"))
 
     override suspend fun connect() {
         println("Connecting to ${type.uppercase()} MCP server at: $url")
 
-        val transport = StreamableHttpClientTransport(
+        val transport = SseClientTransport(
             client = httpClient,
-            url = url,
+            urlString = url,
             requestBuilder = {
-                this@HttpClient.headers.forEach { (key, value) ->
+                this@SseClient.headers.forEach { (key, value) ->
                     headers {
                         append(key, value)
                     }

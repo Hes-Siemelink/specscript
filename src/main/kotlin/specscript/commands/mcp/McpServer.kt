@@ -84,7 +84,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
     private fun startServer(info: McpServerInfo, server: Server) {
         when (info.transport) {
             TransportType.STDIO -> startStdioServer(info.name, server)
-            TransportType.HTTP -> startHttpServer(info, server)
+            TransportType.HTTP, TransportType.SSE -> startHttpServer(info, server)
         }
     }
 
@@ -301,7 +301,8 @@ data class McpServerInfo(
 
 enum class TransportType {
     STDIO,
-    HTTP
+    HTTP,
+    SSE
 }
 
 data class ToolInfo(
