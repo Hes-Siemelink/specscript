@@ -38,20 +38,11 @@ class HttpTransport(
     }
     private val client: Client = Client(clientInfo = Implementation("specscript-client", "1.0.0"))
 
-    override suspend fun connect(): Boolean {
-        return try {
-            println("Connecting to ${type.uppercase()} MCP server at: $baseUrl")
+    override suspend fun connect() {
+        println("Connecting to ${type.uppercase()} MCP server at: $baseUrl")
 
-            val transport = createTransport()
-
-            client.connect(transport)
-            true
-        } catch (e: Exception) {
-            println("Failed to connect to MCP server: ${e.message}")
-            e.printStackTrace()
-            cleanup()
-            false
-        }
+        val transport = createTransport()
+        client.connect(transport)
     }
 
     private fun createTransport(): AbstractTransport = when (type.lowercase()) {

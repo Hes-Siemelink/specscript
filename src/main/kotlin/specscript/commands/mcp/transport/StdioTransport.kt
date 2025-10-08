@@ -11,6 +11,7 @@ import kotlinx.io.asSink
 import kotlinx.io.asSource
 import kotlinx.io.buffered
 import specscript.language.SpecScriptCommandError
+import specscript.language.SpecScriptImplementationException
 import java.util.concurrent.TimeUnit
 
 /**
@@ -26,7 +27,7 @@ class StdioTransport(
     private var process: Process? = null
     private var client: Client? = null
 
-    override suspend fun connect(): Boolean {
+    override suspend fun connect() {
         return try {
             // Execute shell command - let shell handle parsing and execution
             println("DEBUG: Starting process with command: $command")
@@ -41,12 +42,9 @@ class StdioTransport(
 
             client!!.connect(transport)
             println("DEBUG: Successfully connected to MCP server via stdio")
-            true
         } catch (e: Exception) {
-            println("DEBUG: Failed to connect via stdio: ${e.message}")
-            e.printStackTrace()
             cleanup()
-            false
+            throw SpecScriptImplementationException("Failed to start MCP process: $command", cause = e)
         }
     }
 

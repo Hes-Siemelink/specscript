@@ -23,9 +23,8 @@ class InternalTransport(
 
     private var connected = false
 
-    override suspend fun connect(): Boolean {
+    override suspend fun connect() {
         connected = true
-        return true
     }
 
     override suspend fun callTool(request: CallToolRequest): CallToolResult {

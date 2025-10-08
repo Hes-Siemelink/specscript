@@ -18,7 +18,7 @@ interface McpClientTransport {
      * Establishes connection to the MCP server.
      * @return true if connection successful, false otherwise
      */
-    suspend fun connect(): Boolean
+    suspend fun connect()
 
     /**
      * Calls a tool on the connected MCP server.

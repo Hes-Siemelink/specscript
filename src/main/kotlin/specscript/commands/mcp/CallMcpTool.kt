@@ -7,8 +7,10 @@ import io.modelcontextprotocol.kotlin.sdk.CallToolRequest
 import io.modelcontextprotocol.kotlin.sdk.CallToolResult
 import io.modelcontextprotocol.kotlin.sdk.TextContent
 import kotlinx.coroutines.runBlocking
-import specscript.commands.mcp.transport.TransportConfig
-import specscript.commands.mcp.transport.TransportFactory
+import specscript.commands.mcp.transport.HttpTransport
+import specscript.commands.mcp.transport.InternalTransport
+import specscript.commands.mcp.transport.McpClientTransport
+import specscript.commands.mcp.transport.StdioTransport
 import specscript.language.*
 import specscript.util.Yaml
 import specscript.util.toDomainObject
@@ -20,19 +22,17 @@ object CallMcpTool : CommandHandler("Call Mcp tool", "ai/mcp"), ObjectHandler, D
         val info = data.toDomainObject(CallMcpToolInfo::class)
 
         return runBlocking {
-            callToolWithTransport(info)
+            callTool(info)
         }
     }
 
-    private suspend fun callToolWithTransport(
+    private suspend fun callTool(
         info: CallMcpToolInfo,
     ): JsonNode? {
-        val transportConfig = TransportConfig.fromJson(info.transport, info.server)
-        val transport = TransportFactory.createTransport(transportConfig)
+        val transport = createTransport(info.transport)
+
         return try {
-            if (!transport.connect()) {
-                throw SpecScriptCommandError("Failed to connect to MCP server '${info.server}'")
-            }
+            transport.connect()
 
             val request = CallToolRequest(
                 name = info.tool,
@@ -75,10 +75,41 @@ fun CallToolResult.firstTextAsJson(): JsonNode {
     }
 }
 
+fun createTransport(
+    transport: TransportInfo,
+): McpClientTransport {
+    return when (transport.type) {
+        "internal" -> {
+            val server = McpServer.servers[transport.server]
+                ?: throw IllegalArgumentException("Server '${transport.server}' is not running. Start it with 'Mcp server' command first.")
+            InternalTransport(server)
+        }
+
+        "stdio" -> {
+            StdioTransport(transport.command!!)
+        }
+
+        "http", "sse" -> {
+            HttpTransport(transport.url!!, transport.headers, transport.auth_token!!, transport.type)
+        }
+
+        else -> throw SpecScriptCommandError("Unknown transport type: ${transport.type}")
+    }
+}
+
 
 data class CallMcpToolInfo(
-    val server: String?,
+    val server: String?,  // XXX Needed?
     val tool: String,
-    val transport: JsonNode,
-    val arguments: ObjectNode? = null
+    val transport: TransportInfo,
+    val arguments: ObjectNode? = null  // TODO: rename to 'input'
+)
+
+data class TransportInfo(
+    val type: String,
+    val server: String? = null,
+    val command: String? = null,
+    val url: String?,
+    val headers: Map<String, String> = emptyMap(),
+    val auth_token: String? = null,  // TODO: rename to token
 )
