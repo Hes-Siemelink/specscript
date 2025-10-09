@@ -1,6 +1,6 @@
-# Command: Print
+# Command: Print Json
 
-`Print JSON` prints contents in JSON representation.
+`Print Json` prints contents in JSON representation to the console.
 
 | Content type | Supported |
 |--------------|-----------|
@@ -12,12 +12,12 @@
 
 ## Basic usage
 
-Use **Print JSON** to see contents in JSON representation.
+Use **Print Json** to see contents in JSON representation.
 
 ```yaml specscript
 Code example: Print an object as JSON
 
-Print JSON:
+Print Json:
   greeting: Hello, World!
 ```
 

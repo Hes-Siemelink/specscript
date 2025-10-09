@@ -83,12 +83,14 @@ object CommandLibrary {
         Values,
 
         // Util
+        Base64Encode,
+        Base64Decode,
+        ParseYaml,
         Print,
         PrintJson,
         ToJson,
+        ToText,
         Wait,
-        Base64Encode,
-        Base64Decode,
 
         // Files
         ReadFile,

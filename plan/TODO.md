@@ -45,12 +45,9 @@
 
 ## Core
 
-* Clean up Exceptions and error handling
-* Proper "StackTrace"
 * Define commands in SpecScript itself
 * Secrets
 * Properly handle: null, empty, boolean, int
-* Convert to yaml
 * Stream and pipe output as Yaml array of lines
 * Find a way to confirm default input parameters vs. just taking them for granted. Interactive mode would trigger
   confirmation?

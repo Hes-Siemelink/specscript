@@ -58,10 +58,14 @@ Overview of standard commands in SpecScript.
 
 ### Util
 
-* [Print](core/util/Print.spec.md) - Prints to the console
-* [Wait](core/util/Wait.spec.md) - Waits a while
-* [Base64 encode](core/util/Base64%20encode.spec.md) - Does a Base64 encoding
 * [Base64 decode](core/util/Base64%20decode.spec.md) - Decodes a Base64 encoded text
+* [Base64 encode](core/util/Base64%20encode.spec.md) - Does a Base64 encoding
+* [Json](core/util/Json.spec.md) - Converts structured data into a JSON string
+* [Parse Yaml](core/util/Parse%20Yaml.spec.md) - Parses a Yaml or Json string into structured data
+* [Print](core/util/Print.spec.md) - Prints to the console
+* [Print Json](core/util/Print%20Json.spec.md) - Prints the output variable as JSON
+* [Text](core/util/Text.spec.md) - Converts structured data into a string
+* [Wait](core/util/Wait.spec.md) - Waits a while
 
 ## Local IO
 
