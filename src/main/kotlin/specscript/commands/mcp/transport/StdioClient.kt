@@ -6,7 +6,7 @@ import io.modelcontextprotocol.kotlin.sdk.client.StdioClientTransport
 import kotlinx.io.asSink
 import kotlinx.io.asSource
 import kotlinx.io.buffered
-import specscript.language.SpecScriptImplementationException
+import specscript.language.SpecScriptInternalError
 
 /**
  * Stdio transport for communication with MCP servers via shell commands.
@@ -32,7 +32,7 @@ class StdioClient(
 
             client.connect(transport)
         } catch (e: Exception) {
-            throw SpecScriptImplementationException("Failed to start MCP process: $command", cause = e)
+            throw SpecScriptInternalError("Failed to start MCP process: $command", cause = e)
         }
     }
 

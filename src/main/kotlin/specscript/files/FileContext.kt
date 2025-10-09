@@ -107,7 +107,7 @@ class FileContext(
         }
 
         // No handler found for command
-        throw ScriptingException("Unknown command: $command")
+        throw SpecScriptException("Unknown command: $command")
     }
 
     private fun findLocalFileCommands(): Map<String, SpecScriptFile> {

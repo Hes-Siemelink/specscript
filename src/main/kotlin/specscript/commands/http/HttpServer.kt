@@ -106,7 +106,7 @@ private suspend fun handleRequest(
         data.output != null -> data.output.resolve(localContext)
         data.script != null -> data.script.run(localContext)
         data.file != null -> SpecScriptFile(localContext.scriptDir.resolve(data.file)).run(localContext)
-        else -> throw ScriptingException("No handler action defined")
+        else -> throw SpecScriptException("No handler action defined")
     }
 
     // Return JSON (output already a JsonNode)

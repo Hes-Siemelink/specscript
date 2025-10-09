@@ -67,8 +67,8 @@ private fun runSingleCommand(
         }
         return result
     } catch (e: SpecScriptException) {
-        e.data ?: run {
-            e.data = asCommand(handler, data)
+        e.command ?: run {
+            e.command = asCommand(handler, data)
         }
         throw e
     }
@@ -101,10 +101,10 @@ fun handleCommand(handler: CommandHandler, data: JsonNode, context: ScriptContex
     } catch (e: SpecScriptCommandError) {
         throw e
     } catch (e: SpecScriptException) {
-        e.data = asCommand(handler, data)
+        e.command = asCommand(handler, data)
         throw e
     } catch (e: Exception) {
-        throw SpecScriptImplementationException(e.message ?: e.toString(), asCommand(handler, data), e)
+        throw SpecScriptInternalError(e.message ?: e.toString(), e, asCommand(handler, data))
     }
 }
 

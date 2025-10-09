@@ -3,8 +3,8 @@ package specscript.commands.testing
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ValueNode
 import specscript.language.CommandHandler
-import specscript.language.SpecScriptCommandError
 import specscript.language.ScriptContext
+import specscript.language.SpecScriptCommandError
 import specscript.language.ValueHandler
 import specscript.util.IO.rewireSystemErr
 import specscript.util.IO.rewireSystemOut
@@ -26,7 +26,11 @@ object ExpectedConsoleOutput : CommandHandler("Expected console output", "core/t
             val error = Json.newObject()
             error.put("expected", data.toDisplayYaml().trim())
             error.put("actual", output.trim())
-            throw SpecScriptCommandError("Output", "Unexpected console output.", error)
+            throw SpecScriptCommandError(
+                "Unexpected console output.",
+                type = "Output",
+                data = error
+            )
         }
 
         return null

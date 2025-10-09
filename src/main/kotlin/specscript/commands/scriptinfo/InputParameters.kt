@@ -73,7 +73,7 @@ object InputParameters : CommandHandler("Input parameters", "core/script-info"),
                 context.interactive -> info.prompt(name)
 
 
-                else -> throw MissingParameterException(
+                else -> throw MissingInputException(
                     "No value provided for: $name",
                     name,
                     input

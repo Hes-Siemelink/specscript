@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.node.TextNode
 import com.networknt.schema.JsonSchema
 import specscript.language.*
-import specscript.util.*
+import specscript.util.Json
+import specscript.util.JsonSchemas
+import specscript.util.toJson
 
 object ValidateSchema : CommandHandler("Validate schema", "core/schema"), ObjectHandler {
 
@@ -36,7 +38,11 @@ private fun JsonNode.validateWithSchema(schema: JsonSchema) {
             Json.newObject(it.code, it.message)
         }.toJson()
 
-        throw SpecScriptCommandError("Schema validation error", "Schema validation error", validationErrors)
+        throw SpecScriptCommandError(
+            "Schema validation error",
+            type = "Schema validation error",
+            data = validationErrors
+        )
     }
 }
 

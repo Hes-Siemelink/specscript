@@ -36,8 +36,8 @@ object CliErrorReporter {
         }
 
         // Print SpecScript context
-        exception.data?.let {
-            val yaml = exception.data.toDisplayYaml().prependIndent("  ")
+        exception.command?.let {
+            val yaml = exception.command.toDisplayYaml().prependIndent("  ")
             val message = "In ${exception.context ?: "command"}:"
             System.err.println("\n\n$message\n\n${yaml}".trimMargin())
         }
@@ -63,8 +63,4 @@ object CliErrorReporter {
 
 fun SpecScriptException.reportError(printStackTrace: Boolean) {
     CliErrorReporter.reportLanguageError(this, printStackTrace)
-}
-
-fun SpecScriptCommandError.reportError() {
-    CliErrorReporter.reportCommandError(this)
 }

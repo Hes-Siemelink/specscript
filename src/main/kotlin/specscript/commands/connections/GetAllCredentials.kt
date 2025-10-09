@@ -3,8 +3,8 @@ package specscript.commands.connections
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ValueNode
 import specscript.language.CommandHandler
-import specscript.language.SpecScriptCommandError
 import specscript.language.ScriptContext
+import specscript.language.SpecScriptCommandError
 import specscript.language.ValueHandler
 import specscript.util.Json
 
@@ -15,9 +15,9 @@ object GetAllCredentials : CommandHandler("Get all credentials", "core/connectio
         val targetName = data.asText()
         val credentials = context.getCredentials()
         val target = credentials.targetResources[targetName] ?: throw SpecScriptCommandError(
-            "unknown target",
             "Unknown target $targetName",
-            Json.newObject("target", targetName)
+            type = "unknown target",
+            data = Json.newObject("target", targetName)
         )
 
         return target.toArrayNode()

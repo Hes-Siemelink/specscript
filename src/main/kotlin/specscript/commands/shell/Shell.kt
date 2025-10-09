@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.node.TextNode
 import com.fasterxml.jackson.databind.node.ValueNode
 import specscript.commands.testing.ExpectedConsoleOutput
 import specscript.language.*
-import specscript.util.Json
+import specscript.util.Json.newObject
 import specscript.util.toDisplayYaml
 import specscript.util.toDomainObject
 import java.io.FileNotFoundException
@@ -105,7 +105,7 @@ private fun execute(
         throw e
     } catch (e: IOException) {
         print(buffer.toString())
-        throw SpecScriptCommandError("shell", e.toString())
+        throw SpecScriptCommandError(message = e.toString(), type = "shell")
     }
 }
 
@@ -142,9 +142,9 @@ fun streamCommand(
             val exitCode = process.waitFor()
             if (exitCode != 0) {
                 throw SpecScriptCommandError(
-                    "shell",
                     "Shell command failed",
-                    Json.newObject("exitCode", exitCode.toString())
+                    type = "shell",
+                    data = newObject("exitCode", exitCode.toString())
                 )
             }
         }

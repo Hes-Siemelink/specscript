@@ -12,7 +12,7 @@
 
 ## Basic usage
 
-Use **Mcp tool** to define tools that can be added to an MCP server. This command is typically used in conjunction with
+Use **Mcp tool** to define tools that can be added to an MCP server. This command is used in conjunction with
 `Mcp server` to modularize tool definitions.
 
 ```yaml specscript

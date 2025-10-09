@@ -29,7 +29,7 @@ private fun validate(data: JsonNode, type: Type, registry: TypeRegistry) {
     if (messages.isNotEmpty()) {
         val validationErrors = messages.map { TextNode(it) }.toJson()
 
-        throw SpecScriptCommandError("Type validation", "Type validation errors", validationErrors)
+        throw SpecScriptCommandError("Type validation errors", type = "Type validation", data = validationErrors)
     }
 }
 

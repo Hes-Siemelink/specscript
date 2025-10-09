@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.node.TextNode
 import com.fasterxml.jackson.databind.node.ValueNode
 import com.fasterxml.jackson.module.kotlin.contains
 import specscript.language.*
-import specscript.util.Json
 import specscript.util.Yaml
 import java.nio.file.Path
 import kotlin.io.path.exists
@@ -34,11 +33,7 @@ fun JsonNode.toPath(context: ScriptContext, directory: Path? = null): Path {
             if (file.exists()) {
                 file
             } else {
-                throw SpecScriptCommandError(
-                    "file not found",
-                    "File not found: ${file.toRealPath()}",
-                    Json.newObject("file", file.toRealPath().toString())
-                )
+                throw CommandFormatException("File not found: ${file.toRealPath()}")
             }
         }
 
@@ -48,10 +43,10 @@ fun JsonNode.toPath(context: ScriptContext, directory: Path? = null): Path {
             } else if (contains("resource")) {
                 this["resource"].toPath(context, context.scriptDir)
             } else {
-                throw ScriptingException("Expected either 'file' or 'resource' property.")
+                throw CommandFormatException("Expected either 'file' or 'resource' property.")
             }
         }
 
-        else -> throw ScriptingException("Unsupported node type for files: ${javaClass.simpleName}")
+        else -> throw CommandFormatException("Unsupported node type for files: ${javaClass.simpleName}")
     }
 }

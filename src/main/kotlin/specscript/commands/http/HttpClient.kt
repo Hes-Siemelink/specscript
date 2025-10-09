@@ -4,11 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.node.TextNode
 import com.fasterxml.jackson.databind.node.ValueNode
-import specscript.language.SpecScriptCommandError
-import specscript.language.ScriptContext
-import specscript.util.Json
-import specscript.util.Yaml
-import specscript.util.toDisplayYaml
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.auth.*
@@ -20,6 +15,11 @@ import io.ktor.http.*
 import io.ktor.util.cio.*
 import io.ktor.utils.io.*
 import kotlinx.coroutines.runBlocking
+import specscript.language.ScriptContext
+import specscript.language.SpecScriptCommandError
+import specscript.util.Json
+import specscript.util.Yaml
+import specscript.util.toDisplayYaml
 import java.net.URI
 import java.nio.file.Path
 
@@ -126,7 +126,7 @@ object HttpClient {
                 TextNode(response.bodyAsText())
             }
             val type = response.status.value.toString()
-            throw SpecScriptCommandError(type, "Http request returned an error", data)
+            throw SpecScriptCommandError("Http request returned an error", type = type, data = data)
         }
 
         // No content

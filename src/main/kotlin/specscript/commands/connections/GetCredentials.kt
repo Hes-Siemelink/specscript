@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.TextNode
 import com.fasterxml.jackson.databind.node.ValueNode
 import specscript.language.*
-import specscript.util.Json
+import specscript.util.Json.newObject
 
 object GetCredentials : CommandHandler("Get credentials", "core/connections"), ValueHandler {
 
@@ -24,9 +24,9 @@ object GetCredentials : CommandHandler("Get credentials", "core/connections"), V
             }
 
             else -> throw SpecScriptCommandError(
-                "no accounts",
                 "No accounts defined for $targetName",
-                Json.newObject("target", targetName)
+                type = "no accounts",
+                data = newObject("target", targetName)
             )
         }
     }

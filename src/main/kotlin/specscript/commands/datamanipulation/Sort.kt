@@ -13,7 +13,7 @@ object Sort : CommandHandler("Sort", "core/data-manipulation"), ObjectHandler {
 
         val items = data["items"]
             ?: context.output
-            ?: throw ScriptingException("Specify 'items' or make sure \${output} is set.")
+            ?: throw CommandFormatException("Specify 'items' or make sure \${output} is set.")
         if (items !is ArrayNode) throw CommandFormatException("items should be an array")
         val sortField = data.getTextParameter("by")
 

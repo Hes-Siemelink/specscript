@@ -42,7 +42,11 @@ object McpToolCall : CommandHandler("Mcp tool call", "ai/mcp"), ObjectHandler, D
             val result = mcp.client.callTool(request) as CallToolResult
             val firstMessage: JsonNode = result.firstTextAsJson()
             if (result.isError!!) {
-                throw SpecScriptCommandError("MCP Server error", "Tool '${info.tool}' call failed", data = firstMessage)
+                throw SpecScriptCommandError(
+                    "Tool '${info.tool}' call failed",
+                    type = "MCP Server error",
+                    data = firstMessage
+                )
             }
 
             firstMessage

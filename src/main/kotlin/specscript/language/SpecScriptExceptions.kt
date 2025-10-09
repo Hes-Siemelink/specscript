@@ -8,57 +8,53 @@ import specscript.language.types.ObjectDefinition
  * Base exception class for all SpecScript-related errors.
  *
  * @param message The error message
- * @param data Optional JSON data associated with the error
  * @param cause The underlying cause of the exception
- * @param context Optional context information about where the error occurred
+ * @param command JSON data of the command causing the error. Will be filled in by the executor.
  */
 open class SpecScriptException(
-    message: String,
-    var data: JsonNode? = null,
+    override val message: String,
     cause: Throwable? = null,
+    var command: JsonNode? = null
+) : Exception(message, cause) {
+
+    /** Context where the error occurred, for example the filename. Will be filled in by the executor. */
     var context: String? = null
-) : Exception(message, cause)
+}
 
 /**
  * Indicates that a command has invalid format or structure.
- * Used for syntax errors and malformed command definitions.
  */
 class CommandFormatException(message: String) : SpecScriptException(message)
 
 /**
- * Indicates that a runtime errors occurred during script execution. when
- */
-class ScriptingException(message: String, data: JsonNode? = null) : SpecScriptException(message, data)
-
-/**
- * Indicates a missing required parameter
+ * Indicates a missing required input parameter
  *
  * @param name The name of the missing parameter
- * @param parameters The object definition containing parameter requirements
+ * @param info The object definition containing parameter requirements
  */
-class MissingParameterException(
+class MissingInputException(
     message: String,
     val name: String,
-    val parameters: ObjectDefinition
+    val info: ObjectDefinition
 ) : SpecScriptException(message)
 
 /**
- * Used for internal errors that indicate bugs in the SpecScript implementation.
+ * Wraps unhandled exceptions.
  */
-class SpecScriptImplementationException(message: String, data: JsonNode? = null, cause: Throwable? = null) :
-    SpecScriptException(message, data, cause)
+class SpecScriptInternalError(message: String, cause: Throwable? = null, command: JsonNode? = null) :
+    SpecScriptException(message, cause, command = command)
 
 /**
- * Exception thrown when a command execution fails with structured error information.
- * This is the preferred exception type for command handlers to provide rich error details.
- *
- * @param error The structured error data containing type, message, and optional data
+ * Exception that can be handled by the `On error` command. in SpecScript.
  */
-open class SpecScriptCommandError(message: String, val error: ErrorData = ErrorData(message = message)) :
-    Exception(message) {
+open class SpecScriptCommandError(
+    message: String,
+    cause: Throwable? = null,
+    val type: String = "error",
+    val data: JsonNode? = null
+) :
+    SpecScriptException(message, cause) {
 
-    constructor(error: ErrorData) : this(error.message, error)
-
-    constructor(type: String, message: String, data: JsonNode? = null) :
-            this(ErrorData(type, message, data))
+    val error: ErrorData
+        get() = ErrorData(type, message, data)
 }

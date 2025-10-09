@@ -113,10 +113,10 @@ class SpecScriptCli(
                 CliErrorReporter.reportInvocationError(e)
                 return 1
 
-            } catch (e: MissingParameterException) {
+            } catch (e: MissingInputException) {
                 System.err.println("Missing parameter: --${e.name}")
                 System.err.println("\nOptions:")
-                System.err.println(e.parameters.toDisplayString())
+                System.err.println(e.info.toDisplayString())
                 return 1
 
             } catch (e: SpecScriptException) {

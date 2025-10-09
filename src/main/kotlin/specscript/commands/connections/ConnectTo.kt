@@ -23,7 +23,7 @@ object ConnectTo : CommandHandler("Connect to", "core/connections"), ValueHandle
 
         // Find script
         val connectScript = context.info.connections[target]
-            ?: throw ScriptingException("No connection script configured for $target in ${context.scriptFile.parent.toRealPath().name}")
+            ?: throw SpecScriptException("No connection script configured for $target in ${context.scriptFile.parent.toRealPath().name}")
 
         // Execute script
         val result = connect(connectScript, context)
