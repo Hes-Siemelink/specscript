@@ -220,7 +220,7 @@ Expected output: Something funny
 Run it
 
 ```shell cli
-spec -o call-helper
+spec call-helper
 ```
 
 And it will output:

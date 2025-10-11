@@ -27,8 +27,6 @@ POST:
   body:
     name: ${input.name}
     language: ${input.language}
-
-Print: ${output}
 ```
 
 Run the script with this command:
@@ -302,7 +300,7 @@ Prompt:
     - Spanish
     - Dutch
 
-Print:
+Output:
   You selected: ${output}
 ```
 

@@ -73,39 +73,9 @@ With the expected output:
 Hello, Alice!
 ```
 
-### --output
-
-Some SpecScript scripts will produce output. By default, the `cli` command does not print the output. You can turn it on
-with the
-`--output` option.
-
-For example, the **[greet](/samples/basic/greet.spec.yaml)** script uses a **Print** command to show the greeting,
-whereas
-**[create-greeting](/samples/basic/create-greeting.spec.yaml)** does not print anything but creates output to be used by
-another script.
-
-Running `create-greeting` like this will show nothing
-
-```shell cli cd=samples
-spec basic create-greeting --name Bob
-```
-
-Output:
-
-```output
-```
-
-We will see the output when passing the `--output` parameter, or its shortcut `-o`:
-
-```shell cli cd=samples
-spec -o basic create-greeting --name Bob
-```
-
-```output
-Hello Bob!
-```
-
 ### --output-json
+
+Most SpecScript scripts will produce output. By default, the `cli` command prints the output in Yaml format.
 
 To show the output in the script in Json format, use `--output-json` or the shortcut  `-j`:
 

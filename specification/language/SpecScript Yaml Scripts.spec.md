@@ -62,7 +62,7 @@ You can have multiple commands in a file, and they will be executed in order:
 ```yaml file=prompt.spec.yaml
 Prompt: What is your name?
 
-Print: Hello ${output}!
+Output: Hello ${output}!
 ```
 
 When storing this in a file `prompt.spec.yaml` and running it with the following command,
@@ -160,7 +160,7 @@ Script info: Prints a personalized greeting
 Input parameters:
   name: Your name
 
-Print: Hello ${name}!
+Output: Hello ${name}!
 ```
 
 It has input parameter `name`:

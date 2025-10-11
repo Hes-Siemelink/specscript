@@ -1,9 +1,10 @@
 # On my mind
 
-* Interactive and test mode
-    * Reintroduce 'interactive mode' to SpecScript CLI
-    * Merge tests into CLI so you can run cli --test <comething>
+* Also find markdown scripts by shortcut. For example `spec prompt` should work on `prompt.spec.md` as well as
+  `prompt.spec.yaml`
 * Rewrite README
+* Test mode
+    * Merge tests into CLI so you can run cli --test <comething>
 
 ## MCP
 

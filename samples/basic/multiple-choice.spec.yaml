@@ -9,5 +9,5 @@ Prompt:
     - Cake
     - Drizzle
 
-Print:
+Output:
   Your choices: ${output}

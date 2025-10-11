@@ -63,7 +63,7 @@ private fun CommandLineParameters.getOption(option: String): Pair<String, Parame
 private fun CommandLineParameters.getOutputOption(): OutputOption = when {
     contains("output") -> OutputOption.YAML
     contains("output-json") -> OutputOption.JSON
-    else -> OutputOption.NONE
+    else -> OutputOption.YAML
 }
 
 private enum class ArgType { GLOBAL_OPTIONS, FILENAME, COMMAND_ARGS }

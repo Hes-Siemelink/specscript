@@ -22,8 +22,6 @@ POST:
   body:
     name: ${input.name}
     language: ${input.language}
-
-Print: ${output}
 ```
 
 Run it to test your API:

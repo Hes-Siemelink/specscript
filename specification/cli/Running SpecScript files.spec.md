@@ -121,36 +121,3 @@ This will print:
 ```output
 Hello, Alice!
 ```
-
-## Capturing output
-
-Some SpecScript commands produce output. By default, the SpecScript cli does not print the output. Use
-the [--output](Command%20line%20options.spec.md#--output) option to see it.
-
-For example, the **[greet](/samples/basic/greet.spec.yaml)** script uses a **Print** command to show the greeting,
-whereas
-**[create-greeting](/samples/basic/create-greeting.spec.yaml)** does not print anything but creates output to be used by
-another script.
-
-Running `create-greeting` like this will show nothing:
-
-```shell cli cd=samples
-spec basic create-greeting --name Bob
-```
-
-The output is empty:
-
-```output
-```
-
-We will only see the output when passing the `--output` parameter, or its shortcut `-o`:
-
-```shell cli cd=samples
-spec -o basic create-greeting --name Bob
-```
-
-```output
-Hello Bob!
-```
-
-<!-- TODO Document --output-json option -->

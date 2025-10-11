@@ -15,5 +15,3 @@ For each:
     name: ${item.name}
     vanity_domain: ${item.vanity_domain}
     id: ${item.id}
-
-Print: ${output}
