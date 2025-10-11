@@ -159,6 +159,13 @@ fun resolveCommand(command: String, workingDir: Path): Path {
         }
     }
 
+    // Try with .spec.md extension
+    workingDir.resolve("$command.spec.md").let {
+        if (it.exists()) {
+            return it
+        }
+    }
+
     throw CliInvocationException("Could not find spec file for: $command")
 }
 

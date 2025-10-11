@@ -1,7 +1,5 @@
 # On my mind
 
-* Also find markdown scripts by shortcut. For example `spec prompt` should work on `prompt.spec.md` as well as
-  `prompt.spec.yaml`
 * Rewrite README
 * Test mode
     * Merge tests into CLI so you can run cli --test <comething>
