@@ -30,7 +30,7 @@ class CliCommandLineOptions private constructor(
             val options = definedOptions.validateArgs(globalArgs)
 
             return CliCommandLineOptions(
-                interactive = !options.contains("non-interactive"),
+                interactive = options.contains("interactive"),
                 printOutput = options.getOutputOption(),
                 help = options.contains("help"),
                 debug = options.contains("debug"),

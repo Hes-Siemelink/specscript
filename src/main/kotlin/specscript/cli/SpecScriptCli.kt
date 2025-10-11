@@ -22,16 +22,19 @@ fun main(args: Array<String>) {
 class SpecScriptCli(
     private val options: CliCommandLineOptions,
     private val workingDir: Path = Path.of("."),
+    private val input: UserInput = StandardInput,
     private val output: ConsoleOutput = StandardOutput
 ) {
 
     constructor(
         vararg args: String,
         workingDir: Path = Path.of("."),
+        input: UserInput = StandardInput,
         output: ConsoleOutput = StandardOutput
-    ) : this(CliCommandLineOptions(args.toList()), workingDir, output)
+    ) : this(CliCommandLineOptions(args.toList()), workingDir, input, output)
 
     fun run(parent: ScriptContext? = null) {
+
         // Show usage when no commands are given
         if (options.commands.isEmpty()) {
             output.printUsage(CliCommandLineOptions.definedOptions)
@@ -44,7 +47,7 @@ class SpecScriptCli(
 
         // Create context
         val context = if (parent == null) {
-            FileContext(resolvedFile, interactive = false, workingDir = workingDir)
+            FileContext(resolvedFile, interactive = options.interactive, workingDir = workingDir)
         } else {
             FileContext(resolvedFile, parent)
         }
@@ -85,16 +88,24 @@ class SpecScriptCli(
 
     private fun getCommand(args: List<String>, context: FileContext): String? {
 
+        // Return the command if specified
         if (args.isNotEmpty()) {
             return args[0]
         }
 
-        // Print available commands and exit
-        output.printDirectoryInfo(context.info)
-        val commands = context.getAllCommands().filter { !it.hidden }
-        output.printCommands(commands)
 
-        return null
+        // Print info
+        output.printDirectoryInfo(context.info)
+
+        // Select command
+        val commands = context.getAllCommands().filter { !it.hidden }
+        return when {
+            context.interactive && !options.help -> input.askForCommand(commands)
+            else -> {
+                output.printCommands(commands)
+                null
+            }
+        }
     }
 
     companion object {
