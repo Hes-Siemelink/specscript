@@ -1,11 +1,13 @@
 # Eval syntax
 
-You can write code in a functional style by using the eval syntax. Be careful not to go crazy with this one and go all
-nested and lispy! In order to keep your scripts legible, it's better to avoid nested logic.
+You can write code in a functional style by using the eval syntax.
+
+Be careful not to go crazy with this one and go all nested and lispy! In order to keep your scripts legible, it's better
+to avoid nested logic.
 
 ## Basic usage
 
-Inside a data block, you can use any command prefixed with `:` to have it evaluated inline.
+Inside a data block, you can use any command prefixed with `/` to have it evaluated inline.
 
 For example:
 
@@ -13,7 +15,7 @@ For example:
 Code example: Simple Eval
 
 Add:
-  - :Add:
+  - /Add:
       - 1
       - 2
   - 3
@@ -56,7 +58,7 @@ ${cast}:
     age: 13
 
 Add:
-  :For each:
+  /For each:
     ${character} in: ${cast}
     Output: ${character.age}
 

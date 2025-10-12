@@ -50,7 +50,7 @@ the [Eval syntax](../../../language/Eval%20syntax.spec.md):
 Code example: Specify credentials inline
 
 Credentials:
-  :Temp file:
+  /Temp file:
     content:
       My Temp Server:
         credentials:

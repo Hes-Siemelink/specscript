@@ -1,7 +1,7 @@
 Test case: Evaluate a command inside data
 
 Output:
-  :Size: four
+  /Size: four
 
 Expected output: 4
 
@@ -9,9 +9,9 @@ Expected output: 4
 Test case: Evaluate an array
 
 Output:
-  - :Size: one
-  - :Size: two
-  - :Size: three
+  - /Size: one
+  - /Size: two
+  - /Size: three
 
 Expected output:
   - 3
@@ -23,7 +23,7 @@ Test case: Evaluate a nested command
 
 Output:
   Size:
-    :Size:
+    /Size:
       - 1
       - 2
       - 3
@@ -35,8 +35,8 @@ Expected output:
 Test case: Evaluate a command nested in another command
 
 Output:
-  :Size:
-    :Output:
+  /Size:
+    /Output:
       - 1
       - 2
       - 3
@@ -49,7 +49,7 @@ Test case: Eval in conditions
 If:
   item: 5
   equals:
-    :Size: three
+    /Size: three
   then:
     Output: Correct eval
   else:
@@ -68,7 +68,7 @@ If:
   then:
     Output: State was clean
     Print:
-      :${state}: dirty
+      /${state}: dirty
   else:
     Output: State was not clean
 

@@ -85,11 +85,12 @@
 * Multi-line shell support
 * Support stdin:
   if (System.`in`.available() != 0) { val input = Yaml.mapper.readTree(System.`in`)}
-* Code organization
-    * Versioning and auto-upgrading of commands
-    * Review Script info on directories
-    * Support modules
-* Shell: option to capture output as yaml.
+
+## Code organization
+
+* Versioning and auto-upgrading of commands
+* Review Script info on directories
+* Support modules
 
 ## Improve slow startup
 

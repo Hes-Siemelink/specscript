@@ -17,7 +17,7 @@ private class Evaluator(val context: ScriptContext) : JsonProcessor() {
             val evaluatedData = process(data)
             node.set<JsonNode>(key, evaluatedData)
 
-            if (key.startsWith(":")) {
+            if (key.startsWith("/")) {
                 val name = key.substring(1)
                 val handler = context.getCommandHandler(name)
                 val result = runCommand(handler, evaluatedData, context)
