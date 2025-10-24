@@ -2,31 +2,26 @@ group = "hes.specscript"
 version = "0.6.2-SNAPSHOT"
 
 plugins {
-    kotlin("multiplatform") version "2.1.20"
-    kotlin("plugin.serialization") version "2.1.20"
+    kotlin("multiplatform") version "2.2.20"
+    kotlin("plugin.serialization") version "2.2.20"
     `maven-publish`
     id("com.github.breadmoirai.github-release") version "2.5.2"
 }
 
 kotlin {
     jvm {
-        compilations.all {
-            kotlinOptions.jvmTarget = "21"
-        }
         testRuns["test"].executionTask.configure {
             useJUnitPlatform()
         }
     }
-    // Minimal native target (can expand later). Assumes Apple Silicon; adjust if needed.
-    macosArm64()
 
     sourceSets {
         val commonMain by getting {
             dependencies {
                 implementation("io.github.oshai:kotlin-logging:5.0.0")
-                implementation("io.ktor:ktor-client-core:3.3.+")
-                // Serialization runtime (recommended for multiplatform)
+                // Removed Ktor from commonMain to avoid ABI mismatch; keep it JVM-only for now.
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+                implementation("net.mamoe.yamlkt:yamlkt:0.13.+")
             }
         }
         val commonTest by getting {
@@ -72,12 +67,6 @@ kotlin {
                 implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.+")
                 implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.17.+")
             }
-        }
-        val macosArm64Main by getting {
-            // Native-specific deps can go here later
-        }
-        val macosArm64Test by getting {
-            dependencies { implementation(kotlin("test")) }
         }
     }
 }
