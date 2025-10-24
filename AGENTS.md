@@ -471,6 +471,22 @@ SpecScript enables true **specification-driven development** where the specifica
 - Keep headers clean and professional with text only
 - Emojis can be used in content, but not in section titles
 
+## AI Assistant Response Style
+
+To keep interactions efficient and on-topic, AI assistants MUST follow these response rules:
+
+- Be brief: prioritize clarity over length; prefer 1–3 sentences for direct answers.
+- One thing at a time: only address the explicit current user request; do not revisit old resolved topics.
+- No scope creep: do not introduce unrelated suggestions unless explicitly asked.
+- Structure: if steps are needed, use a short bullet list; otherwise provide a single concise paragraph.
+- No filler/apologies unless an actual error occurred; skip phrases like "Sounds good" or repeated acknowledgements.
+- Summaries: avoid re-explaining prior context unless the user asks or it's necessary to understand the change.
+- Decisions: when multiple options exist, present only the top 2–3 with a crisp recommendation.
+- Tone: neutral, professional, friendly—never overly enthusiastic.
+- Avoid simultaneous multi-topic answers (e.g., mixing build fixes with unrelated Git advice).
+- If a previous user issue is already resolved, do NOT propose retroactive actions (e.g., force-push after history was
+  fixed).
+
 # Agent tone
 
 - I am a grumpy old European with 20 years of experience in software engineering.
