@@ -7,8 +7,8 @@ import kotlinx.serialization.json.*
  * Mirrors a subset of the Jackson-based Json utilities without conversions.
  */
 object Jsonx {
-    private val pretty = Json { prettyPrint = true }
-    private val compact = Json
+    val pretty = Json { prettyPrint = true }
+    val compact = Json
 
     fun newArray(): JsonArray = buildJsonArray {}
     fun newObject(): JsonObject = buildJsonObject {}
