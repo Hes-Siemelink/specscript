@@ -11,3 +11,6 @@ test.db
 .specstory/*
 .cursorindexingignore
 .specstory/.what-is-this.md
+
+# Specscript
+/.specscript

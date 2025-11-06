@@ -3,15 +3,8 @@
 * Rewrite README
 * Test mode
     * Merge tests into CLI so you can run cli --test <comething>
-
-## MCP
-
-* TODOs in MCP server.
-* Process MCP result as list
-
-## AI agents
-
-* https://github.com/JetBrains/koog
+* Define commands in Markdown and publish thenm as library functions
+* Use JSON schema for input. Or Typescript syntax?
 
 ## In general
 
@@ -85,6 +78,16 @@
 * Multi-line shell support
 * Support stdin:
   if (System.`in`.available() != 0) { val input = Yaml.mapper.readTree(System.`in`)}
+
+## MCP
+
+* TODOs in MCP server.
+* Process MCP result as list
+
+## AI agents
+
+* Langchain
+* https://github.com/JetBrains/koog
 
 ## Code organization
 

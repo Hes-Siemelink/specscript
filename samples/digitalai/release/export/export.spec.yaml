@@ -1,0 +1,17 @@
+Script info: Export some releases
+
+Connect to: Digital.ai Release
+
+POST:
+  path: /api/v1/releases/search?page=0&resultsPerPage=10&pageIsOffset=false
+  body:
+    timeFrame: LAST_MONTH
+
+#Read file: sample-releases.json
+
+Encode vars:
+  text: ${output}
+
+For each:
+  Output: ${item.id}
+

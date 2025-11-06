@@ -1,0 +1,5 @@
+Script info: |
+  Exporting releases from Digital.ai Release
+
+connections:
+  Digital.ai Release: ../login/connect.spec.yaml
