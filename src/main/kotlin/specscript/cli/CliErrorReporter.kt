@@ -35,6 +35,11 @@ object CliErrorReporter {
             }
         }
 
+        // Print data
+        if (exception is SpecScriptCommandError && exception.data != null) {
+            System.err.println(exception.data.toDisplayYaml().prependIndent())
+        }
+
         // Print SpecScript context
         exception.command?.let {
             val yaml = exception.command.toDisplayYaml().prependIndent("  ")
