@@ -9,8 +9,8 @@ POST:
 
 #Read file: sample-releases.json
 
-Encode vars:
-  text: ${output}
+#Encode vars:
+#  text: ${output}
 
 For each:
   Output: ${item.id}

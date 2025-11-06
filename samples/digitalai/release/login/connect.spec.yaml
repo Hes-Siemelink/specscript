@@ -13,5 +13,6 @@ If:
 ---
 Http request defaults:
   url: ${endpoint.url}
-  username: ${endpoint.username}
-  password: ${endpoint.password}
+  #  username: ${endpoint.username}
+  #  password: ${endpoint.password}
+  headers: ${endpoint.headers}

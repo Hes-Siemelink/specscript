@@ -136,3 +136,21 @@ Expected output:
   - name: runner (Remote runner)
     value: 123
 
+---
+Test case: For each with variable syntax in sample data
+
+Read file:
+  resource: data-with-variable-syntax.yaml
+
+For each:
+  ${item} in: ${output}
+  Print: ${item}
+
+---
+Test case: For each with variable syntax in sample data and implicit loop variable
+
+Read file:
+  resource: data-with-variable-syntax.yaml
+
+For each:
+  Print: ${item}

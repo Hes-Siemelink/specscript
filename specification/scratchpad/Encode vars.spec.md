@@ -13,7 +13,7 @@ Input parameters:
   text: The text to sanitize
 ```
 
-We use a simple encoding scheme where `${` is replaced with `$💰{` to escape the variable syntax.
+We use a simple encoding scheme where `${` is replaced with `💰{` to escape the variable syntax.
 
 ```yaml specscript
 Replace:

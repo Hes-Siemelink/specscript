@@ -3,7 +3,7 @@
 * Rewrite README
 * Test mode
     * Merge tests into CLI so you can run cli --test <comething>
-* Define commands in Markdown and publish thenm as library functions
+* Define commands in Markdown and publish them as library functions
 * Use JSON schema for input. Or Typescript syntax?
 
 ## In general

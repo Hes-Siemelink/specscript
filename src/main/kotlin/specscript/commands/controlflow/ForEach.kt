@@ -1,10 +1,7 @@
 package specscript.commands.controlflow
 
 import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ArrayNode
-import com.fasterxml.jackson.databind.node.JsonNodeFactory
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.ValueNode
+import com.fasterxml.jackson.databind.node.*
 import specscript.language.*
 
 object ForEach : CommandHandler("For each", "core/control-flow"), ObjectHandler, DelayedResolver {
@@ -16,8 +13,14 @@ object ForEach : CommandHandler("For each", "core/control-flow"), ObjectHandler,
         // Copy the data because we will modify it
         val body = data.deepCopy()
 
-        val (loopVar, itemData) = removeLoopVariable(body) ?: Pair("item", context.output)
-        checkNotNull(itemData) { "For each without loop variable takes items from  \${output}, but \${output} is null" }
+        val (loopVar, itemData) = removeLoopVariable(body)
+            ?: Pair(
+                "item",
+                TextNode("\${output}") // Pass ${output} as a string to prevent resolution of variable syntax inside the data
+            ).apply {
+                checkNotNull(context.output) { "For each without loop variable takes items from  \${output}, but \${output} is null" }
+            }
+
 
         val items = itemData.resolve(context)
         val output: JsonNode = if (items is ArrayNode) body.arrayNode() else body.objectNode()
