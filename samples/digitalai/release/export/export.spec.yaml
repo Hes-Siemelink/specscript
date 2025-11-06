@@ -2,16 +2,37 @@ Script info: Export some releases
 
 Connect to: Digital.ai Release
 
-POST:
-  path: /api/v1/releases/search?page=0&resultsPerPage=10&pageIsOffset=false
-  body:
-    timeFrame: LAST_MONTH
+${page}: 0
 
-#Read file: sample-releases.json
+Repeat:
 
-#Encode vars:
-#  text: ${output}
+  POST:
+    path: /api/v1/releases/search?page=${page}&resultsPerPage=5&pageIsOffset=false
+    body:
+      timeFrame: LAST_MONTH
+  As: ${releases}
 
-For each:
-  Output: ${item.id}
+  For each:
+    ${release} in: ${releases}
 
+    Replace:
+      text: /
+      in: ${release.id}
+      with: _
+    As: ${name}
+
+    Write file:
+      file: out/${name}.json
+      content: ${release}
+    Print: out/${name}.json
+
+  Add to:
+    ${page}: 1
+
+  until:
+    not:
+      item:
+        /Size: ${releases}
+      equals: 5
+
+Output: Export completed
