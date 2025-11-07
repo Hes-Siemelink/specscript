@@ -15,8 +15,7 @@ properties:
       - DELETE
   headers:
     type: object
-  body:
-    type: object
+  body: { }
   cookies:
     type: object
   save as:

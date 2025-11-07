@@ -48,6 +48,21 @@ Expected output:
   3: Three
 
 ---
+Test case: POST with list
+
+POST:
+  path: /echo/body
+  body:
+    - One
+    - Two
+    - Three
+
+Expected output:
+  - One
+  - Two
+  - Three
+
+---
 Test case: POST without path parameter
 
 POST:

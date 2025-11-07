@@ -1,5 +1,9 @@
 # On my mind
 
+* Variables surrounded by whitespace
+* Crispy Lispy Typescript implementation
+* Description command
+* Input schema according to JSON schema
 * Rewrite README
 * Test mode
     * Merge tests into CLI so you can run cli --test <comething>
