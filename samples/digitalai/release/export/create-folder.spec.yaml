@@ -1,0 +1,14 @@
+Input parameters:
+  folderId: Full folder ID
+  title:
+    description: Folder title
+    default: New Folder
+
+Connect to: Digital.ai Release
+
+POST:
+  path: /fixtures/folders
+  body:
+    - type: xlrelease.Folder
+      id: ${folderId}
+      title: ${title}

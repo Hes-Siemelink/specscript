@@ -1,0 +1,18 @@
+Script info: Import a release
+
+Connect to: Digital.ai Release
+
+Read file: out/Applications_Folder3d78f453fa75488495836f261e732e49_Release975b794d7a934989921d7f9de8386efd.json
+As: ${release}
+
+---
+POST:
+  path: /fixtures/release
+  body: ${release}
+
+Output:
+  Imported release: ${output.title}
+
+On error:
+  Print: ${error}
+
