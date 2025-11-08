@@ -1,5 +1,6 @@
-package specscript.spec
+package specscript.test
 
+import org.junit.jupiter.api.DynamicContainer
 import org.junit.jupiter.api.DynamicContainer.dynamicContainer
 import org.junit.jupiter.api.DynamicNode
 import org.junit.jupiter.api.DynamicTest
@@ -12,6 +13,7 @@ import specscript.commands.userinteraction.TestPrompt
 import specscript.commands.userinteraction.UserPrompt
 import specscript.files.*
 import specscript.language.*
+import specscript.util.Yaml
 import specscript.util.toDisplayYaml
 import java.nio.file.Files
 import java.nio.file.Path
@@ -19,8 +21,50 @@ import kotlin.io.path.isDirectory
 import kotlin.io.path.listDirectoryEntries
 import kotlin.io.path.name
 
+
 //
-// All
+// Run tests
+//
+
+fun runTests(file: Path) {
+    val report = TestReport()
+    runTestSuite(file.getTests(), report)
+
+    println(Yaml.mapper.writeValueAsString(report))
+}
+
+fun runTestSuite(nodes: List<DynamicNode>, report: TestReport) {
+    fun run(node: DynamicNode) {
+        when (node) {
+            is DynamicTest -> {
+                try {
+                    node.executable.execute()
+                    report.passed += 1
+                } catch (e: Throwable) {
+                    report.failed += 1
+                    report.details += TestFailure(node.displayName, e.message ?: "")
+                }
+            }
+
+            is DynamicContainer -> node.children.forEach { run(it) }
+        }
+    }
+    nodes.forEach { run(it) }
+}
+
+class TestReport() {
+    var passed: Int = 0
+    var failed: Int = 0
+    var details: List<TestFailure> = emptyList()
+}
+
+class TestFailure(
+    val testCase: String,
+    val error: String
+)
+
+//
+// Extract tests from files
 //
 
 fun Path.getTests(): List<DynamicNode> {
@@ -37,6 +81,7 @@ fun Path.getTests(): List<DynamicNode> {
             }
         }
     } else {
+        // TODO: Get test cases from Markdown and Code examples from Yaml
         if (name.endsWith(YAML_SPEC_EXTENSION)) {
             return SpecScriptFile(this).getTestCases()
         } else if (name.endsWith(MARKDOWN_SPEC_EXTENSION)) {

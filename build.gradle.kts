@@ -37,18 +37,14 @@ dependencies {
     implementation("com.github.kotlin-inquirer:kotlin-inquirer:0.1.0")
     implementation("org.jline:jline:3.27.+")
     implementation("org.fusesource.jansi:jansi:2.4.1")
-    // Removed Javalin dependency after migrating HttpServer to Ktor
     implementation("org.xerial:sqlite-jdbc:3.47.0.0")
-
-    // Model Context Protocol dependencies
     implementation("io.modelcontextprotocol:kotlin-sdk:0.7.2")
-    implementation("io.github.oshai:kotlin-logging:5.0.0")
+    implementation("io.github.oshai:kotlin-logging:5.0.0")  // For MCP
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+    implementation("org.junit.jupiter:junit-jupiter-api:5.13.4")
+    runtimeOnly("org.junit.jupiter:junit-jupiter-engine:5.13.4")
+
     testImplementation("io.kotest:kotest-assertions-core:5.7.2")
-    testImplementation("net.pwall.json:json-kotlin-schema:0.47")
-
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 }
 
 sourceSets.main.get().resources.srcDir("specification")

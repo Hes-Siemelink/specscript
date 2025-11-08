@@ -5,7 +5,15 @@ import specscript.commands.http.HttpServer
 import specscript.commands.userinteraction.TestPrompt
 import specscript.commands.userinteraction.UserPrompt
 import specscript.files.SpecScriptFile
+import specscript.test.getCodeExamplesAsTests
+import specscript.test.getTests
 import java.nio.file.Path
+
+object TestPaths {
+    val README: Path = Path.of("README.md")
+    val SPEC: Path = Path.of("specification")
+    val SAMPLE_SERVER: Path = Path.of("samples/http-server/sample-server/sample-server.spec.yaml")
+}
 
 class SpecScriptTestSuite {
 

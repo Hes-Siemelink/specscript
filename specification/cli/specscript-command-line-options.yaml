@@ -23,3 +23,9 @@ debug:
   default: false
   type: boolean
   short option: d
+
+test:
+  description: Run in test mode. Only tests will be executed.
+  default: false
+  type: boolean
+  short option: t

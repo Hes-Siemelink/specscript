@@ -32,6 +32,7 @@ Expected console output: |
     --output-json, -j   Print the output at the end of the script in Json format
     --interactive, -i   SpecScript may prompt for user input if it needs more information
     --debug, -d     Run in debug mode. Prints stacktraces when an error occurs.
+    --test, -t      Run in test mode. Only tests will be executed.
 ```
 
 ## Specifying the working dir

@@ -5,6 +5,7 @@ import specscript.files.FileContext
 import specscript.files.SpecScriptFile
 import specscript.language.*
 import specscript.language.types.toDisplayString
+import specscript.test.runTests
 import specscript.util.add
 import specscript.util.toDisplayJson
 import specscript.util.toDisplayYaml
@@ -45,6 +46,12 @@ class SpecScriptCli(
         val command = options.commands[0]
         val resolvedFile = resolveCommand(command, workingDir)
 
+        // Run in test mode
+        if (options.testMode) {
+            runTests(resolvedFile)
+            return
+        }
+
         // Create context
         val context = if (parent == null) {
             FileContext(resolvedFile, interactive = options.interactive, workingDir = workingDir)
@@ -59,6 +66,7 @@ class SpecScriptCli(
             executeFile(resolvedFile, options, context, output)
         }
     }
+
 
     private fun invokeDirectory(
         cliDir: Path,

@@ -12,6 +12,7 @@ class CliCommandLineOptions private constructor(
     val printOutput: OutputOption,
     val help: Boolean,
     val debug: Boolean,
+    val testMode: Boolean,
     val commands: List<String>,
     private val commandArgs: List<String>
 
@@ -34,6 +35,7 @@ class CliCommandLineOptions private constructor(
                 printOutput = options.getOutputOption(),
                 help = options.contains("help"),
                 debug = options.contains("debug"),
+                testMode = options.contains("test"),
                 commands,
                 commandArgs
             )
