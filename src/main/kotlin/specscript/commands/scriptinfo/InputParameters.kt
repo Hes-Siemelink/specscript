@@ -47,7 +47,7 @@ object InputParameters : CommandHandler("Input parameters", "core/script-info"),
         for ((name, info) in input.properties.entries) {
 
             // Already exists
-            if (context.getInputVariables().contains(name)) {
+            if (context.getInputVariables().has(name)) {
                 // Copy variable to top level
                 context.variables[name] = context.getInputVariables()[name]
                 continue

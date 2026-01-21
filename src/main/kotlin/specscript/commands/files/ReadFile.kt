@@ -37,9 +37,9 @@ fun JsonNode.toPath(context: ScriptContext, directory: Path? = null): Path {
         }
 
         is ObjectNode -> {
-            if (contains("file")) {
+            if (has("file")) {
                 this["file"].toPath(context)
-            } else if (contains("resource")) {
+            } else if (has("resource")) {
                 this["resource"].toPath(context, context.scriptDir)
             } else {
                 throw CommandFormatException("Expected either 'file' or 'resource' property.")
