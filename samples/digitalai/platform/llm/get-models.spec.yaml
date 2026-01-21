@@ -1,0 +1,16 @@
+Input parameters:
+  token: Platform authentication token
+
+GET:
+  url: https://api.staging.digital.ai/llm/models?output_modality=TEXT
+  headers:
+    Authorization: Token ${token}
+    X-Digitalai-AppName: Release
+    
+On error:
+  Print: ${error}
+  Exit: 1
+
+For each:
+  ${item} in: ${output.data}
+  Output: ${item.id}

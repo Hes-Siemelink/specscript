@@ -1,8 +1,5 @@
 # On my mind
 
-* Variables surrounded by whitespace
-* Crispy Lispy Typescript implementation
-* equals with list
 * Description command
 * Input schema according to JSON schema
 * Rewrite README

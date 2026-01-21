@@ -1,0 +1,14 @@
+/let:
+  a: 1
+/add: [ $a, 2, 3 ]
+
+/expect: 6
+
+---
+${a}: 2
+Add:
+  - ${a}
+  - 2
+  - 3
+
+Expected output: 6
