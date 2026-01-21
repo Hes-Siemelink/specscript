@@ -36,7 +36,7 @@ object Add : CommandHandler("Add", "core/data-manipulation"), ArrayHandler {
 
     private fun addToObject(target: ObjectNode, item: JsonNode): ObjectNode {
         return when (item) {
-            is ObjectNode -> target.setAll<ObjectNode>(item)
+            is ObjectNode -> target.setAll(item)
             else -> throw SpecScriptException("Can't add a ${item.javaClass.simpleName} to a ${target.javaClass.simpleName}")
         }
     }

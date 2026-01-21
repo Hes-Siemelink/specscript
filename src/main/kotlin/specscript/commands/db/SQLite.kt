@@ -16,7 +16,7 @@ import java.sql.DriverManager
 object SQLite : CommandHandler("SQLite", "core/db"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
-        val dataWithDefaults = SQLiteDefaults.getFrom(context)?.deepCopy<ObjectNode>()?.setAll(data) ?: data
+        val dataWithDefaults = (SQLiteDefaults.getFrom(context) as ObjectNode?)?.deepCopy()?.setAll(data) ?: data
         val sql = dataWithDefaults.toDomainObject(SQLiteData::class)
 
         // FIXME Use prepared statements to avoid SQL injection
