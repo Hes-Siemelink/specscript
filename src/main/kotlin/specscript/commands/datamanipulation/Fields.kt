@@ -14,7 +14,7 @@ object Fields : CommandHandler("Fields", "core/data-manipulation"), ObjectHandle
 
         val fields = data.arrayNode()
 
-        for ((key, _) in data.fields()) {
+        for ((key, _) in data.properties()) {
             fields.add(key)
         }
 

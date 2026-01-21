@@ -46,7 +46,7 @@ class Contains(
 
     private fun inObject(obj: JsonNode, container: ObjectNode): Boolean {
         if (obj is ObjectNode) {
-            for (field in obj.fields()) {
+            for (field in obj.properties()) {
                 if (!container.has(field.key)) {
                     return false
                 }

@@ -91,7 +91,7 @@ abstract class JsonProcessor {
 
     open fun processObject(node: ObjectNode): JsonNode {
 
-        for (field in node.fields()) {
+        for (field in node.properties()) {
             node.set(field.key, process(field.value))
         }
 
@@ -113,7 +113,7 @@ abstract class JsonProcessor {
 
 fun ObjectNode.toKotlinx(): JsonObject {
     return buildJsonObject {
-        fields().forEach { (key, value) ->
+        properties().forEach { (key, value) ->
             put(key, value.toKotlinx())
         }
     }

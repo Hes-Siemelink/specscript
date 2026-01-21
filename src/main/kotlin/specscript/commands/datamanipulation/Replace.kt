@@ -67,7 +67,7 @@ object Replace : CommandHandler("Replace", "core/data-manipulation"), ObjectHand
 
     private fun replaceObject(source: ObjectNode, part: JsonNode, replaceWith: JsonNode): JsonNode {
         val replacement = source.objectNode()
-        for (field in source.fields()) {
+        for (field in source.properties()) {
             replacement.set(field.key, replace(field.value, part, replaceWith))
         }
         return replacement

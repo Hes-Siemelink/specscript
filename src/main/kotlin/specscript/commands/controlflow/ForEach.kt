@@ -65,7 +65,7 @@ private fun JsonNode.enumerateForEach(): ArrayNode {
         is ValueNode -> return ArrayNode(JsonNodeFactory.instance).add(this)
         is ObjectNode -> {
             val array = ArrayNode(JsonNodeFactory.instance)
-            for (field in fields()) {
+            for (field in properties()) {
                 val obj: ObjectNode = array.objectNode()
                 obj.set("key", array.textNode(field.key))
                 obj.set("value", field.value)

@@ -31,7 +31,7 @@ object ExpectedError :
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
 
-        for ((key, _) in data.fields()) {
+        for (key in data.propertyNames()) {
             if (key == "any" || key == context.error?.error?.type) {
                 context.error = null
                 return null

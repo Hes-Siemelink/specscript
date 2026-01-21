@@ -18,7 +18,7 @@ object PromptObject : CommandHandler("Prompt object", "core/user-interaction"), 
         // Temporary variables that will hold the contents of the entries so later ones can refer to previous ones
         val variables = context.variables.toMutableMap()
 
-        for ((name, parameterData) in data.fields()) {
+        for ((name, parameterData) in data.properties()) {
 
             // Resolve variables
             val parameter = parameterData.resolveVariables(variables).toDomainObject(ParameterData::class)

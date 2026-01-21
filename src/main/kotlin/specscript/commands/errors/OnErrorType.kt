@@ -9,7 +9,7 @@ object OnErrorType : CommandHandler("On error type", "core/errors"), ObjectHandl
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
 
-        for ((key, value) in data.fields()) {
+        for ((key, value) in data.properties()) {
             if (key == "any" || key == context.error?.error?.type) {
                 runErrorHandling(value, context)
                 break

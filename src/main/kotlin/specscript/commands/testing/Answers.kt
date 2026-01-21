@@ -16,7 +16,7 @@ object Answers : CommandHandler("Answers", "core/testing"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
 
-        data.fields().forEach {
+        data.properties().forEach {
             recordedAnswers[it.key] = it.value
         }
 

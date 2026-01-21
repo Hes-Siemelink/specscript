@@ -43,7 +43,7 @@ data class HttpParameters(
                 return
             }
 
-            for (default in defaults.fields()) {
+            for (default in defaults.properties()) {
                 // Add fields that don't exist
                 data.putIfAbsent(default.key, default.value)
 

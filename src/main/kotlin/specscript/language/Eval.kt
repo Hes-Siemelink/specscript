@@ -13,7 +13,7 @@ private class Evaluator(val context: ScriptContext) : JsonProcessor() {
 
     override fun processObject(node: ObjectNode): JsonNode {
 
-        for ((key, data) in node.fields()) {
+        for ((key, data) in node.properties()) {
             val evaluatedData = process(data)
             node.set(key, evaluatedData)
 

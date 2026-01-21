@@ -12,7 +12,7 @@ object Values : CommandHandler("Values", "core/data-manipulation"), ObjectHandle
 
         val fields = data.arrayNode()
 
-        for ((_, value) in data.fields()) {
+        for (value in data.values()) {
             fields.add(value)
         }
 

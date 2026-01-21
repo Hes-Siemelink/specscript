@@ -80,7 +80,7 @@ object HttpClient {
         }
 
     private fun HttpRequestBuilder.headers(parameters: HttpParameters) {
-        parameters.headers?.fields()?.forEach { header ->
+        parameters.headers?.properties()?.forEach { header ->
             header(header.key, header.value.textValue())
         }
 
@@ -93,7 +93,7 @@ object HttpClient {
     }
 
     private fun HttpRequestBuilder.cookies(parameters: HttpParameters) {
-        parameters.cookies?.fields()?.forEach { cookie ->
+        parameters.cookies?.properties()?.forEach { cookie ->
             cookie(cookie.key, cookie.value.textValue())
         }
     }
@@ -103,7 +103,7 @@ object HttpClient {
 
         if (headers[HttpHeaders.ContentType] == ContentType.Application.FormUrlEncoded.toString()) {
             val formData = Parameters.build {
-                parameters.body.fields().forEach {
+                parameters.body.properties().forEach {
                     append(it.key, it.value.toDisplayYaml())
                 }
             }

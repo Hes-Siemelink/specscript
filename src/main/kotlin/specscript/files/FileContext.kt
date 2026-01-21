@@ -175,7 +175,7 @@ class FileContext(
  * Load types from directory.
  */
 private fun TypeRegistry.loadTypes(info: DirectoryInfo) {
-    for ((name, type) in info.types.fields()) {
+    for ((name, type) in info.types.properties()) {
         registerType(Type(name, type.toDomainObject(TypeSpecification::class)))
     }
 }

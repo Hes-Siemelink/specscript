@@ -20,25 +20,7 @@ import specscript.util.Yaml
 import specscript.util.toDomainObject
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.StringNode
-import kotlin.Exception
-import kotlin.String
-import kotlin.collections.asSequence
-import kotlin.collections.map
-import kotlin.collections.toList
-import kotlin.getValue
 import kotlin.io.path.name
-import kotlin.lazy
-import kotlin.let
-import kotlin.sequences.asSequence
-import kotlin.sequences.toList
-import kotlin.text.asSequence
-import kotlin.text.contains
-import kotlin.text.indexOf
-import kotlin.text.substring
-import kotlin.text.toBoolean
-import kotlin.text.toList
-import kotlin.text.trim
-import kotlin.toList
 
 data class Command(val name: String, val data: JsonNode)
 
@@ -121,7 +103,7 @@ private fun toCommandList(script: List<JsonNode>): List<Command> {
 }
 
 private fun toCommandList(scriptNode: JsonNode): List<Command> {
-    return scriptNode.fields().asSequence().map { Command(it.key, it.value) }.toList()
+    return scriptNode.properties().asSequence().map { Command(it.key, it.value) }.toList()
 }
 
 private fun toCommandList(script: String): List<Command> {
