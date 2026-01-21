@@ -21,7 +21,7 @@ object Add : CommandHandler("Add", "core/data-manipulation"), ArrayHandler {
         return when (target) {
             is ArrayNode -> addToArray(target, item)
             is ObjectNode -> addToObject(target, item)
-            is TextNode -> addToText(target, item)
+            is StringNode -> addToText(target, item)
             is IntNode -> addToInt(target, item)
             else -> throw SpecScriptException("Can't add a ${item.javaClass.simpleName} to a ${target.javaClass.simpleName}")
         }
@@ -41,9 +41,9 @@ object Add : CommandHandler("Add", "core/data-manipulation"), ArrayHandler {
         }
     }
 
-    private fun addToText(target: TextNode, item: JsonNode): TextNode {
+    private fun addToText(target: StringNode, item: JsonNode): StringNode {
         return when (item) {
-            is ValueNode -> TextNode(target.asText() + item.asText())
+            is ValueNode -> StringNode(target.asText() + item.asText())
             else -> throw SpecScriptException("Can't add a ${item.javaClass.simpleName} to a ${target.javaClass.simpleName}")
         }
     }

@@ -3,7 +3,7 @@ package specscript.commands.connections
 import specscript.language.*
 import specscript.util.Json.newObject
 import tools.jackson.databind.JsonNode
-import tools.jackson.databind.node.TextNode
+import tools.jackson.databind.node.StringNode
 import tools.jackson.databind.node.ValueNode
 
 object GetCredentials : CommandHandler("Get credentials", "core/connections"), ValueHandler {
@@ -12,7 +12,7 @@ object GetCredentials : CommandHandler("Get credentials", "core/connections"), V
 
         val targetName = data.asText() ?: throw CommandFormatException("Specify target resource")
         val credentials = context.getCredentials()
-        val target = credentials.targetResources[targetName] ?: return TextNode("")
+        val target = credentials.targetResources[targetName] ?: return StringNode("")
 
         return when {
             target.default != null -> {

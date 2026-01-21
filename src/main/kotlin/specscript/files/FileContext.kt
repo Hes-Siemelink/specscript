@@ -8,7 +8,7 @@ import specscript.language.types.TypeRegistry
 import specscript.language.types.TypeSpecification
 import specscript.util.toDomainObject
 import tools.jackson.databind.JsonNode
-import tools.jackson.databind.node.TextNode
+import tools.jackson.databind.node.StringNode
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.*
@@ -56,13 +56,13 @@ class FileContext(
             } else {
                 Files.createTempDirectory("specscript-").apply {
                     toFile().deleteOnExit()
-                    variables[SCRIPT_TEMP_DIR_VARIABLE] = TextNode(toAbsolutePath().toString())
+                    variables[SCRIPT_TEMP_DIR_VARIABLE] = StringNode(toAbsolutePath().toString())
                 }
             }
         }
 
     fun setTempDir(dir: Path) {
-        variables[SCRIPT_TEMP_DIR_VARIABLE] = TextNode(dir.toAbsolutePath().toString())
+        variables[SCRIPT_TEMP_DIR_VARIABLE] = StringNode(dir.toAbsolutePath().toString())
     }
 
     override val output: JsonNode?

@@ -19,17 +19,11 @@ import specscript.files.MarkdownBlock.*
 import specscript.util.Yaml
 import specscript.util.toDomainObject
 import tools.jackson.databind.JsonNode
-import tools.jackson.databind.node.TextNode
+import tools.jackson.databind.node.StringNode
 import kotlin.Exception
 import kotlin.String
-import kotlin.collections.List
 import kotlin.collections.asSequence
-import kotlin.collections.emptyMap
-import kotlin.collections.find
-import kotlin.collections.flatten
 import kotlin.collections.map
-import kotlin.collections.mutableListOf
-import kotlin.collections.plus
 import kotlin.collections.toList
 import kotlin.getValue
 import kotlin.io.path.name
@@ -155,7 +149,7 @@ fun List<MarkdownBlock>.toScript(): Script {
             YamlFile -> {
                 val data = TempFileData(
                     filename = block.getOption("file"),
-                    content = TextNode(block.getContent()),
+                    content = StringNode(block.getContent()),
                     resolve = block.getOption("resolve")?.toBoolean() ?: false,
                 )
                 commands.add(
@@ -197,13 +191,13 @@ fun List<MarkdownBlock>.toScript(): Script {
 
             Quote -> {
                 commands.add(
-                    Command(Print.name, TextNode(block.getContent()))
+                    Command(Print.name, StringNode(block.getContent()))
                 )
             }
 
             Output -> {
                 commands.add(
-                    Command(ExpectedConsoleOutput.name, TextNode(block.getContent()))
+                    Command(ExpectedConsoleOutput.name, StringNode(block.getContent()))
                 )
             }
         }

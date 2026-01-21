@@ -15,7 +15,7 @@ import specscript.util.Json
 import specscript.util.Yaml
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
-import tools.jackson.databind.node.TextNode
+import tools.jackson.databind.node.StringNode
 import kotlin.io.path.name
 
 
@@ -116,7 +116,7 @@ private suspend fun handleRequest(
 private fun ScriptContext.addInputVariable(call: ApplicationCall, bodyText: String) {
     // Body takes precedence
     if (bodyText.isNotBlank()) {
-        variables[INPUT_VARIABLE] = runCatching { Json.mapper.readTree(bodyText) }.getOrElse { TextNode(bodyText) }
+        variables[INPUT_VARIABLE] = runCatching { Json.mapper.readTree(bodyText) }.getOrElse { StringNode(bodyText) }
         return
     }
     // Fallback to query parameters if present
@@ -133,9 +133,9 @@ private fun ScriptContext.addRequestVariable(
 ) {
     val requestData = Json.newObject()
     requestData.set("headers", call.headersAsJson())
-    requestData.set("path", TextNode(call.request.path()))
+    requestData.set("path", StringNode(call.request.path()))
     requestData.set("pathParameters", call.pathParametersAsJson(pathParamNames))
-    requestData.set("query", TextNode(call.request.queryString().orEmpty()))
+    requestData.set("query", StringNode(call.request.queryString().orEmpty()))
     requestData.set("queryParameters", call.queryParametersAsJson())
     requestData.set("body", bodyText.toBodyJson())
     requestData.set("cookies", call.cookiesAsJson())
@@ -155,7 +155,7 @@ private fun ApplicationCall.cookiesAsJson(): ObjectNode =
     Json.newObject(request.cookies.rawCookies)
 
 private fun String.toBodyJson(): JsonNode =
-    if (isBlank()) Json.newObject() else runCatching { Json.mapper.readTree(this) }.getOrElse { TextNode(this) }
+    if (isBlank()) Json.newObject() else runCatching { Json.mapper.readTree(this) }.getOrElse { StringNode(this) }
 
 
 private typealias HttpServerInstance = EmbeddedServer<NettyApplicationEngine, NettyApplicationEngine.Configuration>

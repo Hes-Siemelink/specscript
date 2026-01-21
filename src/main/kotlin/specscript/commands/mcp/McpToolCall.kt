@@ -14,7 +14,7 @@ import specscript.util.toDomainObject
 import specscript.util.toKotlinx
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
-import tools.jackson.databind.node.TextNode
+import tools.jackson.databind.node.StringNode
 
 object McpToolCall : CommandHandler("Mcp tool call", "ai/mcp"), ObjectHandler, DelayedResolver {
 
@@ -64,7 +64,7 @@ object McpToolCall : CommandHandler("Mcp tool call", "ai/mcp"), ObjectHandler, D
 
 fun CallToolResult.firstTextAsJson(): JsonNode {
     if (content.isEmpty()) {
-        return TextNode("Tool executed but returned no content")
+        return StringNode("Tool executed but returned no content")
     }
 
     // TODO handle lists and other content types
@@ -74,7 +74,7 @@ fun CallToolResult.firstTextAsJson(): JsonNode {
             Yaml.parseIfPossible(first.text)
         }
 
-        else -> TextNode("Tool executed successfully with result of type ${first.type}")
+        else -> StringNode("Tool executed successfully with result of type ${first.type}")
     }
 }
 

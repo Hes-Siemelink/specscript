@@ -22,7 +22,7 @@ import specscript.language.*
 import specscript.util.*
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
-import tools.jackson.databind.node.TextNode
+import tools.jackson.databind.node.StringNode
 import kotlin.concurrent.thread
 
 object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, DelayedResolver {
@@ -195,7 +195,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
             // TODO handle lists
             try {
                 // Run script
-                val result: JsonNode? = if (tool.script is TextNode) {
+                val result: JsonNode? = if (tool.script is StringNode) {
                     // Local script file
                     val file = localContext.scriptDir.resolve(tool.script.textValue())
                     SpecScriptFile(file).run(FileContext(file, localContext, localContext.variables))
@@ -223,7 +223,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
             mimeType = resource.mimeType
         ) { request ->
 
-            val result: JsonNode? = if (resource.script is TextNode) {
+            val result: JsonNode? = if (resource.script is StringNode) {
                 // Local script file
                 val file = localContext.scriptDir.resolve(resource.script.textValue())
                 SpecScriptFile(file).run(localContext)
@@ -256,7 +256,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
             localContext.variables[INPUT_VARIABLE] = Json.newObject(request.arguments ?: emptyMap())
 
             // Run script
-            val result: JsonNode? = if (prompt.script is TextNode) {
+            val result: JsonNode? = if (prompt.script is StringNode) {
                 // Local script file
                 val file = localContext.scriptDir.resolve(prompt.script.textValue())
                 SpecScriptFile(file).run(localContext)

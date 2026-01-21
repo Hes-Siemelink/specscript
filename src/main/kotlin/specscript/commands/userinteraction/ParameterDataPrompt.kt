@@ -13,7 +13,7 @@ import tools.jackson.databind.node.ArrayNode
 import tools.jackson.databind.node.BooleanNode.FALSE
 import tools.jackson.databind.node.BooleanNode.TRUE
 import tools.jackson.databind.node.ObjectNode
-import tools.jackson.databind.node.TextNode
+import tools.jackson.databind.node.StringNode
 
 
 fun PropertyDefinition.prompt(label: String? = null): JsonNode {
@@ -141,8 +141,8 @@ private fun promptList(message: String, type: TypeSpecification): ArrayNode {
     val list = Json.newArray()
 
     val name = type.name ?: "item"
-    val add = TextNode("Add new $name")
-    val done = TextNode("Done")
+    val add = StringNode("Add new $name")
+    val done = StringNode("Done")
 
     while (true) {
 

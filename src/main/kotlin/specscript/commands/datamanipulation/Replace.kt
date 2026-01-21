@@ -6,7 +6,7 @@ import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ArrayNode
 import tools.jackson.databind.node.JsonNodeFactory
 import tools.jackson.databind.node.ObjectNode
-import tools.jackson.databind.node.TextNode
+import tools.jackson.databind.node.StringNode
 
 object Replace : CommandHandler("Replace", "core/data-manipulation"), ObjectHandler {
 
@@ -30,7 +30,7 @@ object Replace : CommandHandler("Replace", "core/data-manipulation"), ObjectHand
     ): JsonNode? {
 
         return when (source) {
-            is TextNode -> {
+            is StringNode -> {
                 replaceText(source.textValue(), part, replacement)
             }
 
@@ -47,14 +47,14 @@ object Replace : CommandHandler("Replace", "core/data-manipulation"), ObjectHand
     }
 
     private fun replaceText(source: String, part: JsonNode, replaceWith: JsonNode): JsonNode {
-        if (part !is TextNode) {
+        if (part !is StringNode) {
             throw CommandFormatException("'Replace.find' may contain text only")
         }
 
         val replacementText = replaceWith.toDisplayYaml()
         val replacement = source.replace(part.textValue(), replacementText)
 
-        return TextNode(replacement)
+        return StringNode(replacement)
     }
 
     private fun replaceArray(source: ArrayNode, part: JsonNode, replaceWith: JsonNode): JsonNode {

@@ -17,7 +17,7 @@ object Size : CommandHandler("Size", "core/data-manipulation"), ValueHandler, Ar
                 return if (data.booleanValue()) IntNode(1) else IntNode(0)
             }
 
-            is TextNode -> {
+            is StringNode -> {
                 return IntNode(data.textValue().length)
             }
         }

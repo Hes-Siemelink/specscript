@@ -3,13 +3,13 @@ package specscript.language
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import tools.jackson.databind.node.TextNode
+import tools.jackson.databind.node.StringNode
 
 class VariablesTest {
 
     val variables = mapOf(
-        "1" to TextNode("one"),
-        "2" to TextNode("two")
+        "1" to StringNode("one"),
+        "2" to StringNode("two")
     )
 
     @Test

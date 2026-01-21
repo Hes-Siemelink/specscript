@@ -18,7 +18,7 @@ import specscript.util.Yaml
 import specscript.util.toDisplayYaml
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
-import tools.jackson.databind.node.TextNode
+import tools.jackson.databind.node.StringNode
 import tools.jackson.databind.node.ValueNode
 import java.net.URI
 import java.nio.file.Path
@@ -123,7 +123,7 @@ object HttpClient {
             val data = try {
                 Yaml.parse(response.bodyAsText())
             } catch (_: Exception) {
-                TextNode(response.bodyAsText())
+                StringNode(response.bodyAsText())
             }
             val type = response.status.value.toString()
             throw SpecScriptCommandError("Http request returned an error", type = type, data = data)
@@ -144,9 +144,9 @@ object HttpClient {
             val body = response.body<String>()
             Yaml.parse(body)
         } catch (e: Exception) {
-            // If there are any parsing or encoding errors, just return a String in TextNode
+            // If there are any parsing or encoding errors, just return a String in StringNode
             val byteArrayBody: ByteArray = response.body()
-            TextNode(String(byteArrayBody))
+            StringNode(String(byteArrayBody))
         }
     }
 

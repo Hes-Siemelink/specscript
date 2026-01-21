@@ -4,7 +4,7 @@ import specscript.language.*
 import specscript.util.Yaml
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
-import tools.jackson.databind.node.TextNode
+import tools.jackson.databind.node.StringNode
 import tools.jackson.databind.node.ValueNode
 import java.nio.file.Path
 import kotlin.io.path.exists
@@ -26,7 +26,7 @@ object ReadFile : CommandHandler("Read file", "core/files"), ValueHandler, Objec
 
 fun JsonNode.toPath(context: ScriptContext, directory: Path? = null): Path {
     return when (this) {
-        is TextNode -> {
+        is StringNode -> {
             val dir = directory ?: context.workingDir
             val file = dir.resolve(textValue())
             if (file.exists()) {

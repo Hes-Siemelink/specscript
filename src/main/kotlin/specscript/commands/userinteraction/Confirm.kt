@@ -7,7 +7,7 @@ import specscript.language.ValueHandler
 import specscript.language.types.ParameterData
 import specscript.util.toDisplayYaml
 import tools.jackson.databind.JsonNode
-import tools.jackson.databind.node.TextNode
+import tools.jackson.databind.node.StringNode
 import tools.jackson.databind.node.ValueNode
 
 /**
@@ -15,8 +15,8 @@ import tools.jackson.databind.node.ValueNode
  */
 object Confirm : CommandHandler("Confirm", "core/user-interaction"), ValueHandler {
 
-    val yes = TextNode("Yes")
-    val no = TextNode("No")
+    val yes = StringNode("Yes")
+    val no = StringNode("No")
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode {
 

@@ -6,7 +6,7 @@ import specscript.util.toDomainObject
 import specscript.util.toJson
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
-import tools.jackson.databind.node.TextNode
+import tools.jackson.databind.node.StringNode
 
 object CheckType : CommandHandler("Check type", "core/schema"), ObjectHandler {
 
@@ -27,7 +27,7 @@ private fun validate(data: JsonNode, type: Type, registry: TypeRegistry) {
     val messages = type.definition.resolve(registry).definition.validate(data)
 
     if (messages.isNotEmpty()) {
-        val validationErrors = messages.map { TextNode(it) }.toJson()
+        val validationErrors = messages.map { StringNode(it) }.toJson()
 
         throw SpecScriptCommandError("Type validation errors", type = "Type validation", data = validationErrors)
     }

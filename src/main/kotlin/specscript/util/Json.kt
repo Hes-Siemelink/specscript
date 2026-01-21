@@ -47,7 +47,7 @@ fun JsonNode.asArray(): ArrayNode {
 
 fun ObjectNode.add(vars: Map<String, String>) {
     for (variable in vars) {
-        this.set(variable.key, TextNode(variable.value))
+        this.set(variable.key, StringNode(variable.value))
     }
 }
 
@@ -75,7 +75,7 @@ abstract class JsonProcessor {
         return when (node) {
             is ArrayNode -> processArray(node)
             is ObjectNode -> processObject(node)
-            is TextNode -> processText(node)
+            is StringNode -> processText(node)
             else -> processOther(node)
         }
     }
@@ -98,7 +98,7 @@ abstract class JsonProcessor {
         return node
     }
 
-    open fun processText(node: TextNode): JsonNode {
+    open fun processText(node: StringNode): JsonNode {
         return node
     }
 
@@ -132,7 +132,7 @@ private fun JsonNode.toKotlinx(): JsonElement {
         is NullNode, is MissingNode -> JsonNull
         is BooleanNode -> JsonPrimitive(booleanValue())
         is NumericNode -> JsonPrimitive(numberValue())
-        is TextNode -> JsonPrimitive(textValue())
+        is StringNode -> JsonPrimitive(textValue())
         is ArrayNode -> this.toKotlinx()
         is ObjectNode -> this.toKotlinx()
         else -> throw IllegalArgumentException("Unknown JsonNode type: ${this.javaClass}")

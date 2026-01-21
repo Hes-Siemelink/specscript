@@ -8,7 +8,7 @@ import specscript.util.toDisplayYaml
 import specscript.util.toDomainObject
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
-import tools.jackson.databind.node.TextNode
+import tools.jackson.databind.node.StringNode
 import tools.jackson.databind.node.ValueNode
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -69,7 +69,7 @@ private fun execute(
     commandLine: String,
     workingDir: Path,
     info: ShellCommand = ShellCommand()
-): TextNode? {
+): StringNode? {
 
     val buffer = StringBuilder()
     try {
@@ -95,7 +95,7 @@ private fun execute(
         }
 
         return if (info.captureOutput) {
-            TextNode(buffer.trim().toString())
+            StringNode(buffer.trim().toString())
         } else {
             null
         }

@@ -13,7 +13,7 @@ import specscript.util.toDisplayYaml
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ArrayNode
 import tools.jackson.databind.node.JsonNodeFactory
-import tools.jackson.databind.node.TextNode
+import tools.jackson.databind.node.StringNode
 
 interface UserPrompt {
 
@@ -44,7 +44,7 @@ object KInquirerPrompt : UserPrompt {
             KInquirer.promptInput(message, default)
         }
 
-        return TextNode(answer)
+        return StringNode(answer)
     }
 
     override fun select(message: String, choices: List<Choice<JsonNode>>, multiple: Boolean): JsonNode =
@@ -104,9 +104,9 @@ object TestPrompt : UserPrompt {
     override fun prompt(message: String, default: String, password: Boolean): JsonNode {
 
         val answer: JsonNode = Answers.recordedAnswers[message] ?: if (default.isNotEmpty()) {
-            TextNode(default)
+            StringNode(default)
         } else {
-            TextNode("")
+            StringNode("")
         }
 
         if (password) {

@@ -35,7 +35,7 @@ class Contains(
                 inObject(node, container)
             }
 
-            container is TextNode && node is TextNode -> {
+            container is StringNode && node is StringNode -> {
                 container.textValue().contains(node.textValue())
             }
 

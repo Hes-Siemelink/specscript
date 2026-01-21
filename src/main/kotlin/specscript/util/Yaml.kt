@@ -3,7 +3,7 @@ package specscript.util
 import com.fasterxml.jackson.annotation.JsonInclude
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.ObjectMapper
-import tools.jackson.databind.node.TextNode
+import tools.jackson.databind.node.StringNode
 import tools.jackson.dataformat.yaml.YAMLFactory
 import tools.jackson.dataformat.yaml.YAMLGenerator
 import tools.jackson.module.kotlin.registerKotlinModule
@@ -50,12 +50,12 @@ object Yaml {
     }
 
     fun parseIfPossible(source: String?): JsonNode {
-        source ?: return TextNode("")
+        source ?: return StringNode("")
 
         return try {
             parse(source)
         } catch (_: Exception) {
-            TextNode(source)
+            StringNode(source)
         }
     }
 

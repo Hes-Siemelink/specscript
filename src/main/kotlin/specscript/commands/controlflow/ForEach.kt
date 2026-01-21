@@ -16,7 +16,7 @@ object ForEach : CommandHandler("For each", "core/control-flow"), ObjectHandler,
         val (loopVar, itemData) = removeLoopVariable(body)
             ?: Pair(
                 "item",
-                TextNode("\${output}") // Pass ${output} as a string to prevent resolution of variable syntax inside the data
+                StringNode("\${output}") // Pass ${output} as a string to prevent resolution of variable syntax inside the data
             ).apply {
                 checkNotNull(context.output) { "For each without loop variable takes items from  \${output}, but \${output} is null" }
             }

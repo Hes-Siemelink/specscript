@@ -7,7 +7,7 @@ import specscript.util.JsonSchemas
 import specscript.util.toJson
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
-import tools.jackson.databind.node.TextNode
+import tools.jackson.databind.node.StringNode
 
 object ValidateSchema : CommandHandler("Validate schema", "core/schema"), ObjectHandler {
 
@@ -48,7 +48,7 @@ private fun JsonNode.validateWithSchema(schema: JsonSchema) {
 
 private fun JsonNode.getSchema(context: ScriptContext): JsonSchema {
 
-    return if (this is TextNode) {
+    return if (this is StringNode) {
         val location = context.scriptDir.resolve(textValue())
         JsonSchemas.factory.getSchema(location.toUri())
     } else {
