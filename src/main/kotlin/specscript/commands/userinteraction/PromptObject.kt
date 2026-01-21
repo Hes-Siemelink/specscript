@@ -30,7 +30,7 @@ object PromptObject : CommandHandler("Prompt object", "core/user-interaction"), 
             val answer = parameter.prompt(name)
 
             // Add answer to result and to list of variables
-            answers.set<JsonNode>(name, answer)
+            answers.set(name, answer)
             variables[name] = answer
         }
 

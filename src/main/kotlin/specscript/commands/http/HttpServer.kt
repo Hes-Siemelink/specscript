@@ -132,13 +132,13 @@ private fun ScriptContext.addRequestVariable(
     pathParamNames: List<String>
 ) {
     val requestData = Json.newObject()
-    requestData.set<JsonNode>("headers", call.headersAsJson())
-    requestData.set<JsonNode>("path", TextNode(call.request.path()))
-    requestData.set<JsonNode>("pathParameters", call.pathParametersAsJson(pathParamNames))
-    requestData.set<JsonNode>("query", TextNode(call.request.queryString().orEmpty()))
-    requestData.set<JsonNode>("queryParameters", call.queryParametersAsJson())
-    requestData.set<JsonNode>("body", bodyText.toBodyJson())
-    requestData.set<JsonNode>("cookies", call.cookiesAsJson())
+    requestData.set("headers", call.headersAsJson())
+    requestData.set("path", TextNode(call.request.path()))
+    requestData.set("pathParameters", call.pathParametersAsJson(pathParamNames))
+    requestData.set("query", TextNode(call.request.queryString().orEmpty()))
+    requestData.set("queryParameters", call.queryParametersAsJson())
+    requestData.set("body", bodyText.toBodyJson())
+    requestData.set("cookies", call.cookiesAsJson())
     variables["request"] = requestData
 }
 

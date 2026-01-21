@@ -87,7 +87,7 @@ fun Connection.doJsonQuery(query: String): JsonNode {
                 } else {
                     for (i in 1..resultSet.metaData.columnCount) {
                         val row = newObject()
-                        row.set<JsonNode>(
+                        row.set(
                             resultSet.metaData.getColumnName(i),
                             Yaml.parse(resultSet.getObject(i).toString())
                         )

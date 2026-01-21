@@ -115,7 +115,7 @@ fun add(doc: JsonNode, path: String, value: JsonNode): JsonNode {
     if (parent.isObject) {
         val parentObject = parent as ObjectNode
         val key = path.substring(lastPathIndex + 1)
-        parentObject.set<JsonNode>(key, value)
+        parentObject.set(key, value)
     } else if (parent.isArray) {
         val key = path.substring(lastPathIndex + 1)
         val parentArray = parent as ArrayNode

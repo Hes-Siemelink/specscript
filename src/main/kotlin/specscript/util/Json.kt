@@ -47,7 +47,7 @@ fun JsonNode.asArray(): ArrayNode {
 
 fun ObjectNode.add(vars: Map<String, String>) {
     for (variable in vars) {
-        this.set<JsonNode>(variable.key, TextNode(variable.value))
+        this.set(variable.key, TextNode(variable.value))
     }
 }
 
@@ -92,7 +92,7 @@ abstract class JsonProcessor {
     open fun processObject(node: ObjectNode): JsonNode {
 
         for (field in node.fields()) {
-            node.set<JsonNode>(field.key, process(field.value))
+            node.set(field.key, process(field.value))
         }
 
         return node
@@ -147,7 +147,7 @@ private fun JsonNode.toKotlinx(): JsonElement {
 fun JsonObject.toJackson(nodeFactory: JsonNodeFactory = JsonNodeFactory.instance): ObjectNode {
     val jacksonObject = nodeFactory.objectNode()
     this.entries.forEach { (key, value) ->
-        jacksonObject.set<JsonNode>(key, value.toJackson(nodeFactory))
+        jacksonObject.set(key, value.toJackson(nodeFactory))
     }
     return jacksonObject
 }

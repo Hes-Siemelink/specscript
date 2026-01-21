@@ -15,8 +15,8 @@ object ExpectedOutput : CommandHandler("Expected output", "core/testing"), AnyHa
 
         if (output != data) {
             val error = Json.newObject()
-            error.set<JsonNode>("expected", data)
-            error.set<JsonNode>("actual", output)
+            error.set("expected", data)
+            error.set("actual", output)
             throw SpecScriptCommandError("Unexpected output.", type = "Output", data = error)
         }
 

@@ -110,7 +110,7 @@ fun handleCommand(handler: CommandHandler, data: JsonNode, context: ScriptContex
 
 fun asCommand(handler: CommandHandler, data: JsonNode): JsonNode {
     val node = Json.newObject()
-    node.set<JsonNode>(handler.name, data)
+    node.set(handler.name, data)
     return node
 }
 

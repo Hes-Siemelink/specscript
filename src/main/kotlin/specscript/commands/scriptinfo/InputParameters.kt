@@ -79,7 +79,7 @@ object InputParameters : CommandHandler("Input parameters", "core/script-info"),
                 )
             }
 
-            context.getInputVariables().set<JsonNode>(name, answer)
+            context.getInputVariables().set(name, answer)
             context.variables[name] = answer
         }
     }
