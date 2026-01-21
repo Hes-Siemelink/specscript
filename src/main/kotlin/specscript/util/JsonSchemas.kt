@@ -1,10 +1,10 @@
 package specscript.util
 
-import com.fasterxml.jackson.databind.JsonNode
 import com.networknt.schema.JsonSchema
 import com.networknt.schema.JsonSchemaFactory
 import com.networknt.schema.SpecVersion.VersionFlag
 import specscript.language.CommandFormatException
+import tools.jackson.databind.JsonNode
 import java.nio.file.Path
 
 object JsonSchemas {

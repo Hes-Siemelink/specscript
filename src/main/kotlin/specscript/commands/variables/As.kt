@@ -1,8 +1,8 @@
 package specscript.commands.variables
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ValueNode
 import specscript.language.*
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ValueNode
 
 object As : CommandHandler("As", "core/variables"), ValueHandler, DelayedResolver {
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {

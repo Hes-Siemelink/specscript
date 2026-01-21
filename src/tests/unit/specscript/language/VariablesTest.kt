@@ -1,9 +1,9 @@
 package specscript.language
 
-import com.fasterxml.jackson.databind.node.TextNode
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import tools.jackson.databind.node.TextNode
 
 class VariablesTest {
 

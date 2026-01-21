@@ -1,10 +1,10 @@
 package specscript.commands.util
 
-import com.fasterxml.jackson.databind.JsonNode
 import specscript.language.AnyHandler
 import specscript.language.CommandHandler
 import specscript.language.ScriptContext
 import specscript.util.toDisplayJson
+import tools.jackson.databind.JsonNode
 
 object PrintJson : CommandHandler("Print Json", "core/util"), AnyHandler {
 

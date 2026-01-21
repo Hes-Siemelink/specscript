@@ -1,6 +1,5 @@
 package specscript.cli
 
-import com.fasterxml.jackson.databind.JsonNode
 import specscript.language.SpecScriptCommandError
 import specscript.language.SpecScriptException
 import specscript.util.Json

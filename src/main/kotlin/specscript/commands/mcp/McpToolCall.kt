@@ -1,8 +1,5 @@
 package specscript.commands.mcp
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.TextNode
 import io.modelcontextprotocol.kotlin.sdk.CallToolRequest
 import io.modelcontextprotocol.kotlin.sdk.CallToolResult
 import io.modelcontextprotocol.kotlin.sdk.TextContent
@@ -15,6 +12,9 @@ import specscript.language.*
 import specscript.util.Yaml
 import specscript.util.toDomainObject
 import specscript.util.toKotlinx
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.TextNode
 
 object McpToolCall : CommandHandler("Mcp tool call", "ai/mcp"), ObjectHandler, DelayedResolver {
 

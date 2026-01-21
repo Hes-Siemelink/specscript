@@ -1,9 +1,9 @@
 package specscript.commands.datamanipulation
 
-import com.fasterxml.jackson.databind.node.ObjectNode
 import specscript.commands.datamanipulation.Add.add
 import specscript.language.*
 import specscript.util.asArray
+import tools.jackson.databind.node.ObjectNode
 
 object AddTo : CommandHandler("Add to", "core/data-manipulation"), ObjectHandler {
 

@@ -1,10 +1,10 @@
 package specscript.commands.connections
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.TextNode
-import com.fasterxml.jackson.databind.node.ValueNode
 import specscript.language.*
 import specscript.util.Json.newObject
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.TextNode
+import tools.jackson.databind.node.ValueNode
 
 object GetCredentials : CommandHandler("Get credentials", "core/connections"), ValueHandler {
 

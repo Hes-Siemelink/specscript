@@ -1,9 +1,6 @@
 package specscript.commands.mcp
 
 import com.fasterxml.jackson.annotation.JsonAnySetter
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.TextNode
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
@@ -23,6 +20,9 @@ import specscript.files.FileContext
 import specscript.files.SpecScriptFile
 import specscript.language.*
 import specscript.util.*
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.TextNode
 import kotlin.concurrent.thread
 
 object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, DelayedResolver {

@@ -1,9 +1,5 @@
 package specscript.commands.http
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.TextNode
-import com.fasterxml.jackson.databind.node.ValueNode
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.auth.*
@@ -20,6 +16,10 @@ import specscript.language.SpecScriptCommandError
 import specscript.util.Json
 import specscript.util.Yaml
 import specscript.util.toDisplayYaml
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.TextNode
+import tools.jackson.databind.node.ValueNode
 import java.net.URI
 import java.nio.file.Path
 

@@ -1,9 +1,9 @@
 package specscript.language
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.TextNode
 import specscript.util.JsonProcessor
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.TextNode
 
 fun eval(data: JsonNode, context: ScriptContext): JsonNode {
     return Evaluator(context).process(data)

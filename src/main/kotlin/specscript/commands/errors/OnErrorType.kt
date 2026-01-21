@@ -1,9 +1,9 @@
 package specscript.commands.errors
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
 import specscript.commands.errors.OnError.runErrorHandling
 import specscript.language.*
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
 
 object OnErrorType : CommandHandler("On error type", "core/errors"), ObjectHandler, DelayedResolver, ErrorHandler {
 

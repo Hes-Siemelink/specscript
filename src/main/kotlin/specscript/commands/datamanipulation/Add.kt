@@ -1,11 +1,11 @@
 package specscript.commands.datamanipulation
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.*
 import specscript.language.ArrayHandler
 import specscript.language.CommandHandler
 import specscript.language.ScriptContext
 import specscript.language.SpecScriptException
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.*
 
 object Add : CommandHandler("Add", "core/data-manipulation"), ArrayHandler {
 

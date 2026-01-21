@@ -2,17 +2,17 @@ package specscript.commands.connections
 
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ArrayNode
-import com.fasterxml.jackson.databind.node.JsonNodeFactory
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.ValueNode
 import specscript.language.CommandHandler
 import specscript.language.ScriptContext
 import specscript.language.ValueHandler
 import specscript.util.Json
 import specscript.util.Yaml
 import specscript.util.updateWith
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ArrayNode
+import tools.jackson.databind.node.JsonNodeFactory
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ValueNode
 import java.nio.file.Path
 import kotlin.io.path.createDirectories
 import kotlin.io.path.createFile

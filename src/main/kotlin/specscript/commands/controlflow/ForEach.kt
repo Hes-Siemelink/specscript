@@ -1,8 +1,8 @@
 package specscript.commands.controlflow
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.*
 import specscript.language.*
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.*
 
 object ForEach : CommandHandler("For each", "core/control-flow"), ObjectHandler, DelayedResolver {
 

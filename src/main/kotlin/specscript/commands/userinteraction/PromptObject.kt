@@ -1,10 +1,10 @@
 package specscript.commands.userinteraction
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
 import specscript.language.*
 import specscript.language.types.ParameterData
 import specscript.util.toDomainObject
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
 
 /**
  * Asks multiple questions at once

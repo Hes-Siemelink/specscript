@@ -3,7 +3,6 @@ package specscript.cli
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import specscript.language.types.ObjectDefinition
 import specscript.language.types.ParameterData
-import kotlin.collections.contains
 
 data class CommandLineParameters(
     @get:JsonAnyGetter

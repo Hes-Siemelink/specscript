@@ -1,7 +1,5 @@
 package specscript.language
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.TextNode
 import specscript.commands.files.TempFile
 import specscript.commands.files.TempFileData
 import specscript.commands.scriptinfo.InputParameterData
@@ -20,7 +18,33 @@ import specscript.files.MarkdownBlock
 import specscript.files.MarkdownBlock.*
 import specscript.util.Yaml
 import specscript.util.toDomainObject
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.TextNode
+import kotlin.Exception
+import kotlin.String
+import kotlin.collections.List
+import kotlin.collections.asSequence
+import kotlin.collections.emptyMap
+import kotlin.collections.find
+import kotlin.collections.flatten
+import kotlin.collections.map
+import kotlin.collections.mutableListOf
+import kotlin.collections.plus
+import kotlin.collections.toList
+import kotlin.getValue
 import kotlin.io.path.name
+import kotlin.lazy
+import kotlin.let
+import kotlin.sequences.asSequence
+import kotlin.sequences.toList
+import kotlin.text.asSequence
+import kotlin.text.contains
+import kotlin.text.indexOf
+import kotlin.text.substring
+import kotlin.text.toBoolean
+import kotlin.text.toList
+import kotlin.text.trim
+import kotlin.toList
 
 data class Command(val name: String, val data: JsonNode)
 

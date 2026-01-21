@@ -1,12 +1,12 @@
 package specscript.commands.schema
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.TextNode
 import specscript.language.*
 import specscript.language.types.*
 import specscript.util.toDomainObject
 import specscript.util.toJson
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.TextNode
 
 object CheckType : CommandHandler("Check type", "core/schema"), ObjectHandler {
 

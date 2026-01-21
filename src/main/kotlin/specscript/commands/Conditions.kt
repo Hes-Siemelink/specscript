@@ -1,9 +1,9 @@
 package specscript.commands
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.*
 import specscript.language.CommandFormatException
 import specscript.util.toDisplayYaml
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.*
 
 fun interface Condition {
     fun isTrue(): Boolean

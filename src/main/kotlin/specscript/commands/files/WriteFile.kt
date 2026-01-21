@@ -1,10 +1,10 @@
 package specscript.commands.files
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.ValueNode
 import specscript.language.*
 import specscript.util.toDisplayYaml
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ValueNode
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.createParentDirectories

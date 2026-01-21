@@ -2,8 +2,8 @@ package specscript.language.types
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.JsonNode
 import specscript.commands.toCondition
+import tools.jackson.databind.JsonNode
 
 abstract class PropertyDefinition {
 

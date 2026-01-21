@@ -1,11 +1,5 @@
 package specscript.commands.userinteraction
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ArrayNode
-import com.fasterxml.jackson.databind.node.BooleanNode.FALSE
-import com.fasterxml.jackson.databind.node.BooleanNode.TRUE
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.TextNode
 import com.github.kinquirer.core.Choice
 import specscript.language.CommandFormatException
 import specscript.language.types.ObjectProperties
@@ -14,6 +8,12 @@ import specscript.language.types.PropertyDefinition
 import specscript.language.types.TypeSpecification
 import specscript.util.Json
 import specscript.util.toDisplayYaml
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ArrayNode
+import tools.jackson.databind.node.BooleanNode.FALSE
+import tools.jackson.databind.node.BooleanNode.TRUE
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.TextNode
 
 
 fun PropertyDefinition.prompt(label: String? = null): JsonNode {

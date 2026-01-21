@@ -1,8 +1,8 @@
 package specscript.language.types
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
-import com.fasterxml.jackson.databind.JsonNode
 import specscript.cli.infoString
+import tools.jackson.databind.JsonNode
 
 interface ObjectDefinition {
     val properties: Map<String, PropertyDefinition>

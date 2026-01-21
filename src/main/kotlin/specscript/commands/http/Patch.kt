@@ -1,11 +1,11 @@
 package specscript.commands.http
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
+import io.ktor.http.*
 import specscript.language.CommandHandler
 import specscript.language.ObjectHandler
 import specscript.language.ScriptContext
-import io.ktor.http.*
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
 
 object Patch : CommandHandler("PATCH", "core/http"), ObjectHandler {
 

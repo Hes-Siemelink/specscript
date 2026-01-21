@@ -1,10 +1,10 @@
 package specscript.language
 
-import com.fasterxml.jackson.core.JsonPointer
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.TextNode
 import specscript.util.JsonProcessor
 import specscript.util.toDisplayYaml
+import tools.jackson.core.JsonPointer
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.TextNode
 
 val VARIABLE_REGEX = Regex("\\$\\{([^}]+)}")
 

@@ -1,11 +1,11 @@
 package specscript.util
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.databind.node.*
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import kotlinx.serialization.json.*
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.databind.SerializationFeature
+import tools.jackson.databind.node.*
+import tools.jackson.module.kotlin.registerKotlinModule
 import kotlin.reflect.KClass
 
 object Json {

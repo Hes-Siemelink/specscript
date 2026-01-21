@@ -1,11 +1,11 @@
 package specscript.files
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.module.kotlin.readValue
 import specscript.language.CommandInfo
 import specscript.util.IO.isTempDir
 import specscript.util.Json
 import specscript.util.Yaml
+import tools.jackson.module.kotlin.readValue
 import java.nio.file.Path
 import kotlin.io.path.exists
 import kotlin.io.path.name

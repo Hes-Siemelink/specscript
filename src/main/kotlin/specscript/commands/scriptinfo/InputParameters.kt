@@ -1,10 +1,6 @@
 package specscript.commands.scriptinfo
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.ValueNode
-import com.fasterxml.jackson.module.kotlin.contains
 import specscript.commands.testing.Answers
 import specscript.commands.toCondition
 import specscript.commands.userinteraction.prompt
@@ -14,6 +10,9 @@ import specscript.language.types.ParameterData
 import specscript.language.types.TypeSpecification
 import specscript.language.types.resolve
 import specscript.util.toDomainObject
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ValueNode
 
 object InputParameters : CommandHandler("Input parameters", "core/script-info"),
     ObjectHandler, ValueHandler, DelayedResolver {

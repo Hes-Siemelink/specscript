@@ -1,7 +1,5 @@
 package specscript.files
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.TextNode
 import specscript.commands.CommandLibrary
 import specscript.commands.variables.AssignVariable
 import specscript.language.*
@@ -9,6 +7,8 @@ import specscript.language.types.Type
 import specscript.language.types.TypeRegistry
 import specscript.language.types.TypeSpecification
 import specscript.util.toDomainObject
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.TextNode
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.*

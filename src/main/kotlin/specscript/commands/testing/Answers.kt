@@ -1,11 +1,11 @@
 package specscript.commands.testing
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
 import specscript.language.CommandHandler
 import specscript.language.ObjectHandler
 import specscript.language.ScriptContext
 import specscript.language.SpecScriptException
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
 
 /**
  * Records answers to be replayed in test cases for user input commands.

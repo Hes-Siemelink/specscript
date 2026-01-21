@@ -1,11 +1,11 @@
 package specscript.commands.testing
 
-import com.fasterxml.jackson.databind.JsonNode
 import specscript.language.AnyHandler
 import specscript.language.CommandHandler
 import specscript.language.ScriptContext
 import specscript.language.SpecScriptCommandError
 import specscript.util.Json
+import tools.jackson.databind.JsonNode
 
 object ExpectedOutput : CommandHandler("Expected output", "core/testing"), AnyHandler {
 

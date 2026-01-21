@@ -1,15 +1,15 @@
 package specscript.commands.shell
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.TextNode
-import com.fasterxml.jackson.databind.node.ValueNode
 import specscript.commands.testing.ExpectedConsoleOutput
 import specscript.language.*
 import specscript.util.Json.newObject
 import specscript.util.toDisplayYaml
 import specscript.util.toDomainObject
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.TextNode
+import tools.jackson.databind.node.ValueNode
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.nio.file.Path

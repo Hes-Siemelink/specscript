@@ -1,13 +1,13 @@
 package specscript.commands.schema
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.TextNode
 import com.networknt.schema.JsonSchema
 import specscript.language.*
 import specscript.util.Json
 import specscript.util.JsonSchemas
 import specscript.util.toJson
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.TextNode
 
 object ValidateSchema : CommandHandler("Validate schema", "core/schema"), ObjectHandler {
 

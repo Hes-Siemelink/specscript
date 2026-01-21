@@ -1,12 +1,12 @@
 package specscript.commands.datamanipulation
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.ValueNode
 import specscript.language.CommandHandler
 import specscript.language.ObjectHandler
 import specscript.language.ScriptContext
 import specscript.language.ValueHandler
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ValueNode
 
 object Fields : CommandHandler("Fields", "core/data-manipulation"), ObjectHandler, ValueHandler {
 

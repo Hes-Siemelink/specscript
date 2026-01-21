@@ -1,9 +1,5 @@
 package specscript.commands.userinteraction
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ArrayNode
-import com.fasterxml.jackson.databind.node.JsonNodeFactory
-import com.fasterxml.jackson.databind.node.TextNode
 import com.github.kinquirer.KInquirer
 import com.github.kinquirer.components.promptCheckboxObject
 import com.github.kinquirer.components.promptInput
@@ -14,6 +10,10 @@ import specscript.commands.testing.Answers
 import specscript.language.SpecScriptException
 import specscript.util.Yaml
 import specscript.util.toDisplayYaml
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ArrayNode
+import tools.jackson.databind.node.JsonNodeFactory
+import tools.jackson.databind.node.TextNode
 
 interface UserPrompt {
 
