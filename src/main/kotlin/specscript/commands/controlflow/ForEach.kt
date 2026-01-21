@@ -51,7 +51,7 @@ object ForEach : CommandHandler("For each", "core/control-flow"), ObjectHandler,
     }
 
     private fun removeLoopVariable(data: ObjectNode): Pair<String, JsonNode>? {
-        val first = data.fieldNames().next()
+        val first = data.propertyNames().first()
         val match = FOR_EACH_VARIABLE.matchEntire(first) ?: return null
         val items = data.remove(first)
 
