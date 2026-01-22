@@ -1,6 +1,6 @@
 package specscript.commands.schema
 
-import com.networknt.schema.JsonSchema
+import com.networknt.schema.Schema
 import specscript.language.*
 import specscript.util.Json
 import specscript.util.JsonSchemas
@@ -29,13 +29,13 @@ object ValidateSchema : CommandHandler("Validate schema", "core/schema"), Object
 // Schema support
 //
 
-private fun JsonNode.validateWithSchema(schema: JsonSchema) {
+private fun JsonNode.validateWithSchema(schema: Schema) {
 
     val messages = schema.validate(this)
 
     if (messages.isNotEmpty()) {
         val validationErrors = messages.map {
-            Json.newObject(it.code, it.message)
+            Json.newObject(it.messageKey, it.message)
         }.toJson()
 
         throw SpecScriptCommandError(
@@ -46,12 +46,12 @@ private fun JsonNode.validateWithSchema(schema: JsonSchema) {
     }
 }
 
-private fun JsonNode.getSchema(context: ScriptContext): JsonSchema {
+private fun JsonNode.getSchema(context: ScriptContext): Schema {
 
     return if (this is StringNode) {
         val location = context.scriptDir.resolve(textValue())
-        JsonSchemas.factory.getSchema(location.toUri())
+        JsonSchemas.registry.getSchema(location.toUri().toString())
     } else {
-        JsonSchemas.factory.getSchema(this)
+        JsonSchemas.registry.getSchema(this)
     }
 }
