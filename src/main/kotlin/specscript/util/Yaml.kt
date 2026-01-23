@@ -1,25 +1,26 @@
 package specscript.util
 
-import com.fasterxml.jackson.annotation.JsonInclude
 import tools.jackson.databind.JsonNode
-import tools.jackson.databind.ObjectMapper
 import tools.jackson.databind.node.StringNode
 import tools.jackson.dataformat.yaml.YAMLFactory
-import tools.jackson.dataformat.yaml.YAMLGenerator
-import tools.jackson.module.kotlin.registerKotlinModule
+import tools.jackson.dataformat.yaml.YAMLMapper
+import tools.jackson.dataformat.yaml.YAMLWriteFeature
+import tools.jackson.module.kotlin.kotlinModule
 import java.nio.file.Path
+
 
 object Yaml {
 
-    private val factory = YAMLFactory()
-        .enable(YAMLGenerator.Feature.MINIMIZE_QUOTES)
-        .disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER)
+    val factory: YAMLFactory = YAMLFactory()
+    val mapper: YAMLMapper = YAMLMapper.builder()
+        .addModule(kotlinModule())
+        .enable(YAMLWriteFeature.MINIMIZE_QUOTES)
+        .disable(YAMLWriteFeature.WRITE_DOC_START_MARKER)
+        .build()
 
-    val mapper = ObjectMapper(factory).registerKotlinModule()
-
-    init {
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
-    }
+//    init {
+//        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
+//    }
 
     fun readFile(source: Path): JsonNode {
         return mapper.readValue(source.toFile(), JsonNode::class.java)

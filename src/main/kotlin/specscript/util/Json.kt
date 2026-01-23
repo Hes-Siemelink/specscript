@@ -5,13 +5,19 @@ import tools.jackson.databind.JsonNode
 import tools.jackson.databind.ObjectMapper
 import tools.jackson.databind.SerializationFeature
 import tools.jackson.databind.node.*
-import tools.jackson.module.kotlin.registerKotlinModule
+import tools.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.module.kotlin.jsonMapper
+import tools.jackson.module.kotlin.kotlinModule
 import kotlin.reflect.KClass
 
 object Json {
 
-    val mapper: ObjectMapper = ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT).registerKotlinModule()
-    val compactMapper: ObjectMapper = ObjectMapper().registerKotlinModule()
+    val mapper: ObjectMapper = jsonMapper {
+        addModule(kotlinModule())
+        enable(SerializationFeature.INDENT_OUTPUT)
+    }
+    
+    val compactMapper: ObjectMapper = jacksonObjectMapper()
 
     fun newArray(): ArrayNode {
         return ArrayNode(JsonNodeFactory.instance)
