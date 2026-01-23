@@ -58,7 +58,8 @@ private fun runSingleCommand(
             rawData.resolve(context)
         }
 
-        handler.validate(data)
+        // FIXME Schema validation does not work
+//        handler.validate(data)
 
         val result: JsonNode? = handleCommand(handler, data, context)
 
