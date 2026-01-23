@@ -1,7 +1,7 @@
 # On my mind
 
 * Jackson 3
-    * Deprecated methods like textValue()
+    * Deprecated methods like textValue(), asText()
 * Description command
 * Input schema according to JSON schema
 * Rewrite README

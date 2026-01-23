@@ -65,8 +65,8 @@ testing {
             dependencies {
                 implementation(project())
                 implementation("io.kotest:kotest-assertions-core:5.7.2")
-                implementation("tools.fasterxml.jackson.module:jackson-module-kotlin:3.0.+")
-                implementation("tools.fasterxml.jackson.dataformat:jackson-dataformat-yaml:3.0.+")
+                implementation("tools.jackson.module:jackson-module-kotlin:3.0.+")
+                implementation("tools.jackson.dataformat:jackson-dataformat-yaml:3.0.+")
             }
 
             sources {
