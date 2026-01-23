@@ -11,11 +11,11 @@ import tools.jackson.databind.node.ObjectNode
  * @return a copy of the JSON document with patches applied
  */
 fun JsonNode.applyPatch(patch: ArrayNode): JsonNode {
-    if (!isContainerNode) {
+    if (!isContainer) {
         throw IllegalArgumentException("Invalid JSON document, an object or array is required")
     }
 
-    var result = deepCopy<JsonNode>()
+    var result = deepCopy()
 
     for (operation: JsonNode in patch) {
         if (!operation.isObject) {
