@@ -40,8 +40,8 @@ dependencies {
     implementation("io.modelcontextprotocol:kotlin-sdk:0.7.2")
     implementation("io.github.oshai:kotlin-logging:5.0.0")  // For MCP
 
-    implementation("org.junit.jupiter:junit-jupiter-api:5.13.4")
-    runtimeOnly("org.junit.jupiter:junit-jupiter-engine:5.13.4")
+    implementation("org.junit.jupiter:junit-jupiter-api:5.14.2")
+    runtimeOnly("org.junit.jupiter:junit-jupiter-engine:5.14.2")
 
     testImplementation("io.kotest:kotest-assertions-core:5.7.2")
 }
