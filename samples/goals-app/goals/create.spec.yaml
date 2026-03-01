@@ -1,16 +1,21 @@
-Input parameters:
-  title: Goal title
-  description: Description
-  priority:
-    description: Priority level
-    enum: [ low, medium, high ]
-    default: medium
-  assignee:
-    description: Assigned to
-    default: ""
-  parent_id:
-    description: Parent goal ID for sub-goals
-    default: ""
+Input schema:
+  type: object
+  properties:
+    title:
+      description: Goal title
+    description:
+      description: Description
+    priority:
+      description: Priority level
+      enum: [ low, medium, high ]
+      default: medium
+    assignee:
+      description: Assigned to
+      default: ""
+    parent_id:
+      description: Parent goal ID for sub-goals
+      default: ""
+  required: [ title, description ]
 
 
 # Sanitize input by escaping single quotes

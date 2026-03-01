@@ -1,13 +1,15 @@
-Input parameters:
-  state:
-    description: Optional state filter (todo, in_progress, completed, or 'all' for no filtering)
-    default: all
-  assignee:
-    description: Optional assignee filter ('all' for no filtering)
-    default: all
-  parent_id:
-    description: Filter by parent goal ('all' for all goals, 'none' for top-level only, or a goal ID for children)
-    default: all
+Input schema:
+  type: object
+  properties:
+    state:
+      description: Optional state filter (todo, in_progress, completed, or 'all' for no filtering)
+      default: all
+    assignee:
+      description: Optional assignee filter ('all' for no filtering)
+      default: all
+    parent_id:
+      description: Filter by parent goal ('all' for all goals, 'none' for top-level only, or a goal ID for children)
+      default: all
 
 Connect to: Goal DB
 

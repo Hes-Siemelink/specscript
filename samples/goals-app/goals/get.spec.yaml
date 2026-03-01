@@ -1,6 +1,9 @@
-Input parameters:
-  id:
-    description: Goal identifier
+Input schema:
+  type: object
+  properties:
+    id:
+      description: Goal identifier
+  required: [ id ]
 
 Connect to: Goal DB
 
