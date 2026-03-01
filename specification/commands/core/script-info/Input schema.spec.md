@@ -234,14 +234,35 @@ Assert equals:
     property-A: Ananas
 ```
 
+## Supported JSON Schema subset
+
+`Input schema` uses the JSON Schema structure (`type: object` with `properties`) but only supports a narrow subset of
+the full JSON Schema specification. The following keywords are recognized on each property:
+
+- `description` — description text, used for prompts and CLI help
+- `default` — default value when no input is provided
+- `enum` — list of allowed values, renders as a selection list in interactive mode
+- `type` — informational only, not used for validation (e.g. `string`, `integer`)
+- `condition` — SpecScript-specific extension for conditional properties (not part of JSON Schema)
+
+At the top level, only these keywords are supported:
+
+- `type` — must be `object`
+- `properties` — map of property definitions
+- `required` — array of required property names
+
+Standard JSON Schema features like `pattern`, `minimum`, `maximum`, `minLength`, `maxLength`, `additionalProperties`,
+`allOf`, `anyOf`, `oneOf`, `if/then/else`, `$ref`, and nested object schemas are **not supported**.
+
 ## Compatibility with MCP tool definitions
 
-The `Input schema` command uses the same JSON Schema syntax as MCP tool `inputSchema` definitions. This means the schema
-you write for your script's input can be reused directly when exposing the script as an MCP tool, eliminating the need
-to define parameters twice.
+`Input schema` uses the same JSON Schema structure as MCP tool `inputSchema`. When you expose a script as an MCP tool
+and that script defines its input with `Input schema`, the tool's `inputSchema` is automatically derived from the
+script — you don't need to define it twice.
+
+For example, given a script `goals/create.spec.yaml`:
 
 ```yaml
-# In your script file:
 Input schema:
   type: object
   properties:
@@ -249,17 +270,18 @@ Input schema:
       type: string
       description: Goal title
   required: [ title ]
+```
 
-# In your MCP server definition — same schema:
+You can register it as an MCP tool without repeating the schema:
+
+```yaml
 Mcp tool:
   create_goal:
     description: Create a new goal
-    inputSchema:
-      type: object
-      properties:
-        title:
-          type: string
-          description: Goal title
-      required: [ title ]
     script: goals/create.spec.yaml
 ```
+
+The tool will automatically use the `Input schema` from the script as its `inputSchema`. You can still provide an
+explicit `inputSchema` on the tool definition if you need to override or customize it.
+
+See [Mcp tool](../../ai/mcp/Mcp%20tool.spec.md) and [Mcp server](../../ai/mcp/Mcp%20server.spec.md) for full details.
