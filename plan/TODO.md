@@ -1,7 +1,5 @@
 # On my mind
 
-* Input schema according to JSON schema
-* Rewrite MCP command definition to be easier to write by LLMs
 * LLM commands
 * Rewrite README
 * Test mode
@@ -10,7 +8,6 @@
 ## In general
 
 * AI to generate scripts: notebook type interaction to write scripts
-* Document Json Patch (uses RFC 6902)
 
 # Actually build something
 
