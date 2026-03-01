@@ -178,14 +178,15 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
 
     fun Server.addTool(toolName: String, tool: ToolInfo, localContext: ScriptContext) {
 
-        // TODO add support for required fields
+        val resolvedSchema = tool.inputSchema ?: deriveInputSchema(tool, localContext)
+
         addTool(
             toolName,
             tool.description,
             inputSchema =
                 Tool.Input(
-                    properties = tool.inputSchema?.properties?.toKotlinx() ?: EmptyJsonObject,
-                    required = tool.inputSchema?.required ?: emptyList()
+                    properties = resolvedSchema?.properties?.toKotlinx() ?: EmptyJsonObject,
+                    required = resolvedSchema?.required ?: emptyList()
                 ),
         ) { request ->
             // Set up context for the tool execution
@@ -213,6 +214,28 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
                 CallToolResult(content = listOf(TextContent(e.toString())), isError = true)
             }
         }
+    }
+
+    private fun deriveInputSchema(tool: ToolInfo, context: ScriptContext): InputSchema? {
+        if (tool.script !is TextNode) return null
+
+        val file = context.scriptDir.resolve(tool.script.textValue())
+        val scriptFile = SpecScriptFile(file)
+        val inputSchemaCommand = scriptFile.script.commands.find { it.name == "Input schema" }
+
+        if (inputSchemaCommand != null) {
+            return inputSchemaCommand.data.toDomainObject(InputSchema::class)
+        }
+
+        // Fall back to Input parameters
+        val inputParamsCommand = scriptFile.script.commands.find { it.name == "Input parameters" }
+        if (inputParamsCommand != null) {
+            val info = scriptFile.script.info
+            val propertiesNode = Json.mapper.valueToTree<ObjectNode>(info.input)
+            return InputSchema(properties = propertiesNode)
+        }
+
+        return null
     }
 
     fun Server.addResource(resourceURI: String, resource: ResourceInfo, localContext: ScriptContext) {

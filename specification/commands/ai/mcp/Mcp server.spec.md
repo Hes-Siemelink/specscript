@@ -63,7 +63,62 @@ Mcp server:
 
 The external script file should contain the SpecScript commands to execute when the tool is called.
 
-<!-- TODO: Need to stop the file-server after Mcp tool command is implemented to avoid interference with other tests -->
+### Deriving input schema from script
+
+When a tool references an external script that uses `Input schema`, the `inputSchema` can be omitted. SpecScript
+automatically derives it from the script file.
+
+Given a script file `say-hello.spec.yaml`:
+
+```yaml file=say-hello.spec.yaml
+Input schema:
+  type: object
+  properties:
+    name:
+      description: Who to greet
+      default: World
+
+Output: Hello, ${input.name}!
+```
+
+The MCP server tool definition does not need to repeat the schema:
+
+```yaml specscript
+Code example: MCP server with derived input schema
+
+Mcp server:
+  name: derive-demo
+  version: "1.0.0"
+  transport: SSE
+  port: 8095
+  tools:
+    say_hello:
+      description: Say hello to someone
+      script: say-hello.spec.yaml
+```
+
+```yaml specscript
+Code example: Calling tool with derived schema
+
+Mcp tool call:
+  tool: say_hello
+  input:
+    name: Bob
+  server:
+    type: sse
+    url: "http://localhost:8095"
+
+Expected output: Hello, Bob!
+```
+
+<!-- yaml specscript
+Mcp server:
+  name: derive-demo
+  version: "1.0.0"
+  stop: true
+-->
+
+If `inputSchema` is provided explicitly, it takes precedence over the script's `Input schema`.
 
 ## HTTP transport
 
