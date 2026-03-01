@@ -1,9 +1,11 @@
 Script info:
   description: Sends a greeting
 
-Input parameters:
-  name:
-    description: Your name
-    default: there
+Input schema:
+  type: object
+  properties:
+    name:
+      description: Your name
+      default: there
 
 Output: Hello ${input.name} from SpecScript HTTP Server!

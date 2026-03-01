@@ -1,21 +1,23 @@
-Input parameters:
-  id:
-    description: Full ticket identifier (e.g. TICKET-007)
-  title:
-    description: New title (optional)
-    default: NULL
-  description:
-    description: New description (optional)
-    default: NULL
-  state:
-    description: New state (todo, doing, done) optional
-    default: NULL
-  priority:
-    description: New priority (low, medium, high) optional
-    default: NULL
-  assignee:
-    description: New assignee (optional)
-    default: NULL
+Input schema:
+  type: object
+  properties:
+    id:
+      description: Full ticket identifier (e.g. TICKET-007)
+    title:
+      description: New title (optional)
+      default: NULL
+    description:
+      description: New description (optional)
+      default: NULL
+    state:
+      description: New state (todo, doing, done) optional
+      default: NULL
+    priority:
+      description: New priority (low, medium, high) optional
+      default: NULL
+    assignee:
+      description: New assignee (optional)
+      default: NULL
 
 # Sanitize input by escaping single quotes
 Replace:

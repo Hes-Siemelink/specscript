@@ -158,17 +158,19 @@ Expected output: Hello World!
 
 ## The input variable
 
-The input of a script defined in the **Input parameters** section will be stored in the `${input}` variable
+The input of a script defined in the **Input schema** section will be stored in the `${input}` variable
 
 ```yaml specscript
 Code example: Populating the input variable
 
 Script info: Creates a greeting
 
-Input parameters:
-  name:
-    description: Your name
-    default: World
+Input schema:
+  type: object
+  properties:
+    name:
+      description: Your name
+      default: World
 
 Assert equals:
   actual: ${input}
@@ -185,9 +187,11 @@ Code example: Input and output when defining a script
 
 Script info: Creates a greeting
 
-Input parameters:
-  name:
-    description: Your name
+Input schema:
+  type: object
+  properties:
+    name:
+      description: Your name
 
 Output: Hello ${input.name}!
 ```

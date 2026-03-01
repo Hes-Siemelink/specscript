@@ -1,10 +1,15 @@
 Script info:
   description: Creates a new agent to run in the Cloud Connector, based on a runtime definition
 
-Input parameters:
-  host: Release URL
-  token: Access token for Remote Runner
-  alias: Alias for agent (unique per Digital.ai Platform user)
+Input schema:
+  type: object
+  properties:
+    host:
+      description: Release URL
+    token:
+      description: Access token for Remote Runner
+    alias:
+      description: Alias for agent (unique per Digital.ai Platform user)
 
 ---
 Connect to: Digital.ai Platform

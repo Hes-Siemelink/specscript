@@ -1,6 +1,8 @@
-Input parameters:
-  id:
-    description: Full ticket identifier (e.g. TICKET-007)
+Input schema:
+  type: object
+  properties:
+    id:
+      description: Full ticket identifier (e.g. TICKET-007)
 
 Connect to: Ticket DB
 

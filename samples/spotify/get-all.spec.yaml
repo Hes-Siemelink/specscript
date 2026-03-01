@@ -2,8 +2,11 @@ Script info:
   description: Get complete results by getting all paginated ones.
   hidden: true
 
-Input parameters:
-  url: Spotify url to GET
+Input schema:
+  type: object
+  properties:
+    url:
+      description: Spotify url to GET
 
 ---
 ${all}: [ ]

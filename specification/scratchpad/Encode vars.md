@@ -9,8 +9,11 @@ on input.
 ```yaml specscript
 Script info: Encode variables
 
-Input parameters:
-  text: The text to sanitize
+Input schema:
+  type: object
+  properties:
+    text:
+      description: The text to sanitize
 ```
 
 We use a simple encoding scheme where `${` is replaced with `💰{` to escape the variable syntax.

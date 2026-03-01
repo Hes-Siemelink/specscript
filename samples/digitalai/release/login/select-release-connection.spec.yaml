@@ -1,10 +1,12 @@
 Script info:
   description: Select the default connection
 
-Input parameters:
-  target:
-    description: Target service
-    default: Digital.ai Release
+Input schema:
+  type: object
+  properties:
+    target:
+      description: Target service
+      default: Digital.ai Release
 
 ---
 Get all credentials: ${input.target}

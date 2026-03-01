@@ -1,8 +1,10 @@
 Script info:
   description: Creates a greeting and puts it in the output
 
-Input parameters:
-  name:
-    description: Your name
+Input schema:
+  type: object
+  properties:
+    name:
+      description: Your name
 
 Output: Hello ${input.name}!

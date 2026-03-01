@@ -1,8 +1,10 @@
 Script info: Prints a greeting
 
-Input parameters:
-  name:
-    description: Your name
-    default: World
+Input schema:
+  type: object
+  properties:
+    name:
+      description: Your name
+      default: World
 
 Output: Hello, ${input.name}!

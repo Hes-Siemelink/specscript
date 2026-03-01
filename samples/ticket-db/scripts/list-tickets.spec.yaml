@@ -1,10 +1,12 @@
-Input parameters:
-  state:
-    description: Optional state filter (todo, doing, done, or 'all' for no filtering)
-    default: all
-  assignee:
-    description: Optional assignee filter ('all' for no filtering)
-    default: all
+Input schema:
+  type: object
+  properties:
+    state:
+      description: Optional state filter (todo, doing, done, or 'all' for no filtering)
+      default: all
+    assignee:
+      description: Optional assignee filter ('all' for no filtering)
+      default: all
 
 Connect to: Ticket DB
 
