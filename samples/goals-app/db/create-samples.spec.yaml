@@ -1,0 +1,15 @@
+Script info: Create sample data
+
+Create:
+  - title: Pagination
+    description: Add limit/offset parameters so large backlogs load faster and reduce client memory usage.
+    state: todo
+    priority: low
+  - title: Normalize database schema
+    description: Introduce a separate priorities lookup table and migrate existing rows; prepares for custom priority levels later.
+    state: todo
+    priority: medium
+  - title: Batch import script
+    description: Provide import script to bulk-create goals from a YAML/CSV file for easier onboarding.
+    state: in_progress
+    priority: high

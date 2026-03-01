@@ -1,0 +1,7 @@
+Input parameters:
+  batch:
+    description: The list of goals
+
+For each:
+  ${goal} in: ${batch}
+  Create: ${goal}

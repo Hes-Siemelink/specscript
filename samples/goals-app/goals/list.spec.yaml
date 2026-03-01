@@ -1,0 +1,16 @@
+Input parameters:
+  state:
+    description: Optional state filter (todo, in_progress, completed, or 'all' for no filtering)
+    default: all
+  assignee:
+    description: Optional assignee filter ('all' for no filtering)
+    default: all
+
+Connect to: Goal DB
+
+SQLite:
+  query: |
+    SELECT * FROM goal
+    WHERE ('${input.state}' IN ('', 'all') OR state = '${input.state}')
+      AND ('${input.assignee}' IN ('', 'all') OR assignee = '${input.assignee}')
+    ORDER BY created_at ASC;

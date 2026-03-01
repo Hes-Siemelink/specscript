@@ -1,0 +1,32 @@
+Input parameters:
+  title: Goal title
+  description: Description
+  priority:
+    description: Priority level
+    enum: [ low, medium, high ]
+    default: medium
+  assignee:
+    description: Assigned to
+    default: ""
+
+
+# Sanitize input by escaping single quotes
+Replace:
+  text: "'"
+  in: ${input}
+  with: "''"
+As: ${input}
+
+Connect to: Goal DB
+
+SQLite:
+  update:
+    - |
+      INSERT INTO goal (title, description, priority, assignee)
+      VALUES (
+        '${input.title}',
+        '${input.description}',
+        CASE WHEN '${input.priority}' = '' THEN NULL ELSE '${input.priority}' END,
+        CASE WHEN '${input.assignee}' = '' THEN NULL ELSE '${input.assignee}' END
+      );
+  query: SELECT * FROM goal WHERE id = last_insert_rowid();

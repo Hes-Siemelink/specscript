@@ -1,0 +1,51 @@
+Input parameters:
+  id:
+    description: Goal identifier
+  title:
+    description: New title (optional)
+    default: ""
+  description:
+    description: New description (optional)
+    default: ""
+  state:
+    description: New state (todo, in_progress, completed) optional
+    default: ""
+  priority:
+    description: New priority (low, medium, high) optional
+    default: ""
+  assignee:
+    description: New assignee (optional)
+    default: ""
+
+# Sanitize input by escaping single quotes
+Replace:
+  text: "'"
+  in: ${input}
+  with: "''"
+As: ${input}
+
+Connect to: Goal DB
+
+SQLite:
+  update:
+    - |
+      UPDATE goal
+      SET
+        title = CASE WHEN '${input.title}' = '' THEN title ELSE '${input.title}' END,
+        description = CASE WHEN '${input.description}' = '' THEN description ELSE '${input.description}' END,
+        state = CASE WHEN '${input.state}' = '' THEN state ELSE '${input.state}' END,
+        priority = CASE WHEN '${input.priority}' = '' THEN priority ELSE '${input.priority}' END,
+        assignee = CASE WHEN '${input.assignee}' = '' THEN assignee ELSE '${input.assignee}' END,
+        updated_at = CASE
+          WHEN '${input.title}' = '' AND '${input.description}' = '' AND '${input.state}' = ''
+           AND '${input.priority}' = '' AND '${input.assignee}' = '' THEN updated_at
+          ELSE strftime('%Y-%m-%dT%H:%M:%fZ','now')
+        END
+      WHERE id = '${input.id}';
+  query: |
+    SELECT *, changes() > 0 AS updated,
+      CASE
+        WHEN changes() = 0 THEN 'Goal not found'
+        ELSE 'Goal updated'
+      END AS message
+    FROM goal WHERE id = '${input.id}';

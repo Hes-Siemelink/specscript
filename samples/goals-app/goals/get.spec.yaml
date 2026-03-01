@@ -1,0 +1,8 @@
+Input parameters:
+  id:
+    description: Goal identifier
+
+Connect to: Goal DB
+
+SQLite:
+  query: SELECT * FROM goal WHERE id = '${input.id}'

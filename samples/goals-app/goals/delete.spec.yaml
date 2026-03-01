@@ -1,0 +1,15 @@
+Input parameters:
+  id:
+    description: Goal identifier
+
+Connect to: Goal DB
+
+SQLite:
+  update:
+    - DELETE FROM goal WHERE id = '${input.id}';
+  query: |
+    SELECT '${input.id}' AS id,
+      CASE
+        WHEN changes() > 0 THEN 'Goal deleted'
+        ELSE 'Goal not found'
+      END AS message;
