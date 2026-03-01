@@ -16,6 +16,9 @@ Input parameters:
   assignee:
     description: New assignee (optional)
     default: ""
+  parent_id:
+    description: New parent goal ID (optional)
+    default: ""
 
 # Sanitize input by escaping single quotes
 Replace:
@@ -36,9 +39,10 @@ SQLite:
         state = CASE WHEN '${input.state}' = '' THEN state ELSE '${input.state}' END,
         priority = CASE WHEN '${input.priority}' = '' THEN priority ELSE '${input.priority}' END,
         assignee = CASE WHEN '${input.assignee}' = '' THEN assignee ELSE '${input.assignee}' END,
+        parent_id = CASE WHEN '${input.parent_id}' = '' THEN parent_id ELSE '${input.parent_id}' END,
         updated_at = CASE
           WHEN '${input.title}' = '' AND '${input.description}' = '' AND '${input.state}' = ''
-           AND '${input.priority}' = '' AND '${input.assignee}' = '' THEN updated_at
+           AND '${input.priority}' = '' AND '${input.assignee}' = '' AND '${input.parent_id}' = '' THEN updated_at
           ELSE strftime('%Y-%m-%dT%H:%M:%fZ','now')
         END
       WHERE id = '${input.id}';

@@ -6,6 +6,7 @@ Connect to: Goal DB
 
 SQLite:
   update:
+    - PRAGMA foreign_keys = ON;
     - DELETE FROM goal WHERE id = '${input.id}';
   query: |
     SELECT '${input.id}' AS id,

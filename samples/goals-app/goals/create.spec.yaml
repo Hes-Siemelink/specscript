@@ -8,6 +8,9 @@ Input parameters:
   assignee:
     description: Assigned to
     default: ""
+  parent_id:
+    description: Parent goal ID for sub-goals
+    default: ""
 
 
 # Sanitize input by escaping single quotes
@@ -22,11 +25,12 @@ Connect to: Goal DB
 SQLite:
   update:
     - |
-      INSERT INTO goal (title, description, priority, assignee)
+      INSERT INTO goal (title, description, priority, assignee, parent_id)
       VALUES (
         '${input.title}',
         '${input.description}',
         CASE WHEN '${input.priority}' = '' THEN NULL ELSE '${input.priority}' END,
-        CASE WHEN '${input.assignee}' = '' THEN NULL ELSE '${input.assignee}' END
+        CASE WHEN '${input.assignee}' = '' THEN NULL ELSE '${input.assignee}' END,
+        CASE WHEN '${input.parent_id}' = '' THEN NULL ELSE '${input.parent_id}' END
       );
   query: SELECT * FROM goal WHERE id = last_insert_rowid();

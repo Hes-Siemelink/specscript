@@ -22,7 +22,7 @@ Tools for retrieving and viewing goals
 
 ### List goals
 
-Retrieves all goals with optional filtering by state and assignee.
+Retrieves all goals with optional filtering by state, assignee, and parent.
 
 ```yaml specscript
 Mcp tool:
@@ -39,6 +39,10 @@ Mcp tool:
         assignee:
           type: string
           description: Filter goals by assignee (use 'all' or omit for no filtering)
+          default: all
+        parent_id:
+          type: string
+          description: Filter by parent goal ('all' for all goals, 'none' for top-level only, or a goal ID for children of that goal)
           default: all
     script: goals/list.spec.yaml
 ```
@@ -68,7 +72,7 @@ CRUD operations for creating, updating, and deleting goals.
 
 ### Create new goal
 
-Creates a new goal with the provided details. New goals start in "todo" state.
+Creates a new goal with the provided details. New goals start in "todo" state. Optionally set a `parent_id` to create a sub-goal.
 
 ```yaml specscript
 Mcp tool:
@@ -91,6 +95,9 @@ Mcp tool:
         assignee:
           type: string
           description: Person assigned to this goal
+        parent_id:
+          type: integer
+          description: Parent goal ID for creating sub-goals (omit for top-level goals)
       required: [ title, description ]
     script: goals/create.spec.yaml
 ```
@@ -125,7 +132,7 @@ Mcp tool:
 
 ### Update existing goal
 
-Updates an existing goal's properties including state transitions.
+Updates an existing goal's properties including state transitions and parent assignment.
 
 ```yaml specscript
 Mcp tool:
@@ -154,6 +161,9 @@ Mcp tool:
         assignee:
           type: string
           description: New assignee
+        parent_id:
+          type: integer
+          description: New parent goal ID (move goal under a different parent)
       required: [ id ]
     script: goals/update.spec.yaml
 
@@ -161,7 +171,7 @@ Mcp tool:
 
 ### Delete goal
 
-Permanently removes a goal.
+Permanently removes a goal. Deleting a parent goal also removes all its sub-goals.
 
 ```yaml specscript
 Mcp tool:
@@ -199,6 +209,7 @@ Each goal contains the following properties:
 - **state**: Current state - "todo", "in_progress", or "completed" (string)
 - **priority**: Priority level - "low", "medium", or "high" (string)
 - **assignee**: Person assigned to the goal (string, optional)
+- **parent_id**: Parent goal ID for sub-goals (integer, optional, null for top-level goals)
 - **created_at**: Timestamp when goal was created (ISO 8601 string)
 - **updated_at**: Timestamp when goal was last modified (ISO 8601 string)
 
