@@ -28,6 +28,7 @@ Simple SpecScript example scripts
 Available commands:
   create-greeting   Creates a greeting and puts it in the output
   greet             Prints a greeting
+  greet2            Prints a greeting
   multiple-choice   Interaction example
   output            Sets test output
   prompt            Simple interactive prompt

@@ -1,0 +1,218 @@
+Test case: Input schema populates input variable
+
+Input schema:
+  type: object
+  properties:
+    name:
+      description: Your name
+      default: world
+
+Assert equals:
+  actual: ${input}
+  expected:
+    name: world
+
+---
+Test case: Input schema populates top-level variables
+
+Input schema:
+  type: object
+  properties:
+    greeting:
+      default: Hello
+    name:
+      default: World
+
+Assert equals:
+  actual: ${greeting}, ${name}!
+  expected: Hello, World!
+
+---
+Test case: Input schema with pre-existing input values
+
+${input}:
+  name: Alice
+
+Input schema:
+  type: object
+  properties:
+    name:
+      description: Your name
+      default: Fallback
+
+Assert equals:
+  actual: ${name}
+  expected: Alice
+
+---
+Test case: Input schema with multiple defaults
+
+Input schema:
+  type: object
+  properties:
+    a:
+      default: 1
+    b:
+      default: 2
+    c:
+      default: 3
+
+Assert equals:
+  actual: ${input}
+  expected:
+    a: 1
+    b: 2
+    c: 3
+
+---
+Test case: Input schema with enum and default
+
+Input schema:
+  type: object
+  properties:
+    color:
+      description: Pick a color
+      enum: [ red, green, blue ]
+      default: green
+
+Assert equals:
+  actual: ${color}
+  expected: green
+
+---
+Test case: Input schema with integer default
+
+Input schema:
+  type: object
+  properties:
+    count:
+      description: How many?
+      default: 42
+
+Assert equals:
+  actual: ${count}
+  expected: 42
+
+---
+Test case: Input schema with boolean default
+
+Input schema:
+  type: object
+  properties:
+    verbose:
+      description: Verbose output?
+      default: true
+
+Assert that:
+  item: ${verbose}
+  equals: true
+
+---
+Test case: Input schema conditional includes matching property
+
+${input}: { }
+
+Input schema:
+  type: object
+  properties:
+    mode:
+      default: fast
+    fast-option:
+      description: Fast mode setting
+      default: turbo
+      condition:
+        item: ${input.mode}
+        equals: fast
+    slow-option:
+      description: Slow mode setting
+      default: crawl
+      condition:
+        item: ${input.mode}
+        equals: slow
+
+Assert equals:
+  actual: ${input}
+  expected:
+    mode: fast
+    fast-option: turbo
+
+---
+Test case: Input schema conditional with other branch
+
+${input}:
+  mode: slow
+
+Input schema:
+  type: object
+  properties:
+    mode:
+      default: fast
+    fast-option:
+      default: turbo
+      condition:
+        item: ${input.mode}
+        equals: fast
+    slow-option:
+      default: crawl
+      condition:
+        item: ${input.mode}
+        equals: slow
+
+Assert equals:
+  actual: ${input}
+  expected:
+    mode: slow
+    slow-option: crawl
+
+---
+Test case: Input schema pre-existing values are not overwritten by defaults
+
+${input}:
+  name: Provided
+  color: red
+
+Input schema:
+  type: object
+  properties:
+    name:
+      default: Default
+    color:
+      default: blue
+    extra:
+      default: bonus
+
+Assert equals:
+  actual: ${input}
+  expected:
+    name: Provided
+    color: red
+    extra: bonus
+
+---
+Test case: Input schema with empty string default
+
+Input schema:
+  type: object
+  properties:
+    optional_field:
+      description: Optional
+      default: ""
+
+Assert equals:
+  actual: ${optional_field}
+  expected: ""
+
+---
+Test case: Input schema properties accessible via input dot notation
+
+Input schema:
+  type: object
+  properties:
+    first:
+      default: Alice
+    last:
+      default: Smith
+
+Assert equals:
+  actual: ${input.first} ${input.last}
+  expected: Alice Smith

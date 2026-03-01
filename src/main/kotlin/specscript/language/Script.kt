@@ -6,6 +6,7 @@ import specscript.commands.files.TempFile
 import specscript.commands.files.TempFileData
 import specscript.commands.scriptinfo.InputParameterData
 import specscript.commands.scriptinfo.InputParameters
+import specscript.commands.scriptinfo.InputSchema
 import specscript.commands.scriptinfo.ScriptInfo
 import specscript.commands.scriptinfo.ScriptInfoData
 import specscript.commands.shell.Cli
@@ -72,14 +73,20 @@ class Script(val commands: List<Command>, val title: String? = null) {
         val scriptInfoData = scriptInfoCommand?.data?.toDomainObject(ScriptInfoData::class) ?: ScriptInfoData(title)
 
         val inputParameterCommand = commands.find { it.name == InputParameters.name }
+        val inputSchemaCommand = commands.find { it.name == InputSchema.name }
 
-        return if (inputParameterCommand != null) {
-            // Merge with data from InputParameters
-            val inputParams = inputParameterCommand.data.toDomainObject(InputParameterData::class)
-            val mergedInput = (scriptInfoData.input ?: emptyMap()) + (inputParams.properties)
-            scriptInfoData.copy(input = mergedInput)
-        } else {
-            scriptInfoData
+        return when {
+            inputParameterCommand != null -> {
+                val inputParams = inputParameterCommand.data.toDomainObject(InputParameterData::class)
+                val mergedInput = (scriptInfoData.input ?: emptyMap()) + (inputParams.properties)
+                scriptInfoData.copy(input = mergedInput)
+            }
+            inputSchemaCommand != null -> {
+                val schemaData = InputSchema.toInputData(inputSchemaCommand.data as com.fasterxml.jackson.databind.node.ObjectNode)
+                val mergedInput = (scriptInfoData.input ?: emptyMap()) + (schemaData.properties)
+                scriptInfoData.copy(input = mergedInput)
+            }
+            else -> scriptInfoData
         }
     }
 

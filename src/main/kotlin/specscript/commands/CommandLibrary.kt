@@ -18,6 +18,7 @@ import specscript.commands.mcp.*
 import specscript.commands.schema.CheckType
 import specscript.commands.schema.ValidateSchema
 import specscript.commands.scriptinfo.InputParameters
+import specscript.commands.scriptinfo.InputSchema
 import specscript.commands.scriptinfo.ScriptInfo
 import specscript.commands.shell.Cli
 import specscript.commands.shell.Shell
@@ -36,6 +37,7 @@ object CommandLibrary {
 
         // Script definition
         InputParameters,
+        InputSchema,
         ScriptInfo,
 
         // Variables
