@@ -13,14 +13,17 @@ Get a flavor of SpecScript with this example file `greetings.spec.yaml`:
 ```yaml file=greetings.spec.yaml
 Script info: Multi-language greeting
 
-Input parameters:
-  name: Your name
-  language:
-    description: Select a language
-    enum:
-      - English
-      - Spanish
-      - Dutch
+Input schema:
+  type: object
+  properties:
+    name:
+      description: Your name
+    language:
+      description: Select a language
+      enum:
+        - English
+        - Spanish
+        - Dutch
 
 POST:
   url: http://localhost:2525/greeting
@@ -196,9 +199,13 @@ Define all command-line options in Yaml. Take this file `simple-options.spec.yam
 Script info:
   description: Call Acme
 
-Input parameters:
-  user: Username
-  language: Preferred language
+Input schema:
+  type: object
+  properties:
+    user:
+      description: Username
+    language:
+      description: Preferred language
 ```
 
 This will automatically generate a command description and command line options:
@@ -215,28 +222,30 @@ Options:
   --language   Preferred language
 ```
 
-## Input options
+## Input schema
 
-SpecScript allows you to specify the type and format
-of [input parameters](specification/commands/core/script-info/Input%20parameters.spec.md). Here's an example file
-`input-options.spec.yaml`
+SpecScript allows you to specify the type and format of input parameters by way of
+an [Input schema](specification/commands/core/script-info/Input%20schema.spec.md). Here's an example file
+`input-parameters.spec.yaml`
 
-```yaml file=input-options.spec.yaml
+```yaml file=input-parameters.spec.yaml
 Script info:
   description: Different input options
 
-Input parameters:
-  user:
-    description: Username
-    short option: u
-  password:
-    description: Password
-    secret: true
-    short option: p
+Input schema:
+  type: object
+  properties:
+    user:
+      description: Username
+      short option: u
+    password:
+      description: Password
+      secret: true
+      short option: p
 ```
 
 ```shell cli
-./spec --help input-options.spec.yaml
+./spec --help input-parameters.spec.yaml
 ```
 
 ```output
