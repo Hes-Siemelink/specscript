@@ -17,6 +17,8 @@ import kotlin.io.path.name
 class CliInvocationException(message: String) : Exception(message)
 
 fun main(args: Array<String>) {
+    // Suppress verbose INFO logging from Ktor and MCP SDK
+    System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "warn")
     SpecScriptCli.main(args)
 }
 

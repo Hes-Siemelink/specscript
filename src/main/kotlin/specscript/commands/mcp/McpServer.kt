@@ -99,7 +99,6 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
         )
 
         thread(start = true, isDaemon = false, name = "MCP Server - $name") {
-            System.err.println("[${Thread.currentThread().name}] Starting stdio server ")
             runBlocking {
                 server.createSession(transport)
 
@@ -109,9 +108,8 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
                 }
                 if (servers.contains(name)) {
                     done.join()
-                    System.err.println("[${Thread.currentThread().name}] Stopping stdio server ")
                 } else {
-                    System.err.println("[${Thread.currentThread().name}] Server stopped before it could start")
+                    System.err.println("MCP stdio server '$name' stopped before it could start")
                 }
             }
         }
@@ -131,7 +129,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
         }
 
         httpServers[info.name] = ktorServer
-        ktorServer.start(wait = false)
+        startAndKeepAlive(ktorServer, info.name)
     }
 
     private fun startStreamableHttpServer(info: McpServerInfo, server: Server) {
@@ -148,7 +146,20 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
         }
 
         httpServers[info.name] = ktorServer
+        startAndKeepAlive(ktorServer, info.name)
+    }
+
+    /** Starts the Ktor server synchronously (no race condition) then keeps the JVM alive with a non-daemon thread. */
+    private fun startAndKeepAlive(ktorServer: HttpMcpServer, name: String) {
         ktorServer.start(wait = false)
+        thread(start = true, isDaemon = false, name = "MCP keep-alive - $name") {
+            runBlocking {
+                val done = Job()
+                servers[name]?.onClose { done.complete() }
+                    ?: return@runBlocking
+                done.join()
+            }
+        }
     }
 
     fun stopServer(name: String) {
@@ -211,11 +222,10 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
                 }
 
                 // Process result
-                val output = result.toDisplayYaml()
+                val output = result.toDisplayJson()
                 CallToolResult(content = listOf(TextContent(output)))
             } catch (e: SpecScriptException) {
                 System.err.println("Tool '$toolName' execution error: ${e.message}")
-                e.printStackTrace()
                 CallToolResult(content = listOf(TextContent(e.toString())), isError = true)
             }
         }
@@ -262,7 +272,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
 
             ReadResourceResult(
                 contents = listOf(
-                    TextResourceContents(result.toDisplayYaml(), request.uri, resource.mimeType)
+                    TextResourceContents(result.toDisplayJson(), request.uri, resource.mimeType)
                 )
             )
         }
@@ -298,7 +308,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
                 messages = listOf(
                     PromptMessage(
                         role = Role.User,
-                        content = TextContent(result.toDisplayYaml())
+                        content = TextContent(result.toDisplayJson())
                     )
                 ),
                 description = "Description for ${request.name}"
