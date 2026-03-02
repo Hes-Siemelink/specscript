@@ -4,20 +4,23 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.node.TextNode
+import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.routing.*
 import io.ktor.server.sse.*
-import io.ktor.utils.io.streams.*
-import io.modelcontextprotocol.kotlin.sdk.*
 import io.modelcontextprotocol.kotlin.sdk.server.Server
 import io.modelcontextprotocol.kotlin.sdk.server.ServerOptions
 import io.modelcontextprotocol.kotlin.sdk.server.StdioServerTransport
 import io.modelcontextprotocol.kotlin.sdk.server.mcp
+import io.modelcontextprotocol.kotlin.sdk.server.mcpStreamableHttp
+import io.modelcontextprotocol.kotlin.sdk.types.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.runBlocking
 import kotlinx.io.asSink
+import kotlinx.io.asSource
 import kotlinx.io.buffered
 import specscript.files.FileContext
 import specscript.files.SpecScriptFile
@@ -84,20 +87,21 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
     private fun startServer(info: McpServerInfo, server: Server) {
         when (info.transport) {
             TransportType.STDIO -> startStdioServer(info.name, server)
-            TransportType.HTTP, TransportType.SSE -> startHttpServer(info, server)
+            TransportType.SSE -> startSseServer(info, server)
+            TransportType.HTTP -> startStreamableHttpServer(info, server)
         }
     }
 
     private fun startStdioServer(name: String, server: Server) {
         val transport = StdioServerTransport(
-            System.`in`.asInput(),
+            System.`in`.asSource().buffered(),
             System.out.asSink().buffered()
         )
 
         thread(start = true, isDaemon = false, name = "MCP Server - $name") {
             System.err.println("[${Thread.currentThread().name}] Starting stdio server ")
             runBlocking {
-                server.connect(transport)
+                server.createSession(transport)
 
                 val done = Job()
                 server.onClose {
@@ -113,36 +117,38 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
         }
     }
 
-    private fun startHttpServer(info: McpServerInfo, server: Server) {
+    private fun startSseServer(info: McpServerInfo, server: Server) {
         val port = info.port ?: 8080
         val path = info.path ?: "/"
 
-        thread(start = true, isDaemon = false, name = "MCP HTTP Server - ${info.name}") {
-            System.err.println("[${Thread.currentThread().name}] Starting HTTP server on port $port at path $path")
+        System.err.println("Starting MCP SSE server '${info.name}' on port $port at path $path")
 
-            val ktorServer = embeddedServer(Netty, port = port) {
-                install(SSE)
-                routing {
-                    route(path) {
-                        mcp { server }
-                    }
-                }
-            }
-
-            // Store HTTP server reference for shutdown
-            httpServers[info.name] = ktorServer
-
-            runBlocking {
-                try {
-                    ktorServer.start(wait = true)
-                    System.err.println("[${Thread.currentThread().name}] HTTP server stopped")
-                } catch (e: Exception) {
-                    System.err.println("[${Thread.currentThread().name}] HTTP server error: ${e.message}")
-                } finally {
-                    httpServers.remove(info.name)
-                }
+        val ktorServer = embeddedServer(Netty, port = port) {
+            install(SSE)
+            routing {
+                mcp(path) { server }
             }
         }
+
+        httpServers[info.name] = ktorServer
+        ktorServer.start(wait = false)
+    }
+
+    private fun startStreamableHttpServer(info: McpServerInfo, server: Server) {
+        val port = info.port ?: 8080
+        val path = info.path ?: "/mcp"
+
+        System.err.println("Starting MCP streaming HTTP server '${info.name}' on port $port at path $path")
+
+        val ktorServer = embeddedServer(Netty, port = port) {
+            install(ContentNegotiation) {
+                json(McpJson)
+            }
+            mcpStreamableHttp { server }
+        }
+
+        httpServers[info.name] = ktorServer
+        ktorServer.start(wait = false)
     }
 
     fun stopServer(name: String) {
@@ -183,14 +189,13 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
         addTool(
             toolName,
             tool.description,
-            inputSchema =
-                Tool.Input(
+            inputSchema = ToolSchema(
                     properties = resolvedSchema?.properties?.toKotlinx() ?: EmptyJsonObject,
                     required = resolvedSchema?.required ?: emptyList()
                 ),
         ) { request ->
             // Set up context for the tool execution
-            localContext.variables[INPUT_VARIABLE] = request.arguments.toJackson()
+            localContext.variables[INPUT_VARIABLE] = request.arguments?.toJackson() ?: Json.newObject()
 
 
             // TODO handle lists
@@ -290,13 +295,13 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
 
             // Process result
             GetPromptResult(
-                "Description for ${request.name}",
                 messages = listOf(
                     PromptMessage(
-                        role = Role.user,
+                        role = Role.User,
                         content = TextContent(result.toDisplayYaml())
                     )
-                )
+                ),
+                description = "Description for ${request.name}"
             )
         }
     }

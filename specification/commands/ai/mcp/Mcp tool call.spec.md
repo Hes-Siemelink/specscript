@@ -45,7 +45,7 @@ Mcp tool call:
 Expected output: Hello there!
 ```
 
-Here we use the `internal` transport to connect to the `demo-server` MCP server that we defined earlier. Other supported
+Here we use the `sse` transport to connect to the `demo-server` MCP server that we defined earlier. Other supported
 transport types are `stdio` and `http` (see below).
 
 ## Passing arguments
@@ -106,22 +106,36 @@ Expected output: Mock server response
 
 ### HTTP
 
-HTTP server type enables connection to MCP servers over HTTP. Supports authentication via Bearer tokens and custom
-headers.
+HTTP server type enables connection to MCP servers using the Streamable HTTP transport. Supports authentication via
+Bearer tokens and custom headers.
 
 ```yaml
 Code example: HTTP transport
 
 Mcp tool call:
-  transport:
+  server:
     type: http
     url: "https://api.example.com/mcp"
     headers:
       Authorization: "Bearer ${API_TOKEN}"
       Content-Type: "application/json"
   tool: analyze_data
-  arguments:
+  input:
     data: "sample input"
+```
+
+### SSE
+
+SSE server type enables connection to MCP servers using the legacy Server-Sent Events transport.
+
+```yaml
+Code example: SSE transport
+
+Mcp tool call:
+  server:
+    type: sse
+    url: "http://localhost:8091"
+  tool: hello
 ```
 
 <!-- yaml specscript

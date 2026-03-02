@@ -12,8 +12,8 @@ properties:
     type: boolean
   transport:
     type: string
-    enum: [ STDIO, HTTP ]
-    description: Transport type for the MCP server
+    enum: [ STDIO, HTTP, SSE ]
+    description: Transport type for the MCP server (STDIO, HTTP for streaming HTTP, SSE for legacy SSE)
   port:
     type: integer
     description: Port number for HTTP transport (default 8080)

@@ -120,19 +120,69 @@ Mcp server:
 
 If `inputSchema` is provided explicitly, it takes precedence over the script's `Input schema`.
 
-## HTTP transport
+## SSE transport
 
-Start an HTTP-based MCP server using Server-Sent Events (SSE) for bidirectional communication:
+Start an MCP server using Server-Sent Events (SSE) for bidirectional communication:
 
 ```yaml specscript
-Code example: HTTP MCP server
+Code example: SSE MCP server
+
+Mcp server:
+  name: sse-server
+  version: "1.0.0"
+  transport: SSE
+  port: 8090
+  tools:
+    greet:
+      description: Generate a greeting over SSE
+      inputSchema:
+        properties:
+          name:
+            type: string
+            description: Name to greet
+      script:
+        Output: Hello ${input.name} via SSE!
+```
+
+```yaml specscript
+Code example: Calling SSE server tool
+
+Mcp tool call:
+  tool: greet
+  input:
+    name: Alice
+  server:
+    type: sse
+    url: "http://localhost:8090"
+
+Expected output: Hello Alice via SSE!
+```
+
+<!-- yaml specscript
+Mcp server:
+  name: sse-server
+  version: "1.0.0"
+  stop: true
+-->
+
+SSE transport uses the legacy SSE protocol for MCP communication:
+
+- **transport**: Set to `SSE` to enable SSE transport
+- **port**: Port number for the HTTP server (default: `8080`)
+
+## Streaming HTTP transport
+
+Start an MCP server using the Streamable HTTP transport, which is the recommended transport for HTTP-based MCP
+communication:
+
+```yaml specscript
+Code example: Streaming HTTP MCP server
 
 Mcp server:
   name: http-server
   version: "1.0.0"
   transport: HTTP
-  port: 8090
-  path: "/mcp"
+  port: 8092
   tools:
     greet:
       description: Generate a greeting over HTTP
@@ -145,13 +195,37 @@ Mcp server:
         Output: Hello ${input.name} via HTTP!
 ```
 
-The HTTP server supports:
+```yaml specscript
+Code example: Calling streaming HTTP server tool
 
-- **transport**: Set to `HTTP` to enable HTTP transport (default: `STDIO`)
+Mcp tool call:
+  tool: greet
+  input:
+    name: Bob
+  server:
+    type: http
+    url: "http://localhost:8092/mcp"
+
+Expected output: Hello Bob via HTTP!
+```
+
+<!-- yaml specscript
+Mcp server:
+  name: http-server
+  version: "1.0.0"
+  stop: true
+-->
+
+The streaming HTTP transport supports:
+
+- **transport**: Set to `HTTP` to enable streaming HTTP transport (default: `STDIO`)
 - **port**: Port number for the HTTP server (default: `8080`)
-- **path**: Base path for MCP endpoints (default: `/`)
+- **path**: Path for MCP endpoint (default: `/mcp`)
+- Bidirectional communication via POST (requests) and GET (server-initiated SSE notifications)
+- Session management via `Mcp-Session-Id` header
+- Both JSON and SSE response formats
 
-HTTP clients can connect to `http://localhost:8090/mcp` for SSE and POST messages.
+HTTP clients connect to `http://localhost:<port>/mcp` using the `http` server type.
 
 ### Stop the server
 
@@ -169,11 +243,6 @@ Mcp server:
 <!-- yaml specscript
 Mcp server:
   name: file-server
-  version: "1.0.0"
-  stop: true
-
-Mcp server:
-  name: http-server
   version: "1.0.0"
   stop: true
 -->

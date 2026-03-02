@@ -5,7 +5,7 @@ import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.auth.providers.*
 import io.ktor.client.plugins.sse.*
 import io.ktor.client.request.*
-import io.modelcontextprotocol.kotlin.sdk.Implementation
+import io.modelcontextprotocol.kotlin.sdk.types.Implementation
 import io.modelcontextprotocol.kotlin.sdk.client.Client
 import io.modelcontextprotocol.kotlin.sdk.client.SseClientTransport
 

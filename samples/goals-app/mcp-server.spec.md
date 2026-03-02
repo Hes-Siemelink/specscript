@@ -13,7 +13,7 @@ basic lifecycle: "todo" → "in_progress" → "completed".
 Mcp server:
   name: goals-app
   version: 1.0.0
-  transport: SSE
+  transport: HTTP
 ```
 
 ## Listing Tools
@@ -72,7 +72,8 @@ CRUD operations for creating, updating, and deleting goals.
 
 ### Create new goal
 
-Creates a new goal with the provided details. New goals start in "todo" state. Optionally set a `parent_id` to create a sub-goal.
+Creates a new goal with the provided details. New goals start in "todo" state. Optionally set a `parent_id` to create a
+sub-goal.
 
 ```yaml specscript
 Mcp tool:

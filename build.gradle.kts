@@ -38,7 +38,9 @@ dependencies {
     implementation("org.jline:jline:3.27.+")
     implementation("org.fusesource.jansi:jansi:2.4.1")
     implementation("org.xerial:sqlite-jdbc:3.47.0.0")
-    implementation("io.modelcontextprotocol:kotlin-sdk:0.7.2")
+    implementation("io.modelcontextprotocol:kotlin-sdk:0.8.4")
+    implementation("io.ktor:ktor-server-content-negotiation:3.3.+")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:3.3.+")
     implementation("io.github.oshai:kotlin-logging:5.0.0")  // For MCP
 
     implementation("org.junit.jupiter:junit-jupiter-api:5.13.4")

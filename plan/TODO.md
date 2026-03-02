@@ -1,5 +1,6 @@
 # On my mind
 
+* MCP server returns YAML? Should be JSON
 * LLM commands
 * Rewrite README
 * Test mode

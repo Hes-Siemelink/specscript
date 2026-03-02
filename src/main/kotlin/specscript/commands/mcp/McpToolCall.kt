@@ -3,9 +3,10 @@ package specscript.commands.mcp
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.node.TextNode
-import io.modelcontextprotocol.kotlin.sdk.CallToolRequest
-import io.modelcontextprotocol.kotlin.sdk.CallToolResult
-import io.modelcontextprotocol.kotlin.sdk.TextContent
+import io.modelcontextprotocol.kotlin.sdk.types.CallToolRequest
+import io.modelcontextprotocol.kotlin.sdk.types.CallToolRequestParams
+import io.modelcontextprotocol.kotlin.sdk.types.CallToolResult
+import io.modelcontextprotocol.kotlin.sdk.types.TextContent
 import kotlinx.coroutines.runBlocking
 import specscript.commands.mcp.transport.HttpClient
 import specscript.commands.mcp.transport.McpClientWrapper
@@ -35,13 +36,15 @@ object McpToolCall : CommandHandler("Mcp tool call", "ai/mcp"), ObjectHandler, D
             mcp.connect()
 
             val request = CallToolRequest(
-                name = info.tool,
-                arguments = info.input?.toKotlinx() ?: kotlinx.serialization.json.JsonObject(emptyMap())
+                CallToolRequestParams(
+                    name = info.tool,
+                    arguments = info.input?.toKotlinx() ?: kotlinx.serialization.json.JsonObject(emptyMap())
+                )
             )
 
             val result = mcp.client.callTool(request) as CallToolResult
             val firstMessage: JsonNode = result.firstTextAsJson()
-            if (result.isError!!) {
+            if (result.isError == true) {
                 throw SpecScriptCommandError(
                     "Tool '${info.tool}' call failed",
                     type = "MCP Server error",
