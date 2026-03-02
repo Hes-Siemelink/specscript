@@ -13,7 +13,7 @@ import specscript.commands.mcp.transport.McpClientWrapper
 import specscript.commands.mcp.transport.SseClient
 import specscript.commands.mcp.transport.StdioClient
 import specscript.language.*
-import specscript.util.Yaml
+import specscript.util.Json
 import specscript.util.toDomainObject
 import specscript.util.toKotlinx
 
@@ -73,8 +73,10 @@ fun CallToolResult.firstTextAsJson(): JsonNode {
     // TODO handle lists and other content types
     val first = content.first()
     return when (first) {
-        is TextContent -> {
-            Yaml.parseIfPossible(first.text)
+        is TextContent -> try {
+            Json.mapper.readTree(first.text)
+        } catch (_: Exception) {
+            TextNode(first.text)
         }
 
         else -> TextNode("Tool executed successfully with result of type ${first.type}")

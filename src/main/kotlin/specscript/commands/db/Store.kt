@@ -2,10 +2,11 @@ package specscript.commands.db
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ObjectNode
+import com.fasterxml.jackson.databind.node.TextNode
 import specscript.language.*
+import specscript.util.Json
 import specscript.util.Json.newArray
 import specscript.util.Json.newObject
-import specscript.util.Yaml
 import specscript.util.toCompactJson
 import specscript.util.toDomainObject
 import java.sql.Connection
@@ -81,15 +82,18 @@ fun Connection.doJsonQuery(query: String): JsonNode {
             while (resultSet.next()) {
 
                 if (resultSet.metaData.columnCount == 1 && resultSet.metaData.getColumnName(1) == "json") {
-                    val row = Yaml.parse(resultSet.getObject(1).toString())
+                    val row = Json.mapper.readTree(resultSet.getObject(1).toString())
                     results.add(row)
                 } else {
                     for (i in 1..resultSet.metaData.columnCount) {
                         val row = newObject()
-                        row.set<JsonNode>(
-                            resultSet.metaData.getColumnName(i),
-                            Yaml.parse(resultSet.getObject(i).toString())
-                        )
+                        val value = resultSet.getObject(i)?.toString() ?: ""
+                        val node = try {
+                            Json.mapper.readTree(value)
+                        } catch (_: Exception) {
+                            TextNode(value)
+                        }
+                        row.set<JsonNode>(resultSet.metaData.getColumnName(i), node)
                         results.add(row)
                     }
                 }
