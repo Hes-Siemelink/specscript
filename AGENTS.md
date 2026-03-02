@@ -225,13 +225,14 @@ All documentation includes runnable code examples that are executed as part of t
 
 When committing changes to the project, follow these rules:
 
+- **Always ask for confirmation before committing.** Do not commit autonomously.
 - Use: `git commit -m "Summary" -m "content"`
 - Summary:
     - Must not exceed 70 characters.
     - Write the summary as a user-focused release note item, describing the functional change or improvement from the
       perspective of a non-developer stakeholder.
     - Avoid technical or code-centric language in the summary; save those details for the content/body.
-    - If a new feature is added, start the summary with the 💫 emoji.
+    - If a new feature is added, start the summary with the 💫 emoji. The 💫 entries tell the story at a glance.
     - For non-functional updates (refactoring, documentation, bug fixes, etc.), do not use any emoji.
     - For invasive code structure changes without functional updates, use exactly: `Refactoring` as the summary.
     - For documentation updates, use exactly: `Documentation` as the summary.
