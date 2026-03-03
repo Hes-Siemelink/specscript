@@ -74,7 +74,7 @@ fun CallToolResult.firstTextAsJson(): JsonNode {
     val first = content.first()
     return when (first) {
         is TextContent -> try {
-            Json.mapper.readTree(first.text)
+            Json.readTree(first.text)
         } catch (_: Exception) {
             TextNode(first.text)
         }

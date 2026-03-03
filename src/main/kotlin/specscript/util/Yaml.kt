@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.TextNode
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import java.nio.file.Path
 
 object Yaml {
@@ -15,38 +14,46 @@ object Yaml {
         .enable(YAMLGenerator.Feature.MINIMIZE_QUOTES)
         .disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER)
 
-    val mapper = ObjectMapper(factory).registerKotlinModule()
+    // Bare mapper for tree-model operations (parsing YAML to/from JsonNode).
+    // No KotlinModule — avoids expensive kotlin-reflect initialization on startup.
+    private val treeMapper = ObjectMapper(factory).apply {
+        setSerializationInclusion(JsonInclude.Include.NON_NULL)
+    }
 
-    init {
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
+    // Full mapper with KotlinModule, only for typed deserialization (treeToValue, readValue<T>, valueToTree).
+    // Lazy to defer kotlin-reflect cost until first actual use.
+    val mapper: ObjectMapper by lazy {
+        ObjectMapper(factory).registerModule(KotlinModules.module).apply {
+            setSerializationInclusion(JsonInclude.Include.NON_NULL)
+        }
     }
 
     fun readFile(source: Path): JsonNode {
-        return mapper.readValue(source.toFile(), JsonNode::class.java)
+        return treeMapper.readValue(source.toFile(), JsonNode::class.java)
     }
 
     fun readResource(classpathResource: String): JsonNode {
         val stream = Resources.stream(classpathResource)
 
-        return mapper.readTree(stream)
+        return treeMapper.readTree(stream)
     }
 
     fun parse(source: Path): List<JsonNode> {
         val yamlParser = factory.createParser(source.toFile())
-        return mapper
+        return treeMapper
             .readValues(yamlParser, JsonNode::class.java)
             .readAll()
     }
 
     fun parseAsFile(content: String): List<JsonNode> {
         val yamlParser = factory.createParser(content)
-        return mapper
+        return treeMapper
             .readValues(yamlParser, JsonNode::class.java)
             .readAll()
     }
 
     fun parse(source: String): JsonNode {
-        return mapper.readValue(source, JsonNode::class.java)
+        return treeMapper.readValue(source, JsonNode::class.java)
     }
 
     fun parseIfPossible(source: String?): JsonNode {
@@ -62,6 +69,10 @@ object Yaml {
     inline fun <reified T> parse(node: JsonNode): T {
         return mapper.treeToValue(node, T::class.java)
     }
+
+    fun writeAsString(node: JsonNode): String {
+        return treeMapper.writeValueAsString(node)
+    }
 }
 
 fun JsonNode?.toDisplayYaml(): String {
@@ -69,5 +80,6 @@ fun JsonNode?.toDisplayYaml(): String {
     if (isTextual) {
         return textValue()
     }
-    return Yaml.mapper.writeValueAsString(this).trim()
+    return Yaml.writeAsString(this).trim()
 }
+

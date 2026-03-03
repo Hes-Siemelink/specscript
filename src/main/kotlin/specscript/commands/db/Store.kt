@@ -82,14 +82,14 @@ fun Connection.doJsonQuery(query: String): JsonNode {
             while (resultSet.next()) {
 
                 if (resultSet.metaData.columnCount == 1 && resultSet.metaData.getColumnName(1) == "json") {
-                    val row = Json.mapper.readTree(resultSet.getObject(1).toString())
+                    val row = Json.readTree(resultSet.getObject(1).toString())
                     results.add(row)
                 } else {
                     for (i in 1..resultSet.metaData.columnCount) {
                         val row = newObject()
                         val value = resultSet.getObject(i)?.toString() ?: ""
                         val node = try {
-                            Json.mapper.readTree(value)
+                             Json.readTree(value)
                         } catch (_: Exception) {
                             TextNode(value)
                         }

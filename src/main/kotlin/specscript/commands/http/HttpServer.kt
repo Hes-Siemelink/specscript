@@ -120,7 +120,7 @@ private suspend fun handleRequest(
 private fun ScriptContext.addInputVariable(call: ApplicationCall, bodyText: String) {
     // Body takes precedence
     if (bodyText.isNotBlank()) {
-        variables[INPUT_VARIABLE] = runCatching { Json.mapper.readTree(bodyText) }.getOrElse { TextNode(bodyText) }
+        variables[INPUT_VARIABLE] = runCatching { Json.readTree(bodyText) }.getOrElse { TextNode(bodyText) }
         return
     }
     // Fallback to query parameters if present
@@ -159,7 +159,7 @@ private fun ApplicationCall.cookiesAsJson(): ObjectNode =
     Json.newObject(request.cookies.rawCookies)
 
 private fun String.toBodyJson(): JsonNode =
-    if (isBlank()) Json.newObject() else runCatching { Json.mapper.readTree(this) }.getOrElse { TextNode(this) }
+    if (isBlank()) Json.newObject() else runCatching { Json.readTree(this) }.getOrElse { TextNode(this) }
 
 
 private typealias HttpServerInstance = EmbeddedServer<NettyApplicationEngine, NettyApplicationEngine.Configuration>

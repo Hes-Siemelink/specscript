@@ -79,7 +79,7 @@ private fun Any?.toJsonNode(): JsonNode = when (this) {
 
 /** Try JSON first (for structured data stored as JSON strings), fall back to plain text. */
 private fun jsonOrText(value: String): JsonNode = try {
-    Json.mapper.readTree(value)
+    Json.readTree(value)
 } catch (_: Exception) {
     TextNode(value)
 }
