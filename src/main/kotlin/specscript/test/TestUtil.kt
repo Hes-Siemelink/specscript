@@ -9,6 +9,7 @@ import org.junit.jupiter.api.function.Executable
 import specscript.cli.reportError
 import specscript.commands.testing.CodeExample
 import specscript.commands.testing.TestCase
+import specscript.commands.testing.Tests
 import specscript.commands.userinteraction.TestPrompt
 import specscript.commands.userinteraction.UserPrompt
 import specscript.files.*
@@ -117,12 +118,44 @@ class TestCaseRunner(
 
 /**
  * Extracts the test cases from a script file as individual tests.
+ * Supports both legacy Test case commands and new Tests/Before tests/After tests commands.
  */
 fun SpecScriptFile.getTestCases(): List<DynamicTest> {
+    val hasNewTests = script.commands.any { it.name == Tests.name }
+    val hasLegacyTests = script.commands.any { it.name == TestCase.name }
+
+    if (!hasNewTests && !hasLegacyTests) {
+        return emptyList()
+    }
+
     val context = FileContext(file)
+
+    if (hasNewTests) {
+        return getTests(context)
+    }
 
     return script.splitTestCases().map { script ->
         dynamicTest(script.getTestTitle(TestCase), file.toUri(), TestCaseRunner(context, script))
+    }
+}
+
+private fun SpecScriptFile.getTests(context: ScriptContext): List<DynamicTest> {
+    val suite = script.splitTests()
+
+    return suite.tests.mapIndexed { index, namedTest ->
+        val commands = mutableListOf<Command>()
+
+        if (index == 0 && suite.setup != null) {
+            commands.addAll(suite.setup.commands)
+        }
+
+        commands.addAll(namedTest.script.commands)
+
+        if (index == suite.tests.lastIndex && suite.teardown != null) {
+            commands.addAll(suite.teardown.commands)
+        }
+
+        dynamicTest(namedTest.name, file.toUri(), TestCaseRunner(context, Script(commands)))
     }
 }
 

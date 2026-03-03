@@ -13,9 +13,12 @@ import specscript.commands.shell.Cli
 import specscript.commands.shell.CliData
 import specscript.commands.shell.Shell
 import specscript.commands.shell.ShellCommand
+import specscript.commands.testing.AfterTests
 import specscript.commands.testing.Answers
+import specscript.commands.testing.BeforeTests
 import specscript.commands.testing.ExpectedConsoleOutput
 import specscript.commands.testing.TestCase
+import specscript.commands.testing.Tests
 import specscript.commands.util.Print
 import specscript.files.MarkdownBlock
 import specscript.files.MarkdownBlock.*
@@ -225,4 +228,38 @@ fun Script.splitTestCases(): List<Script> {
     }
 
     return allTests
+}
+
+data class NamedTest(val name: String, val script: Script)
+
+class TestSuite(
+    val setup: Script?,
+    val tests: List<NamedTest>,
+    val teardown: Script?
+)
+
+fun Script.splitTests(): TestSuite {
+    var setup: Script? = null
+    val tests = mutableListOf<NamedTest>()
+    var teardown: Script? = null
+
+    for (command in commands) {
+        when (command.name) {
+            BeforeTests.name -> {
+                setup = Script.from(command.data)
+            }
+
+            AfterTests.name -> {
+                teardown = Script.from(command.data)
+            }
+
+            Tests.name -> {
+                for (field in command.data.fields()) {
+                    tests.add(NamedTest(field.key, Script.from(field.value)))
+                }
+            }
+        }
+    }
+
+    return TestSuite(setup, tests, teardown)
 }

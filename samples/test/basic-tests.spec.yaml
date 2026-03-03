@@ -1,0 +1,57 @@
+# Basic tests
+#
+# A simple example of writing tests in SpecScript.
+# Run with: spec --test basic-tests.spec.yaml
+#
+# Tests are defined using the 'Tests' command. Each key is a test name,
+# and its value contains the commands to run for that test.
+
+Script info: Basic test examples
+
+Print: |
+  Run with: spec --test basic-tests.spec.yaml
+
+Tests:
+
+  Comparing values:
+    Assert that:
+      item: hello
+      equals: hello
+
+  Comparing lists:
+    Assert that:
+      item:
+        - one
+        - two
+      equals:
+        - one
+        - two
+
+  Checking membership:
+    Assert that:
+      item: banana
+      in:
+        - apple
+        - banana
+        - cherry
+
+  Multiple assertions:
+    Assert that:
+      - item: 1
+        equals: 1
+      - item: two
+        equals: two
+      - not:
+          empty: something
+
+  Using variables:
+    ${greeting}: Hello World!
+    Assert that:
+      item: ${greeting}
+      equals: Hello World!
+
+  Computing output:
+    Add:
+      - 10
+      - 20
+    Expected output: 30

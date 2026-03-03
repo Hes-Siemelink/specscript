@@ -45,6 +45,9 @@ object CommandLibrary {
         Output,
 
         // Testing
+        Tests,
+        BeforeTests,
+        AfterTests,
         TestCase,
         CodeExample,
         AssertEquals,
