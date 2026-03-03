@@ -1,218 +1,209 @@
-Test case: Input schema populates input variable
+Tests:
 
-Input schema:
-  type: object
-  properties:
-    name:
-      description: Your name
-      default: world
+  Input schema populates input variable:
 
-Assert equals:
-  actual: ${input}
-  expected:
-    name: world
+    Input schema:
+      type: object
+      properties:
+        name:
+          description: Your name
+          default: world
 
----
-Test case: Input schema populates top-level variables
+    Assert equals:
+      actual: ${input}
+      expected:
+        name: world
 
-Input schema:
-  type: object
-  properties:
-    greeting:
-      default: Hello
-    name:
-      default: World
+  Input schema populates top-level variables:
 
-Assert equals:
-  actual: ${greeting}, ${name}!
-  expected: Hello, World!
+    Input schema:
+      type: object
+      properties:
+        greeting:
+          default: Hello
+        name:
+          default: World
 
----
-Test case: Input schema with pre-existing input values
+    Assert equals:
+      actual: ${greeting}, ${name}!
+      expected: Hello, World!
 
-${input}:
-  name: Alice
+  Input schema with pre-existing input values:
 
-Input schema:
-  type: object
-  properties:
-    name:
-      description: Your name
-      default: Fallback
+    ${input}:
+      name: Alice
 
-Assert equals:
-  actual: ${name}
-  expected: Alice
+    Input schema:
+      type: object
+      properties:
+        name:
+          description: Your name
+          default: Fallback
 
----
-Test case: Input schema with multiple defaults
+    Assert equals:
+      actual: ${name}
+      expected: Alice
 
-Input schema:
-  type: object
-  properties:
-    a:
-      default: 1
-    b:
-      default: 2
-    c:
-      default: 3
+  Input schema with multiple defaults:
 
-Assert equals:
-  actual: ${input}
-  expected:
-    a: 1
-    b: 2
-    c: 3
+    Input schema:
+      type: object
+      properties:
+        a:
+          default: 1
+        b:
+          default: 2
+        c:
+          default: 3
 
----
-Test case: Input schema with enum and default
+    Assert equals:
+      actual: ${input}
+      expected:
+        a: 1
+        b: 2
+        c: 3
 
-Input schema:
-  type: object
-  properties:
-    color:
-      description: Pick a color
-      enum: [ red, green, blue ]
-      default: green
+  Input schema with enum and default:
 
-Assert equals:
-  actual: ${color}
-  expected: green
+    Input schema:
+      type: object
+      properties:
+        color:
+          description: Pick a color
+          enum: [ red, green, blue ]
+          default: green
 
----
-Test case: Input schema with integer default
+    Assert equals:
+      actual: ${color}
+      expected: green
 
-Input schema:
-  type: object
-  properties:
-    count:
-      description: How many?
-      default: 42
+  Input schema with integer default:
 
-Assert equals:
-  actual: ${count}
-  expected: 42
+    Input schema:
+      type: object
+      properties:
+        count:
+          description: How many?
+          default: 42
 
----
-Test case: Input schema with boolean default
+    Assert equals:
+      actual: ${count}
+      expected: 42
 
-Input schema:
-  type: object
-  properties:
-    verbose:
-      description: Verbose output?
-      default: true
+  Input schema with boolean default:
 
-Assert that:
-  item: ${verbose}
-  equals: true
+    Input schema:
+      type: object
+      properties:
+        verbose:
+          description: Verbose output?
+          default: true
 
----
-Test case: Input schema conditional includes matching property
+    Assert that:
+      item: ${verbose}
+      equals: true
 
-${input}: { }
+  Input schema conditional includes matching property:
 
-Input schema:
-  type: object
-  properties:
-    mode:
-      default: fast
-    fast-option:
-      description: Fast mode setting
-      default: turbo
-      condition:
-        item: ${input.mode}
-        equals: fast
-    slow-option:
-      description: Slow mode setting
-      default: crawl
-      condition:
-        item: ${input.mode}
-        equals: slow
+    ${input}: { }
 
-Assert equals:
-  actual: ${input}
-  expected:
-    mode: fast
-    fast-option: turbo
+    Input schema:
+      type: object
+      properties:
+        mode:
+          default: fast
+        fast-option:
+          description: Fast mode setting
+          default: turbo
+          condition:
+            item: ${input.mode}
+            equals: fast
+        slow-option:
+          description: Slow mode setting
+          default: crawl
+          condition:
+            item: ${input.mode}
+            equals: slow
 
----
-Test case: Input schema conditional with other branch
+    Assert equals:
+      actual: ${input}
+      expected:
+        mode: fast
+        fast-option: turbo
 
-${input}:
-  mode: slow
+  Input schema conditional with other branch:
 
-Input schema:
-  type: object
-  properties:
-    mode:
-      default: fast
-    fast-option:
-      default: turbo
-      condition:
-        item: ${input.mode}
-        equals: fast
-    slow-option:
-      default: crawl
-      condition:
-        item: ${input.mode}
-        equals: slow
+    ${input}:
+      mode: slow
 
-Assert equals:
-  actual: ${input}
-  expected:
-    mode: slow
-    slow-option: crawl
+    Input schema:
+      type: object
+      properties:
+        mode:
+          default: fast
+        fast-option:
+          default: turbo
+          condition:
+            item: ${input.mode}
+            equals: fast
+        slow-option:
+          default: crawl
+          condition:
+            item: ${input.mode}
+            equals: slow
 
----
-Test case: Input schema pre-existing values are not overwritten by defaults
+    Assert equals:
+      actual: ${input}
+      expected:
+        mode: slow
+        slow-option: crawl
 
-${input}:
-  name: Provided
-  color: red
+  Input schema pre-existing values are not overwritten by defaults:
 
-Input schema:
-  type: object
-  properties:
-    name:
-      default: Default
-    color:
-      default: blue
-    extra:
-      default: bonus
+    ${input}:
+      name: Provided
+      color: red
 
-Assert equals:
-  actual: ${input}
-  expected:
-    name: Provided
-    color: red
-    extra: bonus
+    Input schema:
+      type: object
+      properties:
+        name:
+          default: Default
+        color:
+          default: blue
+        extra:
+          default: bonus
 
----
-Test case: Input schema with empty string default
+    Assert equals:
+      actual: ${input}
+      expected:
+        name: Provided
+        color: red
+        extra: bonus
 
-Input schema:
-  type: object
-  properties:
-    optional_field:
-      description: Optional
-      default: ""
+  Input schema with empty string default:
 
-Assert equals:
-  actual: ${optional_field}
-  expected: ""
+    Input schema:
+      type: object
+      properties:
+        optional_field:
+          description: Optional
+          default: ""
 
----
-Test case: Input schema properties accessible via input dot notation
+    Assert equals:
+      actual: ${optional_field}
+      expected: ""
 
-Input schema:
-  type: object
-  properties:
-    first:
-      default: Alice
-    last:
-      default: Smith
+  Input schema properties accessible via input dot notation:
 
-Assert equals:
-  actual: ${input.first} ${input.last}
-  expected: Alice Smith
+    Input schema:
+      type: object
+      properties:
+        first:
+          default: Alice
+        last:
+          default: Smith
+
+    Assert equals:
+      actual: ${input.first} ${input.last}
+      expected: Alice Smith

@@ -1,44 +1,43 @@
-Test case: Select with where clause
+Tests:
 
-Shell: rm -f out/json_sample.db
+  Select with where clause:
 
-Store:
-  file: out/json_sample.db
-  table: json_data
-  insert:
-    - greeting: Hello
-      language: English
-    - greeting: Hola
-      language: Spanish
-  query:
-    where: $.language = 'Spanish'
+    Shell: rm -f out/json_sample.db
 
-Expected output:
-  - greeting: Hola
-    language: Spanish
+    Store:
+      file: out/json_sample.db
+      table: json_data
+      insert:
+        - greeting: Hello
+          language: English
+        - greeting: Hola
+          language: Spanish
+      query:
+        where: $.language = 'Spanish'
 
----
-Test case: Selected fields
+    Expected output:
+      - greeting: Hola
+        language: Spanish
 
-Shell: rm -f out/sample.db
+  Selected fields:
 
-Store:
-  file: out/sample.db
-  table: users
-  insert:
-    - name: Alice
-      age: 16
-    - name: Bob
-      age: 17
-    - name: Charlie
-      age: 18
-  query:
-    select:
-      - name
-    where: $.age < 18
+    Shell: rm -f out/sample.db
 
-Expected output:
-  - name: Alice
-  - name: Bob
+    Store:
+      file: out/sample.db
+      table: users
+      insert:
+        - name: Alice
+          age: 16
+        - name: Bob
+          age: 17
+        - name: Charlie
+          age: 18
+      query:
+        select:
+          - name
+        where: $.age < 18
 
-
+    Expected output:
+      - name: Alice
+      - name: Bob

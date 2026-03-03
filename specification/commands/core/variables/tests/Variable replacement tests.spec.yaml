@@ -1,52 +1,51 @@
-Test case: Text replacement
+Tests:
 
-${text}: some text
-${text_replacement}: Here is ${text}
+  Text replacement:
 
-Assert equals:
-  actual: ${text_replacement}
-  expected: Here is some text
+    ${text}: some text
+    ${text_replacement}: Here is ${text}
 
----
-Test case: Use list in text
+    Assert equals:
+      actual: ${text_replacement}
+      expected: Here is some text
 
-${list}:
-  - 1
-  - 2
-  - 3
+  Use list in text:
 
-${list_replacement}: |
-  My list:
-  ${list}
+    ${list}:
+      - 1
+      - 2
+      - 3
 
-Assert equals:
-  actual: ${list_replacement}
-  expected: |
-    My list:
-    - 1
-    - 2
-    - 3
+    ${list_replacement}: |
+      My list:
+      ${list}
 
----
-Test case: Use map in text
-${map_replacement}: |
-  My map:
-  map
+    Assert equals:
+      actual: ${list_replacement}
+      expected: |
+        My list:
+        - 1
+        - 2
+        - 3
 
-Assert equals:
-  actual: ${map_replacement}
-  expected: |
-    My map:
-    map
+  Use map in text:
+    ${map_replacement}: |
+      My map:
+      map
 
----
-Test case: Replace with variable path
+    Assert equals:
+      actual: ${map_replacement}
+      expected: |
+        My map:
+        map
 
-${data}:
-  something:
-    nice: here
-${message}: It is nice ${data.something.nice}
+  Replace with variable path:
 
-Assert equals:
-  actual: ${message}
-  expected: It is nice here
+    ${data}:
+      something:
+        nice: here
+    ${message}: It is nice ${data.something.nice}
+
+    Assert equals:
+      actual: ${message}
+      expected: It is nice here

@@ -1,79 +1,75 @@
-Test case: Evaluate a command inside data
+Tests:
 
-Output:
-  /Size: four
+  Evaluate a command inside data:
 
-Expected output: 4
+    Output:
+      /Size: four
 
----
-Test case: Evaluate an array
+    Expected output: 4
 
-Output:
-  - /Size: one
-  - /Size: two
-  - /Size: three
+  Evaluate an array:
 
-Expected output:
-  - 3
-  - 3
-  - 5
+    Output:
+      - /Size: one
+      - /Size: two
+      - /Size: three
 
----
-Test case: Evaluate a nested command
-
-Output:
-  Size:
-    /Size:
-      - 1
-      - 2
+    Expected output:
       - 3
-
-Expected output:
-  Size: 3
-
----
-Test case: Evaluate a command nested in another command
-
-Output:
-  /Size:
-    /Output:
-      - 1
-      - 2
       - 3
+      - 5
 
-Expected output: 3
+  Evaluate a nested command:
 
----
-Test case: Eval in conditions
+    Output:
+      Size:
+        /Size:
+          - 1
+          - 2
+          - 3
 
-If:
-  item: 5
-  equals:
-    /Size: three
-  then:
-    Output: Correct eval
-  else:
-    Output: Not supposed to get here
+    Expected output:
+      Size: 3
 
-Expected output: Correct eval
+  Evaluate a command nested in another command:
 
----
-Test case: No eager eval
+    Output:
+      /Size:
+        /Output:
+          - 1
+          - 2
+          - 3
 
-${state}: clean
+    Expected output: 3
 
-If:
-  item: ${state}
-  equals: clean
-  then:
-    Output: State was clean
-    Print:
-      /${state}: dirty
-  else:
-    Output: State was not clean
+  Eval in conditions:
 
-Expected output: State was clean
-Assert equals:
-  actual: ${state}
-  expected: dirty
+    If:
+      item: 5
+      equals:
+        /Size: three
+      then:
+        Output: Correct eval
+      else:
+        Output: Not supposed to get here
 
+    Expected output: Correct eval
+
+  No eager eval:
+
+    ${state}: clean
+
+    If:
+      item: ${state}
+      equals: clean
+      then:
+        Output: State was clean
+        Print:
+          /${state}: dirty
+      else:
+        Output: State was not clean
+
+    Expected output: State was clean
+    Assert equals:
+      actual: ${state}
+      expected: dirty

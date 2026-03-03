@@ -1,79 +1,75 @@
-Test case: Run another SpecScript file
+Tests:
 
-Run script:
-  resource: greet.spec.yaml
-  input:
-    name: Jay
+  Run another SpecScript file:
 
-Expected output: Hello Jay!
+    Run script:
+      resource: greet.spec.yaml
+      input:
+        name: Jay
 
----
-Test case: Run another SpecScript file by using a command that has the name of the file
+    Expected output: Hello Jay!
 
-Greet:
-  name: Kay
+  Run another SpecScript file by using a command that has the name of the file:
 
-Expected output: Hello Kay!
+    Greet:
+      name: Kay
 
----
-Test case: A script pointing to another SpecScript file inside Do
+    Expected output: Hello Kay!
 
-Do:
-  Greet:
-    name: May
+  A script pointing to another SpecScript file inside Do:
 
-Expected output: Hello May!
+    Do:
+      Greet:
+        name: May
 
----
-Test case: Run a script from another directory that was imported by .directory-info.yaml
+    Expected output: Hello May!
 
-Helper function:
-  name: Ray
+  Run a script from another directory that was imported by .directory-info.yaml:
 
-Expected output: Thanks for your help, Ray!
+    Helper function:
+      name: Ray
 
----
-Test case: Run a script from another directory that was imported by .directory-info.yaml that calls another script and that directory.
+    Expected output: Thanks for your help, Ray!
 
-Call helper:
-  name: Fay
+  Run a script from another directory that was imported by .directory-info.yaml that calls another script and that directory.:
 
-Expected output: Thanks for your help, Fay!
+    Call helper:
+      name: Fay
 
----
-Test case: Recursively run a script - deeply nested
+    Expected output: Thanks for your help, Fay!
 
-Flat folder list:
-  folders:
-    - name: root
-      children:
-        - name: folder1
+  Recursively run a script - deeply nested:
+
+    Flat folder list:
+      folders:
+        - name: root
           children:
-            - name: folder2
+            - name: folder1
               children:
-                - name: folder3
-                  children: [ ]
+                - name: folder2
+                  children:
+                    - name: folder3
+                      children: [ ]
 
-Expected output:
-  - name: root
-  - name: root/folder1
-  - name: root/folder1/folder2
-  - name: root/folder1/folder2/folder3
+    Expected output:
+      - name: root
+      - name: root/folder1
+      - name: root/folder1/folder2
+      - name: root/folder1/folder2/folder3
 
----
-Test case: Recursively run a script - multiple siblings
+  Recursively run a script - multiple siblings:
 
-Flat folder list:
-  folders:
-    - name: root1
-      children:
-        - name: folder1
-    - name: root2
-      children:
-        - name: folder1
+    Flat folder list:
+      folders:
+        - name: root1
+          children:
+            - name: folder1
+        - name: root2
+          children:
+            - name: folder1
 
-Expected output:
-  - name: root1
-  - name: root1/folder1
-  - name: root2
-  - name: root2/folder1
+    Expected output:
+      - name: root1
+      - name: root1/folder1
+      - name: root2
+      - name: root2/folder1

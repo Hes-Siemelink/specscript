@@ -22,10 +22,10 @@ Print: Hello world!
 Expected console output: Hello world!
 ```
 
-## Scope: Code example and Test case
+## Scope: Code example and Tests
 
-The output buffer to check against is only recorded when a new `Code example` or `Test case` is started. It is reset for
-each time a new example or test case is started.
+The output buffer to check against is only recorded when a new `Code example` or test is started. It is reset each time
+a new example or test case is started.
 
 ```yaml specscript
 Code example: Test new console output
@@ -38,16 +38,13 @@ Expected console output: Hello again
 For test cases:
 
 ```yaml specscript
-Test case: Output 1
+Tests:
 
-Print: one
+  First test:
+    Print: one
+    Expected console output: one
 
-Expected console output: one
-
----
-Test case: Output 2
-
-Print: two
-
-Expected console output: two
+  Second test:
+    Print: two
+    Expected console output: two
 ```

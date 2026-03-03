@@ -1,52 +1,51 @@
-Test case: No extra properties in If
+Tests:
 
-Validate schema:
-  data:
-    empty: { }
-    then:
-      Print: something
-    extra: property
-  schema: If.schema.yaml
+  No extra properties in If:
 
-Expected error:
-  Schema validation error: Schema should not allow extra properties in 'If'
+    Validate schema:
+      data:
+        empty: { }
+        then:
+          Print: something
+        extra: property
+      schema: If.schema.yaml
 
----
-Test case: If without then
+    Expected error:
+      Schema validation error: Schema should not allow extra properties in 'If'
 
-Validate schema:
-  data:
-    empty: { }
-  schema: If.schema.yaml
+  If without then:
 
-Expected error:
-  Schema validation error: Schema should not allow missing 'then'
+    Validate schema:
+      data:
+        empty: { }
+      schema: If.schema.yaml
 
----
-Test case: When with both 'then' and 'else'
+    Expected error:
+      Schema validation error: Schema should not allow missing 'then'
 
-Validate schema:
-  data:
-    - empty: { }
-      then:
-        Print: something
-      else:
-        Print: else
-  schema: When.schema.yaml
+  When with both 'then' and 'else':
 
-Expected error:
-  Schema validation error: Having both 'then' and 'else' should trigger a validation error
+    Validate schema:
+      data:
+        - empty: { }
+          then:
+            Print: something
+          else:
+            Print: else
+      schema: When.schema.yaml
 
----
-Test case: Validate conditions in When
+    Expected error:
+      Schema validation error: Having both 'then' and 'else' should trigger a validation error
 
-Validate schema:
-  data:
-    - not:
-        strange: property
-      then:
-        Print: something
-  schema: When.schema.yaml
+  Validate conditions in When:
 
-Expected error:
-  Schema validation error: Conditions should be properly validated
+    Validate schema:
+      data:
+        - not:
+            strange: property
+          then:
+            Print: something
+      schema: When.schema.yaml
+
+    Expected error:
+      Schema validation error: Conditions should be properly validated

@@ -1,112 +1,107 @@
-Test case: GET with full URL
+Before tests:
 
-GET: http://localhost:2525/items
+  Http request defaults:
+    url: http://localhost:2525
+    cookies:
+      maria: biscuit
 
-Expected output:
-  - 1
-  - 2
-  - 3
+Tests:
 
----
-Http request defaults:
-  url: http://localhost:2525
-  cookies:
-    maria: biscuit
+  GET with full URL:
 
----
-Test case: GET with implicit url and explicit path parameter
+    GET: http://localhost:2525/items
 
-GET:
-  path: /items
+    Expected output:
+      - 1
+      - 2
+      - 3
 
-Expected output:
-  - 1
-  - 2
-  - 3
+  GET with implicit url and explicit path parameter:
 
----
-Test case: GET with query parameters
+    GET:
+      path: /items
 
-GET: /echo/query?content=hello
+    Expected output:
+      - 1
+      - 2
+      - 3
 
-Expected output:
-  content: hello
+  GET with query parameters:
 
----
-Test case: POST
+    GET: /echo/query?content=hello
 
-POST:
-  path: /echo/body
-  body:
-    1: One
-    2: Two
-    3: Three
+    Expected output:
+      content: hello
 
-Expected output:
-  1: One
-  2: Two
-  3: Three
+  POST:
 
----
-Test case: POST with list
+    POST:
+      path: /echo/body
+      body:
+        1: One
+        2: Two
+        3: Three
 
-POST:
-  path: /echo/body
-  body:
-    - One
-    - Two
-    - Three
+    Expected output:
+      1: One
+      2: Two
+      3: Three
 
-Expected output:
-  - One
-  - Two
-  - Three
+  POST with list:
 
----
-Test case: POST without path parameter
+    POST:
+      path: /echo/body
+      body:
+        - One
+        - Two
+        - Three
 
-POST:
-  url: http://localhost:2525/echo/body
-  body:
-    1: One
-    2: Two
-    3: Three
+    Expected output:
+      - One
+      - Two
+      - Three
 
-Expected output:
-  1: One
-  2: Two
-  3: Three
+  POST without path parameter:
 
----
-Test case: Headers
+    POST:
+      url: http://localhost:2525/echo/body
+      body:
+        1: One
+        2: Two
+        3: Three
 
-GET:
-  path: /echo/header
-  headers:
-    Test: something
+    Expected output:
+      1: One
+      2: Two
+      3: Three
 
-Assert that:
-  item:
-    Test: something
-  in: ${output}
+  Headers:
 
----
-Test case: Cookies
+    GET:
+      path: /echo/header
+      headers:
+        Test: something
 
-GET:
-  path: /echo/cookies
-  cookies:
-    speculaas: spicy
+    Assert that:
+      item:
+        Test: something
+      in: ${output}
 
-Expected output:
-  maria: biscuit
-  speculaas: spicy
+  Cookies:
 
----
-Test case: Path parameters
+    GET:
+      path: /echo/cookies
+      cookies:
+        speculaas: spicy
 
-GET:
-  path: /echo/path/custom
+    Expected output:
+      maria: biscuit
+      speculaas: spicy
 
-Expected output:
-  path: custom
+  Path parameters:
+
+    GET:
+      path: /echo/path/custom
+
+    Expected output:
+      path: custom

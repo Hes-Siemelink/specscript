@@ -1,141 +1,136 @@
-Test case: Simple question
+Tests:
 
-Answers:
-  "What is your name?": Emma
+  Simple question:
 
-Prompt: What is your name?
+    Answers:
+      "What is your name?": Emma
 
-Expected output: Emma
+    Prompt: What is your name?
 
----
-Test case: Default answer
+    Expected output: Emma
 
-Prompt:
-  description: How much is 1 + 1?
-  default: 2
+  Default answer:
 
-Expected output: "2"
+    Prompt:
+      description: How much is 1 + 1?
+      default: 2
 
----
-Test case: Multiple questions
+    Expected output: "2"
 
-Answers:
-  - "What is your name?": Mateo
+  Multiple questions:
 
-Prompt object:
-  name: What is your name?
-  sum:
-    description: How much is 1 + 1?
-    default: 2
+    Answers:
+      - "What is your name?": Mateo
 
-Expected output:
-  name: Mateo
-  sum: "2"
+    Prompt object:
+      name: What is your name?
+      sum:
+        description: How much is 1 + 1?
+        default: 2
 
----
-Test case: Select object from list
+    Expected output:
+      name: Mateo
+      sum: "2"
 
-Answers:
-  Select account: dev
+  Select object from list:
 
-Prompt:
-  description: Select account
-  enum:
-    - name: dev
+    Answers:
+      Select account: dev
+
+    Prompt:
+      description: Select account
+      enum:
+        - name: dev
+          id: 123
+          password: xxxx
+        - name: test
+          id: 456
+          password: xxxx
+        - name: prod
+          id: 789
+          password: xxxx
+      display property: name
+
+    Expected output:
+      name: dev
       id: 123
       password: xxxx
-    - name: test
-      id: 456
-      password: xxxx
-    - name: prod
-      id: 789
-      password: xxxx
-  display property: name
 
-Expected output:
-  name: dev
-  id: 123
-  password: xxxx
+  Select multiple items from list:
 
----
-Test case: Select multiple items from list
+    Answers:
+      What flavors do you like?:
+        - Coconut
+        - Pineapple
 
-Answers:
-  What flavors do you like?:
-    - Coconut
-    - Pineapple
+    Prompt:
+      description: What flavors do you like?
+      select: multiple
+      enum:
+        - Vanilla
+        - Mango
+        - Coconut
+        - Pineapple
 
-Prompt:
-  description: What flavors do you like?
-  select: multiple
-  enum:
-    - Vanilla
-    - Mango
-    - Coconut
-    - Pineapple
+    Expected output:
+      - Coconut
+      - Pineapple
 
-Expected output:
-  - Coconut
-  - Pineapple
+  Select value field only:
 
----
-Test case: Select value field only
+    Answers:
+      Favorite channel: The News
 
-Answers:
-  Favorite channel: The News
+    Prompt:
+      description: Favorite channel
+      enum:
+        - name: The News
+          preset: 1
+        - name: Sports Unlimited
+          preset: 2
+      display property: name
+      value property: preset
 
-Prompt:
-  description: Favorite channel
-  enum:
-    - name: The News
-      preset: 1
-    - name: Sports Unlimited
-      preset: 2
-  display property: name
-  value property: preset
+    Expected output: 1
 
-Expected output: 1
+  Select multiple value fields:
 
----
-Test case: Select multiple value fields
+    Answers:
+      Favorite channel:
+        - The News
+        - Sports Unlimited
 
-Answers:
-  Favorite channel:
-    - The News
-    - Sports Unlimited
+    Prompt:
+      description: Favorite channel
+      enum:
+        - name: The News
+          preset: 1
+        - name: Sports Unlimited
+          preset: 2
+        - name: Cartoon Channel
+          preset: 3
+      select: multiple
+      display property: name
+      value property: preset
 
-Prompt:
-  description: Favorite channel
-  enum:
-    - name: The News
-      preset: 1
-    - name: Sports Unlimited
-      preset: 2
-    - name: Cartoon Channel
-      preset: 3
-  select: multiple
-  display property: name
-  value property: preset
+    Expected output:
+      - 1
+      - 2
 
-Expected output:
-  - 1
-  - 2
+  Prompt with custom type:
 
----
-Test case: Prompt with custom type
+    Answers:
+      First name: Alice
+      Last name: Zoe
 
-Answers:
-  First name: Alice
-  Last name: Zoe
+    Prompt:
+      type:
+        properties:
+          first_name:
+            description: First name
+          last_name:
+            description: Last name
 
-Prompt:
-  type:
-    properties:
-      first_name:
-        description: First name
-      last_name:
-        description: Last name
-
-Expected output:
-  first_name: Alice
-  last_name: Zoe
+    Expected output:
+      first_name: Alice
+      last_name: Zoe

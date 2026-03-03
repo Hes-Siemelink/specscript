@@ -488,11 +488,16 @@ Expected output:
 Writing tests in SpecScript is straightforward:
 
 ```yaml specscript
-Test case: A simple test case
+Tests:
 
-Assert that:
-  item: one
-  in: [ one, two, three ]
+  A simple test:
+    Output: Hello world
+    Expected output: Hello world
+
+  Another test:
+    Assert that:
+      item: one
+      in: [ one, two, three ]
 ```
 
 In fact, all tests for the SpecScript language and commands are written in SpecScript itself and can be found in the

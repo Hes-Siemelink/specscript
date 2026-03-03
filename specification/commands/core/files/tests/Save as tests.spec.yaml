@@ -1,13 +1,15 @@
-Test case: Save output to file
+Tests:
 
-Output:
-  test: true
-  something: else
+  Save output to file:
 
-Write file: out/save-as-test.yaml
+    Output:
+      test: true
+      something: else
 
-Read file: out/save-as-test.yaml
+    Write file: out/save-as-test.yaml
 
-Expected output:
-  test: true
-  something: else
+    Read file: out/save-as-test.yaml
+
+    Expected output:
+      test: true
+      something: else

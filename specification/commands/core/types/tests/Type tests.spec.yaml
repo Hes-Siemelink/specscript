@@ -1,148 +1,137 @@
-Test case: String type
+Tests:
 
-Check type:
-  item: Hes
-  type: string
+  String type:
 
----
-Test case: Object type
+    Check type:
+      item: Hes
+      type: string
 
-Check type:
-  item:
-    name: Hes
-  type: object
+  Object type:
 
----
-Test case: Array type
+    Check type:
+      item:
+        name: Hes
+      type: object
 
-Check type:
-  item:
-    - name: Hes
-  type: array
+  Array type:
 
----
-Test case: Not a string
+    Check type:
+      item:
+        - name: Hes
+      type: array
 
-Check type:
-  item:
-    - Hes
-  type: string
+  Not a string:
 
-Expected error:
-  Type validation: Provided data is an array, not a string
+    Check type:
+      item:
+        - Hes
+      type: string
 
----
-Test case: Not an object
+    Expected error:
+      Type validation: Provided data is an array, not a string
 
-Check type:
-  item: Hes
-  type: object
+  Not an object:
 
-Expected error:
-  Type validation: Provided data is string, not an object
+    Check type:
+      item: Hes
+      type: object
 
----
-Test case: Not an array
+    Expected error:
+      Type validation: Provided data is string, not an object
 
-Check type:
-  item:
-    name: Hes
-  type: array
+  Not an array:
 
-Expected error:
-  Type validation: Provided data is an object, not an array
+    Check type:
+      item:
+        name: Hes
+      type: array
 
----
-Test case: Object properties
+    Expected error:
+      Type validation: Provided data is an object, not an array
 
-Check type:
-  item:
-    name: Hes
-  type:
-    base: object
-    properties:
-      name: string
+  Object properties:
 
----
-Test case: Implicit object definition
+    Check type:
+      item:
+        name: Hes
+      type:
+        base: object
+        properties:
+          name: string
 
-Check type:
-  item:
-    name: Hes
-  type:
-    properties:
-      name: string
+  Implicit object definition:
 
----
-Test case: Invalid object property
+    Check type:
+      item:
+        name: Hes
+      type:
+        properties:
+          name: string
 
-Check type:
-  item:
-    name: Hes
-  type:
-    base: object
-    properties:
-      name: object
+  Invalid object property:
 
-Expected error:
-  Type validation: Validation should fail because name is a string, not an object
+    Check type:
+      item:
+        name: Hes
+      type:
+        base: object
+        properties:
+          name: object
 
----
-Test case: Define a list
+    Expected error:
+      Type validation: Validation should fail because name is a string, not an object
 
-Check type:
-  item:
-    - name: Alice
-    - name: Bob
-  type:
-    base: array
-    list of: Person
+  Define a list:
 
----
-Test case: Faulty object
+    Check type:
+      item:
+        - name: Alice
+        - name: Bob
+      type:
+        base: array
+        list of: Person
 
-Check type:
-  item:
-    name-x: Alice
-  type: Person
+  Faulty object:
 
-Expected error:
-  Type validation: Validation should fail because the property name is expected in the Person type
+    Check type:
+      item:
+        name-x: Alice
+      type: Person
 
----
-Test case: Optional property
+    Expected error:
+      Type validation: Validation should fail because the property name is expected in the Person type
 
-Check type:
-  item:
-    name-x: Alice
-  type:
-    base: object
-    properties:
-      name:
-        type: string
-        optional: true
+  Optional property:
 
----
-Test case: Faulty list
+    Check type:
+      item:
+        name-x: Alice
+      type:
+        base: object
+        properties:
+          name:
+            type: string
+            optional: true
 
-Check type:
-  item:
-    - name-x: Alice
-  type:
-    base: array
-    list of: Person
+  Faulty list:
 
-Expected error:
-  Type validation: Validation should fail because the property name is expected in the Person type
+    Check type:
+      item:
+        - name-x: Alice
+      type:
+        base: array
+        list of: Person
 
----
-Test case: Recursive object
+    Expected error:
+      Type validation: Validation should fail because the property name is expected in the Person type
 
-Check type:
-  item:
-    name: Alice
-    child:
-      name: Bob
-      child:
-        name: Charlie
-  type: Recursive Type
+  Recursive object:
+
+    Check type:
+      item:
+        name: Alice
+        child:
+          name: Bob
+          child:
+            name: Charlie
+      type: Recursive Type

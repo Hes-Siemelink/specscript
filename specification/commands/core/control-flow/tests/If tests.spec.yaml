@@ -1,191 +1,179 @@
-Test case: Simple if with equals
+Tests:
 
-If:
-  item: a value
-  equals: a value
-  then:
-    Output: Match
+  Simple if with equals:
 
-Expected output: Match
-
----
-Test case: Simple if with 'in'
-
-If:
-  item: chocolate
-  in:
-    - milk
-    - chocolate
-    - cookies
-  then:
-    ${chocolate}: Found
-
-Assert that:
-  - item: ${chocolate}
-    equals: Found
-
----
-Test case: Substring matching with 'in'
-
-If:
-  item: cola
-  in: chocolate
-  then:
-    ${cola}: Found
-
-Assert that:
-  - item: ${cola}
-    equals: Found
-
----
-Test case: If with and / or
-
-If:
-  all:
-    - item: a value
+    If:
+      item: a value
       equals: a value
-    - any:
-        - item: selection
-          equals: nothing
-        - item: selection
-          equals: selection
-  then:
-    Output: Any Match
+      then:
+        Output: Match
 
-Expected output: Any Match
+    Expected output: Match
 
----
-Test case: If matching each item; no break
+  Simple if with 'in':
 
-If:
-  - item: one
-    equals: one
-    then:
-      ${one}: 1
+    If:
+      item: chocolate
+      in:
+        - milk
+        - chocolate
+        - cookies
+      then:
+        ${chocolate}: Found
 
-  - item: two
-    equals: two
-    then:
-      ${two}: 2
+    Assert that:
+      - item: ${chocolate}
+        equals: Found
 
-Assert equals:
-  - actual:
-      - ${one}
-      - ${two}
-    expected:
+  Substring matching with 'in':
+
+    If:
+      item: cola
+      in: chocolate
+      then:
+        ${cola}: Found
+
+    Assert that:
+      - item: ${cola}
+        equals: Found
+
+  If with and / or:
+
+    If:
+      all:
+        - item: a value
+          equals: a value
+        - any:
+            - item: selection
+              equals: nothing
+            - item: selection
+              equals: selection
+      then:
+        Output: Any Match
+
+    Expected output: Any Match
+
+  If matching each item; no break:
+
+    If:
+      - item: one
+        equals: one
+        then:
+          ${one}: 1
+
+      - item: two
+        equals: two
+        then:
+          ${two}: 2
+
+    Assert equals:
+      - actual:
+          - ${one}
+          - ${two}
+        expected:
+          - 1
+          - 2
+
+  If returns the result of then:
+
+    If:
+      - item: one
+        equals: one
+        then:
+          Output: 1
+
+      - item: two
+        equals: two
+        then:
+          Output: 2
+
+    Expected output:
       - 1
       - 2
 
----
-Test case: If returns the result of then
+  Switch-like if; break after successful match:
 
-If:
-  - item: one
-    equals: one
-    then:
-      Output: 1
+    When:
+      - item: a value
+        equals: a value
+        then:
+          Output: First match
 
-  - item: two
-    equals: two
-    then:
-      Output: 2
+      - item: another value
+        in: another value
+        then:
+          Output: Second match
 
-Expected output:
-  - 1
-  - 2
+    Expected output: First match
 
----
-Test case: Switch-like if; break after successful match
+  Variable resolution in nested Do:
 
-When:
-  - item: a value
-    equals: a value
-    then:
-      Output: First match
+    ${output}: one
 
-  - item: another value
-    in: another value
-    then:
-      Output: Second match
+    If:
+      item: something
+      equals: something
+      then:
+        Do:
+          - ${output}: two
+          - ${var}: ${output}
 
-Expected output: First match
+    Assert equals:
+      - actual: ${var}
+        expected: two
 
----
-Test case: Variable resolution in nested Do
+  Test against an empty list:
 
-${output}: one
+    If:
+      item: [ ]
+      equals: [ ]
+      then:
+        Output: Success
 
-If:
-  item: something
-  equals: something
-  then:
-    Do:
-      - ${output}: two
-      - ${var}: ${output}
+    Expected output: Success
 
-Assert equals:
-  - actual: ${var}
-    expected: two
+  Not:
 
+    Output: Failure
 
----
-Test case: Test against an empty list
+    If:
+      not:
+        item: true
+        equals: false
+      then:
+        Output: Success
 
-If:
-  item: [ ]
-  equals: [ ]
-  then:
-    Output: Success
+    Expected output: Success
 
-Expected output: Success
+  Empty list:
 
----
-Test case: Not
+    Output: [ ]
 
-Output: Failure
+    If:
+      empty: ${output}
+      then:
+        Output: empty list detected
 
-If:
-  not:
-    item: true
-    equals: false
-  then:
-    Output: Success
+    Expected output: empty list detected
 
-Expected output: Success
+  Empty object:
 
----
-Test case: Empty list
+    Output: { }
 
-Output: [ ]
+    If:
+      empty: ${output}
+      then:
+        Output: empty object detected
 
-If:
-  empty: ${output}
-  then:
-    Output: empty list detected
+    Expected output: empty object detected
 
-Expected output: empty list detected
+  Empty string:
 
----
-Test case: Empty object
+    Output: ""
 
-Output: { }
+    If:
+      empty: ${output}
+      then:
+        Output: empty string detected
 
-If:
-  empty: ${output}
-  then:
-    Output: empty object detected
-
-Expected output: empty object detected
-
----
-Test case: Empty string
-
-Output: ""
-
-If:
-  empty: ${output}
-  then:
-    Output: empty string detected
-
-Expected output: empty string detected
-
+    Expected output: empty string detected

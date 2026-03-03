@@ -1,26 +1,26 @@
-Test case: Execution of a list results in a list
+Tests:
 
-Output: Hello
-Do:
-  - Output: one
-  - Output: two
-  - Output: three
+  Execution of a list results in a list:
 
-Expected output:
-  - one
-  - two
-  - three
+    Output: Hello
+    Do:
+      - Output: one
+      - Output: two
+      - Output: three
 
----
-Test case: Chained output in list execution
+    Expected output:
+      - one
+      - two
+      - three
 
-${output}: one
+  Chained output in list execution:
 
-Do:
-  - ${output}: two
-  - ${var}: ${output}
+    ${output}: one
 
-Assert equals:
-  - actual: ${var}
-    expected: two
+    Do:
+      - ${output}: two
+      - ${var}: ${output}
 
+    Assert equals:
+      - actual: ${var}
+        expected: two
