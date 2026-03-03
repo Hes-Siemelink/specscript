@@ -183,6 +183,7 @@ Mcp server:
   version: "1.0.0"
   transport: HTTP
   port: 8092
+  path: mcp
   tools:
     greet:
       description: Generate a greeting over HTTP

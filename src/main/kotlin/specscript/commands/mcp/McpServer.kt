@@ -11,11 +11,7 @@ import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.routing.*
 import io.ktor.server.sse.*
-import io.modelcontextprotocol.kotlin.sdk.server.Server
-import io.modelcontextprotocol.kotlin.sdk.server.ServerOptions
-import io.modelcontextprotocol.kotlin.sdk.server.StdioServerTransport
-import io.modelcontextprotocol.kotlin.sdk.server.mcp
-import io.modelcontextprotocol.kotlin.sdk.server.mcpStreamableHttp
+import io.modelcontextprotocol.kotlin.sdk.server.*
 import io.modelcontextprotocol.kotlin.sdk.types.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.runBlocking
@@ -29,6 +25,11 @@ import specscript.util.*
 import kotlin.concurrent.thread
 
 object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, DelayedResolver {
+
+    init {
+        // Avoid NoClassDefFoundError from Ktor's shutdown hook when the JVM exits via Ctrl+C
+        System.setProperty("io.ktor.server.engine.ShutdownHook", "false")
+    }
 
     private const val DEFAULT_MCP_SERVER = "mcp.server.default"
 
@@ -119,8 +120,6 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
         val port = info.port ?: 8080
         val path = info.path ?: "/"
 
-        System.err.println("Starting MCP SSE server '${info.name}' on port $port at path $path")
-
         val ktorServer = embeddedServer(Netty, port = port) {
             install(SSE)
             routing {
@@ -130,13 +129,13 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
 
         httpServers[info.name] = ktorServer
         startAndKeepAlive(ktorServer, info.name)
+
+        System.err.println("Started MCP SSE server '${info.name}' on port $port at path $path")
     }
 
     private fun startStreamableHttpServer(info: McpServerInfo, server: Server) {
         val port = info.port ?: 8080
-        val path = info.path ?: "/mcp"
-
-        System.err.println("Starting MCP streaming HTTP server '${info.name}' on port $port at path $path")
+        val path = info.path ?: "/"
 
         val ktorServer = embeddedServer(Netty, port = port) {
             install(ContentNegotiation) {
@@ -147,6 +146,8 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
 
         httpServers[info.name] = ktorServer
         startAndKeepAlive(ktorServer, info.name)
+
+        System.err.println("Started MCP streaming HTTP server '${info.name}' on port $port at path $path")
     }
 
     /** Starts the Ktor server synchronously (no race condition) then keeps the JVM alive with a non-daemon thread. */
@@ -201,9 +202,9 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
             toolName,
             tool.description,
             inputSchema = ToolSchema(
-                    properties = resolvedSchema?.properties?.toKotlinx() ?: EmptyJsonObject,
-                    required = resolvedSchema?.required ?: emptyList()
-                ),
+                properties = resolvedSchema?.properties?.toKotlinx() ?: EmptyJsonObject,
+                required = resolvedSchema?.required ?: emptyList()
+            ),
         ) { request ->
             // Set up context for the tool execution
             localContext.variables[INPUT_VARIABLE] = request.arguments?.toJackson() ?: Json.newObject()

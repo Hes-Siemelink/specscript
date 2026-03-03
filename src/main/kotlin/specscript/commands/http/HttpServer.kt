@@ -21,6 +21,11 @@ import kotlin.io.path.name
 
 object HttpServer : CommandHandler("Http server", "core/http"), ObjectHandler, DelayedResolver {
 
+    init {
+        // Avoid NoClassDefFoundError from Ktor's shutdown hook when the JVM exits via Ctrl+C
+        System.setProperty("io.ktor.server.engine.ShutdownHook", "false")
+    }
+
     // Active servers
     private val servers = mutableMapOf<Int, HttpServerInstance>()
 

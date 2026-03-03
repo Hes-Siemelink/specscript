@@ -33,7 +33,7 @@ dependencies {
     implementation("io.ktor:ktor-server-core:3.3.+")
     implementation("io.ktor:ktor-server-netty:3.3.+")
     implementation("io.ktor:ktor-server-sse:3.3.+")
-    implementation("org.slf4j:slf4j-simple:2.0.+")
+    implementation("ch.qos.logback:logback-classic:1.5.+")
     implementation("com.github.kotlin-inquirer:kotlin-inquirer:0.1.0")
     implementation("org.jline:jline:3.27.+")
     implementation("org.fusesource.jansi:jansi:2.4.1")
