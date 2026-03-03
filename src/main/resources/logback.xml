@@ -9,8 +9,6 @@
     <!-- Silence noisy libraries -->
     <logger name="io.ktor" level="WARN"/>
     <logger name="io.modelcontextprotocol" level="WARN"/>
-    <logger name="io.javalin" level="WARN"/>
-    <logger name="org.eclipse.jetty" level="WARN"/>
 
     <!-- MCP SDK FeatureRegistry uses custom logger names "FeatureRegistry[Type]" -->
     <!-- Logback hierarchy uses dot-separators, so brackets don't create parent-child relationships -->

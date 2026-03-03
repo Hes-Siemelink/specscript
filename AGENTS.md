@@ -101,7 +101,7 @@ SpecScript implements server patterns for both MCP and HTTP servers with similar
 
 - Registry keyed by `port` (integer)
 - Schema: `port`, `endpoints` with method handlers
-- Uses Javalin for HTTP handling
+- Uses Ktor with Netty for HTTP handling
 - Lifecycle: separate stop command by port
 
 **Server Alignment Opportunities:**
@@ -180,8 +180,7 @@ All documentation includes runnable code examples that are executed as part of t
 
 - **Kotlin 2.1.20** with JVM target 21
 - **Jackson** for JSON/YAML processing
-- **Ktor** for HTTP client functionality
-- **Javalin** for HTTP server capabilities
+- **Ktor** for HTTP client and server functionality
 - **JUnit 5 + Kotest** for testing
 - **Gradle** with Kotlin DSL for build management
 

@@ -47,8 +47,7 @@ object HttpServer : CommandHandler("Http server", "core/http"), ObjectHandler, D
 
     fun stop(port: Int) {
         println("Stopping SpecScript Http Server on port $port")
-        // Immediate shutdown (no graceful delay) for fast test cycles
-        servers.remove(port)?.stop(0, 0)
+        servers.remove(port)?.stop(100, 200)
     }
 
     private fun addHandler(port: Int, rawPath: String, data: EndpointData, context: ScriptContext) {
@@ -58,7 +57,7 @@ object HttpServer : CommandHandler("Http server", "core/http"), ObjectHandler, D
             embeddedServer(Netty, port = port) { }.also { it.start(wait = false) }
         }
 
-        // Normalize Javalin style ":id" into Ktor style "{id}" so existing specs continue to work.
+        // Normalize ":id" path parameters into Ktor style "{id}"
         val normalizedPath = normalizePath(rawPath)
         val pathParamNames = extractPathParamNames(normalizedPath)
 

@@ -175,7 +175,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
 
         if (httpServer != null) {
             runBlocking {
-                httpServer.stop(0, 0)
+                httpServer.stop(100, 200)
             }
         }
     }
