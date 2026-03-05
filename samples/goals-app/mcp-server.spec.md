@@ -29,22 +29,6 @@ Retrieves all goals with optional filtering by state, assignee, and parent.
 Mcp tool:
   list_goals:
     description: List all goals with optional filtering
-    inputSchema:
-      type: object
-      properties:
-        state:
-          type: string
-          enum: [ all, todo, in_progress, completed ]
-          description: Filter goals by state (use 'all' or omit for no filtering)
-          default: all
-        assignee:
-          type: string
-          description: Filter goals by assignee (use 'all' or omit for no filtering)
-          default: all
-        parent_id:
-          type: string
-          description: Filter by parent goal ('all' for all goals, 'none' for top-level only, or a goal ID for children of that goal)
-          default: all
     script: goals/list.spec.yaml
 ```
 
@@ -56,13 +40,6 @@ Retrieves a single goal by its unique identifier.
 Mcp tool:
   get_goal:
     description: Get a specific goal by ID
-    inputSchema:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Goal ID
-      required: [ id ]
     script: goals/get.spec.yaml
 
 ```
@@ -80,27 +57,6 @@ sub-goal.
 Mcp tool:
   create_goal:
     description: Create a new goal
-    inputSchema:
-      type: object
-      properties:
-        title:
-          type: string
-          description: Goal title
-        description:
-          type: string
-          description: Goal description
-        priority:
-          type: string
-          enum: [ low, medium, high ]
-          description: Goal priority level
-          default: medium
-        assignee:
-          type: string
-          description: Person assigned to this goal
-        parent_id:
-          type: integer
-          description: Parent goal ID for creating sub-goals (omit for top-level goals)
-      required: [ title, description ]
     script: goals/create.spec.yaml
 ```
 
@@ -119,16 +75,6 @@ Mcp tool:
 
       The items of the array in the `batch` property must follow the same schema as defined in the `create_goal` tool.
 
-    inputSchema:
-      type: object
-      properties:
-        batch:
-          type: array
-          items:
-            type: object
-          description: Goal title
-      required:
-        - batch
     script: goals/create-batch.spec.yaml
 ```
 
@@ -140,33 +86,6 @@ Updates an existing goal's properties including state transitions and parent ass
 Mcp tool:
   update_goal:
     description: Update an existing goal
-    inputSchema:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Goal ID to update
-        title:
-          type: string
-          description: New goal title
-        description:
-          type: string
-          description: New goal description
-        state:
-          type: string
-          enum: [ todo, in_progress, completed ]
-          description: New goal state
-        priority:
-          type: string
-          enum: [ low, medium, high ]
-          description: New priority level
-        assignee:
-          type: string
-          description: New assignee
-        parent_id:
-          type: integer
-          description: New parent goal ID (move goal under a different parent)
-      required: [ id ]
     script: goals/update.spec.yaml
 
 ```
@@ -179,13 +98,6 @@ Permanently removes a goal. Deleting a parent goal also removes all its sub-goal
 Mcp tool:
   delete_goal:
     description: Delete a goal by ID
-    inputSchema:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Goal identifier
-      required: [ id ]
     script: goals/delete.spec.yaml
 ```
 
