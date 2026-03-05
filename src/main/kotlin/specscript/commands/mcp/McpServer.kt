@@ -367,7 +367,6 @@ data class ResourceInfo(
 )
 
 data class PromptInfo(
-    val name: String,
     val description: String,
     val arguments: List<PromptArgumentInfo> = emptyList(),
     val script: JsonNode

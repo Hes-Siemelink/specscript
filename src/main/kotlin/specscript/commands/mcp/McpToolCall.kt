@@ -97,8 +97,6 @@ fun createMcpClient(
         TransportType.SSE -> {
             SseClient(server.url!!, server.headers, server.token)
         }
-
-        else -> throw SpecScriptCommandError("Unknown MCP server type: ${server.transport}")
     }
 }
 

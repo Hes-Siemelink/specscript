@@ -4,8 +4,6 @@ type: object
 additionalProperties:
   type: object
   properties:
-    name:
-      type: string
     description:
       type: string
     arguments:
@@ -28,7 +26,6 @@ additionalProperties:
         - object
         - string
   required:
-    - name
     - description
     - script
   additionalProperties: false

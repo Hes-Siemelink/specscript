@@ -81,8 +81,6 @@ definitions:
   PromptInfo:
     type: object
     properties:
-      name:
-        type: string
       description:
         type: string
       arguments:
@@ -104,7 +102,6 @@ definitions:
           - object
           - string
     required:
-      - name
       - description
       - script
     additionalProperties: false

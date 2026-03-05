@@ -33,8 +33,7 @@ Mcp server:
       script:
         Output: Welcome to the MCP server!
   prompts:
-    farewell:
-      name: Farewell Prompt
+    Farewell Prompt:
       description: A prompt for saying goodbye
       script:
         Output: Goodbye! Have a great day!
