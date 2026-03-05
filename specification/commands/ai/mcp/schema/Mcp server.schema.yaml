@@ -1,0 +1,110 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+
+type: object
+properties:
+  name:
+    type: string
+  version:
+    type: string
+  stop:
+    type: boolean
+  transport:
+    type: string
+    enum: [ STDIO, HTTP, SSE ]
+  port:
+    type: integer
+  tools:
+    type: object
+    additionalProperties:
+      $ref: "#/definitions/ToolInfo"
+  resources:
+    type: object
+    additionalProperties:
+      $ref: "#/definitions/ResourceInfo"
+  prompts:
+    type: object
+    additionalProperties:
+      $ref: "#/definitions/PromptInfo"
+required:
+  - name
+additionalProperties: false
+
+definitions:
+
+  ToolInfo:
+    type: object
+    properties:
+      description:
+        type: string
+      inputSchema:
+        $ref: "#/definitions/InputSchema"
+      script:
+        type:
+          - object
+          - string
+    required:
+      - description
+      - script
+    additionalProperties: false
+
+  InputSchema:
+    type: object
+    properties:
+      type:
+        type: string
+      properties:
+        type: object
+      required:
+        type: array
+        items:
+          type: string
+
+  ResourceInfo:
+    type: object
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+      mimeType:
+        type: string
+      script:
+        type:
+          - object
+          - string
+    required:
+      - name
+      - description
+      - script
+    additionalProperties: false
+
+  PromptInfo:
+    type: object
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+      arguments:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+            description:
+              type: string
+            required:
+              type: boolean
+          required:
+            - name
+            - description
+      script:
+        type:
+          - object
+          - string
+    required:
+      - name
+      - description
+      - script
+    additionalProperties: false

@@ -19,10 +19,10 @@ additionalProperties:
             type: string
           required:
             type: boolean
-            default: false
-      required:
-        - name
-        - description
+            default: true
+        required:
+          - name
+          - description
     script:
       type:
         - object
@@ -31,3 +31,4 @@ additionalProperties:
     - name
     - description
     - script
+  additionalProperties: false
