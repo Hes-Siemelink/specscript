@@ -5,9 +5,9 @@ import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.auth.providers.*
 import io.ktor.client.plugins.sse.*
 import io.ktor.client.request.*
-import io.modelcontextprotocol.kotlin.sdk.types.Implementation
 import io.modelcontextprotocol.kotlin.sdk.client.Client
 import io.modelcontextprotocol.kotlin.sdk.client.SseClientTransport
+import io.modelcontextprotocol.kotlin.sdk.types.Implementation
 
 /**
  * Transport for communication with SSE-based MCP server.
@@ -16,7 +16,6 @@ class SseClient(
     val url: String,
     val headers: Map<String, String> = emptyMap(),
     val authToken: String? = null,
-    val type: String = "http"
 ) : McpClientWrapper {
 
     override val client = Client(clientInfo = Implementation("specscript-client", "1.0.0"))
@@ -33,7 +32,7 @@ class SseClient(
     }
 
     override suspend fun connect() {
-        println("Connecting to ${type.uppercase()} MCP server at: $url")
+        println("Connecting to SSE MCP server at: $url")
 
         val transport = SseClientTransport(
             client = httpClient,

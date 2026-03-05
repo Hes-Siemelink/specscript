@@ -117,27 +117,23 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
     }
 
     private fun startSseServer(info: McpServerInfo, server: Server) {
-        val port = info.port ?: 8080
-        val path = info.path ?: "/"
 
-        val ktorServer = embeddedServer(Netty, port = port) {
+        val ktorServer = embeddedServer(Netty, port = info.port) {
             install(SSE)
             routing {
-                mcp(path) { server }
+                mcp("mcp") { server }  // Hardcoded to 'mcp' because mcpStreamableHttp() does so
             }
         }
 
         httpServers[info.name] = ktorServer
         startAndKeepAlive(ktorServer, info.name)
 
-        System.err.println("Started MCP SSE server '${info.name}' on port $port at path $path")
+        println("Started MCP ${info.transport} server '${info.name}' on http://localhost:${info.port}/mcp")
     }
 
     private fun startStreamableHttpServer(info: McpServerInfo, server: Server) {
-        val port = info.port ?: 8080
-        val path = info.path ?: "/"
 
-        val ktorServer = embeddedServer(Netty, port = port) {
+        val ktorServer = embeddedServer(Netty, port = info.port) {
             install(ContentNegotiation) {
                 json(McpJson)
             }
@@ -147,7 +143,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
         httpServers[info.name] = ktorServer
         startAndKeepAlive(ktorServer, info.name)
 
-        System.err.println("Started MCP streaming HTTP server '${info.name}' on port $port at path $path")
+        println("Started MCP ${info.transport} server '${info.name}' on http://localhost:${info.port}/mcp")
     }
 
     /** Starts the Ktor server synchronously (no race condition) then keeps the JVM alive with a non-daemon thread. */
@@ -195,6 +191,8 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
     }
 
     fun Server.addTool(toolName: String, tool: ToolInfo, localContext: ScriptContext) {
+
+        println(" - Tool: $toolName")
 
         val resolvedSchema = tool.inputSchema ?: deriveInputSchema(tool, localContext)
 
@@ -255,6 +253,9 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
     }
 
     fun Server.addResource(resourceURI: String, resource: ResourceInfo, localContext: ScriptContext) {
+
+        println(" - Resource: $resourceURI")
+
         addResource(
             uri = resourceURI,
             name = resource.name,
@@ -280,6 +281,9 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
     }
 
     fun Server.addPrompt(promptName: String, prompt: PromptInfo, localContext: ScriptContext) {
+
+        println(" - Prompt: $promptName")
+
         addPrompt(
             name = promptName,
             description = prompt.description,
@@ -322,11 +326,10 @@ private typealias HttpMcpServer = EmbeddedServer<NettyApplicationEngine, NettyAp
 
 data class McpServerInfo(
     val name: String,
-    val version: String,
+    val version: String = "1.0.0",
     val stop: Boolean = false,
-    val transport: TransportType = TransportType.STDIO,
-    val port: Int? = null,
-    val path: String? = null,
+    val transport: TransportType = TransportType.HTTP,
+    val port: Int = 8080,
 
     @JsonAnySetter
     val tools: MutableMap<String, ToolInfo> = mutableMapOf(),

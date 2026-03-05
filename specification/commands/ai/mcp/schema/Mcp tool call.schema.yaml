@@ -6,10 +6,11 @@ properties:
     oneOf:
       - type: object
         properties:
-          type:
+          transport:
             type: string
-            enum: [ internal, stdio, http, sse ]
+            enum: [ HTTP, SSE, STDIO ]
             description: Transport type
+            default: http
           server:
             type: string
             description: Name of the MCP server to connect to
@@ -30,7 +31,6 @@ properties:
             items:
               type: string
             description: Additional arguments for the process
-        required: [ type ]
         additionalProperties: false
   tool:
     type: string

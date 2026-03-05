@@ -42,7 +42,7 @@ object McpToolCall : CommandHandler("Mcp tool call", "ai/mcp"), ObjectHandler, D
                 )
             )
 
-            val result = mcp.client.callTool(request) as CallToolResult
+            val result = mcp.client.callTool(request)
             val firstMessage: JsonNode = result.firstTextAsJson()
             if (result.isError == true) {
                 throw SpecScriptCommandError(
@@ -55,8 +55,7 @@ object McpToolCall : CommandHandler("Mcp tool call", "ai/mcp"), ObjectHandler, D
             firstMessage
 
         } catch (e: Exception) {
-            e.printStackTrace()
-            throw SpecScriptCommandError("Tool '${info.tool}' call failed: ${e.message}")
+            throw SpecScriptCommandError("Tool '${info.tool}' call failed: ${e.message}", cause = e)
         } finally {
             mcp.close()
         }
@@ -86,20 +85,20 @@ fun CallToolResult.firstTextAsJson(): JsonNode {
 fun createMcpClient(
     server: TargetServerInfo,
 ): McpClientWrapper {
-    return when (server.type) {
-        "stdio" -> {
+    return when (server.transport) {
+        TransportType.STDIO -> {
             StdioClient(server.command!!)
         }
 
-        "http" -> {
-            HttpClient(server.url!!, server.headers, server.token, server.type)
+        TransportType.HTTP -> {
+            HttpClient(server.url!!, server.headers, server.token)
         }
 
-        "sse" -> {
-            SseClient(server.url!!, server.headers, server.token, server.type)
+        TransportType.SSE -> {
+            SseClient(server.url!!, server.headers, server.token)
         }
 
-        else -> throw SpecScriptCommandError("Unknown MCP server type: ${server.type}")
+        else -> throw SpecScriptCommandError("Unknown MCP server type: ${server.transport}")
     }
 }
 
@@ -111,7 +110,7 @@ data class CallMcpToolInfo(
 )
 
 data class TargetServerInfo(
-    val type: String,
+    val transport: TransportType = TransportType.HTTP,
     val server: String? = null,
     val command: String? = null,
     val url: String?,

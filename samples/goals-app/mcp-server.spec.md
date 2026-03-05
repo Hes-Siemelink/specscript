@@ -1,6 +1,6 @@
-# Goals App MCP Server
+# Goals MCP Server
 
-A Model Context Protocol (MCP) server for Goals App, a tool for managing personal and professional goals.
+An MCP server for managing goals.
 
 ## Overview
 
@@ -16,7 +16,7 @@ Mcp server:
   transport: HTTP
 ```
 
-## Listing Tools
+## Querying
 
 Tools for retrieving and viewing goals
 

@@ -97,7 +97,6 @@ Code example: MCP tool with derived input schema
 Mcp server:
   name: derive-server
   version: "1.0.0"
-  transport: SSE
   port: 8094
 ```
 
@@ -120,8 +119,7 @@ Mcp tool call:
   input:
     name: Alice
   server:
-    type: sse
-    url: "http://localhost:8094"
+    url: "http://localhost:8094/mcp"
 
 Expected output: Hello, Alice!
 ```
