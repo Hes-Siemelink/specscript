@@ -14,6 +14,7 @@ Mcp server:
   name: goals-app
   version: 1.0.0
   transport: HTTP
+  port: 9041
 ```
 
 ## Querying
