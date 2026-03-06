@@ -4,8 +4,18 @@ An MCP server for managing goals.
 
 ## Overview
 
-The Goals App MCP Server provides tools for managing goals with CRUD operations and state transitions. It supports the
-basic lifecycle: "todo" → "in_progress" → "completed".
+The Goals MCP Server provides tools for managing goals with CRUD operations and state transitions. It supports the basic
+lifecycle: "todo" → "in_progress" → "completed".
+
+To start the Goals MCP server:
+
+```shell ignore
+cd samples/goals-app
+spec db create-db
+spec goals-mcp-server.spec.md
+```
+
+The server can be reached on http://localhost:9041/mcp
 
 ## Server Configuration
 
@@ -101,19 +111,7 @@ Mcp tool:
     script: goals/delete.spec.yaml
 ```
 
-## Usage Examples
-
-### Starting the server
-
-To start the Goals App MCP server:
-
-```shell ignore
-spec samples/goals-app/mcp-server.spec.md
-```
-
-The server will start and wait for MCP client connections.
-
-### Goal data model
+## Goal data model
 
 Each goal contains the following properties:
 
@@ -136,4 +134,3 @@ Goals follow this workflow:
 3. **completed**: Goal has been completed
 
 State transitions can be made using the `update_goal` tool by changing the `state` property.
-
