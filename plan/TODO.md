@@ -1,7 +1,10 @@
 # On my mind
 
+* Use Markdown front matter for SpecScript files to define metadata
 * LLM commands
+* Agent definitions
 * Rewrite README
+* Rethink Connect to again
 
 ## In general
 
