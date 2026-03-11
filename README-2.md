@@ -13,9 +13,13 @@ Here's a complete API testing specification in `user-api.spec.yaml`:
 Script info:
   description: User API validation
 
-Input parameters:
-  name: User name
-  language: Greeting language
+Input schema:
+  type: object
+  properties:
+    name:
+      description: User name
+    language:
+      description: Greeting language
 
 POST:
   url: http://localhost:2525/greeting

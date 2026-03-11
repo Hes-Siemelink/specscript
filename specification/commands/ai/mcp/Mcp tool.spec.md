@@ -70,3 +70,65 @@ Mcp server:
   version: "1.0.0"
   stop: true
 -->
+
+## Deriving input schema from script
+
+When a tool references an external script file that uses `Input schema`, the `inputSchema` can be omitted from the tool
+definition. SpecScript will automatically derive it from the script's `Input schema` command.
+
+Given a script file `greet-tool.spec.yaml` that defines its input using `Input schema`:
+
+```yaml file=greet-tool.spec.yaml
+Input schema:
+  type: object
+  properties:
+    name:
+      description: Name of the person to greet
+      default: World
+
+Output: Hello, ${input.name}!
+```
+
+You can define the MCP tool without repeating the schema:
+
+```yaml specscript
+Code example: MCP tool with derived input schema
+
+Mcp server:
+  name: derive-server
+  version: "1.0.0"
+  port: 8094
+```
+
+```yaml specscript
+Code example: Tool with schema derived from script
+
+Mcp tool:
+  greet:
+    description: Generate a personalized greeting
+    script: greet-tool.spec.yaml
+```
+
+Calling the tool works as expected, with the input schema derived from the script:
+
+```yaml specscript
+Code example: Calling a tool with derived schema
+
+Mcp tool call:
+  tool: greet
+  input:
+    name: Alice
+  server:
+    url: "http://localhost:8094/mcp"
+
+Expected output: Hello, Alice!
+```
+
+<!-- yaml specscript
+Mcp server:
+  name: derive-server
+  version: "1.0.0"
+  stop: true
+-->
+
+If `inputSchema` is provided explicitly on the tool definition, it takes precedence over the script's `Input schema`.

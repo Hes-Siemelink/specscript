@@ -4,15 +4,19 @@ import specscript.commands.files.TempFile
 import specscript.commands.files.TempFileData
 import specscript.commands.scriptinfo.InputParameterData
 import specscript.commands.scriptinfo.InputParameters
+import specscript.commands.scriptinfo.InputSchema
 import specscript.commands.scriptinfo.ScriptInfo
 import specscript.commands.scriptinfo.ScriptInfoData
 import specscript.commands.shell.Cli
 import specscript.commands.shell.CliData
 import specscript.commands.shell.Shell
 import specscript.commands.shell.ShellCommand
+import specscript.commands.testing.AfterTests
 import specscript.commands.testing.Answers
+import specscript.commands.testing.BeforeTests
 import specscript.commands.testing.ExpectedConsoleOutput
 import specscript.commands.testing.TestCase
+import specscript.commands.testing.Tests
 import specscript.commands.util.Print
 import specscript.files.MarkdownBlock
 import specscript.files.MarkdownBlock.*
@@ -72,14 +76,20 @@ class Script(val commands: List<Command>, val title: String? = null) {
         val scriptInfoData = scriptInfoCommand?.data?.toDomainObject(ScriptInfoData::class) ?: ScriptInfoData(title)
 
         val inputParameterCommand = commands.find { it.name == InputParameters.name }
+        val inputSchemaCommand = commands.find { it.name == InputSchema.name }
 
-        return if (inputParameterCommand != null) {
-            // Merge with data from InputParameters
-            val inputParams = inputParameterCommand.data.toDomainObject(InputParameterData::class)
-            val mergedInput = (scriptInfoData.input ?: emptyMap()) + (inputParams.properties)
-            scriptInfoData.copy(input = mergedInput)
-        } else {
-            scriptInfoData
+        return when {
+            inputParameterCommand != null -> {
+                val inputParams = inputParameterCommand.data.toDomainObject(InputParameterData::class)
+                val mergedInput = (scriptInfoData.input ?: emptyMap()) + (inputParams.properties)
+                scriptInfoData.copy(input = mergedInput)
+            }
+            inputSchemaCommand != null -> {
+                val schemaData = InputSchema.toInputData(inputSchemaCommand.data as tools.jackson.databind.node.ObjectNode)
+                val mergedInput = (scriptInfoData.input ?: emptyMap()) + (schemaData.properties)
+                scriptInfoData.copy(input = mergedInput)
+            }
+            else -> scriptInfoData
         }
     }
 
@@ -218,4 +228,38 @@ fun Script.splitTestCases(): List<Script> {
     }
 
     return allTests
+}
+
+data class NamedTest(val name: String, val script: Script)
+
+class TestSuite(
+    val setup: Script?,
+    val tests: List<NamedTest>,
+    val teardown: Script?
+)
+
+fun Script.splitTests(): TestSuite {
+    var setup: Script? = null
+    val tests = mutableListOf<NamedTest>()
+    var teardown: Script? = null
+
+    for (command in commands) {
+        when (command.name) {
+            BeforeTests.name -> {
+                setup = Script.from(command.data)
+            }
+
+            AfterTests.name -> {
+                teardown = Script.from(command.data)
+            }
+
+            Tests.name -> {
+                for (field in command.data.properties()) {
+                    tests.add(NamedTest(field.key, Script.from(field.value)))
+                }
+            }
+        }
+    }
+
+    return TestSuite(setup, tests, teardown)
 }

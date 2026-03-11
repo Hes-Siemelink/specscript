@@ -20,19 +20,21 @@ the [mcp-relelese.spec.yaml](mcp-release.spec.yaml) server specification. Techni
 defined here it makes it easier the test the script in isolation and reuse it in other contexts.
 
 ```yaml specscript
-Input parameters:
+Input schema:
+  type: object
+  properties:
 
-  task_id:
-    description: Full ID of the task to change
+    task_id:
+      description: Full ID of the task to change
 
-  target_type:
-    description: New task type. For example, xlrelease.Task
-    default: jenkins.Build
+    target_type:
+      description: New task type. For example, xlrelease.Task
+      default: jenkins.Build
 
-  task_properties:
-    description: New task details
-    default:
-      jobName: My Job
+    task_properties:
+      description: New task details
+      default:
+        jobName: My Job
 ```
 
 ## REST API calls

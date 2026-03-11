@@ -1,7 +1,10 @@
 Script info: Show albums of an artist
 
-Input parameters:
-  name: Name of the artist
+Input schema:
+  type: object
+  properties:
+    name:
+      description: Name of the artist
 
 ---
 Get artist info:

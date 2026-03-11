@@ -1,6 +1,8 @@
-Input parameters:
-  batch:
-    description: The list of tickets
+Input schema:
+  type: object
+  properties:
+    batch:
+      description: The list of tickets
 
 For each:
   ${ticket} in: ${batch}

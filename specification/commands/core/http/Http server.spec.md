@@ -168,8 +168,11 @@ Suppose you have a file `greet.spec.yaml`
 ```yaml file=greet.spec.yaml
 Script info: Creates a greeting
 
-Input parameters:
-  name: Your name
+Input schema:
+  type: object
+  properties:
+    name:
+      description: Your name
 
 Output: Hello ${input.name}!
 ```

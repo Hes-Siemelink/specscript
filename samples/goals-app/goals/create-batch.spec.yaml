@@ -1,0 +1,10 @@
+Input schema:
+  type: object
+  properties:
+    batch:
+      description: The list of goals
+  required: [ batch ]
+
+For each:
+  ${goal} in: ${batch}
+  Create: ${goal}

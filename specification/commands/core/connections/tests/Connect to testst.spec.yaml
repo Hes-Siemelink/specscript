@@ -1,22 +1,23 @@
-Test case: Use a connection with SpecScript code
+Tests:
 
-Connect to: SpecScript Sample Server
+  Use a connection with SpecScript code:
 
-GET: /items
+    Connect to: SpecScript Sample Server
 
-Expected output:
-  - 1
-  - 2
-  - 3
+    GET: /items
 
----
-Test case: Use a connection script
+    Expected output:
+      - 1
+      - 2
+      - 3
 
-Connect to: SpecScript Sample Server with script
+  Use a connection script:
 
-GET: /items
+    Connect to: SpecScript Sample Server with script
 
-Expected output:
-  - 1
-  - 2
-  - 3
+    GET: /items
+
+    Expected output:
+      - 1
+      - 2
+      - 3

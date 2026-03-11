@@ -21,8 +21,6 @@ Code example: Simple MCP server
 
 Mcp server:
   name: demo-server
-  version: "1.0.0"
-  transport: SSE
   port: 8091
   tools:
     hello:
@@ -39,14 +37,10 @@ Code example: Basic Mcp tool call
 Mcp tool call:
   tool: hello
   server:
-    type: sse
-    url: "http://localhost:8091"
+    url: "http://localhost:8091/mcp"
 
 Expected output: Hello there!
 ```
-
-Here we use the `internal` transport to connect to the `demo-server` MCP server that we defined earlier. Other supported
-transport types are `stdio` and `http` (see below).
 
 ## Passing arguments
 
@@ -73,14 +67,12 @@ Mcp tool call:
   input:
     name: Alice
   server:
-    type: sse
-    url: "http://localhost:8091"
+    url: "http://localhost:8091/mcp"
 
 Expected output: Hello Alice!
-
 ```
 
-## Server types
+## Transport types
 
 The `server` property defines how to connect to the MCP server. There are three supported transport types:
 `stdio`, `http` and `sse`.
@@ -98,7 +90,7 @@ Mcp tool call:
   input:
     data: sample input
   server:
-    type: stdio
+    transport: STDIO
     command: bash specification/commands/ai/mcp/mock-mcp-server.sh
 
 Expected output: Mock server response
@@ -106,22 +98,36 @@ Expected output: Mock server response
 
 ### HTTP
 
-HTTP server type enables connection to MCP servers over HTTP. Supports authentication via Bearer tokens and custom
-headers.
+HTTP server type enables connection to MCP servers using the Streamable HTTP transport. Supports authentication via
+Bearer tokens and custom headers.
 
 ```yaml
 Code example: HTTP transport
 
 Mcp tool call:
-  transport:
-    type: http
+  server:
+    transport: HTTP
     url: "https://api.example.com/mcp"
     headers:
       Authorization: "Bearer ${API_TOKEN}"
       Content-Type: "application/json"
   tool: analyze_data
-  arguments:
+  input:
     data: "sample input"
+```
+
+### SSE
+
+SSE server type enables connection to MCP servers using the legacy Server-Sent Events transport.
+
+```yaml
+Code example: SSE transport
+
+Mcp tool call:
+  server:
+    transport: SSE
+    url: "http://localhost:8091/mcp"
+  tool: hello
 ```
 
 <!-- yaml specscript

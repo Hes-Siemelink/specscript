@@ -3,13 +3,13 @@ package specscript.commands.db
 import specscript.language.CommandHandler
 import specscript.language.ObjectHandler
 import specscript.language.ScriptContext
+import specscript.util.Json
 import specscript.util.Json.newArray
 import specscript.util.Json.newObject
-import specscript.util.Yaml
 import specscript.util.toDomainObject
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
-import java.lang.String.valueOf
+import tools.jackson.databind.node.StringNode
 import java.sql.Connection
 import java.sql.DriverManager
 
@@ -61,9 +61,25 @@ fun List<Map<String, Any>>.toNode(): JsonNode {
     this.forEach { row ->
         val rowNode = newObject()
         row.forEach { (key, value) ->
-            rowNode.set(key, Yaml.parseIfPossible(valueOf(value)))
+            rowNode.set(key, value.toJsonNode())
         }
         node.add(rowNode)
     }
     return node
+}
+
+/** Convert a JDBC value to a Jackson JsonNode without YAML parsing. */
+private fun Any?.toJsonNode(): JsonNode = when (this) {
+    null -> StringNode("")
+    is Number -> Json.mapper.valueToTree(this)
+    is Boolean -> Json.mapper.valueToTree(this)
+    is String -> jsonOrText(this)
+    else -> StringNode(toString())
+}
+
+/** Try JSON first (for structured data stored as JSON strings), fall back to plain text. */
+private fun jsonOrText(value: String): JsonNode = try {
+    Json.readTree(value)
+} catch (_: Exception) {
+    StringNode(value)
 }

@@ -32,12 +32,14 @@ dependencies {
     implementation("io.ktor:ktor-server-core:3.3.+")
     implementation("io.ktor:ktor-server-netty:3.3.+")
     implementation("io.ktor:ktor-server-sse:3.3.+")
-    implementation("org.slf4j:slf4j-simple:2.0.+")
+    implementation("ch.qos.logback:logback-classic:1.5.+")
     implementation("com.github.kotlin-inquirer:kotlin-inquirer:0.1.0")
     implementation("org.jline:jline:3.27.+")
     implementation("org.fusesource.jansi:jansi:2.4.1")
     implementation("org.xerial:sqlite-jdbc:3.47.0.0")
-    implementation("io.modelcontextprotocol:kotlin-sdk:0.7.2")
+    implementation("io.modelcontextprotocol:kotlin-sdk:0.8.4")
+    implementation("io.ktor:ktor-server-content-negotiation:3.3.+")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:3.3.+")
     implementation("io.github.oshai:kotlin-logging:5.0.0")  // For MCP
 
     implementation("org.junit.jupiter:junit-jupiter-api:5.14.2")

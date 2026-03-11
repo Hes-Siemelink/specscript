@@ -31,8 +31,7 @@ Now that we have a server running, we can add prompts to it:
 Code example: Adding a prompt to an MCP server
 
 Mcp prompt:
-  code-review:
-    name: Code Review Assistant
+  Code Review Assistant:
     description: Helps review code for best practices and potential issues
     arguments:
       - name: code
@@ -62,8 +61,7 @@ Add multiple prompts in one command:
 Code example: Multiple MCP prompts
 
 Mcp prompt:
-  explain-concept:
-    name: Concept Explainer
+  Concept Explainer:
     description: Explains technical concepts in simple terms
     arguments:
       - name: concept
@@ -78,8 +76,7 @@ Mcp prompt:
 
         Simple explanation coming soon...
 
-  generate-tests:
-    name: Test Generator
+  Test Generator:
     description: Generates unit tests for given code
     arguments:
       - name: function_code
@@ -106,8 +103,7 @@ You can reference external SpecScript files in the `script` property by providin
 Code example: Prompt backed by external script
 
 Mcp prompt:
-  documentation-writer:
-    name: Documentation Writer
+  Documentation Writer:
     description: Generates comprehensive documentation
     arguments:
       - name: code_snippet

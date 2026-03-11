@@ -95,8 +95,11 @@ For example, suppose we have a file `create-greeting.spec.yaml`, that creates a 
 ```yaml file=create-greeting.spec.yaml
 Script info: Creates a greeting
 
-Input parameters:
-  name: Your name
+Input schema:
+  type: object
+  properties:
+    name:
+      description: Your name
 
 Output: Hello ${name}!
 ```

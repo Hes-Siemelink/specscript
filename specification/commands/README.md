@@ -20,6 +20,7 @@ Overview of standard commands in SpecScript.
 * [Add to](core/data-manipulation/Add%20to.spec.md) - Adds items to existing variables
 * [Append](core/data-manipulation/Append.spec.md) - Adds items to the output variable
 * [Find](core/data-manipulation/Find.spec.md) - Retrieves a snippet from a larger object
+* [Json patch](core/data-manipulation/Json%20patch.spec.md) - Applies JSON Patch operations to a document
 * [Replace](core/data-manipulation/Replace.spec.md) - Does a text-based find&replace
 * [Size](core/data-manipulation/Size.spec.md) - Gives you the size of things
 * [Sort](core/data-manipulation/Sort.spec.md) - Sorts an array

@@ -1,15 +1,16 @@
 package specscript.commands.mcp
 
-import io.modelcontextprotocol.kotlin.sdk.CallToolRequest
-import io.modelcontextprotocol.kotlin.sdk.CallToolResult
-import io.modelcontextprotocol.kotlin.sdk.TextContent
+import io.modelcontextprotocol.kotlin.sdk.types.CallToolRequest
+import io.modelcontextprotocol.kotlin.sdk.types.CallToolRequestParams
+import io.modelcontextprotocol.kotlin.sdk.types.CallToolResult
+import io.modelcontextprotocol.kotlin.sdk.types.TextContent
 import kotlinx.coroutines.runBlocking
 import specscript.commands.mcp.transport.HttpClient
 import specscript.commands.mcp.transport.McpClientWrapper
 import specscript.commands.mcp.transport.SseClient
 import specscript.commands.mcp.transport.StdioClient
 import specscript.language.*
-import specscript.util.Yaml
+import specscript.util.Json
 import specscript.util.toDomainObject
 import specscript.util.toKotlinx
 import tools.jackson.databind.JsonNode
@@ -35,13 +36,15 @@ object McpToolCall : CommandHandler("Mcp tool call", "ai/mcp"), ObjectHandler, D
             mcp.connect()
 
             val request = CallToolRequest(
-                name = info.tool,
-                arguments = info.input?.toKotlinx() ?: kotlinx.serialization.json.JsonObject(emptyMap())
+                CallToolRequestParams(
+                    name = info.tool,
+                    arguments = info.input?.toKotlinx() ?: kotlinx.serialization.json.JsonObject(emptyMap())
+                )
             )
 
-            val result = mcp.client.callTool(request) as CallToolResult
+            val result = mcp.client.callTool(request)
             val firstMessage: JsonNode = result.firstTextAsJson()
-            if (result.isError!!) {
+            if (result.isError == true) {
                 throw SpecScriptCommandError(
                     "Tool '${info.tool}' call failed",
                     type = "MCP Server error",
@@ -52,8 +55,7 @@ object McpToolCall : CommandHandler("Mcp tool call", "ai/mcp"), ObjectHandler, D
             firstMessage
 
         } catch (e: Exception) {
-            e.printStackTrace()
-            throw SpecScriptCommandError("Tool '${info.tool}' call failed: ${e.message}")
+            throw SpecScriptCommandError("Tool '${info.tool}' call failed: ${e.message}", cause = e)
         } finally {
             mcp.close()
         }
@@ -70,8 +72,10 @@ fun CallToolResult.firstTextAsJson(): JsonNode {
     // TODO handle lists and other content types
     val first = content.first()
     return when (first) {
-        is TextContent -> {
-            Yaml.parseIfPossible(first.text)
+        is TextContent -> try {
+            Json.readTree(first.text)
+        } catch (_: Exception) {
+            StringNode(first.text)
         }
 
         else -> StringNode("Tool executed successfully with result of type ${first.type}")
@@ -81,20 +85,18 @@ fun CallToolResult.firstTextAsJson(): JsonNode {
 fun createMcpClient(
     server: TargetServerInfo,
 ): McpClientWrapper {
-    return when (server.type) {
-        "stdio" -> {
+    return when (server.transport) {
+        TransportType.STDIO -> {
             StdioClient(server.command!!)
         }
 
-        "http" -> {
-            HttpClient(server.url!!, server.headers, server.token, server.type)
+        TransportType.HTTP -> {
+            HttpClient(server.url!!, server.headers, server.token)
         }
 
-        "sse" -> {
-            SseClient(server.url!!, server.headers, server.token, server.type)
+        TransportType.SSE -> {
+            SseClient(server.url!!, server.headers, server.token)
         }
-
-        else -> throw SpecScriptCommandError("Unknown MCP server type: ${server.type}")
     }
 }
 
@@ -106,7 +108,7 @@ data class CallMcpToolInfo(
 )
 
 data class TargetServerInfo(
-    val type: String,
+    val transport: TransportType = TransportType.HTTP,
     val server: String? = null,
     val command: String? = null,
     val url: String?,

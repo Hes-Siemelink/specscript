@@ -3,21 +3,30 @@ package specscript.util
 import kotlinx.serialization.json.*
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectWriter
 import tools.jackson.databind.SerializationFeature
 import tools.jackson.databind.node.*
-import tools.jackson.module.kotlin.jacksonObjectMapper
 import tools.jackson.module.kotlin.jsonMapper
 import tools.jackson.module.kotlin.kotlinModule
 import kotlin.reflect.KClass
 
 object Json {
 
-    val mapper: ObjectMapper = jsonMapper {
-        addModule(kotlinModule())
-        enable(SerializationFeature.INDENT_OUTPUT)
+    // Bare mapper for tree-model operations (JsonNode read/write).
+    // No KotlinModule — avoids expensive kotlin-reflect initialization on startup.
+    private val treeMapper: ObjectMapper = jsonMapper {}
+
+    private val prettyWriter: ObjectWriter = treeMapper.writerWithDefaultPrettyPrinter()
+    private val compactWriter: ObjectWriter = treeMapper.writer()
+
+    // Full mapper with KotlinModule, for typed deserialization/serialization.
+    // Lazy to defer kotlin-reflect cost until first actual use.
+    val mapper: ObjectMapper by lazy {
+        jsonMapper {
+            addModule(kotlinModule())
+            enable(SerializationFeature.INDENT_OUTPUT)
+        }
     }
-    
-    val compactMapper: ObjectMapper = jacksonObjectMapper()
 
     fun newArray(): ArrayNode {
         return ArrayNode(JsonNodeFactory.instance)
@@ -35,7 +44,19 @@ object Json {
     }
 
     fun newObject(map: Map<String, String>): ObjectNode {
-        return mapper.valueToTree(map)
+        return treeMapper.valueToTree(map)
+    }
+
+    fun writeAsString(node: JsonNode): String {
+        return prettyWriter.writeValueAsString(node)
+    }
+
+    fun writeCompact(node: JsonNode): String {
+        return compactWriter.writeValueAsString(node)
+    }
+
+    fun readTree(content: String): JsonNode {
+        return treeMapper.readTree(content)
     }
 }
 
@@ -67,12 +88,12 @@ fun <T : Any> T.updateWith(content: JsonNode): T {
 
 fun JsonNode?.toDisplayJson(): String {
     this ?: return ""
-    return Json.mapper.writeValueAsString(this).trim()
+    return Json.writeAsString(this).trim()
 }
 
 fun JsonNode?.toCompactJson(): String {
     this ?: return ""
-    return Json.compactMapper.writeValueAsString(this).trim()
+    return Json.writeCompact(this).trim()
 }
 
 abstract class JsonProcessor {

@@ -1,46 +1,42 @@
-Test case: Output
+Tests:
 
-Output: a result
+  Output:
 
-Expected output: a result
+    Output: a result
 
----
-Test case: Set variable with 'As'
+    Expected output: a result
 
-Output: some more contents
-As: ${var3}
+  Set variable with 'As':
 
-Assert equals:
-  - actual: ${var3}
-    expected: some more contents
+    Output: some more contents
+    As: ${var3}
 
+    Assert equals:
+      - actual: ${var3}
+        expected: some more contents
 
----
-Test case: Output variable assignment
+  Output variable assignment:
 
-${var}: something
-${output}: ${var}
+    ${var}: something
+    ${output}: ${var}
 
-Expected output: something
+    Expected output: something
 
+  Output should be a list when invoking a handler with a list:
 
----
-Test case: Output should be a list when invoking a handler with a list
+    Output:
+      - one
+      - two
+      - three
 
-Output:
-  - one
-  - two
-  - three
+    Expected output:
+      - one
+      - two
+      - three
 
-Expected output:
-  - one
-  - two
-  - three
+  Use numbers in interpolation:
 
----
-Test case: Use numbers in interpolation
+    ${number}: 2
+    Output: Number ${number}
 
-${number}: 2
-Output: Number ${number}
-
-Expected output: Number 2
+    Expected output: Number 2

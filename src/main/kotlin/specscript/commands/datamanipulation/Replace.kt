@@ -42,7 +42,7 @@ object Replace : CommandHandler("Replace", "core/data-manipulation"), ObjectHand
                 replaceObject(source, part, replacement)
             }
 
-            else -> null
+            else -> source
         }
     }
 

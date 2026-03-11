@@ -1,8 +1,11 @@
-Input parameters:
-  folderId: Full folder ID
-  title:
-    description: Folder title
-    default: New Folder
+Input schema:
+  type: object
+  properties:
+    folderId:
+      description: Full folder ID
+    title:
+      description: Folder title
+      default: New Folder
 
 Connect to: Digital.ai Release
 

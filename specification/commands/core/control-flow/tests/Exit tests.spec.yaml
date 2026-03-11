@@ -1,5 +1,7 @@
-Test case: Exit from script
+Tests:
 
-Exit: Expected exit from test
+  Exit from script:
 
-Expected output: We are not supposed to get here
+    Exit: Expected exit from test
+
+    Expected output: We are not supposed to get here

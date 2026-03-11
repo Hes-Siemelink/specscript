@@ -1,156 +1,148 @@
-Test case: Output from for each
+Tests:
 
-Output: something
+  Output from for each:
 
-For each:
-  ${item} in:
-    - one
-    - two
-    - three
-  Output:
-    item: ${item}
+    Output: something
 
-Expected output:
-  - item: one
-  - item: two
-  - item: three
+    For each:
+      ${item} in:
+        - one
+        - two
+        - three
+      Output:
+        item: ${item}
 
----
-Test case: Use Output if there is no loop variable
+    Expected output:
+      - item: one
+      - item: two
+      - item: three
 
-Output:
-  - one
-  - two
-  - three
+  Use Output if there is no loop variable:
 
-For each:
-  Output:
-    item: ${item}
+    Output:
+      - one
+      - two
+      - three
 
-Expected output:
-  - item: one
-  - item: two
-  - item: three
+    For each:
+      Output:
+        item: ${item}
 
----
-Test case: Use output inside for each
+    Expected output:
+      - item: one
+      - item: two
+      - item: three
 
-Output: something
+  Use output inside for each:
 
-For each:
-  ${item} in:
-    - one
-    - two
-    - three
-  Output: ${output} ${item}
+    Output: something
 
-Expected output:
-  - something one
-  - something one two
-  - something one two three
+    For each:
+      ${item} in:
+        - one
+        - two
+        - three
+      Output: ${output} ${item}
 
+    Expected output:
+      - something one
+      - something one two
+      - something one two three
 
----
-Test case: Make sure variables are resolved at right time in Do command
+  Make sure variables are resolved at right time in Do command:
 
-${output}: something else
-${test}: [ ]
+    ${output}: something else
+    ${test}: [ ]
 
-For each:
-  ${recipe} in:
-    - Mango ice cream
-    - Ratatouille
-    - Meatballs
-  Output: ${recipe}
-As: ${recipes}
+    For each:
+      ${recipe} in:
+        - Mango ice cream
+        - Ratatouille
+        - Meatballs
+      Output: ${recipe}
+    As: ${recipes}
 
-Assert equals:
-  actual: ${recipes}
-  expected:
-    - Mango ice cream
-    - Ratatouille
-    - Meatballs
+    Assert equals:
+      actual: ${recipes}
+      expected:
+        - Mango ice cream
+        - Ratatouille
+        - Meatballs
 
----
-Test case: Use variable in For each
+  Use variable in For each:
 
-${items}:
-  - One
-  - Two
-  - Three
-${test_result}: [ ]
+    ${items}:
+      - One
+      - Two
+      - Three
+    ${test_result}: [ ]
 
-For each:
-  ${item} in: ${items}
-  Output: (${item})
-As: ${test_result}
+    For each:
+      ${item} in: ${items}
+      Output: (${item})
+    As: ${test_result}
 
-Assert equals:
-  - actual: ${test_result}
-    expected:
-      - (One)
-      - (Two)
-      - (Three)
+    Assert equals:
+      - actual: ${test_result}
+        expected:
+          - (One)
+          - (Two)
+          - (Three)
 
----
-Test case: For each should output empty list when looping over an empty list
+  For each should output empty list when looping over an empty list:
 
-Output: something to begin with
+    Output: something to begin with
 
-For each:
-  ${nothing} in: [ ]
+    For each:
+      ${nothing} in: [ ]
 
-  Output: something else
+      Output: something else
 
-Expected output: [ ]
+    Expected output: [ ]
 
----
-Test case: For each on object
+  For each on object:
 
-For each:
-  ${entry} in:
-    1: one
-    2: two
-  Output: ${entry.value} indeed
+    For each:
+      ${entry} in:
+        1: one
+        2: two
+      Output: ${entry.value} indeed
 
-Expected output:
-  1: one indeed
-  2: two indeed
+    Expected output:
+      1: one indeed
+      2: two indeed
 
----
-Test case: For each with variables resolution
+  For each with variables resolution:
 
-Output:
-  agents:
-    - id: 123
-      alias: runner
-      description: Remote runner
+    Output:
+      agents:
+        - id: 123
+          alias: runner
+          description: Remote runner
 
-For each:
-  ${agent} in: ${output.agents}
-  Output:
-    name: ${agent.alias} (${agent.description})
-    value: ${agent.id}
+    For each:
+      ${agent} in: ${output.agents}
+      Output:
+        name: ${agent.alias} (${agent.description})
+        value: ${agent.id}
 
-Expected output:
-  - name: runner (Remote runner)
-    value: 123
+    Expected output:
+      - name: runner (Remote runner)
+        value: 123
 
----
-Test case: For each with variable syntax in sample data
+  For each with variable syntax in sample data:
 
-Read file:
-  resource: data-with-variable-syntax.yaml
+    Read file:
+      resource: data-with-variable-syntax.yaml
 
-For each:
-  ${item} in: ${output}
-  Print: ${item}
+    For each:
+      ${item} in: ${output}
+      Print: ${item}
 
----
-Test case: For each with variable syntax in sample data and implicit loop variable
+  For each with variable syntax in sample data and implicit loop variable:
 
-Read file:
-  resource: data-with-variable-syntax.yaml
+    Read file:
+      resource: data-with-variable-syntax.yaml
 
-For each:
-  Print: ${item}
+    For each:
+      Print: ${item}

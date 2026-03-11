@@ -152,13 +152,16 @@ Prints a simple greeting
 
 ### Defining script input
 
-**Input parameters** is used to specify the script's input. Here's `greet.spec.yaml`:
+**Input schema** is used to specify the script's input. Here's `greet.spec.yaml`:
 
 ```yaml file=greeting.spec.yaml
 Script info: Prints a personalized greeting
 
-Input parameters:
-  name: Your name
+Input schema:
+  type: object
+  properties:
+    name:
+      description: Your name
 
 Output: Hello ${name}!
 ```

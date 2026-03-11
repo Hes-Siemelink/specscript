@@ -1,9 +1,13 @@
 Script info:
   description: Creates a new account
 
-Input parameters:
-  name: Customer name
-  id: Customer ID
+Input schema:
+  type: object
+  properties:
+    name:
+      description: Customer name
+    id:
+      description: Customer ID
 
 ---
 Connect to: Digital.ai Platform

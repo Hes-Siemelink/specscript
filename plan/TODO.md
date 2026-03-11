@@ -2,18 +2,17 @@
 
 * Jackson 3
     * Deprecated methods like textValue(), asText()
+* Use Markdown front matter for SpecScript files to define metadata
+* LLM commands
+* Agent definitions
 * Description command
 * Input schema according to JSON schema
 * Rewrite README
-* Test mode
-    * Merge tests into CLI so you can run cli --test <comething>
-* Define commands in Markdown and publish them as library functions
-* Use JSON schema for input. Or Typescript syntax?
+* Rethink Connect to again
 
 ## In general
 
 * AI to generate scripts: notebook type interaction to write scripts
-* Document Json Patch (uses RFC 6902)
 
 # Actually build something
 
@@ -22,20 +21,10 @@
     * Store stuff on sqlite using same construct
     * Edit lists
 
-# Installable artifact
-
-* Produce a clean, lightweight, native library
-* Node / TypeScript?
-* Compile to WASM
-* Kotlin native? => Use Pure Kotlin libraries
-* Go?
-
 # SpecScript
 
 * Naming alternatives
     * Spec.it
-* Add test support in cli command
-    * `spec --run` vs `spec --test`
 
 # SpecScript language
 
@@ -48,17 +37,9 @@
 * Find a way to confirm default input parameters vs. just taking them for granted. Interactive mode would trigger
   confirmation?
 
-## Types
-
-* Document types
-* Define array and string types in type system
-* Define 'output type' on Script info
-* Turn types into JSON schema
-* Refactor types and directory info
-* Base on TypeScript types
-
 ## User interaction
 
+* Use Input schema for Prompt
 * Resolve difference between Input parameters and Prompt for default values. Use two terms:
     - 'default' for Input parameters only -- no confirmation
     - 'placeholder' for both that will display the value for confirmation. (Alternative names: 'suggestion', '
@@ -85,7 +66,6 @@
 
 ## MCP
 
-* TODOs in MCP server.
 * Process MCP result as list
 
 ## AI agents
@@ -98,13 +78,6 @@
 * Versioning and auto-upgrading of commands
 * Review Script info on directories
 * Support modules
-
-## Improve slow startup
-
-* Jackson is slow on Kotlin: https://github.com/FasterXML/jackson-module-kotlin/issues/69
-* Jackson Jr?
-* Alternative Yaml lib: https://github.com/pwall567/kjson-yaml
-* Or rewrite as Go or TypeScript
 
 # Bugs
 

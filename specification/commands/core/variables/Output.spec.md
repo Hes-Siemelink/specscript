@@ -74,10 +74,12 @@ Here's an example of a script that defines the input and then makes it clear wha
 ```yaml specscript
 Code example: Define input and output in a script
 
-Input parameters:
-  name:
-    description: Person to greet
-    default: Nobody
+Input schema:
+  type: object
+  properties:
+    name:
+      description: Person to greet
+      default: Nobody
 
 Output: Hello ${input.name}!
 ```

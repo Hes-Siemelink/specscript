@@ -1,8 +1,11 @@
 Script info:
   description: Creates a new OIDC client
 
-Input parameters:
-  client_id: Client ID
+Input schema:
+  type: object
+  properties:
+    client_id:
+      description: Client ID
 
 ---
 Connect to: Digital.ai Platform

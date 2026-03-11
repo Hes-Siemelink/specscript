@@ -1,0 +1,41 @@
+Input schema:
+  type: object
+  properties:
+    title:
+      description: Goal title
+    description:
+      description: Description
+    priority:
+      description: Priority level
+      enum: [ low, medium, high ]
+      default: medium
+    assignee:
+      description: Assigned to
+      default: ""
+    parent_id:
+      description: Parent goal ID for sub-goals
+      default: ""
+  required: [ title, description ]
+
+
+# Sanitize input by escaping single quotes
+Replace:
+  text: "'"
+  in: ${input}
+  with: "''"
+As: ${input}
+
+Connect to: Goal DB
+
+SQLite:
+  update:
+    - |
+      INSERT INTO goal (title, description, priority, assignee, parent_id)
+      VALUES (
+        '${input.title}',
+        '${input.description}',
+        CASE WHEN '${input.priority}' = '' THEN NULL ELSE '${input.priority}' END,
+        CASE WHEN '${input.assignee}' = '' THEN NULL ELSE '${input.assignee}' END,
+        CASE WHEN '${input.parent_id}' = '' THEN NULL ELSE '${input.parent_id}' END
+      );
+  query: SELECT * FROM goal WHERE id = last_insert_rowid();

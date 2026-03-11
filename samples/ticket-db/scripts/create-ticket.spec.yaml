@@ -1,13 +1,17 @@
-Input parameters:
-  title: Ticket title
-  description: Description
-  priority:
-    description: Priority level
-    enum: [ low, medium, high ]
-    default: medium
-  assignee:
-    description: Assigned to
-    default: unassigned
+Input schema:
+  type: object
+  properties:
+    title:
+      description: Ticket title
+    description:
+      description: Description
+    priority:
+      description: Priority level
+      enum: [ low, medium, high ]
+      default: medium
+    assignee:
+      description: Assigned to
+      default: unassigned
 
 
 # Sanitize input by escaping single quotes

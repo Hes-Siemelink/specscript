@@ -1,10 +1,12 @@
-Input parameters:
-  id:
-    description: Full ticket identifier (e.g. TICKET-007)
-  action:
-    description: Move action (one of up, down, top, bottom)
-    enum: [ up, down, top, bottom ]
-    default: up
+Input schema:
+  type: object
+  properties:
+    id:
+      description: Full ticket identifier (e.g. TICKET-007)
+    action:
+      description: Move action (one of up, down, top, bottom)
+      enum: [ up, down, top, bottom ]
+      default: up
 
 Connect to: Ticket DB
 

@@ -1,42 +1,42 @@
-Test case: Throw and catch error
+Tests:
 
-Output:
-  - Start
+  Throw and catch error:
 
-Error: Something happened
+    Output:
+      - Start
 
-Append: Continue after error
+    Error: Something happened
 
----
-On error:
-  Append: Caught error
+    Append: Continue after error
 
-Expected output:
-  - Start
-  - Caught error
+    On error:
+      Append: Caught error
 
----
-Test case: Named error
+    Expected output:
+      - Start
+      - Caught error
 
-Output:
-  - Start
+  Named error:
 
-Error:
-  message: Something happened
-  type: 400
+    Output:
+      - Start
 
-Append: Continue after error
+    Error:
+      message: Something happened
+      type: 400
 
----
-On error type:
-  400:
-    Append: Caught right error
-  500:
-    Append: Caught wrong error
+    Append: Continue after error
 
-Append: After error was handled
+    On error type:
+      400:
+        Append: Caught right error
+      500:
+        Append: Caught wrong error
 
-Expected output:
-  - Start
-  - Caught right error
-  - After error was handled
+    Do:
+      - Append: After error was handled
+
+      - Expected output:
+          - Start
+          - Caught right error
+          - After error was handled

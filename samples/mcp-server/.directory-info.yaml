@@ -1,5 +1,0 @@
-Script info: |
-  Digital.ai Release commands
-
-connections:
-  Digital.ai Release: ../digitalai/release/login/connect.spec.yaml

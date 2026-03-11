@@ -89,7 +89,9 @@ object StandardOutput : ConsoleOutput {
     }
 
     override fun printOutput(output: String) {
-        println(output)
+        if (output.isNotBlank()) {
+            println(output)
+        }
     }
 }
 

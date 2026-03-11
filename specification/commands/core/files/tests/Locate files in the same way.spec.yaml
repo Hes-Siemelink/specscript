@@ -1,66 +1,61 @@
-Test case: Read file from working directory (short way)
+Tests:
 
-Read file: specification/commands/core/files/tests/content/plain.yaml
+  Read file from working directory (short way):
 
-Expected output:
-  loaded: true
+    Read file: specification/commands/core/files/tests/content/plain.yaml
 
----
-Test case: Read file from working directory (file property)
+    Expected output:
+      loaded: true
 
-Read file:
-  file: specification/commands/core/files/tests/content/plain.yaml
+  Read file from working directory (file property):
 
-Expected output:
-  loaded: true
+    Read file:
+      file: specification/commands/core/files/tests/content/plain.yaml
 
----
-Test case: Read file relative to script
+    Expected output:
+      loaded: true
 
-Read file:
-  resource: content/plain.yaml
+  Read file relative to script:
 
-Expected output:
-  loaded: true
+    Read file:
+      resource: content/plain.yaml
 
----
-Test case: Run script from same directory (short way)
+    Expected output:
+      loaded: true
 
-Run script: greet.spec.yaml
+  Run script from same directory (short way):
 
-Expected output: Hello world!
+    Run script: greet.spec.yaml
 
----
-Test case: Run script from working directory (file property)
+    Expected output: Hello world!
 
-Run script:
-  file: specification/commands/core/files/tests/greet.spec.yaml
-  input:
-    name: Fay
+  Run script from working directory (file property):
 
-Expected output: Hello Fay!
+    Run script:
+      file: specification/commands/core/files/tests/greet.spec.yaml
+      input:
+        name: Fay
 
----
-Test case: Run script relative to script
+    Expected output: Hello Fay!
 
-Run script:
-  resource: greet.spec.yaml
-  input:
-    name: Ray
+  Run script relative to script:
 
-Expected output: Hello Ray!
+    Run script:
+      resource: greet.spec.yaml
+      input:
+        name: Ray
 
----
-Test case: Shell command from current directory (short way)
+    Expected output: Hello Ray!
 
-Shell: specification/commands/core/files/tests/hello.sh
+  Shell command from current directory (short way):
 
-Expected output: Hello World
+    Shell: specification/commands/core/files/tests/hello.sh
 
----
-Test case: Shell command in same directory as script
+    Expected output: Hello World
 
-Shell:
-  resource: sh hello.sh
+  Shell command in same directory as script:
 
-Expected output: Hello World
+    Shell:
+      resource: sh hello.sh
+
+    Expected output: Hello World

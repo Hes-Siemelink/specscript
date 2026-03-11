@@ -1,0 +1,35 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+
+type: object
+
+properties:
+  doc:
+    type:
+      - object
+      - array
+  patch:
+    type: array
+    items:
+      type: object
+      properties:
+        op:
+          type: string
+          enum:
+            - add
+            - remove
+            - replace
+            - move
+            - copy
+            - test
+        path:
+          type: string
+        value: {}
+        from:
+          type: string
+      required:
+        - op
+        - path
+
+required:
+  - patch
+additionalProperties: false

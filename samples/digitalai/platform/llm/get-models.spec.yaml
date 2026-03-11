@@ -1,5 +1,8 @@
-Input parameters:
-  token: Platform authentication token
+Input schema:
+  type: object
+  properties:
+    token:
+      description: Platform authentication token
 
 GET:
   url: https://api.staging.digital.ai/llm/models?output_modality=TEXT

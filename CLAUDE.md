@@ -131,20 +131,6 @@ SpecScript implements server patterns for both MCP and HTTP servers with similar
 - Use explicit start/stop commands: `Start mcp server` / `Stop mcp server`
 - NOT integrated into test framework automatic lifecycle
 - This provides better control and explicit resource management
-- Example test pattern:
-
-```yaml
-Test case: MCP operation
-  setup:
-    Start mcp server:
-      name: test-server
-      tools: { ... }
-  test:
-  # Test operations
-  cleanup:
-    Stop mcp server:
-      name: test-server
-```
 
 **MCP Backlog System Patterns:**
 

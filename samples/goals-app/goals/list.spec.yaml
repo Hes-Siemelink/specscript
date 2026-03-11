@@ -1,0 +1,24 @@
+Input schema:
+  type: object
+  properties:
+    state:
+      description: Optional state filter (todo, in_progress, completed, or 'all' for no filtering)
+      default: all
+    assignee:
+      description: Optional assignee filter ('all' for no filtering)
+      default: all
+    parent_id:
+      description: Filter by parent goal ('all' for all goals, 'none' for top-level only, or a goal ID for children)
+      default: all
+
+Connect to: Goal DB
+
+SQLite:
+  query: |
+    SELECT * FROM goal
+    WHERE ('${input.state}' IN ('', 'all') OR state = '${input.state}')
+      AND ('${input.assignee}' IN ('', 'all') OR assignee = '${input.assignee}')
+      AND ('${input.parent_id}' IN ('', 'all')
+        OR ('${input.parent_id}' = 'none' AND parent_id IS NULL)
+        OR parent_id = '${input.parent_id}')
+    ORDER BY created_at ASC;

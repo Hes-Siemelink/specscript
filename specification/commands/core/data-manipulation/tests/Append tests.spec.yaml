@@ -1,7 +1,7 @@
-Test case: Append to empty output
+Tests:
 
-Append:
-  something: new
-
-Expected output:
-  something: new
+  Append to empty output:
+    Append:
+      something: new
+    Expected output:
+      something: new

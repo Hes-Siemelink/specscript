@@ -1,8 +1,11 @@
 Script info:
   description: Creates a new Cloud Connector
 
-Input parameters:
-  name: Cloud Connector name
+Input schema:
+  type: object
+  properties:
+    name:
+      description: Cloud Connector name
 
 ---
 Connect to: Digital.ai Platform

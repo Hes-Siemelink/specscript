@@ -1,40 +1,39 @@
-Test case: Only once do
+Tests:
 
-Output: one
+  Only once do:
 
-Repeat:
-  Output: done
-  until: done
+    Output: one
 
----
-Test case: Counting
+    Repeat:
+      Output: done
+      until: done
 
-Output: 1
+  Counting:
 
-Repeat:
-  Append: 1
-  until: 10
+    Output: 1
 
----
-Test case: Append output
+    Repeat:
+      Append: 1
+      until: 10
 
-Output: one
+  Append output:
 
-Repeat:
-  Output: ${output} one
-  until:
-    item: ${output}
-    equals: one one one
+    Output: one
 
-Expected output: one one one
+    Repeat:
+      Output: ${output} one
+      until:
+        item: ${output}
+        equals: one one one
 
----
-Test case: Repeat checks a list result
+    Expected output: one one one
 
-Output: one
+  Repeat checks a list result:
 
-Repeat:
-  Do:
-    - Output: one
-    - Output: two
-  until: [ one, two ]
+    Output: one
+
+    Repeat:
+      Do:
+        - Output: one
+        - Output: two
+      until: [ one, two ]

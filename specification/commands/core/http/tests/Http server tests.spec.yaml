@@ -1,37 +1,38 @@
-Test case: Start and stop server
+Tests:
 
-Http server:
-  port: 25001
-  endpoints:
-    /hello:
-      get:
-        output: Hello
+  Start and stop server:
 
-GET: http://localhost:25001/hello
+    Do:
+      - Http server:
+          port: 25001
+          endpoints:
+            /hello:
+              get:
+                output: Hello
 
-Expected output: Hello
+      - GET: http://localhost:25001/hello
 
----
-Http server:
-  port: 25001
-  stop: true
+      - Expected output: Hello
 
----
-Test case: Endpoint with script output
+      - Http server:
+          port: 25001
+          stop: true
 
-Http server:
-  port: 25001
-  endpoints:
-    /hello:
-      get:
-        script:
-          Output: Hello again
+  Endpoint with script output:
 
-GET: http://localhost:25001/hello
+    Do:
+      - Http server:
+          port: 25001
+          endpoints:
+            /hello:
+              get:
+                script:
+                  Output: Hello again
 
-Expected output: Hello again
+      - GET: http://localhost:25001/hello
 
----
-Http server:
-  port: 25001
-  stop: true
+      - Expected output: Hello again
+
+      - Http server:
+          port: 25001
+          stop: true

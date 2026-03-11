@@ -22,6 +22,11 @@ import kotlin.io.path.name
 
 object HttpServer : CommandHandler("Http server", "core/http"), ObjectHandler, DelayedResolver {
 
+    init {
+        // Avoid NoClassDefFoundError from Ktor's shutdown hook when the JVM exits via Ctrl+C
+        System.setProperty("io.ktor.server.engine.ShutdownHook", "false")
+    }
+
     // Active servers
     private val servers = mutableMapOf<Int, HttpServerInstance>()
 
@@ -43,8 +48,7 @@ object HttpServer : CommandHandler("Http server", "core/http"), ObjectHandler, D
 
     fun stop(port: Int) {
         println("Stopping SpecScript Http Server on port $port")
-        // Immediate shutdown (no graceful delay) for fast test cycles
-        servers.remove(port)?.stop(0, 0)
+        servers.remove(port)?.stop(100, 200)
     }
 
     private fun addHandler(port: Int, rawPath: String, data: EndpointData, context: ScriptContext) {
@@ -54,7 +58,7 @@ object HttpServer : CommandHandler("Http server", "core/http"), ObjectHandler, D
             embeddedServer(Netty, port = port) { }.also { it.start(wait = false) }
         }
 
-        // Normalize Javalin style ":id" into Ktor style "{id}" so existing specs continue to work.
+        // Normalize ":id" path parameters into Ktor style "{id}"
         val normalizedPath = normalizePath(rawPath)
         val pathParamNames = extractPathParamNames(normalizedPath)
 
@@ -117,7 +121,7 @@ private suspend fun handleRequest(
 private fun ScriptContext.addInputVariable(call: ApplicationCall, bodyText: String) {
     // Body takes precedence
     if (bodyText.isNotBlank()) {
-        variables[INPUT_VARIABLE] = runCatching { Json.mapper.readTree(bodyText) }.getOrElse { StringNode(bodyText) }
+        variables[INPUT_VARIABLE] = runCatching { Json.readTree(bodyText) }.getOrElse { StringNode(bodyText) }
         return
     }
     // Fallback to query parameters if present
@@ -156,7 +160,7 @@ private fun ApplicationCall.cookiesAsJson(): ObjectNode =
     Json.newObject(request.cookies.rawCookies)
 
 private fun String.toBodyJson(): JsonNode =
-    if (isBlank()) Json.newObject() else runCatching { Json.mapper.readTree(this) }.getOrElse { StringNode(this) }
+    if (isBlank()) Json.newObject() else runCatching { Json.readTree(this) }.getOrElse { StringNode(this) }
 
 
 private typealias HttpServerInstance = EmbeddedServer<NettyApplicationEngine, NettyApplicationEngine.Configuration>

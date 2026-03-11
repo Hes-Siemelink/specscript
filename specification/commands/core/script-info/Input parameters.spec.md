@@ -1,5 +1,8 @@
 # Command: Input parameters
 
+> [!WARNING]
+> `Input parameters` is deprecated. Use [Input schema](Input%20schema.spec.md) instead, which uses standard JSON Schema syntax.
+
 `Input parameters` contains the definitions of the input parameters for a script.
 
 | Content type | Supported |

@@ -1,29 +1,28 @@
-Test case: Read file from disk
+Tests:
 
-Read file: specification/commands/core/files/tests/content/plain.yaml
+  Read file from disk:
 
-Expected output:
-  loaded: true
+    Read file: specification/commands/core/files/tests/content/plain.yaml
 
----
-Test case: Read file relative to script
+    Expected output:
+      loaded: true
 
-Read file:
-  resource: content/plain.yaml
+  Read file relative to script:
 
-Expected output:
-  loaded: true
+    Read file:
+      resource: content/plain.yaml
 
----
-Test case: Read file with variable syntax and multiple documents
+    Expected output:
+      loaded: true
 
-Read file: specification/commands/core/files/tests/content/multiple documents.yaml
-${raw}: ${output}
+  Read file with variable syntax and multiple documents:
 
-Assert that:
-  item:
-    test: true
-    something: else
-  in:
-    ${output}
+    Read file: specification/commands/core/files/tests/content/multiple documents.yaml
+    ${raw}: ${output}
 
+    Assert that:
+      item:
+        test: true
+        something: else
+      in:
+        ${output}

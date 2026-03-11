@@ -6,7 +6,7 @@ repository.
 ## Project Overview
 
 SpecScript is a Kotlin-based tool for creating human and AI-friendly specifications using Markdown and YAML. It provides
-a CLI tool called `cli` that can execute `.spec.yaml` script files containing YAML specifications for HTTP requests,
+a CLI tool called `spec` that can execute `.spec.yaml` script files containing YAML specifications for HTTP requests,
 user interaction, testing, and more.
 
 ## Build and Development Commands
@@ -21,7 +21,7 @@ user interaction, testing, and more.
 
 ```bash
 ./gradlew test                    # Unit tests
-./gradlew specificationTest       # Specification tests (392 tests)
+./gradlew specificationTest       # Specification tests (440+ tests)
 ./gradlew check                   # All tests including specification tests
 ```
 
@@ -101,7 +101,7 @@ SpecScript implements server patterns for both MCP and HTTP servers with similar
 
 - Registry keyed by `port` (integer)
 - Schema: `port`, `endpoints` with method handlers
-- Uses Javalin for HTTP handling
+- Uses Ktor with Netty for HTTP handling
 - Lifecycle: separate stop command by port
 
 **Server Alignment Opportunities:**
@@ -127,20 +127,6 @@ SpecScript implements server patterns for both MCP and HTTP servers with similar
 - Use explicit start/stop commands: `Start mcp server` / `Stop mcp server`
 - NOT integrated into test framework automatic lifecycle
 - This provides better control and explicit resource management
-- Example test pattern:
-
-```yaml
-Test case: MCP operation
-  setup:
-    Start mcp server:
-      name: test-server
-      tools: { ... }
-  test:
-  # Test operations
-  cleanup:
-    Stop mcp server:
-      name: test-server
-```
 
 **MCP Backlog System Patterns:**
 
@@ -162,7 +148,7 @@ Test case: MCP operation
 
 - **Unit Tests**: `src/tests/unit/` - Traditional unit tests
 - **Specification Tests**: `src/tests/specification/` - Tests that validate the SpecScript language specifications
-    - All 392 specification tests run executable documentation
+    - All 440+ specification tests run executable documentation
     - Uses Jackson dependencies for JSON processing in tests
 
 ### Documentation and Specifications
@@ -180,8 +166,7 @@ All documentation includes runnable code examples that are executed as part of t
 
 - **Kotlin 2.1.20** with JVM target 21
 - **Jackson** for JSON/YAML processing
-- **Ktor** for HTTP client functionality
-- **Javalin** for HTTP server capabilities
+- **Ktor** for HTTP client and server functionality
 - **JUnit 5 + Kotest** for testing
 - **Gradle** with Kotlin DSL for build management
 
@@ -212,66 +197,29 @@ All documentation includes runnable code examples that are executed as part of t
 - Two JAR artifacts are built: thin (531KB) and fat (36MB) for different deployment scenarios
 - Run the tests before creating a commit
 
-## Strategic Planning and Development Approach
+## Planning and refactoring
 
-### Spec-First Development Philosophy
-
-SpecScript follows a **spec-first development methodology**:
-
-1. **Always write specifications first** - Define behavior in SpecScript YAML/Markdown format
-2. **Analyze existing patterns** - Study current Kotlin implementation before proposing solutions
-3. **Create detailed plans** - Document approach, phases, and integration considerations in `/plan` directory
-4. **Implement incrementally** - Build based on specification, validating against existing patterns
-
-### Planning Documents Structure
-
-- **Focused Plans**: Single-responsibility plans like `mcp-backlog-focused-plan.md`
-- **Future Work Plans**: Separate plans for dependent work like `server-alignment-future-plan.md`
-- **Learning Integration**: Document insights and lessons learned for future reference
-- **Phase-based Implementation**: Clear phases with dependencies and success criteria
-
-### Key Planning Principles
-
-- **Scope Discipline**: Separate immediate needs from future architectural work
-- **Learning-Based**: Build on insights from current implementations
-- **Backward Compatibility**: Maintain existing functionality while adding new capabilities
-- **Risk Mitigation**: Identify technical and implementation risks with mitigation strategies
-
-## Major Refactoring Plans
-
-- **Library Architecture Refactoring**: See `plan/specscript-to-specscript-library-refactoring.md`
-- **MCP Backlog System**: See `plan/mcp-backlog-focused-plan.md` (immediate focus)
-- **Server Alignment**: See `plan/server-alignment-future-plan.md` (future work)
-- Goal: Transform SpecScript into a library that specscript depends on
-- Will enable separation of core engine from CLI-specific implementations
-- Planned multi-repository development setup for easier cross-repo work
-
-## Refactoring Rules & Guidelines
-
-- When refactoring, follow a multi-phase approach, ensuring each phase is completed and tested before proceeding.
-- During refactoring, the AI assistant should read the log file (`.claude/log.txt`) to understand the current state and
-  continue from where it left off.
-- When providing options during refactoring, clearly state the options and the decision made. In the case of dependency
-  management, prefer using thin JARs and let Gradle handle transitive dependencies (Option 1).
-- After removing implementation directories during refactoring, update the build configuration to depend on the new
-  library, create a minimal CLI bootstrap, and test the setup.
-- When working in a git-controlled directory (e.g., a dedicated branch for refactoring), avoid creating unnecessary
-  backup files, as git serves as the backup system.
-- When refactoring and there is a naming conflict (e.g., main functions in different projects), rename one of the
-  conflicting elements to resolve the conflict.
+- Plans live in `/plan` directory. Key plans: `specscript-to-specscript-library-refactoring.md`,
+  `mcp-backlog-focused-plan.md`, `server-alignment-future-plan.md`.
+- When refactoring, follow a multi-phase approach. Complete and test each phase before proceeding.
+- Always run `./gradlew specificationTest` before committing — the specs ARE the tests.
+- Prefer thin JARs with Gradle-managed transitive dependencies over fat JARs for library consumption.
+- Git is the backup system — don't create backup files in a git-controlled directory.
 
 ## Git commit rules
 
 When committing changes to the project, follow these rules:
 
+- **Always ask for confirmation before committing.** Do not commit autonomously.
 - Use: `git commit -m "Summary" -m "content"`
 - Summary:
     - Must not exceed 70 characters.
     - Write the summary as a user-focused release note item, describing the functional change or improvement from the
       perspective of a non-developer stakeholder.
     - Avoid technical or code-centric language in the summary; save those details for the content/body.
-    - If a new feature is added, start the summary with the 💫 emoji.
-    - For non-functional updates (refactoring, documentation, bug fixes, etc.), do not use any emoji.
+    - If a new feature is added, start the summary with the 💫 emoji. The 💫 entries tell the story at a glance.
+    - For non-functional updates (refactoring, documentation, etc.), do not use any emoji.
+    - For bug fixes, use exactly: `Bug fix` as the summary.
     - For invasive code structure changes without functional updates, use exactly: `Refactoring` as the summary.
     - For documentation updates, use exactly: `Documentation` as the summary.
     - For code cleanups (removing unused code, imports, fixing linter warnings, etc. without invasive refactoring), use
@@ -285,191 +233,135 @@ When committing changes to the project, follow these rules:
     - Do not mention test status unless there are failing tests requiring attention
     - If the code was generated by LLM, you may add the 🤖 emoji and the name of the agent in the content
 
-## SpecScript Documentation and Testing Philosophy
+## SpecScript documentation and testing philosophy
 
-**Key Learning**: SpecScript documentation IS the test suite. Every code example in specification documents literally
-executes during tests.
+SpecScript documentation IS the test suite. Every code example in specification documents executes during
+`./gradlew specificationTest`. You cannot lie in documentation — if you write it, it must work or tests fail.
 
-**CRITICAL**: The files in `specification/language/` are the authoritative reference for writing effective SpecScript.
-These documents define the canonical patterns and must be consulted before writing any specification documents. Key
-references:
+The files in `specification/language/` are the authoritative reference for SpecScript syntax:
 
-- `SpecScript Yaml Scripts.spec.md` - Core language syntax and command usage
-- `SpecScript Markdown Documents.spec.md` - Defines proper structure for spec files including hidden cleanup code
-- `Organizing SpecScript files in directories.spec.md` - File organization patterns
-- Other language specifications provide the authoritative guidance for SpecScript syntax and structure
+- `SpecScript Yaml Scripts.spec.md` — core language syntax and command usage
+- `SpecScript Markdown Documents.spec.md` — proper structure for spec files including hidden setup/cleanup
+- `Organizing SpecScript files in directories.spec.md` — file organization patterns
 
-### Code Block Types in SpecScript Docs:
+### Code block types
 
-- ````yaml specscript` - **EXECUTABLE**: Runs as actual tests during the gradle specificationTest
-- ````yaml` - **ILLUSTRATIVE**: Shows syntax without execution (for invalid/example code)
-- ````yaml file=filename.spec.yaml` - **FILE CREATION**: Creates temporary files during test execution
+- ````yaml specscript` — **EXECUTABLE**: runs as tests during `specificationTest`
+- ````yaml` — **ILLUSTRATIVE**: shows syntax without execution
+- ````yaml file=filename.spec.yaml` — **FILE CREATION**: creates temporary files during test execution
+- `<!-- yaml specscript -->` — **HIDDEN EXECUTABLE**: runs but not rendered in docs (setup/cleanup)
 
-### Critical Rules for SpecScript Documentation:
+### Rules for specification documents
 
-1. **All `yaml specscript` blocks must be valid, working code** - they execute during tests
-2. **Use `localhost:2525` endpoints** - sample-server.spec.yaml runs automatically during tests providing real HTTP
-   endpoints
-3. **Invalid examples must use plain `yaml`** - never `yaml specscript` for broken/incorrect code
-4. **You cannot lie in documentation** - if you write it, it must work or tests fail
-5. **Docs stay current automatically** - because they're executable, they can't become outdated
-6. **Use sentence case for section titles** - e.g., "Reading temp files created in Markdown", not "Reading Temp Files
-   Created In Markdown"
-7. **Multiple commands require `---` separators** - YAML doesn't allow duplicate keys, so use `---` between commands or
-   list syntax for repetition
+1. All `yaml specscript` blocks must be valid, working code
+2. Use `localhost:2525` endpoints — `sample-server.spec.yaml` runs automatically during tests
+3. Invalid examples must use plain `yaml`, never `yaml specscript`
+4. Use sentence case for section titles
+5. Multiple commands in one block require `---` separators (YAML duplicate key constraint)
+6. Always run `./gradlew specificationTest` before committing
 
-### Sample Server Endpoints (available during tests):
+### Sample server endpoints (available during tests)
 
-- `POST /greeting` - accepts `name` and `language`, returns formatted greeting
-- `GET /items` - returns `[1, 2, 3]`
-- `POST /items` - echoes back input as `Fields: ${input}`
-- `GET /hello` - returns `"Hello from SpecScript!"`
+- `POST /greeting` — accepts `name` and `language`, returns formatted greeting
+- `GET /items` — returns `[1, 2, 3]`
+- `POST /items` — echoes back input as `Fields: ${input}`
+- `GET /hello` — returns `"Hello from SpecScript!"`
 
-### Documentation Development Pattern:
+### File extension rules
 
-1. Write specification with executable examples
-2. Run `./gradlew specificationTest`
-3. If tests fail, your documentation is wrong - fix it
-4. This is **spec-driven development** - documentation validates behavior
+- **`.spec.md`**: Executable documentation with `yaml specscript` blocks
+- **`.spec.yaml`**: Pure SpecScript YAML scripts
+- Never use `yaml file=filename.spec.yaml` as a substitute for executable code in `.spec.md` files
 
-**This is the magic of SpecScript**: Documentation that can't lie because it executes.
+## Spec-first development
 
-## Adding New SpecScript Commands: Complete Development Process
+Write the specification BEFORE implementing code. The spec defines the behavior; implementation follows.
 
-This section documents the complete process used to create the `Mcp tool` command, serving as a template for future
-command development.
+1. Write `.spec.md` with executable examples defining the desired behavior
+2. Optionally mock with `Output:` commands for early iteration
+3. Run `./gradlew specificationTest` — if tests fail, the spec is wrong
+4. Implement in Kotlin only when the spec is solid
+5. Iterate: change behavior by changing the spec first
 
-### Phase 1: User-Centered Specification Writing
+## Adding new commands
 
-1. **Write basic use case**: Start with the simplest, most natural way a user would want to use the command
-2. **Create declarative examples**: Focus on *what* the user wants to achieve, not *how* it works internally
-3. **Build specification document**: Write `.spec.md` with realistic examples that make intuitive sense
-4. **Expand use cases**: Add more complex scenarios, edge cases, and variations based on natural usage patterns
-5. **Validate readability**: Ensure the specification reads clearly and demonstrates obvious value to users
+### Phase 1: Specification
 
-### Phase 2: Technical Design
+1. Start with the simplest, most natural way a user would express their intent
+2. Write `.spec.md` with realistic, declarative examples
+3. Expand to cover edge cases and complex scenarios
 
-1. **Study existing patterns**: Examine similar commands (e.g., `Mcp server`) for structural consistency
-2. **Design YAML structure**: Determine content type support (Value/List/Object) based on specification examples
-3. **Create JSON schema**: Define `schema/CommandName.schema.yaml` following established patterns
-4. **Refine specification structure**: Apply `SpecScript Markdown Documents.spec.md` patterns for proper execution
+### Phase 2: Technical design
 
-### Phase 3: Kotlin Implementation
+1. Study similar commands for structural consistency
+2. Design YAML structure and determine content type support (Value/List/Object)
+3. Create `schema/CommandName.schema.yaml`
 
-1. **Create command handler**: Implement `CommandHandler` extending appropriate interfaces (`ObjectHandler`,
-   `DelayedResolver`)
-2. **Design data classes**: Reuse existing classes where possible (good OO/encapsulation principle)
-3. **Implement business logic**: Focus on core functionality, delegate to existing utility methods
-4. **Add to CommandLibrary**: Register the new command in the centralized command registry
-5. **Handle shared concerns**: Utilize existing patterns for context management, server registries, etc.
+### Phase 3: Kotlin implementation
 
-### Phase 4: Integration and Testing
+1. Create a `CommandHandler` singleton, implementing `ObjectHandler`, `DelayedResolver`, etc. as needed
+2. Reuse existing classes and utilities — good OO/encapsulation
+3. Register in `CommandLibrary.kt`
+4. Use `ScriptContext.session` for cross-command state when appropriate
 
-1. **Build and test**: Use `./gradlew build fatJar -x test -x specificationTest` for rapid iteration
-2. **Validate specification**: Run individual spec files to verify examples work correctly
-3. **Full test suite**: Execute `./gradlew build` to ensure all tests pass
-4. **Refactor based on feedback**: Apply architectural improvements (encapsulation, code reuse)
+### Phase 4: Testing
 
-### Key Architectural Decisions Made
+1. Rapid iteration: `./gradlew build fatJar -x test -x specificationTest`
+2. Validate individual spec: `spec your-spec.spec.md`
+3. Full suite: `./gradlew specificationTest`
 
-- **Data structure reuse**: Modified existing `ToolInfo` class rather than creating duplicates
-- **Context management**: Added utility functions to `McpServer` for session state encapsulation
-- **YAML structure evolution**: Evolved from individual tool definitions to map-based structure for consistency
-- **Proper spec structure**: Separate YAML blocks, descriptive text flow, hidden cleanup code
+## Input handling architecture
 
-### Critical Patterns for Future Commands
+SpecScript has two commands for defining script input: `Input parameters` (legacy) and `Input schema` (recommended).
+Both populate the `${input}` variable identically.
 
-- **User-first specification**: Start with how users naturally want to express their intent, not technical constraints
-- **Declarative examples**: Focus on *what* users want to achieve, making the command's purpose immediately clear
-- **Specification-driven design**: The readability and intuitiveness of the specification drives all technical decisions
-- **Good OO/encapsulation**: Create utility functions in parent classes to reduce client code complexity
-- **Structural consistency**: Follow existing command patterns only after the user experience is well-defined
-- **Test-driven validation**: Every code example in specifications must execute successfully
-- **Context sharing**: Use `ScriptContext.session` for cross-command state when appropriate
+### Input schema (preferred for new scripts)
 
-### Why Specification-First Matters
+- Uses standard JSON Schema syntax (`type: object`, `properties`, `required`)
+- Implemented in `InputSchema.kt` — implements `ObjectHandler` + `DelayedResolver`
+- Converts JSON Schema `properties` into `ParameterData` objects, then delegates to
+  `InputParameters.populateInputVariables()` for resolution
+- Only a narrow JSON Schema subset is supported: `description`, `default`, `enum`, `type` (informational),
+  `condition` (SpecScript extension) per property; `type`, `properties`, `required` at top level
+- `ParameterData.schema.yaml` is shared between both commands via `$ref`
 
-Implementation-first approaches often result in:
+### Variable resolution priority
 
-- Awkward, technical-sounding command structures
-- Documentation that's hard to write because the design is unintuitive
-- Commands that feel like programming rather than declaring intent
-- Complex examples that obscure the command's value
+`populateInputVariables()` resolves each property in order: existing value → default → recorded test answer →
+interactive prompt → `MissingInputException`.
 
-Specification-first ensures:
+### `DelayedResolver` interface
 
-- Natural, declarative command usage that reads like human intent
-- Documentation that flows logically and demonstrates clear value
-- Implementation that serves user needs rather than technical convenience
-- Commands that feel like configuration rather than code
+Commands implementing `DelayedResolver` receive raw YAML data without variable expansion. The command handles
+`${variable}` resolution itself. Both `InputParameters` and `InputSchema` use this because property definitions may
+contain variable references (e.g., `condition: { item: ${input.switch} }`).
 
-This process ensures new commands integrate seamlessly with the existing SpecScript ecosystem while maintaining
-consistency and testability.
+### Script metadata extraction
 
-## Spec-First Development Philosophy
+`Script.getScriptInfo()` scans command lists for both `Input parameters` and `Input schema` to extract metadata for CLI
+`--help`, MCP tool schema derivation, and test scaffolding.
 
-SpecScript enables true **specification-driven development** where the specification IS the implementation:
+**Important**: `ScriptInfoData` does not preserve the `required` array — `deriveInputSchema()` in `McpServer.kt`
+reads raw command data from `Script.commands` instead.
 
-### Core Principles
+### MCP tool schema derivation
 
-1. **Write the spec first** - Define how the system should work in `.spec.md` files with executable examples
-2. **Implement in SpecScript** - Use pure SpecScript (YAML) before writing any Kotlin/Java code
-3. **Mock with `Output` commands** - Use `Output:` to return mock data that demonstrates the intended behavior
-4. **Iterate on the specification** - Test and refine the spec until it perfectly describes the desired system
-5. **Only then implement in code** - Convert SpecScript implementations to optimized code when needed
+When an MCP tool references a script file and has no explicit `inputSchema`, `McpServer.deriveInputSchema()` loads the
+script and extracts its `Input schema` (falling back to `Input parameters`). This eliminates schema duplication between
+script input definitions and MCP tool definitions.
 
-### Development Workflow
+### Two independent validation systems
 
-1. **Create specification**: Write `.spec.md` with complete documentation and examples
-2. **Implement in SpecScript**: Create `.spec.yaml` files with mock implementations using `Output` commands
-3. **Test the specification**: Run `cli your-spec.spec.md` to validate syntax and behavior
-4. **Iterate and refine**: Adjust the specification based on testing and feedback
-5. **Replace mocks gradually**: Convert mock `Output` commands to real implementations when needed
+1. **JSON Schema validation** (networknt library) — validates command YAML structure against `schema/*.schema.yaml`
+2. **SpecScript type system** (`TypeRegistry`/`TypeSpecification`) — runtime type checking for variables
 
-### Benefits
+These systems do not interact.
 
-- **Immediate feedback**: Specifications are executable from day one
-- **Clear requirements**: The spec defines exactly how the system should behave
-- **No implementation-spec drift**: The spec IS a working implementation
-- **Faster iteration**: Changes to behavior start with changing the spec
-- **Better collaboration**: Non-technical stakeholders can understand and run the specs
+## Sensitive areas
 
-### Example: MCP Server Development
-
-```markdown
-1. Write `mcp-server.spec.md` with complete MCP tool definitions using `yaml specscript` blocks
-2. Implement tools with `script: Output: { mock: "data" }`
-3. Test with `cli mcp-server.spec.md`
-4. Iterate on tool schemas and responses
-5. Replace `Output` with real logic when spec is solid
-```
-
-### Critical File Extension Rules
-
-- **`.spec.md`**: Executable SpecScript documentation with ````yaml specscript` blocks
-- **`.spec.yaml`**: Pure SpecScript YAML files
-- **NEVER use**: ````yaml file=filename.spec.yaml` in executable documentation - this creates temp files, not executable
-  code
-
-### Common Mistakes to Avoid
-
-1. **Wrong Block Type**: Using ````yaml file=` instead of ````yaml specscript` in `.spec.md` files
-2. **Eager Commits**: Always run `./gradlew specificationTest` before committing - we are spec-driven!
-3. **Wrong Commit Messages**:
-    - Use "Bug fix" for actual bugs
-    - Use functional change descriptions for user-facing changes
-    - Use change emoji (💫) for new features
-    - Use warning triangle (⚠️) for breaking changes
-    - Do not mention test results unless tests are failing
-    - Example: "💫⚠️ Changed Markdown extension from 'cli.md' to 'spec.md'"
-
-## Documentation Style Guidelines
-
-### Markdown Headers
-
-- **Never use emojis in Markdown headers** (e.g., avoid `## 🔄 Features`)
-- Keep headers clean and professional with text only
-- Emojis can be used in content, but not in section titles
+- **`samples/basic/` directory**: Adding or removing files here breaks 3 spec files that hardcode directory listing
+  output (`Organizing SpecScript files in directories.spec.md`, `Command line options.spec.md`, `Cli.spec.md`). Update
+  those specs if you modify the directory contents.
 
 ## AI Assistant Response Style
 

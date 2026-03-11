@@ -3,42 +3,36 @@ $schema: https://json-schema.org/draft/2020-12/schema
 type: object
 properties:
   server:
-    oneOf:
-      - type: object
-        properties:
-          type:
-            type: string
-            enum: [ internal, stdio, http, sse ]
-            description: Transport type
-          server:
-            type: string
-            description: Name of the MCP server to connect to
-          command:
-            type: string
-            description: Command and arguments to spawn MCP server process
-          url:
-            type: string
-            description: Http address of the MCP server
-          headers:
-            type: object
-            description: Additional HTTP headers to include in requests
-          token:
-            type: string
-            description: Authentication token for the MCP server
-          args:
-            type: array
-            items:
-              type: string
-            description: Additional arguments for the process
-        required: [ type ]
-        additionalProperties: false
+    type: object
+    properties:
+      transport:
+        type: string
+        enum: [ STDIO, HTTP, SSE ]
+      server:
+        type: string
+        description: Name of the MCP server to connect to
+      command:
+        type: string
+        description: Command to spawn MCP server process (STDIO transport)
+      url:
+        type: string
+        description: HTTP address of the MCP server
+      headers:
+        type: object
+        additionalProperties:
+          type: string
+        description: Additional HTTP headers to include in requests
+      token:
+        type: string
+        description: Authentication token for the MCP server
+    additionalProperties: false
   tool:
     type: string
     description: Name of the tool to execute
   input:
     type: object
     description: Arguments to pass to the tool
-  additionalProperties: false
 required:
   - server
   - tool
+additionalProperties: false

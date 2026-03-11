@@ -1,12 +1,13 @@
-Test case: Base64 encode
+Tests:
 
-Base64 encode: Hello world!
+  Base64 encode:
 
-Expected output: SGVsbG8gd29ybGQh
+    Base64 encode: Hello world!
 
----
-Test case: Base64 decode
+    Expected output: SGVsbG8gd29ybGQh
 
-Base64 decode: SGVsbG8gd29ybGQh
+  Base64 decode:
 
-Expected output: Hello world!
+    Base64 decode: SGVsbG8gd29ybGQh
+
+    Expected output: Hello world!

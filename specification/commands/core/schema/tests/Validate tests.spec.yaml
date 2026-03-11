@@ -1,22 +1,23 @@
-Test case: Validation with external schema
+Tests:
 
-Validate schema:
-  data: Hello world
-  schema: string.schema.json
+  Validation with external schema:
 
-On error:
-  Print: ${error}
-  Output: invalid data
+    Validate schema:
+      data: Hello world
+      schema: string.schema.json
 
----
-Test case: Validation with external schema -- failure
+    On error:
+      Print: ${error}
+      Output: invalid data
 
-Validate schema:
-  data: Hello world
-  schema: object.schema.json
+  Validation with external schema -- failure:
 
-On error:
-  Print: ${error}
-  Output: invalid data
+    Validate schema:
+      data: Hello world
+      schema: object.schema.json
 
-Expected output: invalid data
+    On error:
+      Print: ${error}
+      Output: invalid data
+
+    Expected output: invalid data

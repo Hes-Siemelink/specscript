@@ -1,70 +1,69 @@
-Test case: Get multiple variables with Prompt object
+Tests:
 
-Answers:
-  Value 1: 1
-  Value 2: 2
+  Get multiple variables with Prompt object:
 
-Prompt object:
-  one: Value 1
-  two: Value 2
+    Answers:
+      Value 1: 1
+      Value 2: 2
 
-Expected output:
-  one: 1
-  two: 2
+    Prompt object:
+      one: Value 1
+      two: Value 2
 
----
-Test case: Prompt object, with conditions
+    Expected output:
+      one: 1
+      two: 2
 
-Answers:
-  Choose which variable to set: a
-  Value for a: a is set
-  Value for b: b is set
+  Prompt object, with conditions:
 
-Prompt object:
+    Answers:
+      Choose which variable to set: a
+      Value for a: a is set
+      Value for b: b is set
 
-  switch: Choose which variable to set
+    Prompt object:
 
-  a:
-    description: Value for a
-    condition:
-      item: ${switch}
-      equals: a
+      switch: Choose which variable to set
 
-  b:
-    description: Value for b
-    condition:
-      item: ${switch}
-      equals: b
+      a:
+        description: Value for a
+        condition:
+          item: ${switch}
+          equals: a
 
-Expected output:
-  switch: a
-  a: a is set
+      b:
+        description: Value for b
+        condition:
+          item: ${switch}
+          equals: b
 
----
-Test case: Boolean choice
+    Expected output:
+      switch: a
+      a: a is set
 
-Answers:
-  Enabled: "true"
+  Boolean choice:
 
-Prompt object:
-  enabled:
-    description: Enabled
-    enum:
-      - true
-      - false
+    Answers:
+      Enabled: "true"
 
-Expected output:
-  enabled: true
+    Prompt object:
+      enabled:
+        description: Enabled
+        enum:
+          - true
+          - false
 
----
-Test case: Use field name for prompt if there is no description
+    Expected output:
+      enabled: true
 
-Answers:
-  name: Alice
+  Use field name for prompt if there is no description:
 
-Prompt object:
-  name:
-    type: string
+    Answers:
+      name: Alice
 
-Expected output:
-  name: Alice
+    Prompt object:
+      name:
+        type: string
+
+    Expected output:
+      name: Alice

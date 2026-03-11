@@ -1,111 +1,108 @@
-Test case: Simple DB
+Tests:
 
-Shell: rm -f out/sample.db
+  Simple DB:
 
-SQLite:
-  file: out/sample.db
-  update:
-    - create table users (id integer primary key, name text)
-    - insert into users (name) values ('Alice')
-  query: select * from users
+    Shell: rm -f out/sample.db
 
-Expected output:
-  - id: 1
-    name: Alice
+    SQLite:
+      file: out/sample.db
+      update:
+        - create table users (id integer primary key, name text)
+        - insert into users (name) values ('Alice')
+      query: select * from users
 
----
-Test case: Simple DB with query
+    Expected output:
+      - id: 1
+        name: Alice
 
-Shell: rm -f out/sample.db
+  Simple DB with query:
 
-SQLite:
-  file: out/sample.db
-  update:
-    - create table users (id integer primary key, name text, age integer)
-    - insert into users (name, age) values ('Alice', 16)
-    - insert into users (name, age) values ('Bob', 17)
-    - insert into users (name, age ) values ('Charlie', 18)
-  query: select name, age from users where age < 18
+    Shell: rm -f out/sample.db
 
-Expected output:
-  - name: Alice
-    age: 16
-  - name: Bob
-    age: 17
+    SQLite:
+      file: out/sample.db
+      update:
+        - create table users (id integer primary key, name text, age integer)
+        - insert into users (name, age) values ('Alice', 16)
+        - insert into users (name, age) values ('Bob', 17)
+        - insert into users (name, age ) values ('Charlie', 18)
+      query: select name, age from users where age < 18
 
+    Expected output:
+      - name: Alice
+        age: 16
+      - name: Bob
+        age: 17
 
----
-Test case: Create JSON DB
+  Create JSON DB:
 
-Shell: rm -f out/json_sample.db
+    Shell: rm -f out/json_sample.db
 
-Json:
-  - greeting: Hello
-    language: English
-  - greeting: Hola
-    language: Spanish
-As: ${data}
-
-SQLite:
-  file: out/json_sample.db
-  update:
-    - create table json_data (id integer primary key, data TEXT)
-    - insert into json_data (data) values (json('${data}'))
-  query: select json(data) as data from json_data
-
-Expected output:
-  - data:
+    Json:
       - greeting: Hello
         language: English
       - greeting: Hola
         language: Spanish
+    As: ${data}
 
----
-Test case: Query multiple JSON entries
+    SQLite:
+      file: out/json_sample.db
+      update:
+        - create table json_data (id integer primary key, data TEXT)
+        - insert into json_data (data) values (json('${data}'))
+      query: select json(data) as data from json_data
 
-Shell: rm -f out/json_sample.db
+    Expected output:
+      - data:
+          - greeting: Hello
+            language: English
+          - greeting: Hola
+            language: Spanish
 
-Json:
-  - greeting: Hello
-    language: English
-  - greeting: Hola
-    language: Spanish
-As: ${data}
+  Query multiple JSON entries:
 
-SQLite:
-  file: out/json_sample.db
-  update:
-    - create table json_data (id integer primary key, data TEXT)
-    - insert into json_data (data) values (json('${data}'))
-    - insert into json_data (data) values (json('${data}'))
-  query: select json(data) as data from json_data
+    Shell: rm -f out/json_sample.db
 
-Expected output:
-  - data:
+    Json:
       - greeting: Hello
         language: English
       - greeting: Hola
         language: Spanish
-  - data:
-      - greeting: Hello
-        language: English
-      - greeting: Hola
-        language: Spanish
+    As: ${data}
 
----
-Test case: JSON / YAML conversion
+    SQLite:
+      file: out/json_sample.db
+      update:
+        - create table json_data (id integer primary key, data TEXT)
+        - insert into json_data (data) values (json('${data}'))
+        - insert into json_data (data) values (json('${data}'))
+      query: select json(data) as data from json_data
 
-Shell: rm -f out/sample.db
+    Expected output:
+      - data:
+          - greeting: Hello
+            language: English
+          - greeting: Hola
+            language: Spanish
+      - data:
+          - greeting: Hello
+            language: English
+          - greeting: Hola
+            language: Spanish
 
-SQLite:
-  file: out/sample.db
-  update:
-    - create table data (id integer primary key, json text)
-    - "insert into data (json) values ('{\"hello\": \"world\"}')"
-    - "insert into data (json) values ('one: two: three')"
-  query: select json from data
+  JSON / YAML conversion:
 
-Expected output:
-  - json:
-      hello: world
-  - json: "one: two: three"
+    Shell: rm -f out/sample.db
+
+    SQLite:
+      file: out/sample.db
+      update:
+        - create table data (id integer primary key, json text)
+        - "insert into data (json) values ('{\"hello\": \"world\"}')"
+        - "insert into data (json) values ('one: two: three')"
+      query: select json from data
+
+    Expected output:
+      - json:
+          hello: world
+      - json: "one: two: three"

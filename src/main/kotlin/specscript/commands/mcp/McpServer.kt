@@ -1,19 +1,18 @@
 package specscript.commands.mcp
 
+import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.routing.*
 import io.ktor.server.sse.*
-import io.ktor.utils.io.streams.*
-import io.modelcontextprotocol.kotlin.sdk.*
-import io.modelcontextprotocol.kotlin.sdk.server.Server
-import io.modelcontextprotocol.kotlin.sdk.server.ServerOptions
-import io.modelcontextprotocol.kotlin.sdk.server.StdioServerTransport
-import io.modelcontextprotocol.kotlin.sdk.server.mcp
+import io.modelcontextprotocol.kotlin.sdk.server.*
+import io.modelcontextprotocol.kotlin.sdk.types.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.runBlocking
 import kotlinx.io.asSink
+import kotlinx.io.asSource
 import kotlinx.io.buffered
 import specscript.files.FileContext
 import specscript.files.SpecScriptFile
@@ -25,6 +24,11 @@ import tools.jackson.databind.node.StringNode
 import kotlin.concurrent.thread
 
 object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, DelayedResolver {
+
+    init {
+        // Avoid NoClassDefFoundError from Ktor's shutdown hook when the JVM exits via Ctrl+C
+        System.setProperty("io.ktor.server.engine.ShutdownHook", "false")
+    }
 
     private const val DEFAULT_MCP_SERVER = "mcp.server.default"
 
@@ -83,20 +87,20 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
     private fun startServer(info: McpServerInfo, server: Server) {
         when (info.transport) {
             TransportType.STDIO -> startStdioServer(info.name, server)
-            TransportType.HTTP, TransportType.SSE -> startHttpServer(info, server)
+            TransportType.SSE -> startSseServer(info, server)
+            TransportType.HTTP -> startStreamableHttpServer(info, server)
         }
     }
 
     private fun startStdioServer(name: String, server: Server) {
         val transport = StdioServerTransport(
-            System.`in`.asInput(),
+            System.`in`.asSource().buffered(),
             System.out.asSink().buffered()
         )
 
         thread(start = true, isDaemon = false, name = "MCP Server - $name") {
-            System.err.println("[${Thread.currentThread().name}] Starting stdio server ")
             runBlocking {
-                server.connect(transport)
+                server.createSession(transport)
 
                 val done = Job()
                 server.onClose {
@@ -104,42 +108,52 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
                 }
                 if (servers.contains(name)) {
                     done.join()
-                    System.err.println("[${Thread.currentThread().name}] Stopping stdio server ")
                 } else {
-                    System.err.println("[${Thread.currentThread().name}] Server stopped before it could start")
+                    System.err.println("MCP stdio server '$name' stopped before it could start")
                 }
             }
         }
     }
 
-    private fun startHttpServer(info: McpServerInfo, server: Server) {
-        val port = info.port ?: 8080
-        val path = info.path ?: "/"
+    private fun startSseServer(info: McpServerInfo, server: Server) {
 
-        thread(start = true, isDaemon = false, name = "MCP HTTP Server - ${info.name}") {
-            System.err.println("[${Thread.currentThread().name}] Starting HTTP server on port $port at path $path")
-
-            val ktorServer = embeddedServer(Netty, port = port) {
-                install(SSE)
-                routing {
-                    route(path) {
-                        mcp { server }
-                    }
-                }
+        val ktorServer = embeddedServer(Netty, port = info.port) {
+            install(SSE)
+            routing {
+                mcp("mcp") { server }  // Hardcoded to 'mcp' because mcpStreamableHttp() does so
             }
+        }
 
-            // Store HTTP server reference for shutdown
-            httpServers[info.name] = ktorServer
+        httpServers[info.name] = ktorServer
+        startAndKeepAlive(ktorServer, info.name)
 
+        println("Started MCP ${info.transport} server '${info.name}' on http://localhost:${info.port}/mcp")
+    }
+
+    private fun startStreamableHttpServer(info: McpServerInfo, server: Server) {
+
+        val ktorServer = embeddedServer(Netty, port = info.port) {
+            install(ContentNegotiation) {
+                json(McpJson)
+            }
+            mcpStreamableHttp { server }
+        }
+
+        httpServers[info.name] = ktorServer
+        startAndKeepAlive(ktorServer, info.name)
+
+        println("Started MCP ${info.transport} server '${info.name}' on http://localhost:${info.port}/mcp")
+    }
+
+    /** Starts the Ktor server synchronously (no race condition) then keeps the JVM alive with a non-daemon thread. */
+    private fun startAndKeepAlive(ktorServer: HttpMcpServer, name: String) {
+        ktorServer.start(wait = false)
+        thread(start = true, isDaemon = false, name = "MCP keep-alive - $name") {
             runBlocking {
-                try {
-                    ktorServer.start(wait = true)
-                    System.err.println("[${Thread.currentThread().name}] HTTP server stopped")
-                } catch (e: Exception) {
-                    System.err.println("[${Thread.currentThread().name}] HTTP server error: ${e.message}")
-                } finally {
-                    httpServers.remove(info.name)
-                }
+                val done = Job()
+                servers[name]?.onClose { done.complete() }
+                    ?: return@runBlocking
+                done.join()
             }
         }
     }
@@ -156,7 +170,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
 
         if (httpServer != null) {
             runBlocking {
-                httpServer.stop(0, 0)
+                httpServer.stop(100, 200)
             }
         }
     }
@@ -177,18 +191,20 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
 
     fun Server.addTool(toolName: String, tool: ToolInfo, localContext: ScriptContext) {
 
-        // TODO add support for required fields
+        println(" - Tool: $toolName")
+
+        val resolvedSchema = tool.inputSchema ?: deriveInputSchema(tool, localContext)
+
         addTool(
             toolName,
             tool.description,
-            inputSchema =
-                Tool.Input(
-                    properties = tool.inputSchema?.properties?.toKotlinx() ?: EmptyJsonObject,
-                    required = tool.inputSchema?.required ?: emptyList()
-                ),
+            inputSchema = ToolSchema(
+                properties = resolvedSchema?.properties?.toKotlinx() ?: EmptyJsonObject,
+                required = resolvedSchema?.required ?: emptyList()
+            ),
         ) { request ->
             // Set up context for the tool execution
-            localContext.variables[INPUT_VARIABLE] = request.arguments.toJackson()
+            localContext.variables[INPUT_VARIABLE] = request.arguments?.toJackson() ?: Json.newObject()
 
 
             // TODO handle lists
@@ -204,17 +220,41 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
                 }
 
                 // Process result
-                val output = result.toDisplayYaml()
+                val output = result.toDisplayJson()
                 CallToolResult(content = listOf(TextContent(output)))
             } catch (e: SpecScriptException) {
                 System.err.println("Tool '$toolName' execution error: ${e.message}")
-                e.printStackTrace()
                 CallToolResult(content = listOf(TextContent(e.toString())), isError = true)
             }
         }
     }
 
+    private fun deriveInputSchema(tool: ToolInfo, context: ScriptContext): InputSchema? {
+        if (tool.script !is StringNode) return null
+
+        val file = context.scriptDir.resolve(tool.script.textValue())
+        val scriptFile = SpecScriptFile(file)
+        val inputSchemaCommand = scriptFile.script.commands.find { it.name == "Input schema" }
+
+        if (inputSchemaCommand != null) {
+            return inputSchemaCommand.data.toDomainObject(InputSchema::class)
+        }
+
+        // Fall back to Input parameters
+        val inputParamsCommand = scriptFile.script.commands.find { it.name == "Input parameters" }
+        if (inputParamsCommand != null) {
+            val info = scriptFile.script.info
+            val propertiesNode = Json.mapper.valueToTree<ObjectNode>(info.input)
+            return InputSchema(properties = propertiesNode)
+        }
+
+        return null
+    }
+
     fun Server.addResource(resourceURI: String, resource: ResourceInfo, localContext: ScriptContext) {
+
+        println(" - Resource: $resourceURI")
+
         addResource(
             uri = resourceURI,
             name = resource.name,
@@ -233,13 +273,16 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
 
             ReadResourceResult(
                 contents = listOf(
-                    TextResourceContents(result.toDisplayYaml(), request.uri, resource.mimeType)
+                    TextResourceContents(result.toDisplayJson(), request.uri, resource.mimeType)
                 )
             )
         }
     }
 
     fun Server.addPrompt(promptName: String, prompt: PromptInfo, localContext: ScriptContext) {
+
+        println(" - Prompt: $promptName")
+
         addPrompt(
             name = promptName,
             description = prompt.description,
@@ -266,13 +309,13 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
 
             // Process result
             GetPromptResult(
-                "Description for ${request.name}",
                 messages = listOf(
                     PromptMessage(
-                        role = Role.user,
-                        content = TextContent(result.toDisplayYaml())
+                        role = Role.User,
+                        content = TextContent(result.toDisplayJson())
                     )
-                )
+                ),
+                description = "Description for ${request.name}"
             )
         }
     }
@@ -282,11 +325,10 @@ private typealias HttpMcpServer = EmbeddedServer<NettyApplicationEngine, NettyAp
 
 data class McpServerInfo(
     val name: String,
-    val version: String,
+    val version: String = "1.0.0",
     val stop: Boolean = false,
-    val transport: TransportType = TransportType.STDIO,
-    val port: Int? = null,
-    val path: String? = null,
+    val transport: TransportType = TransportType.HTTP,
+    val port: Int = 8080,
 
     val tools: MutableMap<String, ToolInfo> = mutableMapOf(),
 
@@ -321,7 +363,6 @@ data class ResourceInfo(
 )
 
 data class PromptInfo(
-    val name: String,
     val description: String,
     val arguments: List<PromptArgumentInfo> = emptyList(),
     val script: JsonNode
