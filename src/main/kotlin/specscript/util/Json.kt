@@ -159,7 +159,7 @@ private fun JsonNode.toKotlinx(): JsonElement {
         is NullNode, is MissingNode -> JsonNull
         is BooleanNode -> JsonPrimitive(booleanValue())
         is NumericNode -> JsonPrimitive(numberValue())
-        is StringNode -> JsonPrimitive(textValue())
+        is StringNode -> JsonPrimitive(stringValue())
         is ArrayNode -> this.toKotlinx()
         is ObjectNode -> this.toKotlinx()
         else -> throw IllegalArgumentException("Unknown JsonNode type: ${this.javaClass}")
@@ -198,7 +198,7 @@ fun JsonElement.toJackson(nodeFactory: JsonNodeFactory = JsonNodeFactory.instanc
 
 private fun JsonPrimitive.toJackson(nodeFactory: JsonNodeFactory): JsonNode {
     if (this.isString) {
-        return nodeFactory.textNode(this.content)
+        return nodeFactory.stringNode(this.content)
     }
     // Try to be as specific as possible with number types
     this.longOrNull?.let { return nodeFactory.numberNode(it) }
@@ -206,5 +206,5 @@ private fun JsonPrimitive.toJackson(nodeFactory: JsonNodeFactory): JsonNode {
     this.booleanOrNull?.let { return nodeFactory.booleanNode(it) }
 
     // Fallback for other potential primitive types
-    return nodeFactory.textNode(this.content)
+    return nodeFactory.stringNode(this.content)
 }

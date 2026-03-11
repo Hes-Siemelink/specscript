@@ -33,7 +33,7 @@ private class NodeComparator(val field: String) : Comparator<JsonNode> {
         return if (value1 is NumericNode && value2 is NumericNode) {
             value1.asInt() - value2.asInt()
         } else {
-            value1.asText().compareTo(value2.asText())
+            value1.asString().compareTo(value2.asString())
         }
     }
 }

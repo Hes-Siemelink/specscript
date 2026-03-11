@@ -17,7 +17,7 @@ object ExpectedError :
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
 
         if (context.error == null) {
-            throw MissingExpectedError(data.textValue())
+            throw MissingExpectedError(data.stringValue())
         }
 
         context.error = null

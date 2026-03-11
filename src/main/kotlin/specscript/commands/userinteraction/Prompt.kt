@@ -16,7 +16,7 @@ import tools.jackson.databind.node.ValueNode
 object Prompt : CommandHandler("Prompt", "core/user-interaction"), ValueHandler, ObjectHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode {
-        return UserPrompt.prompt(data.textValue())
+        return UserPrompt.prompt(data.stringValue())
     }
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {

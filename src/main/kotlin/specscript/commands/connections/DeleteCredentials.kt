@@ -16,7 +16,7 @@ object DeleteCredentials : CommandHandler("Delete credentials", "core/connection
         val credentials = context.getCredentials()
         val target = credentials.targetResources[targetName] ?: return null
 
-        target.credentials.removeIf { it["name"]?.textValue() == oldCredentials }
+        target.credentials.removeIf { it["name"]?.stringValue() == oldCredentials }
         credentials.save()
 
         return null

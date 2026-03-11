@@ -18,7 +18,7 @@ object Size : CommandHandler("Size", "core/data-manipulation"), ValueHandler, Ar
             }
 
             is StringNode -> {
-                return IntNode(data.textValue().length)
+                return IntNode(data.stringValue().length)
             }
         }
 

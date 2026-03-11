@@ -23,15 +23,15 @@ data class HttpParameters(
             update(data, defaults)
 
             return HttpParameters(
-                host = data["url"].textValue(),
-                path = data["path"]?.textValue(),
+                host = data["url"].stringValue(),
+                path = data["path"]?.stringValue(),
                 method = method,
                 body = data["body"],
                 headers = data["headers"],
                 cookies = data["cookies"],
-                saveAs = data["save as"]?.textValue(),
-                username = data["username"]?.textValue(),
-                password = data["password"]?.textValue(),
+                saveAs = data["save as"]?.stringValue(),
+                username = data["username"]?.stringValue(),
+                password = data["password"]?.stringValue(),
             )
         }
 

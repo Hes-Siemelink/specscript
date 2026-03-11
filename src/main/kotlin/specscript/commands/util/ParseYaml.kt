@@ -10,6 +10,6 @@ import tools.jackson.databind.node.ValueNode
 object ParseYaml : CommandHandler("Parse Yaml", "core/util"), ValueHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
-        return Yaml.parseIfPossible(data.asText())
+        return Yaml.parseIfPossible(data.asString())
     }
 }

@@ -10,7 +10,7 @@ object GetCredentials : CommandHandler("Get credentials", "core/connections"), V
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
 
-        val targetName = data.asText() ?: throw CommandFormatException("Specify target resource")
+        val targetName = data.asString() ?: throw CommandFormatException("Specify target resource")
         val credentials = context.getCredentials()
         val target = credentials.targetResources[targetName] ?: return StringNode("")
 

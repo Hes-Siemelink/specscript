@@ -212,7 +212,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
                 // Run script
                 val result: JsonNode? = if (tool.script is StringNode) {
                     // Local script file
-                    val file = localContext.scriptDir.resolve(tool.script.textValue())
+                    val file = localContext.scriptDir.resolve(tool.script.stringValue())
                     SpecScriptFile(file).run(FileContext(file, localContext, localContext.variables))
                 } else {
                     // Inline script
@@ -232,7 +232,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
     private fun deriveInputSchema(tool: ToolInfo, context: ScriptContext): InputSchema? {
         if (tool.script !is StringNode) return null
 
-        val file = context.scriptDir.resolve(tool.script.textValue())
+        val file = context.scriptDir.resolve(tool.script.stringValue())
         val scriptFile = SpecScriptFile(file)
         val inputSchemaCommand = scriptFile.script.commands.find { it.name == "Input schema" }
 
@@ -264,7 +264,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
 
             val result: JsonNode? = if (resource.script is StringNode) {
                 // Local script file
-                val file = localContext.scriptDir.resolve(resource.script.textValue())
+                val file = localContext.scriptDir.resolve(resource.script.stringValue())
                 SpecScriptFile(file).run(localContext)
             } else {
                 // Inline script
@@ -300,7 +300,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
             // Run script
             val result: JsonNode? = if (prompt.script is StringNode) {
                 // Local script file
-                val file = localContext.scriptDir.resolve(prompt.script.textValue())
+                val file = localContext.scriptDir.resolve(prompt.script.stringValue())
                 SpecScriptFile(file).run(localContext)
             } else {
                 // Inline script

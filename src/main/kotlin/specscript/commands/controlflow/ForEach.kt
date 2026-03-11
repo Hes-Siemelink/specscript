@@ -41,7 +41,7 @@ object ForEach : CommandHandler("For each", "core/control-flow"), ObjectHandler,
             result?.let {
                 when (output) {
                     is ArrayNode -> output.add(result)
-                    is ObjectNode -> output.set(item["key"].textValue(), result)
+                    is ObjectNode -> output.set(item["key"].stringValue(), result)
                     else -> {}
                 }
             }
@@ -67,7 +67,7 @@ private fun JsonNode.enumerateForEach(): ArrayNode {
             val array = ArrayNode(JsonNodeFactory.instance)
             for (field in properties()) {
                 val obj: ObjectNode = array.objectNode()
-                obj.set("key", array.textNode(field.key))
+                obj.set("key", array.stringNode(field.key))
                 obj.set("value", field.value)
                 array.add(obj)
             }

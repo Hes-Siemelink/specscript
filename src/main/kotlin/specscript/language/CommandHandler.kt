@@ -64,5 +64,5 @@ fun JsonNode.getTextParameter(parameter: String): String {
     if (value !is ValueNode) {
         throw CommandFormatException("Field '$parameter' needs to be a text value.")
     }
-    return value.textValue()
+    return value.stringValue()
 }

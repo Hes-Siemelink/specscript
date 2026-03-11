@@ -32,15 +32,15 @@ fun JsonNode.applyPatch(patch: ArrayNode): JsonNode {
  */
 private fun perform(operation: ObjectNode, doc: JsonNode): JsonNode {
     val opNode = operation["op"]
-    if (opNode == null || !opNode.isTextual) {
+    if (opNode == null || !opNode.isString) {
         throw IllegalArgumentException("Invalid \"op\" property: $opNode")
     }
-    val op = opNode.asText()
+    val op = opNode.asString()
     val pathNode = operation["path"]
-    if (pathNode == null || !pathNode.isTextual) {
+    if (pathNode == null || !pathNode.isString) {
         throw IllegalArgumentException("Invalid \"path\" property: $pathNode")
     }
-    val path = pathNode.asText()
+    val path = pathNode.asString()
     if (path.isNotEmpty() && path[0] != '/') {
         throw IllegalArgumentException("Invalid \"path\" property: $path")
     }
@@ -62,10 +62,10 @@ private fun perform(operation: ObjectNode, doc: JsonNode): JsonNode {
 
         "move" -> {
             val fromNode = operation["from"]
-            if (fromNode == null || !fromNode.isTextual) {
+            if (fromNode == null || !fromNode.isString) {
                 throw IllegalArgumentException("Invalid \"from\" property: $fromNode")
             }
-            val from = fromNode.asText()
+            val from = fromNode.asString()
             if (from.isNotEmpty() && from[0] != '/') {
                 throw IllegalArgumentException("Invalid \"from\" property: $fromNode")
             }
@@ -74,10 +74,10 @@ private fun perform(operation: ObjectNode, doc: JsonNode): JsonNode {
 
         "copy" -> {
             val fromNode = operation["from"]
-            if (fromNode == null || !fromNode.isTextual) {
+            if (fromNode == null || !fromNode.isString) {
                 throw IllegalArgumentException("Invalid \"from\" property: $fromNode")
             }
-            val from = fromNode.asText()
+            val from = fromNode.asString()
             if (from.isNotEmpty() && from[0] != '/') {
                 throw IllegalArgumentException("Invalid \"from\" property: $fromNode")
             }

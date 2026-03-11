@@ -27,8 +27,8 @@ object HttpClient {
 
     fun processRequest(data: ValueNode, context: ScriptContext, method: HttpMethod): JsonNode? {
 
-        val uri = URI(encodePath(data.textValue()))
-        val separator = data.textValue().indexOf(uri.path)
+        val uri = URI(encodePath(data.stringValue()))
+        val separator = data.stringValue().indexOf(uri.path)
         val parsedData = Json.newObject("path", uri.toString().substring(separator))
 
         val url = uri.toString().substring(0, separator)
@@ -81,7 +81,7 @@ object HttpClient {
 
     private fun HttpRequestBuilder.headers(parameters: HttpParameters) {
         parameters.headers?.properties()?.forEach { header ->
-            header(header.key, header.value.textValue())
+            header(header.key, header.value.stringValue())
         }
 
         if (!headers.contains(HttpHeaders.ContentType)) {
@@ -94,7 +94,7 @@ object HttpClient {
 
     private fun HttpRequestBuilder.cookies(parameters: HttpParameters) {
         parameters.cookies?.properties()?.forEach { cookie ->
-            cookie(cookie.key, cookie.value.textValue())
+            cookie(cookie.key, cookie.value.stringValue())
         }
     }
 

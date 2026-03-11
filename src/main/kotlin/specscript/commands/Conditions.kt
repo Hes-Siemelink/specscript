@@ -36,7 +36,7 @@ class Contains(
             }
 
             container is StringNode && node is StringNode -> {
-                container.textValue().contains(node.textValue())
+                container.stringValue().contains(node.stringValue())
             }
 
             else -> {
@@ -69,7 +69,7 @@ class Empty(private val node: JsonNode) : Condition {
             is ArrayNode -> node.isEmpty
             is ObjectNode -> node.isEmpty
             is NumericNode -> node.asInt() == 0
-            is ValueNode -> node.textValue() == null || node.textValue().isEmpty()
+            is ValueNode -> node.stringValue() == null || node.stringValue().isEmpty()
             else -> node.isEmpty
         }
 }

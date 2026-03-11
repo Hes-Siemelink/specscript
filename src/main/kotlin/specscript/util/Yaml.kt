@@ -4,7 +4,6 @@ import tools.jackson.databind.DeserializationFeature
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.ObjectMapper
 import tools.jackson.databind.node.StringNode
-import tools.jackson.dataformat.yaml.YAMLFactory
 import tools.jackson.dataformat.yaml.YAMLMapper
 import tools.jackson.dataformat.yaml.YAMLWriteFeature
 import tools.jackson.module.kotlin.kotlinModule
@@ -12,8 +11,6 @@ import java.nio.file.Path
 
 
 object Yaml {
-
-    val factory: YAMLFactory = YAMLFactory()
 
     // Bare mapper for tree-model operations (parsing YAML to/from JsonNode).
     // No KotlinModule — avoids expensive kotlin-reflect initialization on startup.
@@ -45,14 +42,14 @@ object Yaml {
     }
 
     fun parse(source: Path): List<JsonNode> {
-        val yamlParser = factory.createParser(source.toFile())
+        val yamlParser = treeMapper.createParser(source.toFile())
         return treeMapper
             .readValues(yamlParser, JsonNode::class.java)
             .readAll()
     }
 
     fun parseAsFile(content: String): List<JsonNode> {
-        val yamlParser = factory.createParser(content)
+        val yamlParser = treeMapper.createParser(content)
         return treeMapper
             .readValues(yamlParser, JsonNode::class.java)
             .readAll()
@@ -83,8 +80,8 @@ object Yaml {
 
 fun JsonNode?.toDisplayYaml(): String {
     this ?: return ""
-    if (isTextual) {
-        return textValue()
+    if (isString) {
+        return stringValue()
     }
     return Yaml.writeAsString(this).trim()
 }

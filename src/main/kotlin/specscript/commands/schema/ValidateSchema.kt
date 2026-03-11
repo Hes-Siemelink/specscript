@@ -50,7 +50,7 @@ private fun JsonNode.validateWithSchema(schema: Schema) {
 private fun JsonNode.getSchema(context: ScriptContext): Schema {
 
     return if (this is StringNode) {
-        val location = context.scriptDir.resolve(textValue())
+        val location = context.scriptDir.resolve(stringValue())
         JsonSchemas.registry.getSchema(SchemaLocation.of(location.toUri().toString()))
     } else {
         JsonSchemas.registry.getSchema(this)

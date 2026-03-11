@@ -124,7 +124,7 @@ object TestPrompt : UserPrompt {
             Answers.recordedAnswers[message] ?: throw IllegalStateException("No prerecorded answer for '$message'")
 
         if (multiple) {
-            val set = selectedAnswer.toList().map { it.textValue() }
+            val set = selectedAnswer.toList().map { it.stringValue() }
             val selection = choices.filter {
                 set.contains(it.displayName)
             }
@@ -137,7 +137,7 @@ object TestPrompt : UserPrompt {
 
         } else {
             val selection = choices.find {
-                selectedAnswer.textValue() == it.displayName
+                selectedAnswer.stringValue() == it.displayName
             } ?: throw SpecScriptException("Prerecorded choice '$selectedAnswer' not found in provided list.")
 
             println(KInquirer.renderInput(message, choices, listOf(selection)))

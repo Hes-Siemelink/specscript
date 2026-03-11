@@ -38,14 +38,14 @@ fun PropertyDefinition.prompt(label: String? = null): JsonNode {
 }
 
 private fun PropertyDefinition.promptText(message: String, password: Boolean = false): JsonNode {
-    return UserPrompt.prompt(message, default?.asText() ?: "", password)
+    return UserPrompt.prompt(message, default?.asString() ?: "", password)
 }
 
 private fun PropertyDefinition.promptBoolean(message: String): JsonNode {
 
-    val answer = UserPrompt.prompt(message, default?.asText() ?: "")
+    val answer = UserPrompt.prompt(message, default?.asString() ?: "")
 
-    return if (answer.textValue() == "true") TRUE
+    return if (answer.stringValue() == "true") TRUE
     else FALSE
 }
 
@@ -55,7 +55,7 @@ private fun PropertyDefinition.promptChoice(message: String, multiple: Boolean =
         if (displayProperty == null) {
             Choice(choiceData.toDisplayYaml(), choiceData)
         } else {
-            Choice(choiceData[displayProperty].textValue(), choiceData)
+            Choice(choiceData[displayProperty].stringValue(), choiceData)
         }
     } ?: emptyList()
 

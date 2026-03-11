@@ -27,7 +27,7 @@ object InputParameters : CommandHandler("Input parameters", "core/script-info"),
     }
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
-        val type = TypeSpecification(data.textValue())
+        val type = TypeSpecification(data.stringValue())
 
         val resolvedType = type.resolve(context.types).definition
 

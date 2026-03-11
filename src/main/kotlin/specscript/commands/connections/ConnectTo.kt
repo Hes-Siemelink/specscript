@@ -16,7 +16,7 @@ object ConnectTo : CommandHandler("Connect to", "core/connections"), ValueHandle
         }
 
         // Already connected, return previous result from connection script
-        val target = data.textValue()
+        val target = data.stringValue()
         if (context.getCache().contains(target)) {
             return context.getCache()[target]
         }
@@ -47,7 +47,7 @@ private fun connect(
 
     when (connectScript) {
         is ValueNode -> {
-            val cliFile = context.scriptDir.resolve(connectScript.textValue())
+            val cliFile = context.scriptDir.resolve(connectScript.stringValue())
             return SpecScriptFile(cliFile).run(FileContext(cliFile, context))
         }
 

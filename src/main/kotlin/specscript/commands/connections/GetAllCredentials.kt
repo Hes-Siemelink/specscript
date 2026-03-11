@@ -12,7 +12,7 @@ object GetAllCredentials : CommandHandler("Get all credentials", "core/connectio
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode {
 
-        val targetName = data.asText()
+        val targetName = data.asString()
         val credentials = context.getCredentials()
         val target = credentials.targetResources[targetName] ?: throw SpecScriptCommandError(
             "Unknown target $targetName",

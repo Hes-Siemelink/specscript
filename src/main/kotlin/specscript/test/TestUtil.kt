@@ -202,5 +202,5 @@ fun Script.getTestTitle(commandHandler: CommandHandler): String {
     val command = commands.find {
         it.name == commandHandler.name
     }
-    return command?.data?.textValue() ?: commandHandler.name
+    return command?.data?.stringValue() ?: commandHandler.name
 }

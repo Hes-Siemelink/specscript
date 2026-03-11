@@ -28,7 +28,7 @@ fun JsonNode.toPath(context: ScriptContext, directory: Path? = null): Path {
     return when (this) {
         is StringNode -> {
             val dir = directory ?: context.workingDir
-            val file = dir.resolve(textValue())
+            val file = dir.resolve(stringValue())
             if (file.exists()) {
                 file
             } else {

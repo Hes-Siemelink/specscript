@@ -52,7 +52,7 @@ class FileContext(
     override val tempDir: Path
         get() {
             return if (variables.containsKey(SCRIPT_TEMP_DIR_VARIABLE)) {
-                Path.of(variables[SCRIPT_TEMP_DIR_VARIABLE]!!.textValue())
+                Path.of(variables[SCRIPT_TEMP_DIR_VARIABLE]!!.stringValue())
             } else {
                 Files.createTempDirectory("specscript-").apply {
                     toFile().deleteOnExit()

@@ -43,7 +43,7 @@ object Add : CommandHandler("Add", "core/data-manipulation"), ArrayHandler {
 
     private fun addToText(target: StringNode, item: JsonNode): StringNode {
         return when (item) {
-            is ValueNode -> StringNode(target.asText() + item.asText())
+            is ValueNode -> StringNode(target.asString() + item.asString())
             else -> throw SpecScriptException("Can't add a ${item.javaClass.simpleName} to a ${target.javaClass.simpleName}")
         }
     }

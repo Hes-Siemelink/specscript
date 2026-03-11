@@ -12,7 +12,7 @@ object As : CommandHandler("As", "core/variables"), ValueHandler, DelayedResolve
         }
 
         // Support both variable syntax and plain variable name
-        val variableName = getVariableName(data.asText())
+        val variableName = getVariableName(data.asString())
 
         context.variables[variableName] = context.variables.getValue(OUTPUT_VARIABLE)
 

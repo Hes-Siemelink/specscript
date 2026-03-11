@@ -31,7 +31,7 @@ object Replace : CommandHandler("Replace", "core/data-manipulation"), ObjectHand
 
         return when (source) {
             is StringNode -> {
-                replaceText(source.textValue(), part, replacement)
+                replaceText(source.stringValue(), part, replacement)
             }
 
             is ArrayNode -> {
@@ -52,7 +52,7 @@ object Replace : CommandHandler("Replace", "core/data-manipulation"), ObjectHand
         }
 
         val replacementText = replaceWith.toDisplayYaml()
-        val replacement = source.replace(part.textValue(), replacementText)
+        val replacement = source.replace(part.stringValue(), replacementText)
 
         return StringNode(replacement)
     }

@@ -22,7 +22,7 @@ object Shell : CommandHandler("Shell", "core/shell"), ObjectHandler, ValueHandle
 
         val info = createCommandInfo(context)
 
-        return execute(data.textValue(), context.workingDir, info)
+        return execute(data.stringValue(), context.workingDir, info)
     }
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {

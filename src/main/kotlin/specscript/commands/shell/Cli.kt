@@ -18,7 +18,7 @@ object Cli : CommandHandler("Cli", "core/shell"), ValueHandler, ObjectHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
 
-        return runCli(context, data.asText())
+        return runCli(context, data.asString())
     }
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {

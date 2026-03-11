@@ -17,7 +17,7 @@ private class VariableResolver(val variables: Map<String, JsonNode>) : JsonProce
     override fun processText(node: StringNode): JsonNode {
 
         // Single variable reference will return full content of variable as node
-        val singleVariableMatch = VARIABLE_REGEX.matchEntire(node.textValue())
+        val singleVariableMatch = VARIABLE_REGEX.matchEntire(node.stringValue())
         if (singleVariableMatch != null) {
             val varName = singleVariableMatch.groupValues[1]
             return getValue(varName, variables)
@@ -25,8 +25,8 @@ private class VariableResolver(val variables: Map<String, JsonNode>) : JsonProce
 
         // One or more variables mixed in text are replaced with text values
         // Only replace the node is there is a variable in it
-        if (VARIABLE_REGEX.containsMatchIn(node.textValue())) {
-            return StringNode(resolveVariablesInText(node.textValue(), variables))
+        if (VARIABLE_REGEX.containsMatchIn(node.stringValue())) {
+            return StringNode(resolveVariablesInText(node.stringValue(), variables))
         }
 
         return node

@@ -36,7 +36,7 @@ object Credentials : CommandHandler("Credentials", "core/shell"), ValueHandler {
     }
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
-        val credentials = fromFile(Path.of(data.textValue()).toAbsolutePath())
+        val credentials = fromFile(Path.of(data.stringValue()).toAbsolutePath())
         context.setCredentials(credentials)
 
         return null
@@ -77,7 +77,7 @@ data class TargetResource(
 ) {
 
     fun default(): ObjectNode? {
-        return credentials.find { it["name"]?.textValue() == default }
+        return credentials.find { it["name"]?.stringValue() == default }
     }
 
     fun toArrayNode(): ArrayNode {
