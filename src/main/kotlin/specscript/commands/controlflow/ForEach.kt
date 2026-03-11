@@ -1,6 +1,7 @@
 package specscript.commands.controlflow
 
 import specscript.language.*
+import specscript.util.Json
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.*
 
@@ -62,9 +63,9 @@ object ForEach : CommandHandler("For each", "core/control-flow"), ObjectHandler,
 private fun JsonNode.enumerateForEach(): ArrayNode {
     when (this) {
         is ArrayNode -> return this
-        is ValueNode -> return ArrayNode(JsonNodeFactory.instance).add(this)
+        is ValueNode -> return Json.newArray().add(this)
         is ObjectNode -> {
-            val array = ArrayNode(JsonNodeFactory.instance)
+            val array = Json.newArray()
             for (field in properties()) {
                 val obj: ObjectNode = array.objectNode()
                 obj.set("key", array.stringNode(field.key))

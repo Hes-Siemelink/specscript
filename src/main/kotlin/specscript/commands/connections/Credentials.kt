@@ -10,7 +10,6 @@ import specscript.util.Yaml
 import specscript.util.updateWith
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ArrayNode
-import tools.jackson.databind.node.JsonNodeFactory
 import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.ValueNode
 import java.nio.file.Path
@@ -46,7 +45,7 @@ object Credentials : CommandHandler("Credentials", "core/shell"), ValueHandler {
 fun CredentialsFile.save(): CredentialsFile {
     checkNotNull(file) { "Can't save Credentials object because there is no file associated with it." }
 
-    Yaml.mapper.writeValue(file?.toFile(), this.targetResources)
+    Yaml.writeToFile(file!!.toFile(), this.targetResources)
 
     return this
 }
@@ -81,7 +80,7 @@ data class TargetResource(
     }
 
     fun toArrayNode(): ArrayNode {
-        val list = ArrayNode(JsonNodeFactory.instance)
+        val list = Json.newArray()
         for (item in credentials) {
             list.add(item)
         }

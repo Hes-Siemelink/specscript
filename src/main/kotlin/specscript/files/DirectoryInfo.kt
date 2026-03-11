@@ -5,7 +5,6 @@ import specscript.language.CommandInfo
 import specscript.util.IO.isTempDir
 import specscript.util.Json
 import specscript.util.Yaml
-import tools.jackson.module.kotlin.readValue
 import java.nio.file.Path
 import kotlin.io.path.exists
 import kotlin.io.path.name
@@ -33,7 +32,7 @@ class DirectoryInfo : CommandInfo {
             val directoryInfoYaml = dir.resolve(".directory-info.yaml")
 
             val info = if (directoryInfoYaml.exists()) {
-                Yaml.mapper.readValue(directoryInfoYaml.toFile())
+                Yaml.readTyped(directoryInfoYaml.toFile())
             } else {
                 DirectoryInfo()
             }
@@ -52,7 +51,7 @@ class DirectoryInfo : CommandInfo {
 
             val typesFile = dir.resolve("types.yaml")
             if (typesFile.exists()) {
-                info.types = Yaml.mapper.readValue(typesFile.toFile())
+                info.types = Yaml.readTyped(typesFile.toFile())
             }
 
             return info

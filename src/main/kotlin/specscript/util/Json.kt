@@ -21,7 +21,7 @@ object Json {
 
     // Full mapper with KotlinModule, for typed deserialization/serialization.
     // Lazy to defer kotlin-reflect cost until first actual use.
-    val mapper: ObjectMapper by lazy {
+    private val mapper: ObjectMapper by lazy {
         jsonMapper {
             addModule(kotlinModule())
             enable(SerializationFeature.INDENT_OUTPUT)
@@ -58,6 +58,25 @@ object Json {
     fun readTree(content: String): JsonNode {
         return treeMapper.readTree(content)
     }
+
+    fun toObject(value: Any?): ObjectNode {
+        if (value == null) {
+            return newObject()
+        }
+        return mapper.valueToTree(value)
+    }
+
+    fun toJson(value: Number): JsonNode {
+        return mapper.valueToTree(value)
+    }
+
+    fun <T : Any> treeToValue(node: JsonNode, dataClass: KClass<T>): T {
+        return mapper.treeToValue(node, dataClass.java)
+    }
+
+    fun <T : Any> updateWith(target: T, content: JsonNode): T {
+        return mapper.readerForUpdating(target).readValue(content)
+    }
 }
 
 
@@ -79,11 +98,11 @@ fun ObjectNode.add(vars: Map<String, String>) {
 }
 
 fun <T : Any> JsonNode.toDomainObject(dataClass: KClass<T>): T {
-    return Json.mapper.treeToValue(this, dataClass.java)
+    return Json.treeToValue(this, dataClass)
 }
 
 fun <T : Any> T.updateWith(content: JsonNode): T {
-    return Json.mapper.readerForUpdating(this).readValue(content)
+    return Json.updateWith(this, content)
 }
 
 fun JsonNode?.toDisplayJson(): String {

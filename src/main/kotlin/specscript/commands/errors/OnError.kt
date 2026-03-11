@@ -18,7 +18,7 @@ object OnError : CommandHandler("On error", "core/errors"), ObjectHandler, Delay
 
         val error = context.error ?: return
 
-        context.variables["error"] = Yaml.mapper.valueToTree(error.error)
+        context.variables["error"] = Yaml.valueToTree(error.error)
         context.error = null
 
         errorHandlingSection.run(context)

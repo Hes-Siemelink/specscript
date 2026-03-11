@@ -244,7 +244,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
         val inputParamsCommand = scriptFile.script.commands.find { it.name == "Input parameters" }
         if (inputParamsCommand != null) {
             val info = scriptFile.script.info
-            val propertiesNode = Json.mapper.valueToTree<ObjectNode>(info.input)
+            val propertiesNode = Json.toObject(info.input)
             return InputSchema(properties = propertiesNode)
         }
 

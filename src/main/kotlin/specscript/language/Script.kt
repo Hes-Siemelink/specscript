@@ -145,7 +145,7 @@ fun List<MarkdownBlock>.toScript(): Script {
                     resolve = block.getOption("resolve")?.toBoolean() ?: false,
                 )
                 commands.add(
-                    Command(TempFile.name, Yaml.mapper.valueToTree(data))
+                    Command(TempFile.name, Yaml.valueToTree(data))
                 )
             }
 
@@ -157,7 +157,7 @@ fun List<MarkdownBlock>.toScript(): Script {
                     cd = block.getOption("cd")
                 )
                 commands.add(
-                    Command(Cli.name, Yaml.mapper.valueToTree(data))
+                    Command(Cli.name, Yaml.valueToTree(data))
                 )
             }
 
@@ -171,7 +171,7 @@ fun List<MarkdownBlock>.toScript(): Script {
                     cd = block.getOption("cd")
                 )
                 commands.add(
-                    Command(Shell.name, Yaml.mapper.valueToTree(data))
+                    Command(Shell.name, Yaml.valueToTree(data))
                 )
             }
 

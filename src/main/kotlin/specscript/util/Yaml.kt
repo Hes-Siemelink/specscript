@@ -7,6 +7,7 @@ import tools.jackson.databind.node.StringNode
 import tools.jackson.dataformat.yaml.YAMLMapper
 import tools.jackson.dataformat.yaml.YAMLWriteFeature
 import tools.jackson.module.kotlin.kotlinModule
+import java.io.File
 import java.nio.file.Path
 
 
@@ -22,7 +23,8 @@ object Yaml {
 
     // Full mapper with KotlinModule, only for typed deserialization (treeToValue, readValue<T>, valueToTree).
     // Lazy to defer kotlin-reflect cost until first actual use.
-    val mapper: ObjectMapper by lazy {
+    @PublishedApi
+    internal val mapper: ObjectMapper by lazy {
         YAMLMapper.builder()
             .addModule(kotlinModule())
             .enable(YAMLWriteFeature.MINIMIZE_QUOTES)
@@ -75,6 +77,22 @@ object Yaml {
 
     fun writeAsString(node: JsonNode): String {
         return treeMapper.writeValueAsString(node)
+    }
+
+    fun <T : JsonNode> valueToTree(value: Any): T {
+        return mapper.valueToTree(value)
+    }
+
+    inline fun <reified T> readTyped(file: File): T {
+        return mapper.readValue(file, T::class.java)
+    }
+
+    fun writeToFile(file: File, value: Any) {
+        mapper.writeValue(file, value)
+    }
+
+    fun writeAsString(value: Any): String {
+        return mapper.writeValueAsString(value)
     }
 }
 

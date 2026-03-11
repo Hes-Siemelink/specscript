@@ -8,11 +8,11 @@ import com.github.kinquirer.components.promptListObject
 import com.github.kinquirer.core.Choice
 import specscript.commands.testing.Answers
 import specscript.language.SpecScriptException
+import specscript.util.Json
 import specscript.util.Yaml
 import specscript.util.toDisplayYaml
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ArrayNode
-import tools.jackson.databind.node.JsonNodeFactory
 import tools.jackson.databind.node.StringNode
 
 interface UserPrompt {
@@ -50,7 +50,7 @@ object KInquirerPrompt : UserPrompt {
     override fun select(message: String, choices: List<Choice<JsonNode>>, multiple: Boolean): JsonNode =
         if (multiple) {
             val answers = KInquirer.promptCheckboxObject(message, choices, minNumOfSelection = 1)
-            Yaml.mapper.valueToTree(answers)
+            Yaml.valueToTree(answers)
         } else {
             KInquirer.promptListObject(message, choices)
         }
@@ -128,7 +128,7 @@ object TestPrompt : UserPrompt {
             val selection = choices.filter {
                 set.contains(it.displayName)
             }
-            val result = ArrayNode(JsonNodeFactory.instance)
+            val result = Json.newArray()
             selection.forEach { result.add(it.data) }
 
             println(KInquirer.renderInput(message, choices, selection))

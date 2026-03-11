@@ -1,10 +1,10 @@
 package specscript.commands.datamanipulation
 
 import specscript.language.*
+import specscript.util.Json
 import specscript.util.toDisplayYaml
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ArrayNode
-import tools.jackson.databind.node.JsonNodeFactory
 import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.StringNode
 
@@ -58,7 +58,7 @@ object Replace : CommandHandler("Replace", "core/data-manipulation"), ObjectHand
     }
 
     private fun replaceArray(source: ArrayNode, part: JsonNode, replaceWith: JsonNode): JsonNode {
-        val replacement = ArrayNode(JsonNodeFactory.instance)
+        val replacement = Json.newArray()
         for (node in source) {
             replacement.add(replace(node, part, replaceWith))
         }

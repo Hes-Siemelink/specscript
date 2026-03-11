@@ -3,7 +3,6 @@ package specscript.language
 import specscript.util.Json
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ArrayNode
-import tools.jackson.databind.node.JsonNodeFactory
 import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.ValueNode
 
@@ -27,7 +26,7 @@ private fun runCommandOnList(
     context: ScriptContext
 ): ArrayNode? {
 
-    val output = ArrayNode(JsonNodeFactory.instance)
+    val output = Json.newArray()
 
     for (data in dataList) {
         val result = runSingleCommand(handler, data, context)

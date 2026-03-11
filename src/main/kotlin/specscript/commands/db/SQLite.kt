@@ -8,6 +8,7 @@ import specscript.util.Json.newArray
 import specscript.util.Json.newObject
 import specscript.util.toDomainObject
 import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.BooleanNode
 import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.StringNode
 import java.sql.Connection
@@ -71,8 +72,8 @@ fun List<Map<String, Any>>.toNode(): JsonNode {
 /** Convert a JDBC value to a Jackson JsonNode without YAML parsing. */
 private fun Any?.toJsonNode(): JsonNode = when (this) {
     null -> StringNode("")
-    is Number -> Json.mapper.valueToTree(this)
-    is Boolean -> Json.mapper.valueToTree(this)
+    is Number -> Json.toJson(this)
+    is Boolean -> BooleanNode.valueOf(this)
     is String -> jsonOrText(this)
     else -> StringNode(toString())
 }
