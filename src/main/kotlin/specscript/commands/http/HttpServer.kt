@@ -1,6 +1,7 @@
 package specscript.commands.http
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -160,15 +161,17 @@ private fun String.toBodyJson(): JsonNode =
 
 private typealias HttpServerInstance = EmbeddedServer<NettyApplicationEngine, NettyApplicationEngine.Configuration>
 
-data class Endpoints(
-    @get:JsonAnyGetter
-    val paths: MutableMap<String, EndpointData> = mutableMapOf()
-)
+class Endpoints {
+    @JsonAnyGetter
+    @JsonAnySetter
+    val paths: MutableMap<String, EndpointData> = linkedMapOf()
+}
 
-data class EndpointData(
-    @get:JsonAnyGetter
-    val methodHandlers: Map<String, MethodHandlerData> = mutableMapOf()
-)
+class EndpointData {
+    @JsonAnyGetter
+    @JsonAnySetter
+    val methodHandlers: MutableMap<String, MethodHandlerData> = mutableMapOf()
+}
 
 data class MethodHandlerData(
     val output: JsonNode? = null,

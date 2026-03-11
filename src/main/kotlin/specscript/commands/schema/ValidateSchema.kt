@@ -1,6 +1,7 @@
 package specscript.commands.schema
 
 import com.networknt.schema.Schema
+import com.networknt.schema.SchemaLocation
 import specscript.language.*
 import specscript.util.Json
 import specscript.util.JsonSchemas
@@ -50,7 +51,7 @@ private fun JsonNode.getSchema(context: ScriptContext): Schema {
 
     return if (this is StringNode) {
         val location = context.scriptDir.resolve(textValue())
-        JsonSchemas.registry.getSchema(location.toUri().toString())
+        JsonSchemas.registry.getSchema(SchemaLocation.of(location.toUri().toString()))
     } else {
         JsonSchemas.registry.getSchema(this)
     }

@@ -4,6 +4,7 @@ import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.StringNode
 import tools.jackson.dataformat.yaml.YAMLFactory
 import tools.jackson.dataformat.yaml.YAMLMapper
+import tools.jackson.databind.DeserializationFeature
 import tools.jackson.dataformat.yaml.YAMLWriteFeature
 import tools.jackson.module.kotlin.kotlinModule
 import java.nio.file.Path
@@ -16,6 +17,7 @@ object Yaml {
         .addModule(kotlinModule())
         .enable(YAMLWriteFeature.MINIMIZE_QUOTES)
         .disable(YAMLWriteFeature.WRITE_DOC_START_MARKER)
+        .disable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS)
         .build()
 
 //    init {

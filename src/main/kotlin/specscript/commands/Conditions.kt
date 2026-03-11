@@ -106,11 +106,11 @@ fun JsonNode.toCondition(): Condition {
         }
 
         has("all") -> {
-            return All(get("all").map { it.toCondition() })
+            return All(get("all").toList().map { it.toCondition() })
         }
 
         has("any") -> {
-            return AnyCondition(get("any").map { it.toCondition() })
+            return AnyCondition(get("any").toList().map { it.toCondition() })
         }
 
         has("not") -> {

@@ -23,8 +23,8 @@ class DirectoryInfo : CommandInfo {
     @JsonProperty("specscript-version")
     override var specScriptVersion: String = "unknown"
 
-    val imports = mutableListOf<String>()
-    val connections = Json.newObject()
+    var imports = mutableListOf<String>()
+    var connections = Json.newObject()
 
     var types = Json.newObject()
 

@@ -1,6 +1,7 @@
 package specscript.language.types
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
 import specscript.cli.infoString
 import tools.jackson.databind.JsonNode
 
@@ -30,10 +31,11 @@ fun ObjectDefinition.toDisplayString(): String {
     return builder.toString()
 }
 
-data class ObjectProperties(
-    @get:JsonAnyGetter
-    override val properties: Map<String, PropertySpecification> = mutableMapOf()
-) : ObjectDefinition {
+class ObjectProperties : ObjectDefinition {
+
+    @JsonAnyGetter
+    @JsonAnySetter
+    override val properties: MutableMap<String, PropertySpecification> = LinkedHashMap()
 
     fun validate(data: JsonNode): List<String> {
         val messages = mutableListOf<String>()
@@ -51,5 +53,11 @@ data class ObjectProperties(
         }
 
         return messages
+    }
+
+    companion object {
+        operator fun invoke(properties: Map<String, PropertySpecification>): ObjectProperties {
+            return ObjectProperties().also { it.properties.putAll(properties) }
+        }
     }
 }

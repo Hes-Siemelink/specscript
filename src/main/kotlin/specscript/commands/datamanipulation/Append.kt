@@ -4,7 +4,7 @@ import specscript.commands.datamanipulation.Add.add
 import specscript.language.AnyHandler
 import specscript.language.CommandHandler
 import specscript.language.ScriptContext
-import specscript.util.asArray
+import specscript.util.toArrayNode
 import tools.jackson.databind.JsonNode
 
 object Append : CommandHandler("Append", "core/data-manipulation"), AnyHandler {
@@ -13,7 +13,7 @@ object Append : CommandHandler("Append", "core/data-manipulation"), AnyHandler {
 
         var total = context.output ?: return data
 
-        for (item in data.asArray()) {
+        for (item in data.toArrayNode()) {
             total = add(total, item)
         }
 

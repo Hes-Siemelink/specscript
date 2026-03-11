@@ -1,6 +1,7 @@
 package specscript.commands.scriptinfo
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
 import specscript.commands.testing.Answers
 import specscript.commands.toCondition
 import specscript.commands.userinteraction.prompt
@@ -98,9 +99,9 @@ private fun conditionValid(condition: JsonNode?, context: ScriptContext): Boolea
     return condition.resolveVariables(context.variables).toCondition().isTrue()
 }
 
-data class InputParameterData(
-    @get:JsonAnyGetter
-    override val properties: Map<String, ParameterData> = mutableMapOf()
-) : ObjectDefinition {
-}
+class InputParameterData : ObjectDefinition {
 
+    @JsonAnyGetter
+    @JsonAnySetter
+    override val properties: MutableMap<String, ParameterData> = LinkedHashMap()
+}

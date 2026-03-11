@@ -5,6 +5,7 @@ import com.networknt.schema.Schema
 import com.networknt.schema.SchemaLocation
 import com.networknt.schema.SchemaRegistry
 import com.networknt.schema.dialect.Dialects
+import com.networknt.schema.resource.IriResourceLoader
 import specscript.language.CommandFormatException
 import tools.jackson.databind.JsonNode
 import java.nio.file.Path
@@ -17,6 +18,9 @@ object JsonSchemas {
     var registry: SchemaRegistry = SchemaRegistry.withDialect(Dialects.getDraft202012()) { builder ->
         builder.schemaIdResolvers { resolvers ->
             resolvers.mapPrefix("https://specscript.info/v1/commands", "classpath:commands")
+        }
+        builder.resourceLoaders { loaders ->
+            loaders.add(IriResourceLoader.getInstance())
         }
     }
 
@@ -48,4 +52,3 @@ internal fun JsonNode.validateWithSchema(schemaName: String) {
         throw CommandFormatException("Schema validation errors according to \"${schemaName}\":\n$messages")
     }
 }
-

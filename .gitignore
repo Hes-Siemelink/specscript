@@ -6,6 +6,13 @@
 /.kotlin
 test.db
 
+# Eclipse
+/.classpath
+/.project
+/.settings
+/bin
+/com
+
 # AI tooling
 .aider.*
 .specstory/*

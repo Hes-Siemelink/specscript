@@ -1,6 +1,5 @@
 package specscript.commands.mcp
 
-import com.fasterxml.jackson.annotation.JsonAnySetter
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
@@ -289,13 +288,10 @@ data class McpServerInfo(
     val port: Int? = null,
     val path: String? = null,
 
-    @JsonAnySetter
     val tools: MutableMap<String, ToolInfo> = mutableMapOf(),
 
-    @JsonAnySetter
     val resources: MutableMap<String, ResourceInfo> = mutableMapOf(),
 
-    @JsonAnySetter
     val prompts: MutableMap<String, PromptInfo> = mutableMapOf()
 )
 

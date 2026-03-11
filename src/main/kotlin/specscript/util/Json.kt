@@ -44,7 +44,7 @@ fun List<JsonNode>.toJson(): ArrayNode {
     return ArrayNode(JsonNodeFactory.instance, this)
 }
 
-fun JsonNode.asArray(): ArrayNode {
+fun JsonNode.toArrayNode(): ArrayNode {
     return when (this) {
         is ArrayNode -> this
         else -> ArrayNode(JsonNodeFactory.instance).add(this)

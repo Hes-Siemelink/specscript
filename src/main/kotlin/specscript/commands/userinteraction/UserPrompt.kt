@@ -124,7 +124,7 @@ object TestPrompt : UserPrompt {
             Answers.recordedAnswers[message] ?: throw IllegalStateException("No prerecorded answer for '$message'")
 
         if (multiple) {
-            val set = selectedAnswer.map { it.textValue() }
+            val set = selectedAnswer.toList().map { it.textValue() }
             val selection = choices.filter {
                 set.contains(it.displayName)
             }
