@@ -3,7 +3,7 @@
 If by now you are getting accustomed to the fact that SpecScript is Yaml, get ready for the kicker: SpecScript files can
 also be written in Markdown!
 
-This way, we can freely mix code, data _and_ documentation in a single file. Another way to llok at it is that in the
+This way, we can freely mix code, data _and_ documentation in a single file. Another way to look at it is that in the
 documentation, you embed the code and data for your script. This style is
 called [literate programming](https://en.wikipedia.org/wiki/Literate_programming): telling the story of what you want to
 do, while at the same time defining the executable code that defines how to do it.
