@@ -1,8 +1,5 @@
 package specscript.commands.mcp
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.TextNode
 import io.modelcontextprotocol.kotlin.sdk.types.CallToolRequest
 import io.modelcontextprotocol.kotlin.sdk.types.CallToolRequestParams
 import io.modelcontextprotocol.kotlin.sdk.types.CallToolResult
@@ -16,6 +13,9 @@ import specscript.language.*
 import specscript.util.Json
 import specscript.util.toDomainObject
 import specscript.util.toKotlinx
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.StringNode
 
 object McpToolCall : CommandHandler("Mcp tool call", "ai/mcp"), ObjectHandler, DelayedResolver {
 
@@ -66,19 +66,19 @@ object McpToolCall : CommandHandler("Mcp tool call", "ai/mcp"), ObjectHandler, D
 
 fun CallToolResult.firstTextAsJson(): JsonNode {
     if (content.isEmpty()) {
-        return TextNode("Tool executed but returned no content")
+        return StringNode("Tool executed but returned no content")
     }
 
     // TODO handle lists and other content types
     val first = content.first()
     return when (first) {
         is TextContent -> try {
-            Json.readTree(first.text)
+            Json.readJson(first.text)
         } catch (_: Exception) {
-            TextNode(first.text)
+            StringNode(first.text)
         }
 
-        else -> TextNode("Tool executed successfully with result of type ${first.type}")
+        else -> StringNode("Tool executed successfully with result of type ${first.type}")
     }
 }
 

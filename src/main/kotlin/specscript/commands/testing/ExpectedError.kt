@@ -1,11 +1,11 @@
 package specscript.commands.testing
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ArrayNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.ValueNode
 import specscript.language.*
 import specscript.util.toDisplayYaml
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ArrayNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ValueNode
 
 object ExpectedError :
     CommandHandler("Expected error", "core/testing"),
@@ -17,7 +17,7 @@ object ExpectedError :
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
 
         if (context.error == null) {
-            throw MissingExpectedError(data.textValue())
+            throw MissingExpectedError(data.stringValue())
         }
 
         context.error = null
@@ -31,7 +31,7 @@ object ExpectedError :
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
 
-        for ((key, _) in data.fields()) {
+        for (key in data.propertyNames()) {
             if (key == "any" || key == context.error?.error?.type) {
                 context.error = null
                 return null

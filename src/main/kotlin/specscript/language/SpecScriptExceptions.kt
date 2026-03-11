@@ -1,8 +1,8 @@
 package specscript.language
 
-import com.fasterxml.jackson.databind.JsonNode
 import specscript.commands.errors.ErrorData
 import specscript.language.types.ObjectDefinition
+import tools.jackson.databind.JsonNode
 
 /**
  * Base exception class for all SpecScript-related errors.

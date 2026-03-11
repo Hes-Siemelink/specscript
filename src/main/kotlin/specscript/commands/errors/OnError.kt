@@ -1,9 +1,9 @@
 package specscript.commands.errors
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
 import specscript.language.*
-import specscript.util.Yaml
+import specscript.util.toJsonNode
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
 
 object OnError : CommandHandler("On error", "core/errors"), ObjectHandler, DelayedResolver, ErrorHandler {
 
@@ -18,7 +18,7 @@ object OnError : CommandHandler("On error", "core/errors"), ObjectHandler, Delay
 
         val error = context.error ?: return
 
-        context.variables["error"] = Yaml.mapper.valueToTree(error.error)
+        context.variables["error"] = error.error.toJsonNode()
         context.error = null
 
         errorHandlingSection.run(context)

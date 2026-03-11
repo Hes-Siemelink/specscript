@@ -1,7 +1,6 @@
 package specscript.files
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.module.kotlin.readValue
 import specscript.language.CommandInfo
 import specscript.util.IO.isTempDir
 import specscript.util.Json
@@ -23,8 +22,8 @@ class DirectoryInfo : CommandInfo {
     @JsonProperty("specscript-version")
     override var specScriptVersion: String = "unknown"
 
-    val imports = mutableListOf<String>()
-    val connections = Json.newObject()
+    var imports = mutableListOf<String>()
+    var connections = Json.newObject()
 
     var types = Json.newObject()
 
@@ -33,7 +32,7 @@ class DirectoryInfo : CommandInfo {
             val directoryInfoYaml = dir.resolve(".directory-info.yaml")
 
             val info = if (directoryInfoYaml.exists()) {
-                Yaml.mapper.readValue(directoryInfoYaml.toFile())
+                Yaml.readTyped(directoryInfoYaml.toFile())
             } else {
                 DirectoryInfo()
             }
@@ -52,7 +51,7 @@ class DirectoryInfo : CommandInfo {
 
             val typesFile = dir.resolve("types.yaml")
             if (typesFile.exists()) {
-                info.types = Yaml.mapper.readValue(typesFile.toFile())
+                info.types = Yaml.readTyped(typesFile.toFile())
             }
 
             return info

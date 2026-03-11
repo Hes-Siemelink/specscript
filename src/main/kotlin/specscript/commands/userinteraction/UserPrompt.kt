@@ -1,9 +1,5 @@
 package specscript.commands.userinteraction
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ArrayNode
-import com.fasterxml.jackson.databind.node.JsonNodeFactory
-import com.fasterxml.jackson.databind.node.TextNode
 import com.github.kinquirer.KInquirer
 import com.github.kinquirer.components.promptCheckboxObject
 import com.github.kinquirer.components.promptInput
@@ -12,8 +8,11 @@ import com.github.kinquirer.components.promptListObject
 import com.github.kinquirer.core.Choice
 import specscript.commands.testing.Answers
 import specscript.language.SpecScriptException
-import specscript.util.Yaml
+import specscript.util.Json
 import specscript.util.toDisplayYaml
+import specscript.util.toJsonNode
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.StringNode
 
 interface UserPrompt {
 
@@ -44,13 +43,13 @@ object KInquirerPrompt : UserPrompt {
             KInquirer.promptInput(message, default)
         }
 
-        return TextNode(answer)
+        return StringNode(answer)
     }
 
     override fun select(message: String, choices: List<Choice<JsonNode>>, multiple: Boolean): JsonNode =
         if (multiple) {
             val answers = KInquirer.promptCheckboxObject(message, choices, minNumOfSelection = 1)
-            Yaml.mapper.valueToTree(answers)
+            answers.toJsonNode()
         } else {
             KInquirer.promptListObject(message, choices)
         }
@@ -104,9 +103,9 @@ object TestPrompt : UserPrompt {
     override fun prompt(message: String, default: String, password: Boolean): JsonNode {
 
         val answer: JsonNode = Answers.recordedAnswers[message] ?: if (default.isNotEmpty()) {
-            TextNode(default)
+            StringNode(default)
         } else {
-            TextNode("")
+            StringNode("")
         }
 
         if (password) {
@@ -124,11 +123,11 @@ object TestPrompt : UserPrompt {
             Answers.recordedAnswers[message] ?: throw IllegalStateException("No prerecorded answer for '$message'")
 
         if (multiple) {
-            val set = selectedAnswer.map { it.textValue() }
+            val set = selectedAnswer.toList().map { it.stringValue() }
             val selection = choices.filter {
                 set.contains(it.displayName)
             }
-            val result = ArrayNode(JsonNodeFactory.instance)
+            val result = Json.newArray()
             selection.forEach { result.add(it.data) }
 
             println(KInquirer.renderInput(message, choices, selection))
@@ -137,7 +136,7 @@ object TestPrompt : UserPrompt {
 
         } else {
             val selection = choices.find {
-                selectedAnswer.textValue() == it.displayName
+                selectedAnswer.stringValue() == it.displayName
             } ?: throw SpecScriptException("Prerecorded choice '$selectedAnswer' not found in provided list.")
 
             println(KInquirer.renderInput(message, choices, listOf(selection)))

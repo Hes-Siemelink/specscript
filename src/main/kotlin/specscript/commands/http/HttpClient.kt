@@ -1,9 +1,5 @@
 package specscript.commands.http
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.TextNode
-import com.fasterxml.jackson.databind.node.ValueNode
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.auth.*
@@ -20,6 +16,10 @@ import specscript.language.SpecScriptCommandError
 import specscript.util.Json
 import specscript.util.Yaml
 import specscript.util.toDisplayYaml
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.StringNode
+import tools.jackson.databind.node.ValueNode
 import java.net.URI
 import java.nio.file.Path
 
@@ -27,8 +27,8 @@ object HttpClient {
 
     fun processRequest(data: ValueNode, context: ScriptContext, method: HttpMethod): JsonNode? {
 
-        val uri = URI(encodePath(data.textValue()))
-        val separator = data.textValue().indexOf(uri.path)
+        val uri = URI(encodePath(data.stringValue()))
+        val separator = data.stringValue().indexOf(uri.path)
         val parsedData = Json.newObject("path", uri.toString().substring(separator))
 
         val url = uri.toString().substring(0, separator)
@@ -80,8 +80,8 @@ object HttpClient {
         }
 
     private fun HttpRequestBuilder.headers(parameters: HttpParameters) {
-        parameters.headers?.fields()?.forEach { header ->
-            header(header.key, header.value.textValue())
+        parameters.headers?.properties()?.forEach { header ->
+            header(header.key, header.value.stringValue())
         }
 
         if (!headers.contains(HttpHeaders.ContentType)) {
@@ -93,8 +93,8 @@ object HttpClient {
     }
 
     private fun HttpRequestBuilder.cookies(parameters: HttpParameters) {
-        parameters.cookies?.fields()?.forEach { cookie ->
-            cookie(cookie.key, cookie.value.textValue())
+        parameters.cookies?.properties()?.forEach { cookie ->
+            cookie(cookie.key, cookie.value.stringValue())
         }
     }
 
@@ -103,7 +103,7 @@ object HttpClient {
 
         if (headers[HttpHeaders.ContentType] == ContentType.Application.FormUrlEncoded.toString()) {
             val formData = Parameters.build {
-                parameters.body.fields().forEach {
+                parameters.body.properties().forEach {
                     append(it.key, it.value.toDisplayYaml())
                 }
             }
@@ -123,7 +123,7 @@ object HttpClient {
             val data = try {
                 Yaml.parse(response.bodyAsText())
             } catch (_: Exception) {
-                TextNode(response.bodyAsText())
+                StringNode(response.bodyAsText())
             }
             val type = response.status.value.toString()
             throw SpecScriptCommandError("Http request returned an error", type = type, data = data)
@@ -144,9 +144,9 @@ object HttpClient {
             val body = response.body<String>()
             Yaml.parse(body)
         } catch (e: Exception) {
-            // If there are any parsing or encoding errors, just return a String in TextNode
+            // If there are any parsing or encoding errors, just return a String in StringNode
             val byteArrayBody: ByteArray = response.body()
-            TextNode(String(byteArrayBody))
+            StringNode(String(byteArrayBody))
         }
     }
 

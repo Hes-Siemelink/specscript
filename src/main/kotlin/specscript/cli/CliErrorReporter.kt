@@ -1,6 +1,5 @@
 package specscript.cli
 
-import com.fasterxml.jackson.databind.JsonNode
 import specscript.language.SpecScriptCommandError
 import specscript.language.SpecScriptException
 import specscript.util.Json
@@ -56,7 +55,7 @@ object CliErrorReporter {
 
         if (commandError.error.data != null) {
             val details = Json.newObject()
-            details.set<JsonNode>(commandError.error.type, commandError.error.data)
+            details.set(commandError.error.type, commandError.error.data)
             System.err.println(details.toDisplayYaml())
         }
     }

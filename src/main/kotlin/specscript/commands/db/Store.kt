@@ -1,17 +1,18 @@
 package specscript.commands.db
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.TextNode
-import specscript.language.*
+import specscript.language.CommandHandler
+import specscript.language.ObjectHandler
+import specscript.language.ScriptContext
 import specscript.util.Json
 import specscript.util.Json.newArray
 import specscript.util.Json.newObject
 import specscript.util.toCompactJson
 import specscript.util.toDomainObject
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.StringNode
 import java.sql.Connection
 import java.sql.DriverManager
-import kotlin.use
 
 object Store : CommandHandler("Store", "core/db"), ObjectHandler {
 
@@ -82,18 +83,18 @@ fun Connection.doJsonQuery(query: String): JsonNode {
             while (resultSet.next()) {
 
                 if (resultSet.metaData.columnCount == 1 && resultSet.metaData.getColumnName(1) == "json") {
-                    val row = Json.readTree(resultSet.getObject(1).toString())
+                    val row = Json.readJson(resultSet.getObject(1).toString())
                     results.add(row)
                 } else {
                     for (i in 1..resultSet.metaData.columnCount) {
                         val row = newObject()
                         val value = resultSet.getObject(i)?.toString() ?: ""
                         val node = try {
-                             Json.readTree(value)
+                            Json.readJson(value)
                         } catch (_: Exception) {
-                            TextNode(value)
+                            StringNode(value)
                         }
-                        row.set<JsonNode>(resultSet.metaData.getColumnName(i), node)
+                        row.set(resultSet.metaData.getColumnName(i), node)
                         results.add(row)
                     }
                 }

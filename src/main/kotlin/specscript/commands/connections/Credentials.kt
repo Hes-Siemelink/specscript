@@ -2,17 +2,16 @@ package specscript.commands.connections
 
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ArrayNode
-import com.fasterxml.jackson.databind.node.JsonNodeFactory
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.ValueNode
 import specscript.language.CommandHandler
 import specscript.language.ScriptContext
 import specscript.language.ValueHandler
 import specscript.util.Json
 import specscript.util.Yaml
 import specscript.util.updateWith
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ArrayNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ValueNode
 import java.nio.file.Path
 import kotlin.io.path.createDirectories
 import kotlin.io.path.createFile
@@ -36,7 +35,7 @@ object Credentials : CommandHandler("Credentials", "core/shell"), ValueHandler {
     }
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
-        val credentials = fromFile(Path.of(data.textValue()).toAbsolutePath())
+        val credentials = fromFile(Path.of(data.stringValue()).toAbsolutePath())
         context.setCredentials(credentials)
 
         return null
@@ -46,7 +45,7 @@ object Credentials : CommandHandler("Credentials", "core/shell"), ValueHandler {
 fun CredentialsFile.save(): CredentialsFile {
     checkNotNull(file) { "Can't save Credentials object because there is no file associated with it." }
 
-    Yaml.mapper.writeValue(file?.toFile(), this.targetResources)
+    Yaml.writeToFile(file!!.toFile(), this.targetResources)
 
     return this
 }
@@ -77,11 +76,11 @@ data class TargetResource(
 ) {
 
     fun default(): ObjectNode? {
-        return credentials.find { it["name"]?.textValue() == default }
+        return credentials.find { it["name"]?.stringValue() == default }
     }
 
     fun toArrayNode(): ArrayNode {
-        val list = ArrayNode(JsonNodeFactory.instance)
+        val list = Json.newArray()
         for (item in credentials) {
             list.add(item)
         }

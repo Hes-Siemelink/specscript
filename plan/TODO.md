@@ -1,8 +1,12 @@
 # On my mind
 
+* Jackson 3
+    * Deprecated methods like textValue(), asText()
 * Use Markdown front matter for SpecScript files to define metadata
 * LLM commands
 * Agent definitions
+* Description command
+* Input schema according to JSON schema
 * Rewrite README
 * Rethink Connect to again
 
@@ -111,7 +115,7 @@ Please configure a connection to Digital.ai Release
 
 Instacli scripting error
 
-Caused by: java.lang.ClassCastException: class com.fasterxml.jackson.databind.node.TextNode cannot be cast to class com.fasterxml.jackson.databind.node.ObjectNode (com.fasterxml.jackson.databind.node.TextNode and com.fasterxml.jackson.databind.node.ObjectNode are in unnamed module of loader 'app')
+Caused by: java.lang.ClassCastException: class tools.fasterxml.jackson.databind.node.StringNode cannot be cast to class tools.fasterxml.jackson.databind.node.ObjectNode (tools.fasterxml.jackson.databind.node.StringNode and tools.fasterxml.jackson.databind.node.ObjectNode are in unnamed module of loader 'app')
 
 In create-release-connection.cli:
 

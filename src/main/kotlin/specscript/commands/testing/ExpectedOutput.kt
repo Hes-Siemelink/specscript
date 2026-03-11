@@ -1,11 +1,11 @@
 package specscript.commands.testing
 
-import com.fasterxml.jackson.databind.JsonNode
 import specscript.language.AnyHandler
 import specscript.language.CommandHandler
 import specscript.language.ScriptContext
 import specscript.language.SpecScriptCommandError
 import specscript.util.Json
+import tools.jackson.databind.JsonNode
 
 object ExpectedOutput : CommandHandler("Expected output", "core/testing"), AnyHandler {
 
@@ -15,8 +15,8 @@ object ExpectedOutput : CommandHandler("Expected output", "core/testing"), AnyHa
 
         if (output != data) {
             val error = Json.newObject()
-            error.set<JsonNode>("expected", data)
-            error.set<JsonNode>("actual", output)
+            error.set("expected", data)
+            error.set("actual", output)
             throw SpecScriptCommandError("Unexpected output.", type = "Output", data = error)
         }
 

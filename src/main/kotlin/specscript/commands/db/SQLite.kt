@@ -1,8 +1,5 @@
 package specscript.commands.db
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.TextNode
 import specscript.language.CommandHandler
 import specscript.language.ObjectHandler
 import specscript.language.ScriptContext
@@ -10,13 +7,18 @@ import specscript.util.Json
 import specscript.util.Json.newArray
 import specscript.util.Json.newObject
 import specscript.util.toDomainObject
+import specscript.util.toJsonNode
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.BooleanNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.StringNode
 import java.sql.Connection
 import java.sql.DriverManager
 
 object SQLite : CommandHandler("SQLite", "core/db"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
-        val dataWithDefaults = SQLiteDefaults.getFrom(context)?.deepCopy<ObjectNode>()?.setAll(data) ?: data
+        val dataWithDefaults = (SQLiteDefaults.getFrom(context) as ObjectNode?)?.deepCopy()?.setAll(data) ?: data
         val sql = dataWithDefaults.toDomainObject(SQLiteData::class)
 
         // FIXME Use prepared statements to avoid SQL injection
@@ -61,7 +63,7 @@ fun List<Map<String, Any>>.toNode(): JsonNode {
     this.forEach { row ->
         val rowNode = newObject()
         row.forEach { (key, value) ->
-            rowNode.set<JsonNode>(key, value.toJsonNode())
+            rowNode.set(key, jdbcToJsonNode(value))
         }
         node.add(rowNode)
     }
@@ -69,17 +71,17 @@ fun List<Map<String, Any>>.toNode(): JsonNode {
 }
 
 /** Convert a JDBC value to a Jackson JsonNode without YAML parsing. */
-private fun Any?.toJsonNode(): JsonNode = when (this) {
-    null -> TextNode("")
-    is Number -> Json.mapper.valueToTree(this)
-    is Boolean -> Json.mapper.valueToTree(this)
-    is String -> jsonOrText(this)
-    else -> TextNode(toString())
+private fun jdbcToJsonNode(value: Any?): JsonNode = when (value) {
+    null -> StringNode("")
+    is Number -> value.toJsonNode()
+    is Boolean -> BooleanNode.valueOf(value)
+    is String -> jsonOrText(value)
+    else -> StringNode(value.toString())
 }
 
 /** Try JSON first (for structured data stored as JSON strings), fall back to plain text. */
 private fun jsonOrText(value: String): JsonNode = try {
-    Json.readTree(value)
+    Json.readJson(value)
 } catch (_: Exception) {
-    TextNode(value)
+    StringNode(value)
 }

@@ -186,6 +186,9 @@ All documentation includes runnable code examples that are executed as part of t
       `getCurrentServer(context)`
 - **File Naming:** Specification files use spaces in their names (e.g., `Mcp server.spec.md`), which is important for
   file system operations.
+- **API design over inline ceremony:** Prefer a purpose-named method that describes *what* you want over exposing
+  mechanism at the call site. Null handling, type parameters, and library-specific ceremony belong behind the API. For
+  example, prefer `Json.toObject(nullableMap)` over `Json.valueToTree<ObjectNode>(nullableMap ?: emptyMap<String, Any>())`.
 
 ## Important Notes
 

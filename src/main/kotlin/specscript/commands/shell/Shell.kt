@@ -1,15 +1,15 @@
 package specscript.commands.shell
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.TextNode
-import com.fasterxml.jackson.databind.node.ValueNode
 import specscript.commands.testing.ExpectedConsoleOutput
 import specscript.language.*
 import specscript.util.Json.newObject
 import specscript.util.toDisplayYaml
 import specscript.util.toDomainObject
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.StringNode
+import tools.jackson.databind.node.ValueNode
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.nio.file.Path
@@ -22,7 +22,7 @@ object Shell : CommandHandler("Shell", "core/shell"), ObjectHandler, ValueHandle
 
         val info = createCommandInfo(context)
 
-        return execute(data.textValue(), context.workingDir, info)
+        return execute(data.stringValue(), context.workingDir, info)
     }
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
@@ -69,7 +69,7 @@ private fun execute(
     commandLine: String,
     workingDir: Path,
     info: ShellCommand = ShellCommand()
-): TextNode? {
+): StringNode? {
 
     val buffer = StringBuilder()
     try {
@@ -95,7 +95,7 @@ private fun execute(
         }
 
         return if (info.captureOutput) {
-            TextNode(buffer.trim().toString())
+            StringNode(buffer.trim().toString())
         } else {
             null
         }

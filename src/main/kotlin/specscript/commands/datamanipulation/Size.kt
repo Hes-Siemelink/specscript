@@ -1,8 +1,8 @@
 package specscript.commands.datamanipulation
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.*
 import specscript.language.*
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.*
 
 object Size : CommandHandler("Size", "core/data-manipulation"), ValueHandler, ArrayHandler, ObjectHandler {
 
@@ -17,8 +17,8 @@ object Size : CommandHandler("Size", "core/data-manipulation"), ValueHandler, Ar
                 return if (data.booleanValue()) IntNode(1) else IntNode(0)
             }
 
-            is TextNode -> {
-                return IntNode(data.textValue().length)
+            is StringNode -> {
+                return IntNode(data.stringValue().length)
             }
         }
 

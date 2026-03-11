@@ -1,9 +1,9 @@
 package specscript.commands.controlflow
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
 import specscript.commands.toCondition
 import specscript.language.*
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
 
 object Repeat : CommandHandler("Repeat", "core/control-flow"), ObjectHandler, DelayedResolver {
 

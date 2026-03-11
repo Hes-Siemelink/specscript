@@ -1,11 +1,11 @@
 package specscript.commands.connections
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
 import specscript.language.CommandHandler
 import specscript.language.ObjectHandler
 import specscript.language.ScriptContext
 import specscript.util.toDomainObject
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
 
 object CreateCredentials : CommandHandler("Create credentials", "core/connections"), ObjectHandler {
 

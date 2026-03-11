@@ -1,16 +1,20 @@
 package specscript.util
 
-import com.fasterxml.jackson.databind.*
-import com.fasterxml.jackson.databind.node.*
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import kotlinx.serialization.json.*
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectWriter
+import tools.jackson.databind.SerializationFeature
+import tools.jackson.databind.node.*
+import tools.jackson.module.kotlin.jsonMapper
+import tools.jackson.module.kotlin.kotlinModule
 import kotlin.reflect.KClass
 
 object Json {
 
     // Bare mapper for tree-model operations (JsonNode read/write).
     // No KotlinModule — avoids expensive kotlin-reflect initialization on startup.
-    private val treeMapper = ObjectMapper()
+    private val treeMapper: ObjectMapper = jsonMapper {}
 
     private val prettyWriter: ObjectWriter = treeMapper.writerWithDefaultPrettyPrinter()
     private val compactWriter: ObjectWriter = treeMapper.writer()
@@ -18,9 +22,10 @@ object Json {
     // Full mapper with KotlinModule, for typed deserialization/serialization.
     // Lazy to defer kotlin-reflect cost until first actual use.
     val mapper: ObjectMapper by lazy {
-        ObjectMapper()
-            .enable(SerializationFeature.INDENT_OUTPUT)
-            .registerModule(KotlinModules.module)
+        jsonMapper {
+            addModule(kotlinModule())
+            enable(SerializationFeature.INDENT_OUTPUT)
+        }
     }
 
     fun newArray(): ArrayNode {
@@ -50,17 +55,27 @@ object Json {
         return compactWriter.writeValueAsString(node)
     }
 
-    fun readTree(content: String): JsonNode {
+    fun readJson(content: String): JsonNode {
         return treeMapper.readTree(content)
+    }
+
+    fun toObject(value: Any?): ObjectNode {
+        if (value == null) {
+            return newObject()
+        }
+        return mapper.valueToTree(value)
     }
 }
 
+fun Any.toJsonNode(): JsonNode {
+    return Json.mapper.valueToTree(this)
+}
 
-fun List<JsonNode>.toJson(): ArrayNode {
+fun List<JsonNode>.toArrayNode(): ArrayNode {
     return ArrayNode(JsonNodeFactory.instance, this)
 }
 
-fun JsonNode.asArray(): ArrayNode {
+fun JsonNode.toArrayNode(): ArrayNode {
     return when (this) {
         is ArrayNode -> this
         else -> ArrayNode(JsonNodeFactory.instance).add(this)
@@ -69,7 +84,7 @@ fun JsonNode.asArray(): ArrayNode {
 
 fun ObjectNode.add(vars: Map<String, String>) {
     for (variable in vars) {
-        this.set<JsonNode>(variable.key, TextNode(variable.value))
+        this.set(variable.key, StringNode(variable.value))
     }
 }
 
@@ -97,7 +112,7 @@ abstract class JsonProcessor {
         return when (node) {
             is ArrayNode -> processArray(node)
             is ObjectNode -> processObject(node)
-            is TextNode -> processText(node)
+            is StringNode -> processText(node)
             else -> processOther(node)
         }
     }
@@ -113,14 +128,14 @@ abstract class JsonProcessor {
 
     open fun processObject(node: ObjectNode): JsonNode {
 
-        for (field in node.fields()) {
-            node.set<JsonNode>(field.key, process(field.value))
+        for (field in node.properties()) {
+            node.set(field.key, process(field.value))
         }
 
         return node
     }
 
-    open fun processText(node: TextNode): JsonNode {
+    open fun processText(node: StringNode): JsonNode {
         return node
     }
 
@@ -135,7 +150,7 @@ abstract class JsonProcessor {
 
 fun ObjectNode.toKotlinx(): JsonObject {
     return buildJsonObject {
-        fields().forEach { (key, value) ->
+        properties().forEach { (key, value) ->
             put(key, value.toKotlinx())
         }
     }
@@ -154,7 +169,7 @@ private fun JsonNode.toKotlinx(): JsonElement {
         is NullNode, is MissingNode -> JsonNull
         is BooleanNode -> JsonPrimitive(booleanValue())
         is NumericNode -> JsonPrimitive(numberValue())
-        is TextNode -> JsonPrimitive(textValue())
+        is StringNode -> JsonPrimitive(stringValue())
         is ArrayNode -> this.toKotlinx()
         is ObjectNode -> this.toKotlinx()
         else -> throw IllegalArgumentException("Unknown JsonNode type: ${this.javaClass}")
@@ -169,7 +184,7 @@ private fun JsonNode.toKotlinx(): JsonElement {
 fun JsonObject.toJackson(nodeFactory: JsonNodeFactory = JsonNodeFactory.instance): ObjectNode {
     val jacksonObject = nodeFactory.objectNode()
     this.entries.forEach { (key, value) ->
-        jacksonObject.set<JsonNode>(key, value.toJackson(nodeFactory))
+        jacksonObject.set(key, value.toJackson(nodeFactory))
     }
     return jacksonObject
 }
@@ -193,7 +208,7 @@ fun JsonElement.toJackson(nodeFactory: JsonNodeFactory = JsonNodeFactory.instanc
 
 private fun JsonPrimitive.toJackson(nodeFactory: JsonNodeFactory): JsonNode {
     if (this.isString) {
-        return nodeFactory.textNode(this.content)
+        return nodeFactory.stringNode(this.content)
     }
     // Try to be as specific as possible with number types
     this.longOrNull?.let { return nodeFactory.numberNode(it) }
@@ -201,9 +216,5 @@ private fun JsonPrimitive.toJackson(nodeFactory: JsonNodeFactory): JsonNode {
     this.booleanOrNull?.let { return nodeFactory.booleanNode(it) }
 
     // Fallback for other potential primitive types
-    return nodeFactory.textNode(this.content)
-}
-
-object KotlinModules {
-    val module: Module = KotlinModule.Builder().build()
+    return nodeFactory.stringNode(this.content)
 }

@@ -1,11 +1,5 @@
 package specscript.commands.userinteraction
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ArrayNode
-import com.fasterxml.jackson.databind.node.BooleanNode.FALSE
-import com.fasterxml.jackson.databind.node.BooleanNode.TRUE
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.TextNode
 import com.github.kinquirer.core.Choice
 import specscript.language.CommandFormatException
 import specscript.language.types.ObjectProperties
@@ -14,6 +8,12 @@ import specscript.language.types.PropertyDefinition
 import specscript.language.types.TypeSpecification
 import specscript.util.Json
 import specscript.util.toDisplayYaml
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ArrayNode
+import tools.jackson.databind.node.BooleanNode.FALSE
+import tools.jackson.databind.node.BooleanNode.TRUE
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.StringNode
 
 
 fun PropertyDefinition.prompt(label: String? = null): JsonNode {
@@ -38,14 +38,14 @@ fun PropertyDefinition.prompt(label: String? = null): JsonNode {
 }
 
 private fun PropertyDefinition.promptText(message: String, password: Boolean = false): JsonNode {
-    return UserPrompt.prompt(message, default?.asText() ?: "", password)
+    return UserPrompt.prompt(message, default?.asString() ?: "", password)
 }
 
 private fun PropertyDefinition.promptBoolean(message: String): JsonNode {
 
-    val answer = UserPrompt.prompt(message, default?.asText() ?: "")
+    val answer = UserPrompt.prompt(message, default?.asString() ?: "")
 
-    return if (answer.textValue() == "true") TRUE
+    return if (answer.stringValue() == "true") TRUE
     else FALSE
 }
 
@@ -55,7 +55,7 @@ private fun PropertyDefinition.promptChoice(message: String, multiple: Boolean =
         if (displayProperty == null) {
             Choice(choiceData.toDisplayYaml(), choiceData)
         } else {
-            Choice(choiceData[displayProperty].textValue(), choiceData)
+            Choice(choiceData[displayProperty].stringValue(), choiceData)
         }
     } ?: emptyList()
 
@@ -107,7 +107,7 @@ private fun ObjectProperties.promptObject(): JsonNode {
         val answer = parameter.prompt(name)
 
         // Add answer to result and to list of variables
-        answers.set<JsonNode>(name, answer)
+        answers.set(name, answer)
         variables[name] = answer
     }
 
@@ -141,8 +141,8 @@ private fun promptList(message: String, type: TypeSpecification): ArrayNode {
     val list = Json.newArray()
 
     val name = type.name ?: "item"
-    val add = TextNode("Add new $name")
-    val done = TextNode("Done")
+    val add = StringNode("Add new $name")
+    val done = StringNode("Done")
 
     while (true) {
 

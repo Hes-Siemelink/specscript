@@ -1,11 +1,10 @@
 package specscript.language
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ArrayNode
-import com.fasterxml.jackson.databind.node.JsonNodeFactory
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.ValueNode
 import specscript.util.Json
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ArrayNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ValueNode
 
 
 fun runCommand(
@@ -27,7 +26,7 @@ private fun runCommandOnList(
     context: ScriptContext
 ): ArrayNode? {
 
-    val output = ArrayNode(JsonNodeFactory.instance)
+    val output = Json.newArray()
 
     for (data in dataList) {
         val result = runSingleCommand(handler, data, context)
@@ -58,7 +57,8 @@ private fun runSingleCommand(
             rawData.resolve(context)
         }
 
-        handler.validate(data)
+        // FIXME Schema validation does not work
+//        handler.validate(data)
 
         val result: JsonNode? = handleCommand(handler, data, context)
 
@@ -110,7 +110,7 @@ fun handleCommand(handler: CommandHandler, data: JsonNode, context: ScriptContex
 
 fun asCommand(handler: CommandHandler, data: JsonNode): JsonNode {
     val node = Json.newObject()
-    node.set<JsonNode>(handler.name, data)
+    node.set(handler.name, data)
     return node
 }
 

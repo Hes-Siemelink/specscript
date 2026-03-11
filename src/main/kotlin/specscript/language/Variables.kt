@@ -1,10 +1,10 @@
 package specscript.language
 
-import com.fasterxml.jackson.core.JsonPointer
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.TextNode
 import specscript.util.JsonProcessor
 import specscript.util.toDisplayYaml
+import tools.jackson.core.JsonPointer
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.StringNode
 
 val VARIABLE_REGEX = Regex("\\$\\{([^}]+)}")
 
@@ -14,10 +14,10 @@ fun JsonNode.resolveVariables(variables: Map<String, JsonNode>): JsonNode {
 
 private class VariableResolver(val variables: Map<String, JsonNode>) : JsonProcessor() {
 
-    override fun processText(node: TextNode): JsonNode {
+    override fun processText(node: StringNode): JsonNode {
 
         // Single variable reference will return full content of variable as node
-        val singleVariableMatch = VARIABLE_REGEX.matchEntire(node.textValue())
+        val singleVariableMatch = VARIABLE_REGEX.matchEntire(node.stringValue())
         if (singleVariableMatch != null) {
             val varName = singleVariableMatch.groupValues[1]
             return getValue(varName, variables)
@@ -25,8 +25,8 @@ private class VariableResolver(val variables: Map<String, JsonNode>) : JsonProce
 
         // One or more variables mixed in text are replaced with text values
         // Only replace the node is there is a variable in it
-        if (VARIABLE_REGEX.containsMatchIn(node.textValue())) {
-            return TextNode(resolveVariablesInText(node.textValue(), variables))
+        if (VARIABLE_REGEX.containsMatchIn(node.stringValue())) {
+            return StringNode(resolveVariablesInText(node.stringValue(), variables))
         }
 
         return node

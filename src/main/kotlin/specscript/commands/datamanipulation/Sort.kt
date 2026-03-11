@@ -1,11 +1,11 @@
 package specscript.commands.datamanipulation
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ArrayNode
-import com.fasterxml.jackson.databind.node.NumericNode
-import com.fasterxml.jackson.databind.node.ObjectNode
 import specscript.language.*
-import specscript.util.toJson
+import specscript.util.toArrayNode
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ArrayNode
+import tools.jackson.databind.node.NumericNode
+import tools.jackson.databind.node.ObjectNode
 
 object Sort : CommandHandler("Sort", "core/data-manipulation"), ObjectHandler {
 
@@ -19,7 +19,7 @@ object Sort : CommandHandler("Sort", "core/data-manipulation"), ObjectHandler {
 
         val sorted = items.sortedWith(NodeComparator(sortField))
 
-        return sorted.toJson()
+        return sorted.toArrayNode()
     }
 }
 
@@ -33,7 +33,7 @@ private class NodeComparator(val field: String) : Comparator<JsonNode> {
         return if (value1 is NumericNode && value2 is NumericNode) {
             value1.asInt() - value2.asInt()
         } else {
-            value1.asText().compareTo(value2.asText())
+            value1.asString().compareTo(value2.asString())
         }
     }
 }

@@ -1,9 +1,5 @@
 package specscript.commands.shell
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.TextNode
-import com.fasterxml.jackson.databind.node.ValueNode
 import specscript.cli.SpecScriptCli
 import specscript.commands.testing.ExpectedConsoleOutput
 import specscript.language.CommandHandler
@@ -12,13 +8,17 @@ import specscript.language.ScriptContext
 import specscript.language.ValueHandler
 import specscript.util.IO
 import specscript.util.toDomainObject
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.StringNode
+import tools.jackson.databind.node.ValueNode
 import java.nio.file.Path
 
 object Cli : CommandHandler("Cli", "core/shell"), ValueHandler, ObjectHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
 
-        return runCli(context, data.asText())
+        return runCli(context, data.asString())
     }
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
@@ -27,7 +27,7 @@ object Cli : CommandHandler("Cli", "core/shell"), ValueHandler, ObjectHandler {
         return runCli(context, info.command, info.cd?.let { Path.of(it) } ?: context.tempDir)
     }
 
-    private fun runCli(context: ScriptContext, command: String, workingDir: Path = context.tempDir): TextNode {
+    private fun runCli(context: ScriptContext, command: String, workingDir: Path = context.tempDir): StringNode {
         val line = command.split("\\s+".toRegex())
         val args = line.drop(1).toTypedArray()
 
@@ -39,7 +39,7 @@ object Cli : CommandHandler("Cli", "core/shell"), ValueHandler, ObjectHandler {
         // Make sure we can check the output
         val combined = ExpectedConsoleOutput.storeOutput(context, stdout, stderr)
 
-        return TextNode(combined)
+        return StringNode(combined)
     }
 }
 

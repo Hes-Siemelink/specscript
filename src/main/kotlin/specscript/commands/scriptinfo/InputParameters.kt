@@ -1,10 +1,7 @@
 package specscript.commands.scriptinfo
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.ValueNode
-import com.fasterxml.jackson.module.kotlin.contains
+import com.fasterxml.jackson.annotation.JsonAnySetter
 import specscript.commands.testing.Answers
 import specscript.commands.toCondition
 import specscript.commands.userinteraction.prompt
@@ -14,6 +11,9 @@ import specscript.language.types.ParameterData
 import specscript.language.types.TypeSpecification
 import specscript.language.types.resolve
 import specscript.util.toDomainObject
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ValueNode
 
 object InputParameters : CommandHandler("Input parameters", "core/script-info"),
     ObjectHandler, ValueHandler, DelayedResolver {
@@ -27,7 +27,7 @@ object InputParameters : CommandHandler("Input parameters", "core/script-info"),
     }
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
-        val type = TypeSpecification(data.textValue())
+        val type = TypeSpecification(data.stringValue())
 
         val resolvedType = type.resolve(context.types).definition
 
@@ -48,7 +48,7 @@ object InputParameters : CommandHandler("Input parameters", "core/script-info"),
         for ((name, info) in input.properties.entries) {
 
             // Already exists
-            if (context.getInputVariables().contains(name)) {
+            if (context.getInputVariables().has(name)) {
                 // Copy variable to top level
                 context.variables[name] = context.getInputVariables()[name]
                 continue
@@ -80,7 +80,7 @@ object InputParameters : CommandHandler("Input parameters", "core/script-info"),
                 )
             }
 
-            context.getInputVariables().set<JsonNode>(name, answer)
+            context.getInputVariables().set(name, answer)
             context.variables[name] = answer
         }
     }
@@ -99,9 +99,9 @@ private fun conditionValid(condition: JsonNode?, context: ScriptContext): Boolea
     return condition.resolveVariables(context.variables).toCondition().isTrue()
 }
 
-data class InputParameterData(
-    @get:JsonAnyGetter
-    override val properties: Map<String, ParameterData> = mutableMapOf()
-) : ObjectDefinition {
-}
+class InputParameterData : ObjectDefinition {
 
+    @JsonAnyGetter
+    @JsonAnySetter
+    override val properties: MutableMap<String, ParameterData> = LinkedHashMap()
+}

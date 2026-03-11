@@ -1,39 +1,46 @@
 package specscript.util
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.networknt.schema.JsonSchema
-import com.networknt.schema.JsonSchemaFactory
-import com.networknt.schema.SpecVersion.VersionFlag
+import com.networknt.schema.InputFormat
+import com.networknt.schema.Schema
+import com.networknt.schema.SchemaLocation
+import com.networknt.schema.SchemaRegistry
+import com.networknt.schema.dialect.Dialects
+import com.networknt.schema.resource.IriResourceLoader
 import specscript.language.CommandFormatException
+import tools.jackson.databind.JsonNode
 import java.nio.file.Path
+import kotlin.io.path.inputStream
 
 object JsonSchemas {
 
-    private val schemas = mutableMapOf<String, JsonSchema?>()
+    private val schemas = mutableMapOf<String, Schema?>()
 
-    val factory: JsonSchemaFactory = JsonSchemaFactory.getInstance(VersionFlag.V202012) {
-        it.schemaMappers { schemaMappers ->
-            schemaMappers.mapPrefix("https://specscript.info/v1/commands", "classpath:commands")
+    var registry: SchemaRegistry = SchemaRegistry.withDialect(Dialects.getDraft202012()) { builder ->
+        builder.schemaIdResolvers { resolvers ->
+            resolvers.mapPrefix("https://specscript.info/v1/commands", "classpath:commands")
+        }
+        builder.resourceLoaders { loaders ->
+            loaders.add(IriResourceLoader.getInstance())
         }
     }
 
-    fun getSchema(schemaName: String): JsonSchema? {
+    fun getSchema(schemaName: String): Schema? {
         return schemas.getOrPut(schemaName) {
             loadSchema(schemaName)
         }
     }
 
-    private fun loadSchema(schemaName: String): JsonSchema? {
+    private fun loadSchema(schemaName: String): Schema? {
         val schemaFile = when {
-            Resources.exists("commands/$schemaName.yaml") -> "commands/$schemaName.yaml"
-            Resources.exists("commands/$schemaName.json") -> "commands/$schemaName.json"
+            Resources.exists("commands/$schemaName.yaml") -> "classpath:commands/$schemaName.yaml"
+            Resources.exists("commands/$schemaName.json") -> "classpath:commands/$schemaName.json"
             else -> return null
         }
-        return factory.getSchema(Resources.getUri(schemaFile))
+        return registry.getSchema(SchemaLocation.of(schemaFile))
     }
 
-    fun load(schemaFile: Path): JsonSchema? {
-        return factory.getSchema(schemaFile.toUri())
+    fun load(schemaFile: Path): Schema? {
+        return registry.getSchema(schemaFile.inputStream(), InputFormat.YAML)
     }
 }
 
@@ -45,4 +52,3 @@ internal fun JsonNode.validateWithSchema(schemaName: String) {
         throw CommandFormatException("Schema validation errors according to \"${schemaName}\":\n$messages")
     }
 }
-

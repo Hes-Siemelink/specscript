@@ -1,12 +1,12 @@
 package specscript.commands.datamanipulation
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ArrayNode
-import com.fasterxml.jackson.databind.node.JsonNodeFactory
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.TextNode
 import specscript.language.*
+import specscript.util.Json
 import specscript.util.toDisplayYaml
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ArrayNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.StringNode
 
 object Replace : CommandHandler("Replace", "core/data-manipulation"), ObjectHandler {
 
@@ -30,8 +30,8 @@ object Replace : CommandHandler("Replace", "core/data-manipulation"), ObjectHand
     ): JsonNode? {
 
         return when (source) {
-            is TextNode -> {
-                replaceText(source.textValue(), part, replacement)
+            is StringNode -> {
+                replaceText(source.stringValue(), part, replacement)
             }
 
             is ArrayNode -> {
@@ -47,18 +47,18 @@ object Replace : CommandHandler("Replace", "core/data-manipulation"), ObjectHand
     }
 
     private fun replaceText(source: String, part: JsonNode, replaceWith: JsonNode): JsonNode {
-        if (part !is TextNode) {
+        if (part !is StringNode) {
             throw CommandFormatException("'Replace.find' may contain text only")
         }
 
         val replacementText = replaceWith.toDisplayYaml()
-        val replacement = source.replace(part.textValue(), replacementText)
+        val replacement = source.replace(part.stringValue(), replacementText)
 
-        return TextNode(replacement)
+        return StringNode(replacement)
     }
 
     private fun replaceArray(source: ArrayNode, part: JsonNode, replaceWith: JsonNode): JsonNode {
-        val replacement = ArrayNode(JsonNodeFactory.instance)
+        val replacement = Json.newArray()
         for (node in source) {
             replacement.add(replace(node, part, replaceWith))
         }
@@ -67,8 +67,8 @@ object Replace : CommandHandler("Replace", "core/data-manipulation"), ObjectHand
 
     private fun replaceObject(source: ObjectNode, part: JsonNode, replaceWith: JsonNode): JsonNode {
         val replacement = source.objectNode()
-        for (field in source.fields()) {
-            replacement.set<JsonNode>(field.key, replace(field.value, part, replaceWith))
+        for (field in source.properties()) {
+            replacement.set(field.key, replace(field.value, part, replaceWith))
         }
         return replacement
     }

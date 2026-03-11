@@ -1,11 +1,11 @@
 package specscript.commands.datamanipulation
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.*
 import specscript.language.ArrayHandler
 import specscript.language.CommandHandler
 import specscript.language.ScriptContext
 import specscript.language.SpecScriptException
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.*
 
 object Add : CommandHandler("Add", "core/data-manipulation"), ArrayHandler {
 
@@ -21,7 +21,7 @@ object Add : CommandHandler("Add", "core/data-manipulation"), ArrayHandler {
         return when (target) {
             is ArrayNode -> addToArray(target, item)
             is ObjectNode -> addToObject(target, item)
-            is TextNode -> addToText(target, item)
+            is StringNode -> addToText(target, item)
             is IntNode -> addToInt(target, item)
             else -> throw SpecScriptException("Can't add a ${item.javaClass.simpleName} to a ${target.javaClass.simpleName}")
         }
@@ -36,14 +36,14 @@ object Add : CommandHandler("Add", "core/data-manipulation"), ArrayHandler {
 
     private fun addToObject(target: ObjectNode, item: JsonNode): ObjectNode {
         return when (item) {
-            is ObjectNode -> target.setAll<ObjectNode>(item)
+            is ObjectNode -> target.setAll(item)
             else -> throw SpecScriptException("Can't add a ${item.javaClass.simpleName} to a ${target.javaClass.simpleName}")
         }
     }
 
-    private fun addToText(target: TextNode, item: JsonNode): TextNode {
+    private fun addToText(target: StringNode, item: JsonNode): StringNode {
         return when (item) {
-            is ValueNode -> TextNode(target.asText() + item.asText())
+            is ValueNode -> StringNode(target.asString() + item.asString())
             else -> throw SpecScriptException("Can't add a ${item.javaClass.simpleName} to a ${target.javaClass.simpleName}")
         }
     }

@@ -1,10 +1,10 @@
 package specscript.commands.datamanipulation
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
 import specscript.language.CommandHandler
 import specscript.language.ObjectHandler
 import specscript.language.ScriptContext
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
 
 object Values : CommandHandler("Values", "core/data-manipulation"), ObjectHandler {
 
@@ -12,7 +12,7 @@ object Values : CommandHandler("Values", "core/data-manipulation"), ObjectHandle
 
         val fields = data.arrayNode()
 
-        for ((_, value) in data.fields()) {
+        for (value in data.values()) {
             fields.add(value)
         }
 

@@ -1,11 +1,11 @@
 package specscript.commands.connections
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
 import specscript.language.CommandHandler
 import specscript.language.ObjectHandler
 import specscript.language.ScriptContext
 import specscript.language.getTextParameter
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
 
 object DeleteCredentials : CommandHandler("Delete credentials", "core/connections"), ObjectHandler {
 
@@ -16,7 +16,7 @@ object DeleteCredentials : CommandHandler("Delete credentials", "core/connection
         val credentials = context.getCredentials()
         val target = credentials.targetResources[targetName] ?: return null
 
-        target.credentials.removeIf { it["name"]?.textValue() == oldCredentials }
+        target.credentials.removeIf { it["name"]?.stringValue() == oldCredentials }
         credentials.save()
 
         return null

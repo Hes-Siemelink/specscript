@@ -1,6 +1,6 @@
 package specscript.commands.db
 
-import com.fasterxml.jackson.databind.JsonNode
+import tools.jackson.databind.JsonNode
 
 data class StoreData(
     val file: String = "",

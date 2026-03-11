@@ -1,9 +1,9 @@
 package specscript.commands.controlflow
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ArrayNode
-import com.fasterxml.jackson.databind.node.ObjectNode
 import specscript.language.*
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ArrayNode
+import tools.jackson.databind.node.ObjectNode
 
 object When : CommandHandler("When", "core/control-flow"), ArrayHandler, DelayedResolver {
 

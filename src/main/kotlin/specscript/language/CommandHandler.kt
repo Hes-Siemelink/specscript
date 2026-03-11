@@ -1,10 +1,10 @@
 package specscript.language
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ArrayNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.ValueNode
 import specscript.util.validateWithSchema
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ArrayNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ValueNode
 
 abstract class CommandHandler(open val name: String, open val namespace: String?) {
 
@@ -64,5 +64,5 @@ fun JsonNode.getTextParameter(parameter: String): String {
     if (value !is ValueNode) {
         throw CommandFormatException("Field '$parameter' needs to be a text value.")
     }
-    return value.textValue()
+    return value.stringValue()
 }

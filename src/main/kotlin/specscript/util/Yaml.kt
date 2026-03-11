@@ -1,31 +1,36 @@
 package specscript.util
 
-import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.node.TextNode
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
-import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator
+import tools.jackson.databind.DeserializationFeature
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.databind.node.StringNode
+import tools.jackson.dataformat.yaml.YAMLMapper
+import tools.jackson.dataformat.yaml.YAMLWriteFeature
+import tools.jackson.module.kotlin.kotlinModule
+import java.io.File
 import java.nio.file.Path
+
 
 object Yaml {
 
-    private val factory = YAMLFactory()
-        .enable(YAMLGenerator.Feature.MINIMIZE_QUOTES)
-        .disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER)
-
     // Bare mapper for tree-model operations (parsing YAML to/from JsonNode).
     // No KotlinModule — avoids expensive kotlin-reflect initialization on startup.
-    private val treeMapper = ObjectMapper(factory).apply {
-        setSerializationInclusion(JsonInclude.Include.NON_NULL)
-    }
+    private val treeMapper: ObjectMapper = YAMLMapper.builder()
+        .enable(YAMLWriteFeature.MINIMIZE_QUOTES)
+        .disable(YAMLWriteFeature.WRITE_DOC_START_MARKER)
+        .disable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS)
+        .build()
 
     // Full mapper with KotlinModule, only for typed deserialization (treeToValue, readValue<T>, valueToTree).
     // Lazy to defer kotlin-reflect cost until first actual use.
-    val mapper: ObjectMapper by lazy {
-        ObjectMapper(factory).registerModule(KotlinModules.module).apply {
-            setSerializationInclusion(JsonInclude.Include.NON_NULL)
-        }
+    @PublishedApi
+    internal val mapper: ObjectMapper by lazy {
+        YAMLMapper.builder()
+            .addModule(kotlinModule())
+            .enable(YAMLWriteFeature.MINIMIZE_QUOTES)
+            .disable(YAMLWriteFeature.WRITE_DOC_START_MARKER)
+            .disable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS)
+            .build()
     }
 
     fun readFile(source: Path): JsonNode {
@@ -39,14 +44,14 @@ object Yaml {
     }
 
     fun parse(source: Path): List<JsonNode> {
-        val yamlParser = factory.createParser(source.toFile())
+        val yamlParser = treeMapper.createParser(source.toFile())
         return treeMapper
             .readValues(yamlParser, JsonNode::class.java)
             .readAll()
     }
 
     fun parseAsFile(content: String): List<JsonNode> {
-        val yamlParser = factory.createParser(content)
+        val yamlParser = treeMapper.createParser(content)
         return treeMapper
             .readValues(yamlParser, JsonNode::class.java)
             .readAll()
@@ -57,12 +62,12 @@ object Yaml {
     }
 
     fun parseIfPossible(source: String?): JsonNode {
-        source ?: return TextNode("")
+        source ?: return StringNode("")
 
         return try {
             parse(source)
         } catch (_: Exception) {
-            TextNode(source)
+            StringNode(source)
         }
     }
 
@@ -73,13 +78,24 @@ object Yaml {
     fun writeAsString(node: JsonNode): String {
         return treeMapper.writeValueAsString(node)
     }
+    
+    inline fun <reified T> readTyped(file: File): T {
+        return mapper.readValue(file, T::class.java)
+    }
+
+    fun writeToFile(file: File, value: Any) {
+        mapper.writeValue(file, value)
+    }
+
+    fun writeAsString(value: Any): String {
+        return mapper.writeValueAsString(value)
+    }
 }
 
 fun JsonNode?.toDisplayYaml(): String {
     this ?: return ""
-    if (isTextual) {
-        return textValue()
+    if (isString) {
+        return stringValue()
     }
     return Yaml.writeAsString(this).trim()
 }
-

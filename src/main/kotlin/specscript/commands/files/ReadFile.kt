@@ -1,12 +1,11 @@
 package specscript.commands.files
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.TextNode
-import com.fasterxml.jackson.databind.node.ValueNode
-import com.fasterxml.jackson.module.kotlin.contains
 import specscript.language.*
 import specscript.util.Yaml
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.StringNode
+import tools.jackson.databind.node.ValueNode
 import java.nio.file.Path
 import kotlin.io.path.exists
 
@@ -27,9 +26,9 @@ object ReadFile : CommandHandler("Read file", "core/files"), ValueHandler, Objec
 
 fun JsonNode.toPath(context: ScriptContext, directory: Path? = null): Path {
     return when (this) {
-        is TextNode -> {
+        is StringNode -> {
             val dir = directory ?: context.workingDir
-            val file = dir.resolve(textValue())
+            val file = dir.resolve(stringValue())
             if (file.exists()) {
                 file
             } else {
@@ -38,9 +37,9 @@ fun JsonNode.toPath(context: ScriptContext, directory: Path? = null): Path {
         }
 
         is ObjectNode -> {
-            if (contains("file")) {
+            if (has("file")) {
                 this["file"].toPath(context)
-            } else if (contains("resource")) {
+            } else if (has("resource")) {
                 this["resource"].toPath(context, context.scriptDir)
             } else {
                 throw CommandFormatException("Expected either 'file' or 'resource' property.")

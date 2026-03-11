@@ -1,29 +1,22 @@
 package specscript.language
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.TextNode
 import specscript.commands.files.TempFile
 import specscript.commands.files.TempFileData
-import specscript.commands.scriptinfo.InputParameterData
-import specscript.commands.scriptinfo.InputParameters
-import specscript.commands.scriptinfo.InputSchema
-import specscript.commands.scriptinfo.ScriptInfo
-import specscript.commands.scriptinfo.ScriptInfoData
+import specscript.commands.scriptinfo.*
 import specscript.commands.shell.Cli
 import specscript.commands.shell.CliData
 import specscript.commands.shell.Shell
 import specscript.commands.shell.ShellCommand
-import specscript.commands.testing.AfterTests
+import specscript.commands.testing.*
 import specscript.commands.testing.Answers
-import specscript.commands.testing.BeforeTests
-import specscript.commands.testing.ExpectedConsoleOutput
-import specscript.commands.testing.TestCase
-import specscript.commands.testing.Tests
 import specscript.commands.util.Print
 import specscript.files.MarkdownBlock
 import specscript.files.MarkdownBlock.*
 import specscript.util.Yaml
 import specscript.util.toDomainObject
+import specscript.util.toJsonNode
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.StringNode
 import kotlin.io.path.name
 
 data class Command(val name: String, val data: JsonNode)
@@ -84,11 +77,14 @@ class Script(val commands: List<Command>, val title: String? = null) {
                 val mergedInput = (scriptInfoData.input ?: emptyMap()) + (inputParams.properties)
                 scriptInfoData.copy(input = mergedInput)
             }
+
             inputSchemaCommand != null -> {
-                val schemaData = InputSchema.toInputData(inputSchemaCommand.data as com.fasterxml.jackson.databind.node.ObjectNode)
+                val schemaData =
+                    InputSchema.toInputData(inputSchemaCommand.data as tools.jackson.databind.node.ObjectNode)
                 val mergedInput = (scriptInfoData.input ?: emptyMap()) + (schemaData.properties)
                 scriptInfoData.copy(input = mergedInput)
             }
+
             else -> scriptInfoData
         }
     }
@@ -113,7 +109,7 @@ private fun toCommandList(script: List<JsonNode>): List<Command> {
 }
 
 private fun toCommandList(scriptNode: JsonNode): List<Command> {
-    return scriptNode.fields().asSequence().map { Command(it.key, it.value) }.toList()
+    return scriptNode.properties().asSequence().map { Command(it.key, it.value) }.toList()
 }
 
 private fun toCommandList(script: String): List<Command> {
@@ -141,11 +137,11 @@ fun List<MarkdownBlock>.toScript(): Script {
             YamlFile -> {
                 val data = TempFileData(
                     filename = block.getOption("file"),
-                    content = TextNode(block.getContent()),
+                    content = StringNode(block.getContent()),
                     resolve = block.getOption("resolve")?.toBoolean() ?: false,
                 )
                 commands.add(
-                    Command(TempFile.name, Yaml.mapper.valueToTree(data))
+                    Command(TempFile.name, data.toJsonNode())
                 )
             }
 
@@ -157,7 +153,7 @@ fun List<MarkdownBlock>.toScript(): Script {
                     cd = block.getOption("cd")
                 )
                 commands.add(
-                    Command(Cli.name, Yaml.mapper.valueToTree(data))
+                    Command(Cli.name, data.toJsonNode())
                 )
             }
 
@@ -171,7 +167,7 @@ fun List<MarkdownBlock>.toScript(): Script {
                     cd = block.getOption("cd")
                 )
                 commands.add(
-                    Command(Shell.name, Yaml.mapper.valueToTree(data))
+                    Command(Shell.name, data.toJsonNode())
                 )
             }
 
@@ -183,13 +179,13 @@ fun List<MarkdownBlock>.toScript(): Script {
 
             Quote -> {
                 commands.add(
-                    Command(Print.name, TextNode(block.getContent()))
+                    Command(Print.name, StringNode(block.getContent()))
                 )
             }
 
             Output -> {
                 commands.add(
-                    Command(ExpectedConsoleOutput.name, TextNode(block.getContent()))
+                    Command(ExpectedConsoleOutput.name, StringNode(block.getContent()))
                 )
             }
         }
@@ -254,7 +250,7 @@ fun Script.splitTests(): TestSuite {
             }
 
             Tests.name -> {
-                for (field in command.data.fields()) {
+                for (field in command.data.properties()) {
                     tests.add(NamedTest(field.key, Script.from(field.value)))
                 }
             }

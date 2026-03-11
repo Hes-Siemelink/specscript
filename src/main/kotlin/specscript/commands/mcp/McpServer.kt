@@ -1,9 +1,5 @@
 package specscript.commands.mcp
 
-import com.fasterxml.jackson.annotation.JsonAnySetter
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.TextNode
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -22,6 +18,9 @@ import specscript.files.FileContext
 import specscript.files.SpecScriptFile
 import specscript.language.*
 import specscript.util.*
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.StringNode
 import kotlin.concurrent.thread
 
 object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, DelayedResolver {
@@ -211,9 +210,9 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
             // TODO handle lists
             try {
                 // Run script
-                val result: JsonNode? = if (tool.script is TextNode) {
+                val result: JsonNode? = if (tool.script is StringNode) {
                     // Local script file
-                    val file = localContext.scriptDir.resolve(tool.script.textValue())
+                    val file = localContext.scriptDir.resolve(tool.script.stringValue())
                     SpecScriptFile(file).run(FileContext(file, localContext, localContext.variables))
                 } else {
                     // Inline script
@@ -231,9 +230,9 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
     }
 
     private fun deriveInputSchema(tool: ToolInfo, context: ScriptContext): InputSchema? {
-        if (tool.script !is TextNode) return null
+        if (tool.script !is StringNode) return null
 
-        val file = context.scriptDir.resolve(tool.script.textValue())
+        val file = context.scriptDir.resolve(tool.script.stringValue())
         val scriptFile = SpecScriptFile(file)
         val inputSchemaCommand = scriptFile.script.commands.find { it.name == "Input schema" }
 
@@ -245,7 +244,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
         val inputParamsCommand = scriptFile.script.commands.find { it.name == "Input parameters" }
         if (inputParamsCommand != null) {
             val info = scriptFile.script.info
-            val propertiesNode = Json.mapper.valueToTree<ObjectNode>(info.input)
+            val propertiesNode = Json.toObject(info.input)
             return InputSchema(properties = propertiesNode)
         }
 
@@ -263,9 +262,9 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
             mimeType = resource.mimeType
         ) { request ->
 
-            val result: JsonNode? = if (resource.script is TextNode) {
+            val result: JsonNode? = if (resource.script is StringNode) {
                 // Local script file
-                val file = localContext.scriptDir.resolve(resource.script.textValue())
+                val file = localContext.scriptDir.resolve(resource.script.stringValue())
                 SpecScriptFile(file).run(localContext)
             } else {
                 // Inline script
@@ -299,9 +298,9 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
             localContext.variables[INPUT_VARIABLE] = Json.newObject(request.arguments ?: emptyMap())
 
             // Run script
-            val result: JsonNode? = if (prompt.script is TextNode) {
+            val result: JsonNode? = if (prompt.script is StringNode) {
                 // Local script file
-                val file = localContext.scriptDir.resolve(prompt.script.textValue())
+                val file = localContext.scriptDir.resolve(prompt.script.stringValue())
                 SpecScriptFile(file).run(localContext)
             } else {
                 // Inline script
@@ -331,13 +330,10 @@ data class McpServerInfo(
     val transport: TransportType = TransportType.HTTP,
     val port: Int = 8080,
 
-    @JsonAnySetter
     val tools: MutableMap<String, ToolInfo> = mutableMapOf(),
 
-    @JsonAnySetter
     val resources: MutableMap<String, ResourceInfo> = mutableMapOf(),
 
-    @JsonAnySetter
     val prompts: MutableMap<String, PromptInfo> = mutableMapOf()
 )
 

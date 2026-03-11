@@ -1,7 +1,5 @@
 package specscript.files
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.TextNode
 import specscript.commands.CommandLibrary
 import specscript.commands.variables.AssignVariable
 import specscript.language.*
@@ -9,6 +7,8 @@ import specscript.language.types.Type
 import specscript.language.types.TypeRegistry
 import specscript.language.types.TypeSpecification
 import specscript.util.toDomainObject
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.StringNode
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.*
@@ -52,17 +52,17 @@ class FileContext(
     override val tempDir: Path
         get() {
             return if (variables.containsKey(SCRIPT_TEMP_DIR_VARIABLE)) {
-                Path.of(variables[SCRIPT_TEMP_DIR_VARIABLE]!!.textValue())
+                Path.of(variables[SCRIPT_TEMP_DIR_VARIABLE]!!.stringValue())
             } else {
                 Files.createTempDirectory("specscript-").apply {
                     toFile().deleteOnExit()
-                    variables[SCRIPT_TEMP_DIR_VARIABLE] = TextNode(toAbsolutePath().toString())
+                    variables[SCRIPT_TEMP_DIR_VARIABLE] = StringNode(toAbsolutePath().toString())
                 }
             }
         }
 
     fun setTempDir(dir: Path) {
-        variables[SCRIPT_TEMP_DIR_VARIABLE] = TextNode(dir.toAbsolutePath().toString())
+        variables[SCRIPT_TEMP_DIR_VARIABLE] = StringNode(dir.toAbsolutePath().toString())
     }
 
     override val output: JsonNode?
@@ -175,7 +175,7 @@ class FileContext(
  * Load types from directory.
  */
 private fun TypeRegistry.loadTypes(info: DirectoryInfo) {
-    for ((name, type) in info.types.fields()) {
+    for ((name, type) in info.types.properties()) {
         registerType(Type(name, type.toDomainObject(TypeSpecification::class)))
     }
 }

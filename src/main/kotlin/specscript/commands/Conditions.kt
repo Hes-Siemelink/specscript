@@ -1,9 +1,9 @@
 package specscript.commands
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.*
 import specscript.language.CommandFormatException
 import specscript.util.toDisplayYaml
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.*
 
 fun interface Condition {
     fun isTrue(): Boolean
@@ -35,8 +35,8 @@ class Contains(
                 inObject(node, container)
             }
 
-            container is TextNode && node is TextNode -> {
-                container.textValue().contains(node.textValue())
+            container is StringNode && node is StringNode -> {
+                container.stringValue().contains(node.stringValue())
             }
 
             else -> {
@@ -46,7 +46,7 @@ class Contains(
 
     private fun inObject(obj: JsonNode, container: ObjectNode): Boolean {
         if (obj is ObjectNode) {
-            for (field in obj.fields()) {
+            for (field in obj.properties()) {
                 if (!container.has(field.key)) {
                     return false
                 }
@@ -69,7 +69,7 @@ class Empty(private val node: JsonNode) : Condition {
             is ArrayNode -> node.isEmpty
             is ObjectNode -> node.isEmpty
             is NumericNode -> node.asInt() == 0
-            is ValueNode -> node.textValue() == null || node.textValue().isEmpty()
+            is ValueNode -> node.stringValue() == null || node.stringValue().isEmpty()
             else -> node.isEmpty
         }
 }
@@ -106,11 +106,11 @@ fun JsonNode.toCondition(): Condition {
         }
 
         has("all") -> {
-            return All(get("all").map { it.toCondition() })
+            return All(get("all").toList().map { it.toCondition() })
         }
 
         has("any") -> {
-            return AnyCondition(get("any").map { it.toCondition() })
+            return AnyCondition(get("any").toList().map { it.toCondition() })
         }
 
         has("not") -> {

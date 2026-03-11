@@ -31,7 +31,7 @@ fun runTests(file: Path) {
     val report = TestReport()
     runTestSuite(file.getTests(), report)
 
-    println(Yaml.mapper.writeValueAsString(report))
+    println(Yaml.writeAsString(report))
 }
 
 fun runTestSuite(nodes: List<DynamicNode>, report: TestReport) {
@@ -202,5 +202,5 @@ fun Script.getTestTitle(commandHandler: CommandHandler): String {
     val command = commands.find {
         it.name == commandHandler.name
     }
-    return command?.data?.textValue() ?: commandHandler.name
+    return command?.data?.stringValue() ?: commandHandler.name
 }

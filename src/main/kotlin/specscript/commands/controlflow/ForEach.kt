@@ -1,8 +1,9 @@
 package specscript.commands.controlflow
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.*
 import specscript.language.*
+import specscript.util.Json
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.*
 
 object ForEach : CommandHandler("For each", "core/control-flow"), ObjectHandler, DelayedResolver {
 
@@ -16,7 +17,7 @@ object ForEach : CommandHandler("For each", "core/control-flow"), ObjectHandler,
         val (loopVar, itemData) = removeLoopVariable(body)
             ?: Pair(
                 "item",
-                TextNode("\${output}") // Pass ${output} as a string to prevent resolution of variable syntax inside the data
+                StringNode("\${output}") // Pass ${output} as a string to prevent resolution of variable syntax inside the data
             ).apply {
                 checkNotNull(context.output) { "For each without loop variable takes items from  \${output}, but \${output} is null" }
             }
@@ -41,7 +42,7 @@ object ForEach : CommandHandler("For each", "core/control-flow"), ObjectHandler,
             result?.let {
                 when (output) {
                     is ArrayNode -> output.add(result)
-                    is ObjectNode -> output.set(item["key"].textValue(), result)
+                    is ObjectNode -> output.set(item["key"].stringValue(), result)
                     else -> {}
                 }
             }
@@ -51,7 +52,7 @@ object ForEach : CommandHandler("For each", "core/control-flow"), ObjectHandler,
     }
 
     private fun removeLoopVariable(data: ObjectNode): Pair<String, JsonNode>? {
-        val first = data.fieldNames().next()
+        val first = data.propertyNames().first()
         val match = FOR_EACH_VARIABLE.matchEntire(first) ?: return null
         val items = data.remove(first)
 
@@ -62,13 +63,13 @@ object ForEach : CommandHandler("For each", "core/control-flow"), ObjectHandler,
 private fun JsonNode.enumerateForEach(): ArrayNode {
     when (this) {
         is ArrayNode -> return this
-        is ValueNode -> return ArrayNode(JsonNodeFactory.instance).add(this)
+        is ValueNode -> return Json.newArray().add(this)
         is ObjectNode -> {
-            val array = ArrayNode(JsonNodeFactory.instance)
-            for (field in fields()) {
+            val array = Json.newArray()
+            for (field in properties()) {
                 val obj: ObjectNode = array.objectNode()
-                obj.set<JsonNode>("key", array.textNode(field.key))
-                obj.set<JsonNode>("value", field.value)
+                obj.set("key", array.stringNode(field.key))
+                obj.set("value", field.value)
                 array.add(obj)
             }
             return array

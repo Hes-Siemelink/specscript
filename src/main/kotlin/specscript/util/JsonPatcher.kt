@@ -1,8 +1,8 @@
 package specscript.util
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ArrayNode
-import com.fasterxml.jackson.databind.node.ObjectNode
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ArrayNode
+import tools.jackson.databind.node.ObjectNode
 
 /* Derived from https://github.com/egerardus/simple-json-patch */
 
@@ -11,11 +11,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode
  * @return a copy of the JSON document with patches applied
  */
 fun JsonNode.applyPatch(patch: ArrayNode): JsonNode {
-    if (!isContainerNode) {
+    if (!isContainer) {
         throw IllegalArgumentException("Invalid JSON document, an object or array is required")
     }
 
-    var result = deepCopy<JsonNode>()
+    var result = deepCopy()
 
     for (operation: JsonNode in patch) {
         if (!operation.isObject) {
@@ -32,15 +32,15 @@ fun JsonNode.applyPatch(patch: ArrayNode): JsonNode {
  */
 private fun perform(operation: ObjectNode, doc: JsonNode): JsonNode {
     val opNode = operation["op"]
-    if (opNode == null || !opNode.isTextual) {
+    if (opNode == null || !opNode.isString) {
         throw IllegalArgumentException("Invalid \"op\" property: $opNode")
     }
-    val op = opNode.asText()
+    val op = opNode.asString()
     val pathNode = operation["path"]
-    if (pathNode == null || !pathNode.isTextual) {
+    if (pathNode == null || !pathNode.isString) {
         throw IllegalArgumentException("Invalid \"path\" property: $pathNode")
     }
-    val path = pathNode.asText()
+    val path = pathNode.asString()
     if (path.isNotEmpty() && path[0] != '/') {
         throw IllegalArgumentException("Invalid \"path\" property: $path")
     }
@@ -62,10 +62,10 @@ private fun perform(operation: ObjectNode, doc: JsonNode): JsonNode {
 
         "move" -> {
             val fromNode = operation["from"]
-            if (fromNode == null || !fromNode.isTextual) {
+            if (fromNode == null || !fromNode.isString) {
                 throw IllegalArgumentException("Invalid \"from\" property: $fromNode")
             }
-            val from = fromNode.asText()
+            val from = fromNode.asString()
             if (from.isNotEmpty() && from[0] != '/') {
                 throw IllegalArgumentException("Invalid \"from\" property: $fromNode")
             }
@@ -74,10 +74,10 @@ private fun perform(operation: ObjectNode, doc: JsonNode): JsonNode {
 
         "copy" -> {
             val fromNode = operation["from"]
-            if (fromNode == null || !fromNode.isTextual) {
+            if (fromNode == null || !fromNode.isString) {
                 throw IllegalArgumentException("Invalid \"from\" property: $fromNode")
             }
-            val from = fromNode.asText()
+            val from = fromNode.asString()
             if (from.isNotEmpty() && from[0] != '/') {
                 throw IllegalArgumentException("Invalid \"from\" property: $fromNode")
             }
@@ -115,7 +115,7 @@ fun add(doc: JsonNode, path: String, value: JsonNode): JsonNode {
     if (parent.isObject) {
         val parentObject = parent as ObjectNode
         val key = path.substring(lastPathIndex + 1)
-        parentObject.set<JsonNode>(key, value)
+        parentObject.set(key, value)
     } else if (parent.isArray) {
         val key = path.substring(lastPathIndex + 1)
         val parentArray = parent as ArrayNode

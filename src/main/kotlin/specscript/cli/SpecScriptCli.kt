@@ -1,6 +1,5 @@
 package specscript.cli
 
-import com.fasterxml.jackson.databind.JsonNode
 import specscript.files.FileContext
 import specscript.files.SpecScriptFile
 import specscript.language.*
@@ -9,6 +8,7 @@ import specscript.test.runTests
 import specscript.util.add
 import specscript.util.toDisplayJson
 import specscript.util.toDisplayYaml
+import tools.jackson.databind.JsonNode
 import java.nio.file.Path
 import kotlin.io.path.exists
 import kotlin.io.path.isDirectory

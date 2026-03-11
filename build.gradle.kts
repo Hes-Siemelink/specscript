@@ -23,9 +23,9 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
 
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.+")
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.17.+")
-    implementation("com.networknt:json-schema-validator:1.4.0")
+    implementation("tools.jackson.module:jackson-module-kotlin:3.0.+")
+    implementation("tools.jackson.dataformat:jackson-dataformat-yaml:3.0.+")
+    implementation("com.networknt:json-schema-validator:3.0.+")
     implementation("io.ktor:ktor-client-core:3.3.+")
     implementation("io.ktor:ktor-client-java:3.3+")
     implementation("io.ktor:ktor-client-auth:3.3+")
@@ -42,8 +42,8 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json:3.3.+")
     implementation("io.github.oshai:kotlin-logging:5.0.0")  // For MCP
 
-    implementation("org.junit.jupiter:junit-jupiter-api:5.13.4")
-    runtimeOnly("org.junit.jupiter:junit-jupiter-engine:5.13.4")
+    implementation("org.junit.jupiter:junit-jupiter-api:5.14.2")
+    runtimeOnly("org.junit.jupiter:junit-jupiter-engine:5.14.2")
 
     testImplementation("io.kotest:kotest-assertions-core:5.7.2")
 }
@@ -67,8 +67,8 @@ testing {
             dependencies {
                 implementation(project())
                 implementation("io.kotest:kotest-assertions-core:5.7.2")
-                implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.+")
-                implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.17.+")
+                implementation("tools.jackson.module:jackson-module-kotlin:3.0.+")
+                implementation("tools.jackson.dataformat:jackson-dataformat-yaml:3.0.+")
             }
 
             sources {

@@ -1,10 +1,8 @@
 package specscript.commands.http
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.TextNode
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -16,6 +14,9 @@ import specscript.files.SpecScriptFile
 import specscript.language.*
 import specscript.util.Json
 import specscript.util.Yaml
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.StringNode
 import kotlin.io.path.name
 
 
@@ -120,7 +121,7 @@ private suspend fun handleRequest(
 private fun ScriptContext.addInputVariable(call: ApplicationCall, bodyText: String) {
     // Body takes precedence
     if (bodyText.isNotBlank()) {
-        variables[INPUT_VARIABLE] = runCatching { Json.readTree(bodyText) }.getOrElse { TextNode(bodyText) }
+        variables[INPUT_VARIABLE] = runCatching { Json.readJson(bodyText) }.getOrElse { StringNode(bodyText) }
         return
     }
     // Fallback to query parameters if present
@@ -136,13 +137,13 @@ private fun ScriptContext.addRequestVariable(
     pathParamNames: List<String>
 ) {
     val requestData = Json.newObject()
-    requestData.set<JsonNode>("headers", call.headersAsJson())
-    requestData.set<JsonNode>("path", TextNode(call.request.path()))
-    requestData.set<JsonNode>("pathParameters", call.pathParametersAsJson(pathParamNames))
-    requestData.set<JsonNode>("query", TextNode(call.request.queryString().orEmpty()))
-    requestData.set<JsonNode>("queryParameters", call.queryParametersAsJson())
-    requestData.set<JsonNode>("body", bodyText.toBodyJson())
-    requestData.set<JsonNode>("cookies", call.cookiesAsJson())
+    requestData.set("headers", call.headersAsJson())
+    requestData.set("path", StringNode(call.request.path()))
+    requestData.set("pathParameters", call.pathParametersAsJson(pathParamNames))
+    requestData.set("query", StringNode(call.request.queryString().orEmpty()))
+    requestData.set("queryParameters", call.queryParametersAsJson())
+    requestData.set("body", bodyText.toBodyJson())
+    requestData.set("cookies", call.cookiesAsJson())
     variables["request"] = requestData
 }
 
@@ -159,20 +160,22 @@ private fun ApplicationCall.cookiesAsJson(): ObjectNode =
     Json.newObject(request.cookies.rawCookies)
 
 private fun String.toBodyJson(): JsonNode =
-    if (isBlank()) Json.newObject() else runCatching { Json.readTree(this) }.getOrElse { TextNode(this) }
+    if (isBlank()) Json.newObject() else runCatching { Json.readJson(this) }.getOrElse { StringNode(this) }
 
 
 private typealias HttpServerInstance = EmbeddedServer<NettyApplicationEngine, NettyApplicationEngine.Configuration>
 
-data class Endpoints(
-    @get:JsonAnyGetter
-    val paths: MutableMap<String, EndpointData> = mutableMapOf()
-)
+class Endpoints {
+    @JsonAnyGetter
+    @JsonAnySetter
+    val paths: MutableMap<String, EndpointData> = linkedMapOf()
+}
 
-data class EndpointData(
-    @get:JsonAnyGetter
-    val methodHandlers: Map<String, MethodHandlerData> = mutableMapOf()
-)
+class EndpointData {
+    @JsonAnyGetter
+    @JsonAnySetter
+    val methodHandlers: MutableMap<String, MethodHandlerData> = mutableMapOf()
+}
 
 data class MethodHandlerData(
     val output: JsonNode? = null,

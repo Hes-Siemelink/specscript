@@ -1,14 +1,14 @@
 package specscript.commands.userinteraction
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.ValueNode
 import specscript.language.CommandHandler
 import specscript.language.ObjectHandler
 import specscript.language.ScriptContext
 import specscript.language.ValueHandler
 import specscript.language.types.ParameterData
 import specscript.util.toDomainObject
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ValueNode
 
 /**
  * Asks user through simple text prompt
@@ -16,7 +16,7 @@ import specscript.util.toDomainObject
 object Prompt : CommandHandler("Prompt", "core/user-interaction"), ValueHandler, ObjectHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode {
-        return UserPrompt.prompt(data.textValue())
+        return UserPrompt.prompt(data.stringValue())
     }
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {

@@ -1,9 +1,9 @@
 package specscript.commands.variables
 
-import com.fasterxml.jackson.databind.JsonNode
 import specscript.language.AnyHandler
 import specscript.language.CommandHandler
 import specscript.language.ScriptContext
+import tools.jackson.databind.JsonNode
 
 class AssignVariable(private val varName: String) : CommandHandler("\${}", null), AnyHandler {
 
