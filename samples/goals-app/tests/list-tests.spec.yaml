@@ -1,0 +1,113 @@
+# List goals tests
+#
+# Tests for the list goals command with various filters.
+# Run with: spec --test tests/list-tests.spec.yaml
+
+Script info: List goals tests
+
+Before tests:
+  Shell: rm -f db/test-goals.db
+  Create test db: {}
+  # Seed test data
+  Do:
+    - Create:
+        title: Todo goal
+        description: A todo goal
+        assignee: alice
+    - Create:
+        title: In-progress goal
+        description: A goal in progress
+        assignee: bob
+    - Update:
+        id: 2
+        state: in_progress
+    - Create:
+        title: Completed goal
+        description: A finished goal
+        assignee: alice
+    - Update:
+        id: 3
+        state: completed
+    - Create:
+        title: Child of goal 1
+        description: A sub-goal
+        assignee: alice
+        parent_id: 1
+
+Tests:
+
+  List all goals without filters:
+    List:
+      state: all
+      assignee: all
+      parent_id: all
+    As: ${goals}
+    Size: ${goals}
+    Expected output: 4
+
+  Filter by state todo:
+    List:
+      state: todo
+    As: ${goals}
+    Size: ${goals}
+    Assert that:
+      item: ${output}
+      equals: 2
+
+  Filter by state in_progress:
+    List:
+      state: in_progress
+    As: ${goals}
+    Assert that:
+      - item:
+          /Size: ${goals}
+        equals: 1
+      - item: ${goals[0].title}
+        equals: In-progress goal
+
+  Filter by state completed:
+    List:
+      state: completed
+    As: ${goals}
+    Assert that:
+      - item:
+          /Size: ${goals}
+        equals: 1
+      - item: ${goals[0].title}
+        equals: Completed goal
+
+  Filter by assignee:
+    List:
+      assignee: alice
+    As: ${goals}
+    Assert that:
+      - item:
+          /Size: ${goals}
+        equals: 3
+      - item: ${goals[0].assignee}
+        equals: alice
+
+  Filter top-level goals only:
+    List:
+      parent_id: none
+    Size: ${output}
+    Expected output: 3
+
+  Filter children of a specific parent:
+    List:
+      parent_id: 1
+    As: ${goals}
+    Assert that:
+      - item:
+          /Size: ${goals}
+        equals: 1
+      - item: ${goals[0].title}
+        equals: Child of goal 1
+
+  Empty result for non-existent assignee:
+    List:
+      assignee: nobody
+    Expected output: []
+
+After tests:
+  Shell: rm -f db/test-goals.db

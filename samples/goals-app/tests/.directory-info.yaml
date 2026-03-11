@@ -1,0 +1,13 @@
+connections:
+  Goal DB:
+    SQLite defaults:
+      file: db/test-goals.db
+
+imports:
+  - create-test-db.spec.yaml
+  - ../goals/create.spec.yaml
+  - ../goals/list.spec.yaml
+  - ../goals/get.spec.yaml
+  - ../goals/update.spec.yaml
+  - ../goals/delete.spec.yaml
+  - ../goals/create-batch.spec.yaml

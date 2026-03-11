@@ -1,0 +1,69 @@
+# Create goal tests
+#
+# Tests for the create goal command.
+# Run with: spec --test tests/create-tests.spec.yaml
+
+Script info: Create goal tests
+
+Before tests:
+  Shell: rm -f db/test-goals.db
+  Create test db: {}
+
+Tests:
+
+  Create a goal with required fields only:
+    Create:
+      title: Write tests
+      description: Add test coverage for goals app
+    Assert that:
+      - item: ${output[0].title}
+        equals: Write tests
+      - item: ${output[0].description}
+        equals: Add test coverage for goals app
+      - item: ${output[0].state}
+        equals: todo
+      - item: ${output[0].priority}
+        equals: medium
+
+  Create a goal with all fields:
+    Create:
+      title: Ship release
+      description: Deploy version 1.0
+      priority: high
+      assignee: alice
+    Assert that:
+      - item: ${output[0].title}
+        equals: Ship release
+      - item: ${output[0].priority}
+        equals: high
+      - item: ${output[0].assignee}
+        equals: alice
+
+  Create a sub-goal with parent_id:
+    Create:
+      title: Parent goal
+      description: Top-level goal
+    As: ${parent}
+    Run script:
+      resource: ../goals/create.spec.yaml
+      input:
+        title: Child goal
+        description: Sub-goal under parent
+        parent_id: ${parent[0].id}
+    Assert that:
+      not:
+        item: ${output[0].parent_id}
+        equals: ""
+
+  Create a goal with special characters:
+    Create:
+      title: "Fix the user's dashboard"
+      description: "Handle single quotes like it's nothing"
+    Assert that:
+      - item: ${output[0].title}
+        equals: "Fix the user's dashboard"
+      - item: ${output[0].description}
+        equals: "Handle single quotes like it's nothing"
+
+After tests:
+  Shell: rm -f db/test-goals.db

@@ -1,0 +1,78 @@
+# Delete goal tests
+#
+# Tests for the delete goal command, including cascade delete.
+# Run with: spec --test tests/delete-tests.spec.yaml
+
+Script info: Delete goal tests
+
+Before tests:
+  Shell: rm -f db/test-goals.db
+  Create test db: { }
+
+Tests:
+
+  Delete an existing goal:
+
+    Create:
+      title: Delete me
+      description: Temporary goal
+    As: ${created}
+
+    Delete:
+      id: ${created[0].id}
+
+    Assert that:
+      item: ${output[0].message}
+      equals: Goal deleted
+
+
+  Deleted goal is no longer retrievable:
+
+    Create:
+      title: Gone soon
+      description: Temporary
+    As: ${created}
+
+    Delete:
+      id: ${created[0].id}
+
+    Get:
+      id: ${created[0].id}
+
+    Expected output: [ ]
+
+
+  Delete a non-existent goal:
+
+    Delete:
+      id: 999
+
+    Assert that:
+      item: ${output[0].message}
+      equals: Goal not found
+
+  Cascade delete removes child goals:
+
+    Do:
+      - Create:
+          title: Parent
+          description: Will be deleted
+      - As: ${parent}
+      - Run script:
+          resource: ../goals/create.spec.yaml
+          input:
+            title: Child
+            description: Should be cascade deleted
+            parent_id: ${parent[0].id}
+      - As: ${child}
+
+    Delete:
+      id: ${parent[0].id}
+
+    Get:
+      id: ${child[0].id}
+
+    Expected output: [ ]
+
+After tests:
+  Shell: rm -f db/test-goals.db

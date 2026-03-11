@@ -1,0 +1,36 @@
+# Get goal tests
+#
+# Tests for the get goal command.
+# Run with: spec --test tests/get-tests.spec.yaml
+
+Script info: Get goal tests
+
+Before tests:
+  Shell: rm -f db/test-goals.db
+  Create test db: { }
+  Create:
+    title: Fetch me
+    description: A goal to retrieve
+    priority: high
+    assignee: alice
+
+Tests:
+
+  Get existing goal by ID:
+    - Get:
+        id: 1
+    - Assert that:
+        - item: ${output[0].title}
+          equals: Fetch me
+        - item: ${output[0].priority}
+          equals: high
+        - item: ${output[0].assignee}
+          equals: alice
+
+  Get non-existent goal returns empty:
+    Get:
+      id: 999
+    Expected output: [ ]
+
+After tests:
+  Shell: rm -f db/test-goals.db

@@ -1,0 +1,81 @@
+# Update goal tests
+#
+# Tests for the update goal command.
+# Run with: spec --test tests/update-tests.spec.yaml
+
+Script info: Update goal tests
+
+Before tests:
+  Shell: rm -f db/test-goals.db
+  Create test db: {}
+  Create:
+    title: Original title
+    description: Original description
+    priority: low
+    assignee: alice
+
+Tests:
+
+  Update title:
+    Update:
+      id: 1
+      title: Updated title
+    Assert that:
+      - item: ${output[0].title}
+        equals: Updated title
+      - item: ${output[0].message}
+        equals: Goal updated
+
+  Update state to in_progress:
+    Update:
+      id: 1
+      state: in_progress
+    Assert that:
+      item: ${output[0].state}
+      equals: in_progress
+
+  Update state to completed:
+    Update:
+      id: 1
+      state: completed
+    Assert that:
+      item: ${output[0].state}
+      equals: completed
+
+  Update priority and assignee:
+    Update:
+      id: 1
+      priority: high
+      assignee: bob
+    Assert that:
+      - item: ${output[0].priority}
+        equals: high
+      - item: ${output[0].assignee}
+        equals: bob
+
+  Update non-existent goal:
+    Update:
+      id: 999
+      title: Ghost
+    Expected output: []
+
+  Update with special characters:
+    Update:
+      id: 1
+      title: "It's a new title"
+    Assert that:
+      item: ${output[0].title}
+      equals: "It's a new title"
+
+  Unchanged fields are preserved:
+    Update:
+      id: 1
+      title: Only title changes
+    Assert that:
+      - item: ${output[0].title}
+        equals: Only title changes
+      - item: ${output[0].description}
+        equals: Original description
+
+After tests:
+  Shell: rm -f db/test-goals.db

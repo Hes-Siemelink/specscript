@@ -1,0 +1,52 @@
+# Create batch tests
+#
+# Tests for the batch create goals command.
+# Run with: spec --test tests/create-batch-tests.spec.yaml
+
+Script info: Create batch tests
+
+Before tests:
+  Shell: rm -f db/test-goals.db
+  Create test db: {}
+
+Tests:
+
+  Batch create multiple goals:
+    Create batch:
+      batch:
+        - title: Goal one
+          description: First goal
+          priority: high
+        - title: Goal two
+          description: Second goal
+          assignee: bob
+        - title: Goal three
+          description: Third goal
+          priority: low
+    List:
+      state: all
+      assignee: all
+      parent_id: all
+    Size: ${output}
+    Expected output: 3
+
+  Batch create with parent linkage:
+    Create:
+      title: Parent for batch
+      description: Top level
+    As: ${parent}
+    Create batch:
+      batch:
+        - title: Batch child one
+          description: First child
+          parent_id: ${parent[0].id}
+        - title: Batch child two
+          description: Second child
+          parent_id: ${parent[0].id}
+    List:
+      parent_id: ${parent[0].id}
+    Size: ${output}
+    Expected output: 2
+
+After tests:
+  Shell: rm -f db/test-goals.db
