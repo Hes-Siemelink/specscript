@@ -6,11 +6,11 @@ import specscript.language.ScriptContext
 import specscript.util.Json
 import specscript.util.Json.newArray
 import specscript.util.Json.newObject
+import specscript.util.Yaml
 import specscript.util.toCompactJson
 import specscript.util.toDomainObject
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
-import tools.jackson.databind.node.StringNode
 import java.sql.Connection
 import java.sql.DriverManager
 
@@ -89,11 +89,7 @@ fun Connection.doJsonQuery(query: String): JsonNode {
                     for (i in 1..resultSet.metaData.columnCount) {
                         val row = newObject()
                         val value = resultSet.getObject(i)?.toString() ?: ""
-                        val node = try {
-                            Json.readJson(value)
-                        } catch (_: Exception) {
-                            StringNode(value)
-                        }
+                        val node = Yaml.parseIfPossible(value)
                         row.set(resultSet.metaData.getColumnName(i), node)
                         results.add(row)
                     }

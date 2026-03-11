@@ -120,11 +120,7 @@ object HttpClient {
 
         // Error
         if (!response.status.isSuccess()) {
-            val data = try {
-                Yaml.parse(response.bodyAsText())
-            } catch (_: Exception) {
-                StringNode(response.bodyAsText())
-            }
+            val data = Yaml.parseIfPossible(response.bodyAsText())
             val type = response.status.value.toString()
             throw SpecScriptCommandError("Http request returned an error", type = type, data = data)
         }

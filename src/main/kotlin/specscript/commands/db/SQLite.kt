@@ -3,9 +3,9 @@ package specscript.commands.db
 import specscript.language.CommandHandler
 import specscript.language.ObjectHandler
 import specscript.language.ScriptContext
-import specscript.util.Json
 import specscript.util.Json.newArray
 import specscript.util.Json.newObject
+import specscript.util.Yaml
 import specscript.util.toDomainObject
 import specscript.util.toJsonNode
 import tools.jackson.databind.JsonNode
@@ -75,13 +75,6 @@ private fun jdbcToJsonNode(value: Any?): JsonNode = when (value) {
     null -> StringNode("")
     is Number -> value.toJsonNode()
     is Boolean -> BooleanNode.valueOf(value)
-    is String -> jsonOrText(value)
+    is String -> Yaml.parseIfPossible(value)
     else -> StringNode(value.toString())
-}
-
-/** Try JSON first (for structured data stored as JSON strings), fall back to plain text. */
-private fun jsonOrText(value: String): JsonNode = try {
-    Json.readJson(value)
-} catch (_: Exception) {
-    StringNode(value)
 }

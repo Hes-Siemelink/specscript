@@ -121,7 +121,7 @@ private suspend fun handleRequest(
 private fun ScriptContext.addInputVariable(call: ApplicationCall, bodyText: String) {
     // Body takes precedence
     if (bodyText.isNotBlank()) {
-        variables[INPUT_VARIABLE] = runCatching { Json.readJson(bodyText) }.getOrElse { StringNode(bodyText) }
+        variables[INPUT_VARIABLE] = Yaml.parseIfPossible(bodyText)
         return
     }
     // Fallback to query parameters if present
