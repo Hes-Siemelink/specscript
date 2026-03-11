@@ -197,7 +197,7 @@ private fun toTestFromScript(
 
 fun Script.getTestTitle(commandHandler: CommandHandler): String {
     if (title != null) {
-        return title!!
+        return title
     }
     val command = commands.find {
         it.name == commandHandler.name
