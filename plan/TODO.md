@@ -1,22 +1,19 @@
-# On my mind
+# Spotlight
 
-* Jackson 3
-    * Deprecated methods like textValue(), asText()
+* Rethink Connect to again
 * Use Markdown front matter for SpecScript files to define metadata
 * LLM commands
 * Agent definitions
 * Description command
 * Input schema according to JSON schema
 * Rewrite README
-* Rethink Connect to again
-* Investigate running .spec.md code example tests in the original spec directory instead of a temp dir.
-  TestUtil.getCodeExamplesAsTests() currently creates a temp dir as scriptFile, then overrides SCRIPT_DIR
-  to point back to the real spec location. If tests ran in the real dir and used Temp file for scratch files,
-  this special logic could be removed.
 
 ## In general
 
 * AI to generate scripts: notebook type interaction to write scripts
+* Tutorial / guide documents: "Spec documents are written spec-first — they define behavior before implementation
+  exists. This drives a minimalist style: precise, executable, and cheap to change." Create a separate set of
+  friendlier, tutorial-style "getting started" and "how-to" guides.
 
 # Actually build something
 
@@ -40,6 +37,10 @@
 * Stream and pipe output as Yaml array of lines
 * Find a way to confirm default input parameters vs. just taking them for granted. Interactive mode would trigger
   confirmation?
+* Investigate running specification code examples and tests in the original spec directory instead of a temp dir.
+  TestUtil.getCodeExamplesAsTests() currently creates a temp dir as scriptFile, then overrides SCRIPT_DIR to point back
+  to the real spec location. If tests ran in the real dir and used Temp file for scratch files, this special logic could
+  be removed.
 
 ## User interaction
 

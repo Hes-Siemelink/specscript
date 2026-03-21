@@ -135,6 +135,22 @@ included as a resource directory for runtime access.
   example, prefer `Json.toObject(nullableMap)` over
   `Json.valueToTree<ObjectNode>(nullableMap ?: emptyMap<String, Any>())`.
 
+## Specification writing style
+
+Spec documents are written spec-first — they define behavior before implementation exists. This drives a minimalist
+style: precise, executable, and cheap to change.
+
+- **One executable example per concept**, two maximum per section. The example IS the test.
+- **No motivational prose.** No "this is useful for", "previously you had to", or "in CI/CD environments" paragraphs.
+- **No illustrative non-executable examples.** If it can't run as a test, it probably doesn't belong in the spec.
+- **Don't explain what the reader can infer** from the example or from a stated resolution order.
+- **Prefer a summary table** over multiple explanatory paragraphs.
+- **Add new features as sections in existing spec files** rather than creating new spec files.
+- **Keep prose to one or two sentences** introducing the feature and its core rule. Then show the example.
+- **Edge cases go in `tests/` files**, not in the main spec document.
+
+This style is deliberately dry. Friendlier tutorial-style guides are a separate concern (see TODO.md).
+
 ## Sensitive areas
 
 - **`samples/basic/` directory**: Adding or removing files here breaks 3 spec files that hardcode directory listing
