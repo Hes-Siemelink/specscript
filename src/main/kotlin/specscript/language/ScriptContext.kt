@@ -28,4 +28,5 @@ fun ScriptContext.getInputVariables(): ObjectNode {
 
 const val INPUT_VARIABLE = "input"
 const val OUTPUT_VARIABLE = "output"
+const val SCRIPT_DIR_VARIABLE = "SCRIPT_DIR"
 const val SCRIPT_TEMP_DIR_VARIABLE = "SCRIPT_TEMP_DIR"

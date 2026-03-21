@@ -49,6 +49,10 @@ class FileContext(
         }
     }
 
+    init {
+        variables[SCRIPT_DIR_VARIABLE] = StringNode(scriptDir.toAbsolutePath().toString())
+    }
+
     override val tempDir: Path
         get() {
             return if (variables.containsKey(SCRIPT_TEMP_DIR_VARIABLE)) {

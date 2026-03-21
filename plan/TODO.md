@@ -9,6 +9,10 @@
 * Input schema according to JSON schema
 * Rewrite README
 * Rethink Connect to again
+* Investigate running .spec.md code example tests in the original spec directory instead of a temp dir.
+  TestUtil.getCodeExamplesAsTests() currently creates a temp dir as scriptFile, then overrides SCRIPT_DIR
+  to point back to the real spec location. If tests ran in the real dir and used Temp file for scratch files,
+  this special logic could be removed.
 
 ## In general
 

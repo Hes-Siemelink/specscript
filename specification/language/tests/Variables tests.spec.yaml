@@ -44,3 +44,22 @@ Tests:
         expected: Alice
       - actual: ${data.items[1]["name.first"]}
         expected: Bob
+
+
+  SCRIPT_DIR is available:
+
+    Assert that:
+      not:
+        empty: ${SCRIPT_DIR}
+
+
+  SCRIPT_DIR is different from SCRIPT_TEMP_DIR:
+
+    Temp file:
+      filename: marker.txt
+      content: x
+
+    Assert that:
+      not:
+        item: ${SCRIPT_DIR}
+        equals: ${SCRIPT_TEMP_DIR}

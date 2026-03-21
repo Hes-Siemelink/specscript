@@ -16,6 +16,7 @@ import specscript.files.*
 import specscript.language.*
 import specscript.util.Yaml
 import specscript.util.toDisplayYaml
+import tools.jackson.databind.node.StringNode
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.isDirectory
@@ -169,6 +170,11 @@ fun SpecScriptFile.getCodeExamplesAsTests(): List<DynamicTest> {
     testDir.toFile().deleteOnExit()
     val context = FileContext(testDir)
     context.setTempDir(testDir)
+
+    // SCRIPT_DIR points to the original spec file's directory, not the temp dir
+    context.variables[SCRIPT_DIR_VARIABLE] = StringNode(
+        file.toAbsolutePath().normalize().parent.toString()
+    )
 
     val scripts = splitMarkdown()
     val tests: List<DynamicTest> = scripts
