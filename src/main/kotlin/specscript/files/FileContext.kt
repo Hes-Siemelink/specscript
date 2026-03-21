@@ -36,7 +36,15 @@ class FileContext(
         variables,
         parent.session,
         parent.interactive
-    )
+    ) {
+        // Propagate parent's connection definitions for inheritance (first one wins)
+        if (parent is FileContext) {
+            val overrides = getConnectionOverrides()
+            for ((name, value) in parent.info.connections.properties()) {
+                overrides.putIfAbsent(name, value)
+            }
+        }
+    }
 
     override fun clone(): ScriptContext {
         return FileContext(scriptFile, variables.toMutableMap(), session.toMutableMap(), interactive, workingDir)
@@ -78,6 +86,11 @@ class FileContext(
     val info: DirectoryInfo by lazy { SpecScriptDirectories.get(scriptDir) }
     val name: String
         get() = scriptDir.name
+
+    @Suppress("UNCHECKED_CAST")
+    fun getConnectionOverrides(): MutableMap<String, JsonNode> {
+        return session.getOrPut("connect-to.overrides") { mutableMapOf<String, JsonNode>() } as MutableMap<String, JsonNode>
+    }
 
     private val localFileCommands: Map<String, SpecScriptFile> by lazy { findLocalFileCommands() }
     private val importedFileCommands: Map<String, SpecScriptFile> by lazy { findImportedCommands() }

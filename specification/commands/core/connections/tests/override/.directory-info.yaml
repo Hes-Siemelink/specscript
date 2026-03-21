@@ -1,0 +1,4 @@
+connections:
+  SpecScript Sample Server:
+    Http request defaults:
+      url: http://localhost:9999

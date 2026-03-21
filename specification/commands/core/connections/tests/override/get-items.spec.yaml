@@ -1,0 +1,5 @@
+Connect to: SpecScript Sample Server
+
+GET: /items
+
+Output: ${output}

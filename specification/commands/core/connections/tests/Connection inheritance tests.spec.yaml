@@ -1,0 +1,10 @@
+Tests:
+
+  Outer connection definition wins over inner script's directory:
+
+    Run script: override/get-items.spec.yaml
+
+    Expected output:
+      - 1
+      - 2
+      - 3

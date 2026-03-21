@@ -21,8 +21,10 @@ object ConnectTo : CommandHandler("Connect to", "core/connections"), ValueHandle
             return context.getCache()[target]
         }
 
-        // Find script
-        val connectScript = context.info.connections[target]
+        // Find script — inherited connections (first one wins) take precedence
+        val overrides = context.getConnectionOverrides()
+        val connectScript = overrides[target]
+            ?: context.info.connections[target]
             ?: throw SpecScriptException("No connection script configured for $target in ${context.scriptFile.parent.toRealPath().name}")
 
         // Execute script

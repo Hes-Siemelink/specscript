@@ -74,3 +74,31 @@ and it will output:
 This is a very simple example, but you can put more in this script. For example, managing user credentials, obtaining a
 session token, etc. See the [samples](../../../../samples) directory for some real world examples, for example on how to
 connect to Spotify.
+
+## Connection inheritance
+
+When a script runs another script, connections from the outer script are available in the inner script. If both define
+the same connection name, the first one wins — the outer script's definition takes precedence.
+
+Given a script `inner-script.spec.yaml` that connects to an endpoint:
+
+```yaml file=inner-script.spec.yaml
+Connect to: SpecScript Samples
+
+GET: /items
+
+Output: ${output}
+```
+
+```yaml specscript
+Code example: Connection inheritance when calling a script
+
+Connect to: SpecScript Samples
+
+Run script: inner-script.spec.yaml
+
+Expected output:
+  - 1
+  - 2
+  - 3
+```
