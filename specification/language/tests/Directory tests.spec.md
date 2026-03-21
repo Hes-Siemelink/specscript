@@ -36,7 +36,7 @@ Script info: Main script
 Say something: { }
 ```
 
-And a helper script `say-something.spec.yaml` in the `helper` directory:
+And a helper script `helper.spec.yaml` in the `helper` directory:
 
 ```yaml file=helper/helper.spec.yaml
 Output: Hello

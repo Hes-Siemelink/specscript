@@ -258,8 +258,9 @@ Input schema:
       env: SPECSCRIPT_TEST_GREETING_NOT_SET
       default: Hello
 
-Expected output:
-  greeting: Hello
+Assert equals:
+  actual: ${greeting}
+  expected: Hello
 ```
 
 Keep in mind that input specified though an input flag (e.g. `spec run script.spec.yaml --greeting Hi`) will take

@@ -36,6 +36,9 @@ The files in `specification/language/` are the authoritative reference for SpecS
 7. Keep main spec documents concise — one or two examples per feature to illustrate the concept
 8. Put edge cases, combinations, and thorough coverage in a separate `tests/<Topic> tests.spec.yaml` file next to the
    spec document (e.g., `specification/language/tests/Variables tests.spec.yaml` for `Variables.spec.md`)
+9. When using `` ```yaml file=filename.ext `` blocks, always mention the filename in the prose **before** the code
+   block (e.g. "Given a script `inner-script.spec.yaml`:" or "Suppose we have a file `config.yaml`:"). The rendered
+   Markdown on GitHub hides the `` ``` `` header, so the reader won't know which file is being created otherwise.
 
 ## Writing style
 

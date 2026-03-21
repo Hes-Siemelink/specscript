@@ -4,7 +4,7 @@
 
 ### Hello world example
 
-This is the simplest SpecScript file:
+This is the simplest SpecScript file, `hello-world.spec.yaml`:
 
 ```yaml file=hello-world.spec.yaml
 Print: Hello world
@@ -57,7 +57,7 @@ SpecScript does add some additional formatting on top of Yaml, for example the v
 
 ### The command sequence
 
-You can have multiple commands in a file, and they will be executed in order:
+You can have multiple commands in a file, and they will be executed in order. Here's `prompt.spec.yaml`:
 
 ```yaml file=prompt.spec.yaml
 Prompt: What is your name?
@@ -65,7 +65,7 @@ Prompt: What is your name?
 Output: Hello ${output}!
 ```
 
-When storing this in a file `prompt.spec.yaml` and running it with the following command,
+When running it with the following command,
 
 <!-- answers
 What is your name?: Hes
@@ -152,7 +152,7 @@ Prints a simple greeting
 
 ### Defining script input
 
-**Input schema** is used to specify the script's input. Here's `greet.spec.yaml`:
+**Input schema** is used to specify the script's input. Here's `greeting.spec.yaml`:
 
 ```yaml file=greeting.spec.yaml
 Script info: Prints a personalized greeting

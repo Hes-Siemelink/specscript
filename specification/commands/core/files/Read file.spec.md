@@ -50,7 +50,8 @@ Expected output:
 
 ## Reading temp files created in Markdown
 
-For files created with ````yaml file=filename.ext` in the same markdown document, use the `resource` parameter:
+For files created with ````yaml file=filename.ext` in the same markdown document, use the `resource` parameter.
+Suppose we have a file `config.yaml`:
 
 ```yaml file=config.yaml
 database:

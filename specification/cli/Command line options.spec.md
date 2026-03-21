@@ -93,7 +93,7 @@ spec --output-json basic create-greeting --name Bob
 Use this option to see stacktraces from the underlying runtime when an internal error occurs. This option is meant for
 troubleshooting the SpecScript runtime.
 
-For example, the file `error-in-add.spec.yaml` has an error in it that is not handled by SpecScript.
+For example, the file `script-with-error.spec.yaml` has an error in it that is not handled by SpecScript.
 
 ```yaml file=script-with-error.spec.yaml
 GET: http:\\localhost  # Malformed URL - not caught by SpecScript runtime
