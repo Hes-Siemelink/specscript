@@ -13,6 +13,7 @@ import specscript.language.types.resolve
 import specscript.util.toDomainObject
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.StringNode
 import tools.jackson.databind.node.ValueNode
 
 object InputParameters : CommandHandler("Input parameters", "core/script-info"),
@@ -62,6 +63,9 @@ object InputParameters : CommandHandler("Input parameters", "core/script-info"),
             // Find answer
             val question = info.description ?: name
             val answer: JsonNode = when {
+
+                // Get from environment variable
+                info.env != null && System.getenv(info.env) != null -> StringNode(System.getenv(info.env))
 
                 // Get default value
                 info.default != null -> info.default!!

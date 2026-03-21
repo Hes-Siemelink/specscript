@@ -172,10 +172,6 @@ Print: ${greeting}, ${name}!
 
 Use `enum` to restrict the allowed values. In interactive mode, this renders as a selection list.
 
-<!-- yaml specscript
-${input}: {}
--->
-
 ```yaml specscript
 Code example: Input schema with enum
 
@@ -200,10 +196,6 @@ defined before the property that uses them. You can refer to them as part of the
 
 This example uses `${input.switch}` to determine which variable will be part of the input. By setting `switch` to `a`,
 `property-A` is set but not `property-B`.
-
-<!-- yaml specscript
-${input}: { }
--->
 
 ```yaml specscript
 Code example: Input schema with variables and conditions
@@ -234,6 +226,45 @@ Assert equals:
     property-A: Ananas
 ```
 
+## Environment variables
+
+Use `env` to get the input value from an environment variable.
+
+```yaml specscript
+Code example: Input schema with environment variable
+
+Input schema:
+  type: object
+  properties:
+    home:
+      description: Home directory
+      env: HOME
+
+Assert that:
+  not:
+    empty: ${home}
+```
+
+Use the `default` to provide a fallback for when the environment variable is not set.
+
+```yaml specscript
+Code example: Env with default fallback
+
+Input schema:
+  type: object
+  properties:
+    greeting:
+      description: Greeting message
+      env: SPECSCRIPT_TEST_GREETING_NOT_SET
+      default: Hello
+
+Expected output:
+  greeting: Hello
+```
+
+Keep in mind that input specified though an input flag (e.g. `spec run script.spec.yaml --greeting Hi`) will take
+precedence over environment variables.
+
 ## Supported JSON Schema subset
 
 `Input schema` uses the JSON Schema structure (`type: object` with `properties`) but only supports a narrow subset of
@@ -243,6 +274,7 @@ the full JSON Schema specification. The following keywords are recognized on eac
 - `default` — default value when no input is provided
 - `enum` — list of allowed values, renders as a selection list in interactive mode
 - `type` — informational only, not used for validation (e.g. `string`, `integer`)
+- `env` — environment variable name to read the value from (SpecScript extension)
 - `condition` — SpecScript-specific extension for conditional properties (not part of JSON Schema)
 
 At the top level, only these keywords are supported:

@@ -27,4 +27,6 @@ oneOf:
         $ref: "/v1/commands/core/Conditions.schema.yaml"
       "short option":
         type: string
+      "env":
+        type: string
     additionalProperties: false

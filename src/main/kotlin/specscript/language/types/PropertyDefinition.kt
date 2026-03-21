@@ -18,6 +18,7 @@ abstract class PropertyDefinition {
     abstract val valueProperty: String?
     abstract val condition: JsonNode?
     abstract val shortOption: String?
+    abstract val env: String?
 
 
     fun conditionValid(): Boolean {
@@ -50,6 +51,7 @@ data class PropertySpecification(
 
     @JsonProperty("short option")
     override val shortOption: String? = null,
+    override val env: String? = null,
 ) : PropertyDefinition() {
 
     @JsonCreator
@@ -67,7 +69,8 @@ data class PropertySpecification(
             displayProperty = displayProperty,
             valueProperty = valueProperty,
             condition = condition,
-            shortOption = shortOption
+            shortOption = shortOption,
+            env = env
         )
     }
 }
@@ -94,6 +97,7 @@ data class ParameterData(
 
     @JsonProperty("short option")
     override val shortOption: String? = null,
+    override val env: String? = null,
 ) : PropertyDefinition() {
 
     @JsonCreator
