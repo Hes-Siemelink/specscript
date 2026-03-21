@@ -1,0 +1,46 @@
+Tests:
+
+  Bracket notation with nested property:
+
+    ${config}:
+      server.host:
+        name: localhost
+        port: 8080
+
+    Assert equals:
+      - actual: ${config["server.host"].name}
+        expected: localhost
+      - actual: ${config["server.host"].port}
+        expected: 8080
+
+  Bracket notation with multiple dots in key:
+
+    ${api}:
+      com.example.service:
+        status: ok
+
+    Assert equals:
+      actual: ${api["com.example.service"].status}
+      expected: ok
+
+  Bracket notation for key with spaces:
+
+    ${data}:
+      first name: Alice
+
+    Assert equals:
+      actual: ${data["first name"]}
+      expected: Alice
+
+  Bracket notation mixed with array index:
+
+    ${data}:
+      items:
+        - name.first: Alice
+        - name.first: Bob
+
+    Assert equals:
+      - actual: ${data.items[0]["name.first"]}
+        expected: Alice
+      - actual: ${data.items[1]["name.first"]}
+        expected: Bob

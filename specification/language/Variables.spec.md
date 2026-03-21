@@ -50,6 +50,24 @@ Assert equals:
 
 💡Note: this is _not_ JsonPath
 
+### Property names with special characters
+
+To access property names that contain dots, spaces, or other special characters, use bracket notation: `["key"]`
+
+```yaml specscript
+Code example: Bracket notation for property names with special characters
+
+${data}:
+  Summary.Name: Alice
+  first name: Bob
+
+Assert equals:
+  - actual: ${data["Summary.Name"]}
+    expected: Alice
+  - actual: ${data["first name"]}
+    expected: Bob
+```
+
 ## The ${output} variable
 
 The result of each command is stored in the variable `${output}`.

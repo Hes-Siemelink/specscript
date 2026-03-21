@@ -33,6 +33,9 @@ The files in `specification/language/` are the authoritative reference for SpecS
 4. Use sentence case for section titles
 5. Multiple commands in one block require `---` separators (YAML duplicate key constraint)
 6. Always run `./gradlew specificationTest` before committing
+7. Keep main spec documents concise — one or two examples per feature to illustrate the concept
+8. Put edge cases, combinations, and thorough coverage in a separate `tests/<Topic> tests.spec.yaml` file next to the
+   spec document (e.g., `specification/language/tests/Variables tests.spec.yaml` for `Variables.spec.md`)
 
 ## Sample server endpoints (available during tests)
 

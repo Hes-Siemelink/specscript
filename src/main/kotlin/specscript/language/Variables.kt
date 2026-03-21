@@ -68,20 +68,53 @@ fun splitIntoVariableAndPath(varName: String): VariableWithPath {
 }
 
 fun toJsonPointer(jsonPath: String): JsonPointer {
+    val segments = parsePath(jsonPath)
+    val pointer = segments.joinToString("") { "/" + escapeJsonPointerSegment(it) }
+    return JsonPointer.compile(pointer)
+}
 
-    // Make sure path starts with '.' or '['
-    var result = if (jsonPath.startsWith('.') || jsonPath.startsWith('[')) jsonPath else ".$jsonPath"
+/** Parse a SpecScript path into segments, handling dot notation, `[N]` array indexes, and `["key"]` bracket notation. */
+private fun parsePath(path: String): List<String> {
+    val segments = mutableListOf<String>()
+    val current = StringBuilder()
+    var i = 0
+    while (i < path.length) {
+        when {
+            path[i] == '.' -> {
+                if (current.isNotEmpty()) segments.add(current.toString())
+                current.clear()
+                i++
+            }
+            path[i] == '[' -> {
+                if (current.isNotEmpty()) {
+                    segments.add(current.toString())
+                    current.clear()
+                }
+                if (i + 1 < path.length && path[i + 1] == '"') {
+                    // Quoted bracket notation: ["key"]
+                    val closeQuote = path.indexOf('"', i + 2)
+                    segments.add(path.substring(i + 2, closeQuote))
+                    i = closeQuote + 2 // skip closing "]
+                } else {
+                    // Numeric index: [0]
+                    val end = path.indexOf(']', i)
+                    segments.add(path.substring(i + 1, end))
+                    i = end + 1
+                }
+            }
+            else -> {
+                current.append(path[i])
+                i++
+            }
+        }
+    }
+    if (current.isNotEmpty()) segments.add(current.toString())
+    return segments
+}
 
-    // Convert "." to "/"
-    result = result.replace('.', '/')
-
-    // Convert array indexes
-    val index = Regex("\\[(\\d*)]")
-    result = index.replace(result, "/$1")
-
-    val pointer = JsonPointer.compile(result)
-
-    return pointer
+/** Escape a segment for JSON Pointer per RFC 6901: `~` → `~0`, `/` → `~1`. */
+private fun escapeJsonPointerSegment(segment: String): String {
+    return segment.replace("~", "~0").replace("/", "~1")
 }
 
 data class VariableWithPath(val name: String, val path: String?)

@@ -69,4 +69,12 @@ class VariablesTest {
             toJsonPointer(".a[0].b").toString()
         )
     }
+
+    @Test
+    fun bracketNotationInJsonPointer() {
+        assertEquals("/Summary.Name", toJsonPointer("[\"Summary.Name\"]").toString())
+        assertEquals("/server.host/name", toJsonPointer("[\"server.host\"].name").toString())
+        assertEquals("/a/0/name.first", toJsonPointer(".a[0][\"name.first\"]").toString())
+        assertEquals("/first name", toJsonPointer("[\"first name\"]").toString())
+    }
 }
