@@ -63,3 +63,9 @@ Tests:
       not:
         item: ${SCRIPT_DIR}
         equals: ${SCRIPT_TEMP_DIR}
+
+
+  Unset environment variable is empty:
+
+    Assert that:
+      empty: ${env.THIS_VAR_CERTAINLY_DOES_NOT_EXIST_12345}

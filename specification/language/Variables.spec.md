@@ -8,6 +8,7 @@ SpecScript provides several built-in variables:
 |----------------------|-----------------------------------------------------------------|
 | `${output}`          | Result of the last command                                      |
 | `${input}`           | Input parameters of the current script                          |
+| `${env.VAR_NAME}`    | OS environment variable (read-only)                             |
 | `${SCRIPT_DIR}`      | Absolute path to the directory containing the current script    |
 | `${SCRIPT_TEMP_DIR}` | Absolute path to a temporary directory, created on first access |
 
@@ -251,5 +252,25 @@ Code example: Read a file relative to the script
 Read file: ${SCRIPT_DIR}/tests/example.txt
 
 Expected output: Hello
+```
+
+## Environment variables
+
+Access OS environment variables using `${env.VARIABLE_NAME}`.
+
+```yaml specscript
+Code example: Read an environment variable
+
+Assert that:
+  not:
+    empty: ${env.HOME}
+```
+
+Environment variables work in string interpolation just like regular variables.
+
+```yaml specscript
+Code example: Environment variable in string interpolation
+
+Print: Home directory is ${env.HOME}
 ```
 

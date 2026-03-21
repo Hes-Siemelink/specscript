@@ -6,6 +6,7 @@ import specscript.language.*
 import specscript.language.types.Type
 import specscript.language.types.TypeRegistry
 import specscript.language.types.TypeSpecification
+import specscript.util.Json
 import specscript.util.toDomainObject
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.StringNode
@@ -51,6 +52,7 @@ class FileContext(
 
     init {
         variables[SCRIPT_DIR_VARIABLE] = StringNode(scriptDir.toAbsolutePath().toString())
+        variables[ENV_VARIABLE] = Json.newObject(System.getenv())
     }
 
     override val tempDir: Path
