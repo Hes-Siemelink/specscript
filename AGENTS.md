@@ -1,13 +1,50 @@
 # AGENTS.md
 
-This file provides guidance to AI assistants (Claude Code, GitHub Copilot, etc.) when working with code in this
-repository.
+We're in the Specscript language repo and the entire language is defined in the `specification` dir. Read the
+specification to know what SpecScript is. Starting points: Main README.md, `specifciation/overview` directory, and
+`specification/language/` directory.
+
+**IMPORTANT**: before you do anything else, run the `beans prime` command and heed its output.
+
+Use `.tmp` in this repo as a temp directory so you don't need to ask for permission to write files somewhere else.##
+Project Overview
 
 ## Project Overview
 
-SpecScript is a Kotlin-based tool for creating human and AI-friendly specifications using Markdown and YAML. It provides
-a CLI tool called `spec` that can execute `.spec.yaml` script files containing YAML specifications for HTTP requests,
-user interaction, testing, and more.
+SpecScript is a tool for creating human and AI-friendly specifications using Markdown and YAML. It provides a CLI tool
+called `spec` that can execute `.spec.yaml` script files containing YAML specifications for HTTP requests, user
+interaction, testing, and more.
+
+The `specification/` directory contains the complete language specification written in SpecScript Markdown itself. This
+includes tests written in SpecScript yaml. The `samples` directory contains SpecScript example code. The `src/`
+directory contains the Kotlin implementation of the SpecScript language.
+
+When doing a full build, both the specification tests and the unit tests run. The specification tests execute all the
+code examples in the documentation, ensuring that the documentation is always accurate and up-to-date.
+
+## Development Process
+
+SpecScript is developed using a spec-first approach, a bit like TDD. When adding new features or commands, you should
+first write the specification in the `specification/` directory with executable examples. The build will fail on these.
+Then analyze the Kotlin code to make a plan, implement and make sure all tests run.
+
+Full steps are:
+
+1. User gives a problem statement or feature request.
+2. Analyze the problem and write a proposal. Store the proposal as a plain Markdown file in the `plan/proposals`
+   directory. The Markdown is not specscript yet, just a regular Markdown document describing the problem, the proposed
+   solution, and any relevant details. Depending on the problem statement, this could be high level (new language
+   feature), mid-level (new command), or low level (bug fix or refactoring).
+3. User reviews and confirms the proposal. Do not proceed without explicit confirmation.
+4. Write the spec. This is the most critical step. The spec defines the behavior and serves as documentation and tests.
+   Write it in the `specification/` director. For invasive changes, put the new or heavily revised spec in
+   `plan/draft-specs`.
+5. User reviews and confirms the spec. Do not proceed without explicit confirmation.
+6. Implement the code in Kotlin. IMPORTANT: follow existing patterns and architecture. Do not introduce new patterns or
+   architectural styles without explicit confirmation. Put any suggestions for improvements in `plan/agent-ideas.md` as
+   conciser one-liners to be reviewed later
+7. User reviews and confirms the spec. Do not proceed without explicit confirmation.
+8. Prepare commit according to Git commit rules below. User will review and push
 
 ## Build and Development Commands
 
@@ -188,7 +225,8 @@ All documentation includes runnable code examples that are executed as part of t
   file system operations.
 - **API design over inline ceremony:** Prefer a purpose-named method that describes *what* you want over exposing
   mechanism at the call site. Null handling, type parameters, and library-specific ceremony belong behind the API. For
-  example, prefer `Json.toObject(nullableMap)` over `Json.valueToTree<ObjectNode>(nullableMap ?: emptyMap<String, Any>())`.
+  example, prefer `Json.toObject(nullableMap)` over
+  `Json.valueToTree<ObjectNode>(nullableMap ?: emptyMap<String, Any>())`.
 
 ## Important Notes
 
@@ -368,21 +406,16 @@ These systems do not interact.
 
 ## AI Assistant Response Style
 
+I am a grumpy old European with 20 years of experience in software engineering.
+
 To keep interactions efficient and on-topic, AI assistants MUST follow these response rules:
 
-- Be brief: prioritize clarity over length; prefer 1–3 sentences for direct answers.
+- Be concise and to the point: prioritize clarity over length; prefer 1–3 sentences for direct answers.
 - One thing at a time: only address the explicit current user request; do not revisit old resolved topics.
 - No scope creep: do not introduce unrelated suggestions unless explicitly asked.
 - Structure: if steps are needed, use a short bullet list; otherwise provide a single concise paragraph.
 - No filler/apologies unless an actual error occurred; skip phrases like "Sounds good" or repeated acknowledgements.
-- Summaries: avoid re-explaining prior context unless the user asks or it's necessary to understand the change.
 - Decisions: when multiple options exist, present only the top 2–3 with a crisp recommendation.
 - Tone: neutral, professional, friendly—never overly enthusiastic.
-- Avoid simultaneous multi-topic answers (e.g., mixing build fixes with unrelated Git advice).
 - If a previous user issue is already resolved, do NOT propose retroactive actions (e.g., force-push after history was
   fixed).
-
-# Agent tone
-
-- I am a grumpy old European with 20 years of experience in software engineering.
-- Be concise and to the point.
