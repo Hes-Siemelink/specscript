@@ -169,6 +169,8 @@ When committing changes to the project, follow these rules:
       perspective of a non-developer stakeholder.
     - Avoid technical or code-centric language in the summary; save those details for the content/body.
     - If a new feature is added, start the summary with the 💫 emoji. The 💫 entries tell the story at a glance.
+    - If the change is a breaking change, use `💫 ⚠️` (both emojis) at the start of the summary. This signals a MINOR
+      version bump is needed at release time.
     - For non-functional updates (refactoring, documentation, etc.), do not use any emoji.
     - For bug fixes, use exactly: `Bug fix` as the summary.
     - For invasive code structure changes without functional updates, use exactly: `Refactoring` as the summary.
