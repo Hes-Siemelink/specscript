@@ -31,6 +31,7 @@
 
 ## Core
 
+* `spec --version` CLI flag (needs version baked into jar at build time)
 * Define commands in SpecScript itself
 * Secrets
 * Properly handle: null, empty, boolean, int
