@@ -39,7 +39,7 @@
 * Find a way to confirm default input parameters vs. just taking them for granted. Interactive mode would trigger
   confirmation?
 * Investigate running specification code examples and tests in the original spec directory instead of a temp dir.
-  TestUtil.getCodeExamplesAsTests() currently creates a temp dir as scriptFile, then overrides SCRIPT_DIR to point back
+  TestUtil.getCodeExamplesAsTests() currently creates a temp dir as scriptFile, then overrides SCRIPT_HOME to point back
   to the real spec location. If tests ran in the real dir and used Temp file for scratch files, this special logic could
   be removed.
 

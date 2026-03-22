@@ -9,8 +9,7 @@ Tests:
 
   Read file relative to script:
 
-    Read file:
-      resource: content/plain.yaml
+    Read file: ${SCRIPT_HOME}/content/plain.yaml
 
     Expected output:
       loaded: true

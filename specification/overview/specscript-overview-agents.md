@@ -282,7 +282,7 @@ Transports: `HTTP` (default, streaming), `SSE` (legacy), `STDIO`. See
 - `${input}` — script input parameters (from Input schema)
 - `${error}` — error details (inside On error blocks)
 - `${item}` — current item in For each (when no explicit variable)
-- `${SCRIPT_DIR}` — directory containing the current script
+- `${SCRIPT_HOME}` — directory containing the current script
 - `${SCRIPT_TEMP_DIR}` — temporary directory for the current script
 
 ## YAML pitfalls to remember

@@ -35,10 +35,22 @@ Expected output:
 
 ## Reading a file in the same directory as your script
 
-If you want to load a file that is next to your script, use the `resource` parameter:
+Use `${SCRIPT_HOME}` to read a file next to your script:
 
 ```yaml specscript
 Code example: Read a local file
+
+Read file: ${SCRIPT_HOME}/greeting.yaml
+
+Expected output:
+  greeting: Hello
+  language: en    
+```
+
+Alternatively, you can use the `resource` parameter:
+
+```yaml specscript
+Code example: Read a local file with resource
 
 Read file:
   resource: greeting.yaml

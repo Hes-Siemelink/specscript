@@ -187,14 +187,14 @@ Shell:
 Expected output: Hello World
 ```
 
-## Using SCRIPT_DIR
+## Using SCRIPT_HOME
 
-You can achieve the same by using the `SCRIPT_DIR` variable.
+You can achieve the same by using the `SCRIPT_HOME` variable.
 
 ```yaml specscript
-Code example: Use SCRIPT_DIR
+Code example: Use SCRIPT_HOME
 
-Shell: sh $SCRIPT_DIR/hello.sh
+Shell: sh $SCRIPT_HOME/hello.sh
 
 Expected output: Hello World
 ```

@@ -17,6 +17,13 @@ Tests:
 
   Read file relative to script:
 
+    Read file: ${SCRIPT_HOME}/content/plain.yaml
+
+    Expected output:
+      loaded: true
+
+  Read file relative to script (resource property):
+
     Read file:
       resource: content/plain.yaml
 
@@ -41,11 +48,26 @@ Tests:
   Run script relative to script:
 
     Run script:
+      file: ${SCRIPT_HOME}/greet.spec.yaml
+      input:
+        name: Ray
+
+    Expected output: Hello Ray!
+
+  Run script relative to script (resource property):
+
+    Run script:
       resource: greet.spec.yaml
       input:
         name: Ray
 
     Expected output: Hello Ray!
+
+  Shell command in same directory as script:
+
+    Shell: sh ${SCRIPT_HOME}/hello.sh
+
+    Expected output: Hello World
 
   Shell command from current directory (short way):
 
@@ -53,7 +75,7 @@ Tests:
 
     Expected output: Hello World
 
-  Shell command in same directory as script:
+  Shell command in same directory as script (resource property):
 
     Shell:
       resource: sh hello.sh

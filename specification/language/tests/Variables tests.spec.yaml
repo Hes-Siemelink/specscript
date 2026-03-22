@@ -46,14 +46,14 @@ Tests:
         expected: Bob
 
 
-  SCRIPT_DIR is available:
+  SCRIPT_HOME is available:
 
     Assert that:
       not:
-        empty: ${SCRIPT_DIR}
+        empty: ${SCRIPT_HOME}
 
 
-  SCRIPT_DIR is different from SCRIPT_TEMP_DIR:
+  SCRIPT_HOME is different from SCRIPT_TEMP_DIR:
 
     Temp file:
       filename: marker.txt
@@ -61,7 +61,7 @@ Tests:
 
     Assert that:
       not:
-        item: ${SCRIPT_DIR}
+        item: ${SCRIPT_HOME}
         equals: ${SCRIPT_TEMP_DIR}
 
 

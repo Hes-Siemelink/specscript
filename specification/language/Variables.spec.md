@@ -9,7 +9,7 @@ SpecScript provides several built-in variables:
 | `${output}`          | Result of the last command                                      |
 | `${input}`           | Input parameters of the current script                          |
 | `${env.VAR_NAME}`    | OS environment variable (read-only)                             |
-| `${SCRIPT_DIR}`      | Absolute path to the directory containing the current script    |
+| `${SCRIPT_HOME}`     | Absolute path to the directory containing the current script    |
 | `${SCRIPT_TEMP_DIR}` | Absolute path to a temporary directory, created on first access |
 
 ## Basic usage
@@ -238,9 +238,9 @@ Greet:
 Expected output: Hello Alice!
 ```
 
-## SCRIPT_DIR
+## SCRIPT_HOME
 
-The `${SCRIPT_DIR}` variable contains the absolute path to the directory of the currently executing script. Use it to
+The `${SCRIPT_HOME}` variable contains the absolute path to the directory of the currently executing script. Use it to
 reference files relative to the script location, making scripts portable regardless of the working directory.
 
 For example, if you have a file [tests/example.txt](tests/example.txt) next to your script that contains the text "
@@ -249,7 +249,7 @@ Hello", you can read it like this:
 ```yaml specscript
 Code example: Read a file relative to the script
 
-Read file: ${SCRIPT_DIR}/tests/example.txt
+Read file: ${SCRIPT_HOME}/tests/example.txt
 
 Expected output: Hello
 ```

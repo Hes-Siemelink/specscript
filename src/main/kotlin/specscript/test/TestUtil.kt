@@ -171,7 +171,7 @@ fun SpecScriptFile.getCodeExamplesAsTests(): List<DynamicTest> {
     val context = FileContext(testDir)
     context.setTempDir(testDir)
 
-    // SCRIPT_DIR points to the original spec file's directory, not the temp dir
+    // SCRIPT_HOME points to the original spec file's directory, not the temp dir
     context.variables[SCRIPT_DIR_VARIABLE] = StringNode(
         file.toAbsolutePath().normalize().parent.toString()
     )
