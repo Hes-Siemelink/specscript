@@ -1,5 +1,2 @@
 Script info: |
   Manage Cloud Connector installations.
-
-connections:
-  Digital.ai Platform: ../login/connect.spec.yaml

@@ -1,7 +1,2 @@
-connections:
-  Goal DB:
-    SQLite defaults:
-      file: db/goals.db
-
 imports:
   - ../goals/create.spec.yaml

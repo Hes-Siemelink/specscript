@@ -1,0 +1,8 @@
+# This script has no specscript-config.yaml in its directory.
+# It should find the connection from the parent directory's specscript-config.yaml.
+
+Connect to: SpecScript Sample Server
+
+GET: /items
+
+Output: ${output}

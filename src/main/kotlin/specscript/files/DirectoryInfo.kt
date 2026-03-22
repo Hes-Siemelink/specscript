@@ -5,6 +5,7 @@ import specscript.language.CommandInfo
 import specscript.util.IO.isTempDir
 import specscript.util.Json
 import specscript.util.Yaml
+import tools.jackson.databind.JsonNode
 import java.nio.file.Path
 import kotlin.io.path.exists
 import kotlin.io.path.name
@@ -86,4 +87,22 @@ object SpecScriptDirectories {
         }
     }
 
+    /**
+     * Search for a connection by name, starting from [startDir] and walking up parent directories.
+     * Returns the connection definition and the directory it was found in, or null if not found.
+     */
+    fun findConnection(name: String, startDir: Path): ConnectionMatch? {
+        var dir: Path? = startDir.toAbsolutePath().normalize()
+        while (dir != null) {
+            val info = get(dir)
+            val connection = info.connections[name]
+            if (connection != null) {
+                return ConnectionMatch(connection, dir)
+            }
+            dir = dir.parent
+        }
+        return null
+    }
 }
+
+data class ConnectionMatch(val definition: JsonNode, val configDir: Path)

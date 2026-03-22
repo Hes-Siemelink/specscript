@@ -75,6 +75,15 @@ This is a very simple example, but you can put more in this script. For example,
 session token, etc. See the [samples](../../../../samples) directory for some real world examples, for example on how to
 connect to Spotify.
 
+## Upward directory search
+
+When a connection name is not found in the script's own directory, SpecScript searches `specscript-config.yaml` files in
+parent directories until a match is found. The closest definition wins — a subdirectory can override a parent's
+connection.
+
+This means you only need one `specscript-config.yaml` at the project root instead of duplicating it in every
+subdirectory.
+
 ## Connection inheritance
 
 When a script runs another script, connections from the outer script are available in the inner script. If both define

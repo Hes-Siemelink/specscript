@@ -130,6 +130,8 @@ included as a resource directory for runtime access.
   and KDoc for public methods when purpose isn't immediately clear.
 - **File Naming:** Specification files use spaces in their names (e.g., `Mcp server.spec.md`), which is important for
   file system operations.
+- **Directory config:** Each directory can have a `specscript-config.yaml` file for metadata (description, imports,
+  connections). Loaded by `DirectoryInfo.kt`. Not a SpecScript script — plain YAML config.
 - **API design over inline ceremony:** Prefer a purpose-named method that describes *what* you want over exposing
   mechanism at the call site. Null handling, type parameters, and library-specific ceremony belong behind the API. For
   example, prefer `Json.toObject(nullableMap)` over

@@ -1,0 +1,10 @@
+Tests:
+
+  Connection found in parent directory:
+
+    Run script: upward/get-items.spec.yaml
+
+    Expected output:
+      - 1
+      - 2
+      - 3

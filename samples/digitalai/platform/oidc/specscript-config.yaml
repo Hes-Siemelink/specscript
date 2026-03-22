@@ -1,5 +1,2 @@
 Script info: |
   Services for Identity Management
-
-connections:
-  Digital.ai Platform: ../login/connect.spec.yaml
