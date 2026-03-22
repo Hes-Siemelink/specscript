@@ -30,6 +30,11 @@ git log --format="%s" --grep="💫" <last-tag>..HEAD
 
 If any line contains `💫 ⚠️`, bump MINOR. Otherwise bump PATCH.
 
+## Prerequisites
+
+Before starting a release, the git working tree must be clean — no uncommitted or untracked changes. Commit or stash
+everything first. Run `git status` to verify.
+
 ## Release flow
 
 ### Step 1: Determine version
