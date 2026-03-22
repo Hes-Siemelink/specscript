@@ -6,9 +6,9 @@ This contains SpecScript behavior that is too boring for the main spec but shoul
 
 This is what happens when you run `cli` in an empty directory.
 
-The `.directory-info.yaml` file for the `empty` directory:
+The `specscript-config.yaml` file for the `empty` directory:
 
-```yaml file=empty/.directory-info.yaml
+```yaml file=empty/specscript-config.yaml
 Script info: This is an example directory
 ```
 
@@ -42,9 +42,9 @@ And a helper script `helper.spec.yaml` in the `helper` directory:
 Output: Hello
 ```
 
-You can import the say-something script by way of the `.directory-info.yaml` file in the `main` directory:
+You can import the say-something script by way of the `specscript-config.yaml` file in the `main` directory:
 
-```yaml file=main/.directory-info.yaml
+```yaml file=main/specscript-config.yaml
 Script info: Main directory
 imports:
   - ../helper/say-something.spec.yaml

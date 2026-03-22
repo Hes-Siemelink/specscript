@@ -1,12 +1,10 @@
 # Spotlight
 
+* Rewrite README
 * Rethink Connect to again
 * Use Markdown front matter for SpecScript files to define metadata
 * LLM commands
 * Agent definitions
-* Description command
-* Input schema according to JSON schema
-* Rewrite README
 
 ## In general
 

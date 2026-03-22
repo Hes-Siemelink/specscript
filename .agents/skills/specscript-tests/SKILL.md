@@ -224,7 +224,7 @@ full list, not just the last command's output. If you need only the final result
 
 ## Calling imported scripts as commands
 
-Scripts imported via `.directory-info.yaml` become commands. The command name is derived from the filename:
+Scripts imported via `specscript-config.yaml` become commands. The command name is derived from the filename:
 `create.spec.yaml` becomes `Create:`, `create-batch.spec.yaml` becomes `Create batch:`.
 
 ```yaml

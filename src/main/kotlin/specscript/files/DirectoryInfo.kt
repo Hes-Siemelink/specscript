@@ -28,11 +28,14 @@ class DirectoryInfo : CommandInfo {
     var types = Json.newObject()
 
     companion object {
-        fun load(dir: Path): DirectoryInfo {
-            val directoryInfoYaml = dir.resolve(".directory-info.yaml")
 
-            val info = if (directoryInfoYaml.exists()) {
-                Yaml.readTyped(directoryInfoYaml.toFile())
+        const val FILE_NAME = "specscript-config.yaml"
+
+        fun load(dir: Path): DirectoryInfo {
+            val configFile = dir.resolve(FILE_NAME)
+
+            val info = if (configFile.exists()) {
+                Yaml.readTyped(configFile.toFile())
             } else {
                 DirectoryInfo()
             }

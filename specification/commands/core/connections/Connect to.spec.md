@@ -37,9 +37,9 @@ Expected output:
 ```
 
 In order for this to work, you need to configure a _connection script_ for the **SpecScript Samples** endpoint. You do
-this in the  `.directory-info.yaml` file in the same directory:
+this in the `specscript-config.yaml` file in the same directory:
 
-```yaml file=.directory-info.yaml
+```yaml file=specscript-config.yaml
 connections:
   SpecScript Samples: connect.spec.yaml
 ```

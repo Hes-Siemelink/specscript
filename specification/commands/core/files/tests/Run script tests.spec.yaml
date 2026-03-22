@@ -24,14 +24,14 @@ Tests:
 
     Expected output: Hello May!
 
-  Run a script from another directory that was imported by .directory-info.yaml:
+  Run a script from another directory that was imported by specscript-config.yaml:
 
     Helper function:
       name: Ray
 
     Expected output: Thanks for your help, Ray!
 
-  Run a script from another directory that was imported by .directory-info.yaml that calls another script and that directory.:
+  Run a script from another directory that was imported by specscript-config.yaml that calls another script and that directory.:
 
     Call helper:
       name: Fay
