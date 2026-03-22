@@ -87,12 +87,17 @@ The `githubRelease` Gradle task requires a `GITHUB_TOKEN` environment variable w
 token if not set.
 
 ```sh
-GITHUB_TOKEN=<token> ./gradlew githubRelease
+GITHUB_TOKEN=<token> ./gradlew githubRelease -PreleaseHeadline="Short description of this release"
 ```
+
+The `-PreleaseHeadline` property sets the release body/description on GitHub. Write a concise one-liner summarizing the
+release themes (e.g., "MCP streaming HTTP, test framework, environment variables, and more"). If omitted, falls back to
+a generic "Release of SpecScript X.Y.Z" message.
 
 This creates a GitHub release with:
 - Tag: `X.Y.Z` (created by GitHub API, lightweight)
 - Release name: `SpecScript X.Y.Z`
+- Body: the headline from `-PreleaseHeadline`
 - Assets: `specscript-X.Y.Z.jar` and `specscript-X.Y.Z-full.jar`
 
 ### Step 7: Verify

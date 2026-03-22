@@ -62,7 +62,7 @@ before proceeding. Git is the backup system — don't create backup files in a g
 ./gradlew specificationTest       # Specification tests (440+ tests)
 ./gradlew check                   # All tests including specification tests
 ./gradlew build fatJar            # Build fat JAR (self-contained)
-./gradlew githubRelease           # Create GitHub release
+./gradlew githubRelease           # Create GitHub release (pass -PreleaseHeadline="..." for description)
 ```
 
 Create a local executable:

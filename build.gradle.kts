@@ -136,7 +136,8 @@ githubRelease {
     tagName = "${project.version}"
     releaseName = "SpecScript ${project.version}"
     targetCommitish = "main"
-    body = "Release of SpecScript ${project.version}"
+    body = project.findProperty("releaseHeadline")?.toString()
+        ?: "Release of SpecScript ${project.version}"
     draft = false
     prerelease = false
     overwrite = true
