@@ -1,5 +1,5 @@
 group = "hes.specscript"
-version = "0.9.0"
+version = "0.9.1-SNAPSHOT"
 
 plugins {
     kotlin("jvm") version "2.1.20"
