@@ -12,5 +12,3 @@ For each:
     alias: ${agent.alias}
     agent_id: ${agent.agent_id}
     variables: ${agent.variables}
-
-Print: ${output}

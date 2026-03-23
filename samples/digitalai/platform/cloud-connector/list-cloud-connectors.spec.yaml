@@ -4,5 +4,3 @@ Script info: Lists the available Cloud Connectors
 Connect to: Digital.ai Platform
 
 GET: /workload/v1/cloud_connectors/
-
-Print: ${output}

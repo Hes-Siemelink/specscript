@@ -11,5 +11,3 @@ For each:
     name: ${runtime.name}
     description: ${runtime.description}
     id: ${runtime.id}
-
-Print: ${output}

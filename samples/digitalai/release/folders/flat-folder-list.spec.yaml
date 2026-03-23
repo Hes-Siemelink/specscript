@@ -1,5 +1,6 @@
 Script info:
   description: Get all folder names
+  hidden: true
 
 Input schema:
   type: object
@@ -9,7 +10,6 @@ Input schema:
     prefix:
       description: Prefix for folder names
       default: ''
-    hidden: true
 
 ---
 ${folder_list}: [ ]
