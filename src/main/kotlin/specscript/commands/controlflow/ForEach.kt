@@ -74,6 +74,8 @@ private fun JsonNode.enumerateForEach(): ArrayNode {
             }
             return array
         }
+
+        is MissingNode -> return Json.newArray()
     }
     throw AssertionError("Unsupported node type ${this.javaClass}")
 }
