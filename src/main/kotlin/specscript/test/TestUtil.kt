@@ -119,7 +119,7 @@ class TestCaseRunner(
 
 /**
  * Extracts the test cases from a script file as individual tests.
- * Supports both legacy Test case commands and new Tests/Before tests/After tests commands.
+ * Supports both legacy Test case commands and new Tests/Before all tests/After all tests commands.
  */
 fun SpecScriptFile.getTestCases(): List<DynamicTest> {
     val hasNewTests = script.commands.any { it.name == Tests.name }

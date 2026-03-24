@@ -14,7 +14,7 @@ It will report successful and failed tests.
 
 ## Test structure
 
-A test file uses `Tests` to define named tests with nested commands. `Tests`, `Before tests`, and `After tests` are
+A test file uses `Tests` to define named tests with nested commands. `Tests`, `Before all tests`, and `After all tests` are
 only executed in test mode (`spec --test`). In normal execution they are ignored.
 
 ```yaml
@@ -26,14 +26,14 @@ Tests:
 
 ## Setup and teardown
 
-To set up data before any tests are run, use `Before tests`. This is run once per file before the first test. To clean
-data after all tests have run, use `After tests`. This is run once per file after the last test. Both take nested
+To set up data before any tests are run, use `Before all tests`. This is run once per file before the first test. To clean
+data after all tests have run, use `After all tests`. This is run once per file after the last test. Both take nested
 commands.
 
 ```yaml specscript
 Code example: Tests with setup and teardown
 
-Before tests:
+Before all tests:
   ${sample_data}:
     items: [ 1, 2, 3 ]
     greeting: Hello
@@ -49,7 +49,7 @@ Tests:
       item: ${sample_data.greeting}
       equals: Hello
 
-After tests:
+After all tests:
   Print: done
 ```
 

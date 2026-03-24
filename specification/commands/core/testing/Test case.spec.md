@@ -3,8 +3,8 @@
 `Test case` marks the start of test code. It is only executed in test mode (`spec --test`). In normal execution it is
 ignored.
 
-> **Note**: `Test case` is the legacy test command. For new test files, prefer using `Tests` with `Before tests` and
-> `After tests`.
+> **Note**: `Test case` is the legacy test command. For new test files, prefer using `Tests` with `Before all tests` and
+> `After all tests`.
 
 | Content type | Supported |
 |--------------|-----------|

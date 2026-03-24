@@ -1,4 +1,4 @@
-Before tests:
+Before all tests:
 
   Http request defaults:
     url: http://localhost:2525

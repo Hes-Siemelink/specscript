@@ -5,7 +5,7 @@
 
 Script info: Create batch tests
 
-Before tests:
+Before all tests:
   Shell: rm -f db/test-goals.db
   Create test db: {}
 
@@ -48,5 +48,5 @@ Tests:
     Size: ${output}
     Expected output: 2
 
-After tests:
+After all tests:
   Shell: rm -f db/test-goals.db

@@ -1,14 +1,14 @@
 # Setup and teardown
 #
-# Demonstrates Before tests and After tests for shared initialization
+# Demonstrates Before all tests and After all tests for shared initialization
 # and cleanup. Run with: spec --test setup-teardown.spec.yaml
 #
-# 'Before tests' runs once before all tests. State carries forward.
-# 'After tests' runs once after the last test. Use it for cleanup.
+# 'Before all tests' runs once before all tests. State carries forward.
+# 'After all tests' runs once after the last test. Use it for cleanup.
 
 Script info: Setup and teardown example
 
-Before tests:
+Before all tests:
   Http server:
     port: 2526
     endpoints:
@@ -31,7 +31,7 @@ Tests:
     GET: /version
     Expected output: 1.0.0
 
-After tests:
+After all tests:
   Http server:
     port: 2526
     stop: true

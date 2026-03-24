@@ -5,7 +5,7 @@
 
 Script info: Delete goal tests
 
-Before tests:
+Before all tests:
   Shell: rm -f db/test-goals.db
   Create test db: { }
 
@@ -74,5 +74,5 @@ Tests:
 
     Expected output: [ ]
 
-After tests:
+After all tests:
   Shell: rm -f db/test-goals.db

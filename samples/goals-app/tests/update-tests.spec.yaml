@@ -5,7 +5,7 @@
 
 Script info: Update goal tests
 
-Before tests:
+Before all tests:
   Shell: rm -f db/test-goals.db
   Create test db: {}
   Create:
@@ -77,5 +77,5 @@ Tests:
       - item: ${output[0].description}
         equals: Original description
 
-After tests:
+After all tests:
   Shell: rm -f db/test-goals.db

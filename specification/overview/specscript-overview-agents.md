@@ -183,13 +183,13 @@ Other control flow: [If](../commands/core/control-flow/If.spec.md),
 
 ## Testing
 
-Tests only execute with `spec --test`. [Before tests](../commands/core/testing/Before%20tests.spec.md) and
-[After tests](../commands/core/testing/After%20tests.spec.md) run once per file and share context with tests.
+Tests only execute with `spec --test`. [Before all tests](../commands/core/testing/Before%20all%20tests.spec.md) and
+[After all tests](../commands/core/testing/After%20all%20tests.spec.md) run once per file and share context with tests.
 
 ```yaml specscript
 Code example: Test structure
 
-Before tests:
+Before all tests:
   Http request defaults:
     url: http://localhost:2525
 
@@ -203,7 +203,7 @@ Tests:
     GET: /hello
     Expected output: Hello from SpecScript!
 
-After tests:
+After all tests:
   Print: Cleanup done
 ```
 

@@ -5,7 +5,7 @@
 
 Script info: Create goal tests
 
-Before tests:
+Before all tests:
   Shell: rm -f db/test-goals.db
   Create test db: {}
 
@@ -65,5 +65,5 @@ Tests:
       - item: ${output[0].description}
         equals: "Handle single quotes like it's nothing"
 
-After tests:
+After all tests:
   Shell: rm -f db/test-goals.db

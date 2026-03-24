@@ -3,7 +3,7 @@
 `Tests` defines named tests with nested commands. Each key is a test name and its value contains the commands
 to execute.
 
-`Tests`, like `Before tests` and `After tests`, is only executed in test mode (`spec --test`). In normal execution
+`Tests`, like `Before all tests` and `After all tests`, is only executed in test mode (`spec --test`). In normal execution
 it is ignored.
 
 | Content type | Supported |
@@ -45,12 +45,12 @@ Tests:
 
 ## With setup and teardown
 
-`Tests` works with `Before tests` and `After tests` to define a complete test file.
+`Tests` works with `Before all tests` and `After all tests` to define a complete test file.
 
 ```yaml specscript
 Code example: Tests with setup and teardown
 
-Before tests:
+Before all tests:
   ${sample_data}:
     items: [ 1, 2, 3 ]
     greeting: Hello
@@ -66,6 +66,6 @@ Tests:
       item: ${sample_data.greeting}
       equals: Hello
 
-After tests:
+After all tests:
   Print: done
 ```

@@ -5,7 +5,7 @@
 
 Script info: Get goal tests
 
-Before tests:
+Before all tests:
   Shell: rm -f db/test-goals.db
   Create test db: { }
   Create:
@@ -32,5 +32,5 @@ Tests:
       id: 999
     Expected output: [ ]
 
-After tests:
+After all tests:
   Shell: rm -f db/test-goals.db

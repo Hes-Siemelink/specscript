@@ -5,7 +5,7 @@
 
 Script info: List goals tests
 
-Before tests:
+Before all tests:
   Shell: rm -f db/test-goals.db
   Create test db: {}
   # Seed test data
@@ -109,5 +109,5 @@ Tests:
       assignee: nobody
     Expected output: []
 
-After tests:
+After all tests:
   Shell: rm -f db/test-goals.db

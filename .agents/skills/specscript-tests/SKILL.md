@@ -10,7 +10,7 @@ metadata:
 ## Overview
 
 Writes `.spec.yaml` test files for SpecScript projects. Tests are YAML files using SpecScript's built-in test
-framework: `Tests`, `Before tests`, `After tests`, `Assert that`, and `Expected output`.
+framework: `Tests`, `Before all tests`, `After all tests`, `Assert that`, and `Expected output`.
 
 This skill contains the exact syntax patterns, constraints, and gotchas learned from building the goals-app test
 suite (27 tests across 6 files). Follow these patterns precisely — SpecScript's YAML-based syntax has subtle rules
@@ -27,7 +27,7 @@ Every test file follows this skeleton:
 
 Script info: My tests
 
-Before tests:
+Before all tests:
   # setup commands (runs once before all tests)
 
 Tests:
@@ -38,14 +38,14 @@ Tests:
   Another test:
     # commands and assertions
 
-After tests:
+After all tests:
   # cleanup commands (runs once after all tests)
 ```
 
 ### Rules
 
-- `Before tests` and `After tests` run **once per file**, not per test.
-- All three blocks (`Before tests`, `Tests`, `After tests`) share the same context — variables set in setup are
+- `Before all tests` and `After all tests` run **once per file**, not per test.
+- All three blocks (`Before all tests`, `Tests`, `After all tests`) share the same context — variables set in setup are
   visible in tests and teardown.
 - Tests only execute with `spec --test`. Normal `spec` execution silently skips them.
 
@@ -64,11 +64,11 @@ spec --test tests/
 The goals-app uses a SQLite test database. Every test file needs this setup/teardown:
 
 ```yaml
-Before tests:
+Before all tests:
   Shell: rm -f db/test-goals.db
   Create test db: {}
 
-After tests:
+After all tests:
   Shell: rm -f db/test-goals.db
 ```
 
@@ -77,12 +77,12 @@ After tests:
   and creates the schema.
 - The `{}` is required because the command is an imported script with no parameters. Passing null content fails.
 
-### Seeding test data in Before tests
+### Seeding test data in Before all tests
 
 Use `Do:` with a list to run multiple setup commands:
 
 ```yaml
-Before tests:
+Before all tests:
   Shell: rm -f db/test-goals.db
   Create test db: {}
   Do:
@@ -97,7 +97,7 @@ Before tests:
 Or for a single seed record, just use the command directly:
 
 ```yaml
-Before tests:
+Before all tests:
   Shell: rm -f db/test-goals.db
   Create test db: {}
   Create:
@@ -202,7 +202,7 @@ YAML does not allow duplicate keys in the same mapping. These workarounds exist:
          description: Second
    ```
 
-2. **`---` document separator** — only works at the **top level**, not inside `Tests:` or `Before tests:`.
+2. **`---` document separator** — only works at the **top level**, not inside `Tests:` or `Before all tests:`.
 
 3. **`As:` inside `Do:`** — works for capturing intermediate results:
    ```yaml
@@ -264,7 +264,7 @@ Run script:
 
 Script info: Update goal tests
 
-Before tests:
+Before all tests:
   Shell: rm -f db/test-goals.db
   Create test db: {}
   Create:
@@ -301,6 +301,6 @@ Tests:
       - item: ${output[0].description}
         equals: Original description
 
-After tests:
+After all tests:
   Shell: rm -f db/test-goals.db
 ```
