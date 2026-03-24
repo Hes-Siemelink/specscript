@@ -12,6 +12,7 @@ ${storageDir}: ${input.storageDir}
 
 ---
 Http server:
+  name: replaying-proxy
   port: 25101
   endpoints:
 

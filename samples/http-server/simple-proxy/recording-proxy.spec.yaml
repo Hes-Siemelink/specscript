@@ -17,6 +17,7 @@ Http request defaults:
     resource: target-endpoint.yaml
 
 Http server:
+  name: recording-proxy
   port: 25100
   endpoints:
 

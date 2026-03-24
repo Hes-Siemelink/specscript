@@ -412,6 +412,7 @@ for you. Define some endpoints and back them by SpecScript Yaml scripts:
 Code example: Running an HTTP server
 
 Http server:
+  name: sample-server
   port: 2525
   endpoints:
     /hello-example:

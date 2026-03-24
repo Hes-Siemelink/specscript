@@ -14,6 +14,7 @@ import specscript.files.SpecScriptFile
 import specscript.language.*
 import specscript.util.Json
 import specscript.util.Yaml
+import specscript.util.toDomainObject
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.StringNode
@@ -27,35 +28,32 @@ object HttpServer : CommandHandler("Http server", "core/http"), ObjectHandler, D
         System.setProperty("io.ktor.server.engine.ShutdownHook", "false")
     }
 
-    // Active servers
-    private val servers = mutableMapOf<Int, HttpServerInstance>()
+    // Active servers keyed by name
+    private val servers = mutableMapOf<String, HttpServerInstance>()
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
-        val port = data.getParameter("port").intValue()
+        val info = data.toDomainObject(HttpServerInfo::class)
 
         // Stop request
-        data["stop"]?.let {
-            if (it.booleanValue()) {
-                stop(port); return null
-            }
+        if (info.stop) {
+            stop(info.name); return null
         }
 
         // Register endpoints
-        val serveData: Endpoints = Yaml.parse(data.getParameter("endpoints"))
-        serveData.paths.forEach { (path, endpointData) -> addHandler(port, path, endpointData, context) }
+        info.endpoints.paths.forEach { (path, endpointData) -> addHandler(info, path, endpointData, context) }
         return null
     }
 
-    fun stop(port: Int) {
-        println("Stopping SpecScript Http Server on port $port")
-        servers.remove(port)?.stop(100, 200)
+    fun stop(name: String) {
+        println("Stopping SpecScript Http Server '$name'")
+        servers.remove(name)?.stop(100, 200)
     }
 
-    private fun addHandler(port: Int, rawPath: String, data: EndpointData, context: ScriptContext) {
-        // Start (or reuse) server for this port
-        val server = servers.getOrPut(port) {
-            println("Starting SpecScript Http Server for ${context.scriptFile.name} on port $port")
-            embeddedServer(Netty, port = port) { }.also { it.start(wait = false) }
+    private fun addHandler(info: HttpServerInfo, rawPath: String, data: EndpointData, context: ScriptContext) {
+        // Start (or reuse) server for this name
+        val server = servers.getOrPut(info.name) {
+            println("Starting SpecScript Http Server '${info.name}' on port ${info.port}")
+            embeddedServer(Netty, port = info.port) { }.also { it.start(wait = false) }
         }
 
         // Normalize ":id" path parameters into Ktor style "{id}"
@@ -164,6 +162,13 @@ private fun String.toBodyJson(): JsonNode =
 
 
 private typealias HttpServerInstance = EmbeddedServer<NettyApplicationEngine, NettyApplicationEngine.Configuration>
+
+data class HttpServerInfo(
+    val name: String,
+    val port: Int = 3000,
+    val stop: Boolean = false,
+    val endpoints: Endpoints = Endpoints()
+)
 
 class Endpoints {
     @JsonAnyGetter

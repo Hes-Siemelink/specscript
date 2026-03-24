@@ -2,6 +2,7 @@ Script info:
   description: Starts the SpecScript Sample Server
 
 Http server:
+  name: sample-server
   port: 2525
   endpoints:
     /hello:

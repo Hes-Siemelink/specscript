@@ -4,6 +4,7 @@ Tests:
 
     Do:
       - Http server:
+          name: test-server
           port: 25001
           endpoints:
             /hello:
@@ -15,13 +16,14 @@ Tests:
       - Expected output: Hello
 
       - Http server:
-          port: 25001
+          name: test-server
           stop: true
 
   Endpoint with script output:
 
     Do:
       - Http server:
+          name: script-server
           port: 25001
           endpoints:
             /hello:
@@ -34,5 +36,5 @@ Tests:
       - Expected output: Hello again
 
       - Http server:
-          port: 25001
+          name: script-server
           stop: true

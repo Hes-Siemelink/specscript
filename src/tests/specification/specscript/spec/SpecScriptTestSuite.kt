@@ -43,7 +43,7 @@ class SpecScriptTestSuite {
         @AfterAll
         @JvmStatic
         fun stopTestServer() {
-            HttpServer.stop(2525)
+            HttpServer.stop("sample-server")
         }
     }
 }

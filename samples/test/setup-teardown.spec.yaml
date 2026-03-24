@@ -10,6 +10,7 @@ Script info: Setup and teardown example
 
 Before all tests:
   Http server:
+    name: status-server
     port: 2526
     endpoints:
       /status:
@@ -33,5 +34,5 @@ Tests:
 
 After all tests:
   Http server:
-    port: 2526
+    name: status-server
     stop: true

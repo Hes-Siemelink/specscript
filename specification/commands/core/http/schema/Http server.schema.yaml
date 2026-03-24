@@ -2,6 +2,8 @@ $schema: https://json-schema.org/draft/2020-12/schema
 
 type: object
 properties:
+  name:
+    type: string
   port:
     type: integer
   stop:
@@ -10,6 +12,8 @@ properties:
     type: object
     additionalProperties:
       $ref: "#/definitions/Endpoint"
+required:
+  - name
 additionalProperties: false
 
 definitions:

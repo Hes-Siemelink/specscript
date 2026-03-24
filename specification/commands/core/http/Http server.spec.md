@@ -1,7 +1,7 @@
 # Command: Http server
 
 `Http server` starts an embedded HTTP server, based on an OpenAPI-flavored spec and backed by SpecScript scripts. Use
-**Http server** to quickly prototype and API.
+**Http server** to quickly prototype an API.
 
 | Content type | Supported |
 |--------------|-----------|
@@ -13,7 +13,7 @@
 
 ## Basic usage
 
-Set up an HTTP server by defining the port and endpoints.
+Set up an HTTP server by defining a name and endpoints.
 
 The following example defines an HTTP `GET` request on path `/hello` to return the text "Hello World!".
 
@@ -21,6 +21,7 @@ The following example defines an HTTP `GET` request on path `/hello` to return t
 Code example: Http server setup
 
 Http server:
+  name: hello-server
   port: 25001
   endpoints:
     /hello:
@@ -37,10 +38,12 @@ Let's break this down,
 
 ### Define endpoints and start server
 
-The **port** field defines the listening port, in this case 25001.
+The **name** field is the server's identifier, used to reference and stop it.
 
-You can run multiple servers simultaneously on different ports. In this case we start a server on port 25001. If you
-call **Http server** multiple times, the endpoints you define are added to the server running on that port.
+The **port** field defines the listening port, in this case 25001. If omitted, the port defaults to 3000.
+
+You can run multiple servers simultaneously on different ports. If you call **Http server** multiple times with the same
+name, the endpoints you define are added to the existing server.
 
 Then you define the **endpoints**. The format is inspired by OpenAPI definitions.
 
@@ -65,17 +68,17 @@ GET: http://localhost:25001/hello
 
 ### Stop the server
 
-Stop and remove the server for a specific port with the `stop` command:
+Stop and remove a server by name with the `stop` flag:
 
 ```yaml specscript
 Code example: Stop server
 
 Http server:
-  port: 25001
+  name: hello-server
   stop: true
 ```
 
-This will only stop the server running on the specified port, other servers will continue operating.
+This will only stop the named server, other servers will continue operating.
 
 If the server is still running at the end of the script, SpecScript will not exit and keep serving requests until you
 stop the process -- for example by pressing `^C` from the command line.
@@ -101,6 +104,7 @@ Variables are resolved in the `output` handler, making it easy to echo certain p
 Code example: Variables in output
 
 Http server:
+  name: echo-server
   port: 25001
   endpoints:
     /echo/headers:
@@ -115,7 +119,7 @@ Http server:
 
 --- 
 Http server:
-  port: 25001
+  name: echo-server
   stop: true
 -->
 
@@ -127,6 +131,7 @@ Define a SpecScript script in the handler using the `script` type:
 Code example: SpecScript script handler
 
 Http server:
+  name: greet-server
   port: 25001
   endpoints:
     /greet-all:
@@ -155,7 +160,7 @@ Expected output:
 
 ---
 Http server:
-  port: 25001
+  name: greet-server
   stop: true
 -->
 
@@ -184,6 +189,7 @@ passed as input to the script.
 Code example: File handler
 
 Http server:
+  name: file-server
   port: 25001
   endpoints:
     /greet:
@@ -199,6 +205,6 @@ Expected output: Hello Alice!
 
 ---
 Http server:
-  port: 25001
+  name: file-server
   stop: true
 -->
