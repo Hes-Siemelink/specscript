@@ -1,7 +1,6 @@
 # Spotlight
 
 * Rewrite README
-* Rethink Connect to again
 * Use Markdown front matter for SpecScript files to define metadata
 * LLM commands
 * Agent definitions
@@ -16,9 +15,6 @@
 # Actually build something
 
 * Home Recipes
-    * Store stuff on file system with a construct like Connect to
-    * Store stuff on sqlite using same construct
-    * Edit lists
 
 # SpecScript
 
@@ -62,7 +58,7 @@
 
 ## Shell & Files
 
-* Support 'default' parameter to support text parameters in commands that are SpecScript scripts
+* Support text parameters in commands that are SpecScript scripts
 * Support 'list execution' for commands that are SpecScript scripts
 * Multi-line shell support
 * Support stdin:
