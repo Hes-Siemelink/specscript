@@ -38,13 +38,6 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val info = data.toDomainObject(McpServerInfo::class)
 
-        // Stop server
-        if (info.stop) {
-            this.stopServer(info.name)
-            clearCurrentServer(context)
-            return null
-        }
-
         // TODO Resolve top level properties but not the scripts
 
         val server = servers.getOrPut(info.name) {
@@ -185,7 +178,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
         context.session[DEFAULT_MCP_SERVER] = serverName
     }
 
-    private fun clearCurrentServer(context: ScriptContext) {
+    fun clearCurrentServer(context: ScriptContext) {
         context.session.remove(DEFAULT_MCP_SERVER)
     }
 
@@ -326,7 +319,6 @@ private typealias HttpMcpServer = EmbeddedServer<NettyApplicationEngine, NettyAp
 data class McpServerInfo(
     val name: String,
     val version: String = "1.0.0",
-    val stop: Boolean = false,
     val transport: TransportType = TransportType.HTTP,
     val port: Int = 8080,
 

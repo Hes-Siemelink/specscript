@@ -65,10 +65,7 @@ Mcp tool:
 The external script file should contain the SpecScript commands to execute when the tool is called.
 
 <!-- yaml specscript
-Mcp server:
-  name: test-server
-  version: "1.0.0"
-  stop: true
+Stop mcp server: test-server
 -->
 
 ## Deriving input schema from script
@@ -125,10 +122,7 @@ Expected output: Hello, Alice!
 ```
 
 <!-- yaml specscript
-Mcp server:
-  name: derive-server
-  version: "1.0.0"
-  stop: true
+Stop mcp server: derive-server
 -->
 
 If `inputSchema` is provided explicitly on the tool definition, it takes precedence over the script's `Input schema`.

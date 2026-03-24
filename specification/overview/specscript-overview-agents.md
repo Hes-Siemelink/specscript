@@ -249,9 +249,7 @@ Expected output: Hello Alice!
 ```
 
 <!-- yaml specscript
-Mcp server:
-  name: agent-overview-server
-  stop: true
+Stop mcp server: agent-overview-server
 -->
 
 Transports: `HTTP` (default, streaming), `SSE` (legacy), `STDIO`. See

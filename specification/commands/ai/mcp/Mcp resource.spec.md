@@ -116,8 +116,5 @@ Mcp resource:
 The external script file should contain the SpecScript commands to execute when the resource is accessed.
 
 <!-- yaml specscript
-Mcp server:
-  name: test-server
-  version: "1.0.0"
-  stop: true
+Stop mcp server: test-server
 -->

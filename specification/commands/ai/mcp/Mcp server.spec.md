@@ -54,14 +54,12 @@ Mcp tool call:
 Expected output: Hello world!
 ```
 
-Stop and remove the server with the `stop` flag:
+Stop and remove the server with the `Stop mcp server` command:
 
 ```yaml specscript
 Code example: Stop server
 
-Mcp server:
-  name: my-server
-  stop: true
+Stop mcp server: my-server
 ```
 
 ### External script files
@@ -88,9 +86,7 @@ Mcp server:
 The external script file should contain the SpecScript commands to execute when the tool is called.
 
 <!-- yaml specscript
-Mcp server:
-  name: file-server
-  stop: true
+Stop mcp server: file-server
 -->
 
 ### Deriving input schema from script
@@ -124,10 +120,6 @@ Mcp server:
     say_hello:
       description: Say hello to someone
       script: say-hello.spec.yaml
-```
-
-```yaml specscript
-Code example: Calling tool with derived schema
 
 Mcp tool call:
   tool: say_hello
@@ -137,14 +129,9 @@ Mcp tool call:
     url: "http://localhost:8095/mcp"
 
 Expected output: Hello, Bob!
-```
 
-<!-- yaml specscript
-Mcp server:
-  name: derive-demo
-  version: "1.0.0"
-  stop: true
--->
+Stop mcp server: derive-demo
+```
 
 If `inputSchema` is provided explicitly, it takes precedence over the script's `Input schema`.
 
@@ -175,10 +162,6 @@ Mcp server:
             description: Name to greet
       script:
         Output: Hello ${input.name} via HTTP!
-```
-
-```yaml specscript
-Code example: Calling streaming HTTP server tool
 
 Mcp tool call:
   tool: greet
@@ -188,14 +171,9 @@ Mcp tool call:
     url: "http://localhost:8092/mcp"
 
 Expected output: Hello Bob via HTTP!
-```
 
-<!-- yaml specscript
-Mcp server:
-  name: http-server
-  version: "1.0.0"
-  stop: true
--->
+Stop mcp server: http-server
+```
 
 The streaming HTTP transport supports:
 
@@ -229,10 +207,6 @@ Mcp server:
             description: Name to greet
       script:
         Output: Hello ${input.name} via SSE!
-```
-
-```yaml specscript
-Code example: Calling SSE server tool
 
 Mcp tool call:
   tool: greet
@@ -240,17 +214,12 @@ Mcp tool call:
     name: Alice
   server:
     transport: SSE
-    url: "http://localhost:8090"
+    url: http://localhost:8090
 
 Expected output: Hello Alice via SSE!
-```
 
-<!-- yaml specscript
-Mcp server:
-  name: sse-server
-  version: "1.0.0"
-  stop: true
--->
+Stop mcp server: sse-server
+```
 
 ### STDIO transport
 

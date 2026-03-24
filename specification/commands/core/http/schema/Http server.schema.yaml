@@ -6,8 +6,6 @@ properties:
     type: string
   port:
     type: integer
-  stop:
-    type: boolean
   endpoints:
     type: object
     additionalProperties:

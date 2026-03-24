@@ -33,11 +33,6 @@ object HttpServer : CommandHandler("Http server", "core/http"), ObjectHandler, D
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val info = data.toDomainObject(HttpServerInfo::class)
 
-        // Stop request
-        if (info.stop) {
-            stop(info.name); return null
-        }
-
         // Register endpoints
         info.endpoints.paths.forEach { (path, endpointData) -> addHandler(info, path, endpointData, context) }
         return null
@@ -165,7 +160,6 @@ private typealias HttpServerInstance = EmbeddedServer<NettyApplicationEngine, Ne
 data class HttpServerInfo(
     val name: String,
     val port: Int = 3000,
-    val stop: Boolean = false,
     val endpoints: Endpoints = Endpoints()
 )
 

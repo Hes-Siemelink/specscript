@@ -131,8 +131,5 @@ Mcp tool call:
 ```
 
 <!-- yaml specscript
-Mcp server:
-  name: demo-server
-  version: "1.0.0"
-  stop: true
+Stop mcp server: demo-server
 -->

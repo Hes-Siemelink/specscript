@@ -118,8 +118,5 @@ Mcp prompt:
 The external script file should contain the SpecScript commands to execute when the prompt is invoked.
 
 <!-- yaml specscript
-Mcp server:
-  name: test-server
-  version: "1.0.0"
-  stop: true
+Stop mcp server: test-server
 -->

@@ -33,6 +33,4 @@ Tests:
     Expected output: 1.0.0
 
 After all tests:
-  Http server:
-    name: status-server
-    stop: true
+  Stop http server: status-server

@@ -57,9 +57,7 @@ Then you define a handler. There are two handler types:
 
 In the above example we have a static Hello World greeting being returned by `output: Hello World!`
 
-### Test the server
-
-When defining the endpoints, the server is started right away, and we can test it with a simple GET request:
+The server is started right away, and we can test it with a simple GET request:
 
 ```yaml specscript
 GET: http://localhost:25001/hello
@@ -67,14 +65,12 @@ GET: http://localhost:25001/hello
 
 ### Stop the server
 
-Stop and remove a server by name with the `stop` flag:
+Stop and remove a server by name with the `Stop http server` command:
 
 ```yaml specscript
 Code example: Stop server
 
-Http server:
-  name: hello-server
-  stop: true
+Stop http server: hello-server
 ```
 
 This will only stop the named server, other servers will continue operating.
@@ -104,23 +100,21 @@ Code example: Variables in output
 
 Http server:
   name: echo-server
-  port: 25001
+  port: 25002
   endpoints:
     /echo/headers:
       get:
         output: ${request.headers}
     /greeting:
       get:
-        output: Hello ${input.name}
+        output: Hello ${input.name}!
+
+GET: http://localhost:25002/greeting?name=Alice
+
+Expected output: Hello Alice!
+
+Stop http server: echo-server
 ```
-
-<!-- yaml specscript
-
---- 
-Http server:
-  name: echo-server
-  stop: true
--->
 
 ## Running an inline script
 
@@ -131,7 +125,7 @@ Code example: SpecScript script handler
 
 Http server:
   name: greet-server
-  port: 25001
+  port: 25003
   endpoints:
     /greet-all:
       post:
@@ -142,7 +136,7 @@ Http server:
               Hello ${name}!
 
 POST:
-  url: http://localhost:25001/greet-all
+  url: http://localhost:25003/greet-all
   body:
     names:
       - Alice
@@ -153,15 +147,9 @@ Expected output:
   - Hello Alice!
   - Hello Bob!
   - Hello Carol!
+
+Stop http server: greet-server
 ```
-
-<!-- yaml specscript
-
----
-Http server:
-  name: greet-server
-  stop: true
--->
 
 ## Running a script file
 
@@ -190,21 +178,15 @@ Code example: Script file handler
 
 Http server:
   name: file-server
-  port: 25001
+  port: 25004
   endpoints:
     /greet:
       get:
         script: greet.spec.yaml   # Call script in the same directory
 
-GET: http://localhost:25001/greet?name=Alice
+GET: http://localhost:25004/greet?name=Alice
 
 Expected output: Hello Alice!
+
+Stop http server: file-server
 ```
-
-<!-- yaml specscript
-
----
-Http server:
-  name: file-server
-  stop: true
--->

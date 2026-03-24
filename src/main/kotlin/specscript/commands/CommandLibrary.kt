@@ -117,6 +117,7 @@ object CommandLibrary {
 
         // Http server
         HttpServer,
+        StopHttpServer,
 
         // Account connections
         ConnectTo,
@@ -143,7 +144,8 @@ object CommandLibrary {
         McpPrompt,
         McpResource,
         McpServer,
-        McpTool
+        McpTool,
+        StopMcpServer
     )
 
     // TODO Store commands in canonical form: all lower case and spaces

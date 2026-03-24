@@ -50,6 +50,4 @@ Tests:
     List agents: { }
 
 ---
-Http server:
-  name: cloud-connector-mock
-  stop: true
+Stop http server: cloud-connector-mock

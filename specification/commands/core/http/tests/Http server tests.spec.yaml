@@ -2,39 +2,34 @@ Tests:
 
   Start and stop server:
 
-    Do:
-      - Http server:
-          name: test-server
-          port: 25001
-          endpoints:
-            /hello:
-              get:
-                output: Hello
+    Http server:
+      name: test-server
+      port: 25001
+      endpoints:
+        /hello:
+          get:
+            output: Hello
 
-      - GET: http://localhost:25001/hello
+    GET: http://localhost:25001/hello
 
-      - Expected output: Hello
+    Expected output: Hello
 
-      - Http server:
-          name: test-server
-          stop: true
+    Stop http server: test-server
+
 
   Endpoint with script output:
 
-    Do:
-      - Http server:
-          name: script-server
-          port: 25001
-          endpoints:
-            /hello:
-              get:
-                script:
-                  Output: Hello again
+    Http server:
+      name: script-server
+      port: 25001
+      endpoints:
+        /hello:
+          get:
+            script:
+              Output: Hello again
 
-      - GET: http://localhost:25001/hello
+    GET: http://localhost:25001/hello
 
-      - Expected output: Hello again
+    Expected output: Hello again
 
-      - Http server:
-          name: script-server
-          stop: true
+    Stop http server: script-server

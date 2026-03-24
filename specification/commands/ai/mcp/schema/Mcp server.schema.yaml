@@ -6,8 +6,6 @@ properties:
     type: string
   version:
     type: string
-  stop:
-    type: boolean
   transport:
     type: string
     enum: [ STDIO, HTTP, SSE ]
