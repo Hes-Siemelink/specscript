@@ -39,7 +39,7 @@ definitions:
     properties:
       output: { }
       script:
-        type: object
-      file:
-        type: string
+        type:
+          - object
+          - string
     additionalProperties: false

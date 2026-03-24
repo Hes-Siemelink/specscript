@@ -18,7 +18,6 @@ import specscript.util.toDomainObject
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.StringNode
-import kotlin.io.path.name
 
 
 object HttpServer : CommandHandler("Http server", "core/http"), ObjectHandler, DelayedResolver {
@@ -104,11 +103,11 @@ private suspend fun handleRequest(
     localContext.addInputVariable(call, bodyText)
     localContext.addRequestVariable(call, bodyText, pathParamNames)
 
-    // Resolve output via (priority) output -> script -> file
+    // Resolve output via (priority) output -> script
     val output = when {
         data.output != null -> data.output.resolve(localContext)
+        data.script is StringNode -> SpecScriptFile(localContext.scriptDir.resolve(data.script.stringValue())).run(localContext)
         data.script != null -> data.script.run(localContext)
-        data.file != null -> SpecScriptFile(localContext.scriptDir.resolve(data.file)).run(localContext)
         else -> throw SpecScriptException("No handler action defined")
     }
 
@@ -184,9 +183,8 @@ class EndpointData {
 
 data class MethodHandlerData(
     val output: JsonNode? = null,
-    val script: JsonNode? = null,
-    val file: String? = null
+    val script: JsonNode? = null
 ) {
     @JsonCreator
-    constructor(textValue: String) : this(file = textValue)
+    constructor(textValue: String) : this(script = StringNode(textValue))
 }

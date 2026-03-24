@@ -50,13 +50,12 @@ Then you define the **endpoints**. The format is inspired by OpenAPI definitions
 First, you define a path, in this case `/hello`. On the path, you need a define a method handler, one of `get`, `post`,
 `put`, `patch` or `delete`. In this case we defined a `get`.
 
-Then you define a handler. There are three handler types
+Then you define a handler. There are two handler types:
 
 * `output`: returns the content below it
-* `script`: runs an inline SpecScript script
-* `file`: runs a SpecScript file
+* `script`: runs a SpecScript script — either inline or from a file
 
-In this example we have a static Hello World greeting being returned by `output: Hello World!`
+In the above example we have a static Hello World greeting being returned by `output: Hello World!`
 
 ### Test the server
 
@@ -85,7 +84,7 @@ stop the process -- for example by pressing `^C` from the command line.
 
 ## Supplied variables
 
-The following variables can be used in `output`, `script` and `file`
+The following variables can be used in `output` and `script`
 
 * `${input}`: - Body or query parameters. If there is a body in the request, query parameters are ignored.
 * `${request.headers}`: - Request headers
@@ -125,7 +124,7 @@ Http server:
 
 ## Running an inline script
 
-Define a SpecScript script in the handler using the `script` type:
+You can define an inline SpecScript script in the handler using the `script` property:
 
 ```yaml specscript
 Code example: SpecScript script handler
@@ -136,7 +135,7 @@ Http server:
   endpoints:
     /greet-all:
       post:
-        script:
+        script: # Inline SpecScript
           For each:
             ${name} in: ${input.names}
             Output:
@@ -164,9 +163,9 @@ Http server:
   stop: true
 -->
 
-## Running a file
+## Running a script file
 
-You can also specify a SpecScript file to run.
+you can also reference to a SpecScript file, as an alternative to an inline script,
 
 Suppose you have a file `greet.spec.yaml`
 
@@ -182,11 +181,12 @@ Input schema:
 Output: Hello ${input.name}!
 ```
 
-You can call this directly from the http endpoint definition. Note that body or query parameters are automatically
-passed as input to the script.
+You can call this script directly from the http endpoint definition by passing to the `script` property. Just pass it as
+a string, and SpecScript will resolve it as a path relative to the file where the server is defined. Query and body
+parameters are passed as input to the script.
 
 ```yaml specscript
-Code example: File handler
+Code example: Script file handler
 
 Http server:
   name: file-server
@@ -194,7 +194,7 @@ Http server:
   endpoints:
     /greet:
       get:
-        file: greet.spec.yaml
+        script: greet.spec.yaml   # Call script in the same directory
 
 GET: http://localhost:25001/greet?name=Alice
 
