@@ -35,6 +35,15 @@ style, you would have a higher 'data content' than 'logic content' in your scrip
 is data, and the logic is a smaller part. Then Yaml starts making sense as a format.
 
 By convention, commands start with a capital letter, for example `Print` or `Read file`, to distinguish them from data.
+Command matching is case-insensitive, so `print`, `Print`, and `PRINT` all work:
+
+```yaml specscript
+print: Hello from lowercase
+```
+
+```output
+Hello from lowercase
+```
 
 Another advantage of SpecScript syntax being Yaml is familiarity: if you have worked with Yaml before you know its
 structure (and pitfalls) already, and you get editor support out-of-the-box. It's also way easier for the implementation

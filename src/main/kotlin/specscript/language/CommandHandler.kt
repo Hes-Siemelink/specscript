@@ -6,6 +6,10 @@ import tools.jackson.databind.node.ArrayNode
 import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.ValueNode
 
+fun canonicalCommandName(name: String): String = name.lowercase()
+
+fun Command.equalsCommand(handler: CommandHandler): Boolean = name.equals(handler.name, ignoreCase = true)
+
 abstract class CommandHandler(open val name: String, open val namespace: String?) {
 
     fun handlesLists(): Boolean {

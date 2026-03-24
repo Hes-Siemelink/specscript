@@ -122,8 +122,8 @@ class TestCaseRunner(
  * Supports both legacy Test case commands and new Tests/Before all tests/After all tests commands.
  */
 fun SpecScriptFile.getTestCases(): List<DynamicTest> {
-    val hasNewTests = script.commands.any { it.name == Tests.name }
-    val hasLegacyTests = script.commands.any { it.name == TestCase.name }
+    val hasNewTests = script.commands.any { it.equalsCommand(Tests) }
+    val hasLegacyTests = script.commands.any { it.equalsCommand(TestCase) }
 
     if (!hasNewTests && !hasLegacyTests) {
         return emptyList()
@@ -205,8 +205,6 @@ fun Script.getTestTitle(commandHandler: CommandHandler): String {
     if (title != null) {
         return title
     }
-    val command = commands.find {
-        it.name == commandHandler.name
-    }
+    val command = commands.find { it.equalsCommand(commandHandler) }
     return command?.data?.stringValue() ?: commandHandler.name
 }

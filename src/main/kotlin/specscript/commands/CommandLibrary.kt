@@ -30,6 +30,7 @@ import specscript.commands.util.*
 import specscript.commands.variables.As
 import specscript.commands.variables.Output
 import specscript.language.CommandHandler
+import specscript.language.canonicalCommandName
 
 object CommandLibrary {
 
@@ -148,8 +149,7 @@ object CommandLibrary {
         StopMcpServer
     )
 
-    // TODO Store commands in canonical form: all lower case and spaces
     private fun commandMap(vararg commands: CommandHandler): Map<String, CommandHandler> {
-        return commands.associateBy { it.name }
+        return commands.associateBy { canonicalCommandName(it.name) }
     }
 }

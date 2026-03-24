@@ -65,11 +65,11 @@ class Script(val commands: List<Command>, val title: String? = null) {
     }
 
     private fun getScriptInfo(): ScriptInfoData {
-        val scriptInfoCommand = commands.find { it.name == ScriptInfo.name }
+        val scriptInfoCommand = commands.find { it.equalsCommand(ScriptInfo) }
         val scriptInfoData = scriptInfoCommand?.data?.toDomainObject(ScriptInfoData::class) ?: ScriptInfoData(title)
 
-        val inputParameterCommand = commands.find { it.name == InputParameters.name }
-        val inputSchemaCommand = commands.find { it.name == InputSchema.name }
+        val inputParameterCommand = commands.find { it.equalsCommand(InputParameters) }
+        val inputSchemaCommand = commands.find { it.equalsCommand(InputSchema) }
 
         return when {
             inputParameterCommand != null -> {
@@ -204,7 +204,7 @@ fun Script.splitTestCases(): List<Script> {
     var currentCase = mutableListOf<Command>()
     var testCaseFound = false
     for (command in commands) {
-        if (command.name == TestCase.name) {
+        if (command.equalsCommand(TestCase)) {
             if (!testCaseFound) {
                 // Ignore everything before the first 'Test case' command
                 testCaseFound = true
@@ -240,16 +240,16 @@ fun Script.splitTests(): TestSuite {
     var teardown: Script? = null
 
     for (command in commands) {
-        when (command.name) {
-            BeforeTests.name -> {
+        when {
+            command.equalsCommand(BeforeTests) -> {
                 setup = Script.from(command.data)
             }
 
-            AfterTests.name -> {
+            command.equalsCommand(AfterTests) -> {
                 teardown = Script.from(command.data)
             }
 
-            Tests.name -> {
+            command.equalsCommand(Tests) -> {
                 for (field in command.data.properties()) {
                     tests.add(NamedTest(field.key, Script.from(field.value)))
                 }

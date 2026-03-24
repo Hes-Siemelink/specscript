@@ -3,6 +3,7 @@ package specscript.files
 import specscript.commands.CommandLibrary
 import specscript.commands.variables.AssignVariable
 import specscript.language.*
+import specscript.language.canonicalCommandName
 import specscript.language.types.Type
 import specscript.language.types.TypeRegistry
 import specscript.language.types.TypeSpecification
@@ -110,18 +111,20 @@ class FileContext(
             return AssignVariable(match.groupValues[1])
         }
 
+        val canonical = canonicalCommandName(command)
+
         // Standard commands
-        CommandLibrary.commands[command]?.let { handler ->
+        CommandLibrary.commands[canonical]?.let { handler ->
             return handler
         }
 
         // File commands
-        localFileCommands[command]?.let { handler ->
+        localFileCommands[canonical]?.let { handler ->
             return handler
         }
 
         // Imported commands
-        importedFileCommands[command]?.let { handler ->
+        importedFileCommands[canonical]?.let { handler ->
             return handler
         }
 
@@ -156,7 +159,7 @@ class FileContext(
         if (!(file.name.endsWith(YAML_SPEC_EXTENSION) || file.name.endsWith(MARKDOWN_SPEC_EXTENSION))) return
 
         val name = asScriptCommand(file.name)
-        commands[name] = SpecScriptFile(file)
+        commands[canonicalCommandName(name)] = SpecScriptFile(file)
     }
 
     private fun findSubcommands(): Map<String, DirectoryInfo> {
@@ -181,7 +184,7 @@ class FileContext(
 
     fun getCliScriptFile(rawCommand: String): SpecScriptFile? {
         val command = asScriptCommand(rawCommand)
-        return localFileCommands[command]
+        return localFileCommands[canonicalCommandName(command)]
     }
 
     fun getSubcommand(rawCommand: String): DirectoryInfo? {

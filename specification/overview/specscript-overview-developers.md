@@ -20,7 +20,7 @@ interpolation layer on top.
 
 ## Core Language Concepts
 
-**Commands** are YAML keys starting with a capital letter. A script is a sequence of commands executed top-to-bottom:
+**Commands** are YAML keys that, by convention, start with a capital letter. Matching is case-insensitive. A script is a sequence of commands executed top-to-bottom:
 
 ```yaml
 Print: Hello world

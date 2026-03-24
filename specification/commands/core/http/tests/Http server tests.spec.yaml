@@ -2,7 +2,7 @@ Tests:
 
   Start and stop server:
 
-    Http server:
+    HTTP server:
       name: test-server
       port: 25001
       endpoints:
@@ -14,12 +14,12 @@ Tests:
 
     Expected output: Hello
 
-    Stop http server: test-server
+    Stop HTTP server: test-server
 
 
   Endpoint with script output:
 
-    Http server:
+    HTTP server:
       name: script-server
       port: 25001
       endpoints:
@@ -32,4 +32,4 @@ Tests:
 
     Expected output: Hello again
 
-    Stop http server: script-server
+    Stop HTTP server: script-server
