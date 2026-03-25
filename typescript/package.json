@@ -1,0 +1,28 @@
+{
+  "name": "specscript-ts",
+  "version": "0.1.0",
+  "description": "SpecScript TypeScript implementation — Level 0",
+  "type": "module",
+  "main": "dist/cli.js",
+  "bin": {
+    "specscript-ts": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "start": "tsx src/cli.ts"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "yaml": "^2.7.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.4",
+    "tsx": "^4.19.4",
+    "@types/node": "^20.17.50"
+  }
+}

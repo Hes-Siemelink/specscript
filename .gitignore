@@ -20,6 +20,11 @@ test.db
 .specstory/.what-is-this.md
 .tmp
 
+# Node / TypeScript
+node_modules
+typescript/dist
+typescript/pnpm-lock.yaml
+
 # Specscript
 /.specscript
 test-results

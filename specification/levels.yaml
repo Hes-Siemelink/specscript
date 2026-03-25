@@ -44,7 +44,6 @@ levels:
       - Top-level array syntax
       - "Variable resolution: ${...} interpolation and full node replacement"
       - "Variable path navigation: ${a.b[0].c}, bracket notation"
-      - "Eval syntax: /CommandName inline expressions"
       - Conditions system (is, is not, contains, matches, comparisons)
       - Array auto-mapping
       - DelayedResolver interface
@@ -53,8 +52,6 @@ levels:
       # Language
       - language/SpecScript Yaml Scripts.spec.md
       - language/Variables.spec.md
-      - language/Eval syntax.spec.md
-      - language/tests/Eval tests.spec.yaml
       - language/tests/Variables tests.spec.yaml
 
       # Testing commands
@@ -124,7 +121,13 @@ levels:
       - Base64 encode
       - Base64 decode
       - Wait
+    language-features:
+      - "Eval syntax: /CommandName inline expressions"
     spec-files:
+      # Language
+      - language/Eval syntax.spec.md
+      - language/tests/Eval tests.spec.yaml
+
       # Control flow
       - commands/core/control-flow/If.spec.md
       - commands/core/control-flow/When.spec.md

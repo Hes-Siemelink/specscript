@@ -1,11 +1,11 @@
 ---
 # specscript-8y6j
 title: Language levels proposal for multi-language SpecScript
-status: in-progress
+status: completed
 type: feature
 priority: normal
 created_at: 2026-03-25T19:49:26Z
-updated_at: 2026-03-25T20:06:57Z
+updated_at: 2026-03-25T20:51:56Z
 ---
 
 Define a layered grouping of SpecScript features to enable bootstrapping new language implementations (TypeScript, Go, Rust) without covering the entire spec.

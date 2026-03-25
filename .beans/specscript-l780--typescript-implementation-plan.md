@@ -1,11 +1,11 @@
 ---
 # specscript-l780
 title: TypeScript implementation plan
-status: in-progress
+status: completed
 type: feature
 priority: normal
 created_at: 2026-03-25T20:21:27Z
-updated_at: 2026-03-25T20:22:49Z
+updated_at: 2026-03-25T20:51:56Z
 ---
 
 Detailed plan for bootstrapping a TypeScript/Node SpecScript implementation in the monorepo, targeting Level 0 first.
