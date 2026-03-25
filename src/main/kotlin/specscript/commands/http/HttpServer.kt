@@ -27,14 +27,23 @@ object HttpServer : CommandHandler("Http server", "core/http"), ObjectHandler, D
         System.setProperty("io.ktor.server.engine.ShutdownHook", "false")
     }
 
+    private const val DEFAULT_HTTP_SERVER = "http.server.default"
+
     // Active servers keyed by name
     private val servers = mutableMapOf<String, HttpServerInstance>()
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val info = data.toDomainObject(HttpServerInfo::class)
 
+        setDefaultServer(context, info.name)
+
+        // Eagerly start the server so Http endpoint can add to it later
+        ensureRunning(info.name, info.port)
+
         // Register endpoints
-        info.endpoints.paths.forEach { (path, endpointData) -> addHandler(info, path, endpointData, context) }
+        info.endpoints.paths.forEach { (path, endpointData) ->
+            installEndpoint(servers[info.name]!!, path, endpointData, context)
+        }
         return null
     }
 
@@ -43,13 +52,34 @@ object HttpServer : CommandHandler("Http server", "core/http"), ObjectHandler, D
         servers.remove(name)?.stop(100, 200)
     }
 
-    private fun addHandler(info: HttpServerInfo, rawPath: String, data: EndpointData, context: ScriptContext) {
-        // Start (or reuse) server for this name
-        val server = servers.getOrPut(info.name) {
-            println("Starting SpecScript Http Server '${info.name}' on port ${info.port}")
-            embeddedServer(Netty, port = info.port) { }.also { it.start(wait = false) }
-        }
+    fun getDefaultServerName(context: ScriptContext): String {
+        return context.session[DEFAULT_HTTP_SERVER] as? String
+            ?: throw SpecScriptException("No HTTP server found in current context. An Http server must be started before defining endpoints.")
+    }
 
+    private fun setDefaultServer(context: ScriptContext, serverName: String) {
+        context.session[DEFAULT_HTTP_SERVER] = serverName
+    }
+
+    private fun ensureRunning(serverName: String, port: Int): HttpServerInstance {
+        return servers.getOrPut(serverName) {
+            println("Starting SpecScript Http Server '$serverName' on port $port")
+            embeddedServer(Netty, port = port) { }.also { it.start(wait = false) }
+        }
+    }
+
+    fun addHandler(serverName: String, port: Int, rawPath: String, data: EndpointData, context: ScriptContext) {
+        val server = ensureRunning(serverName, port)
+        installEndpoint(server, rawPath, data, context)
+    }
+
+    fun addEndpoint(serverName: String, rawPath: String, data: EndpointData, context: ScriptContext) {
+        val server = servers[serverName]
+            ?: throw SpecScriptException("HTTP server '$serverName' is not running. Start it with Http server before adding endpoints.")
+        installEndpoint(server, rawPath, data, context)
+    }
+
+    private fun installEndpoint(server: HttpServerInstance, rawPath: String, data: EndpointData, context: ScriptContext) {
         // Normalize ":id" path parameters into Ktor style "{id}"
         val normalizedPath = normalizePath(rawPath)
         val pathParamNames = extractPathParamNames(normalizedPath)

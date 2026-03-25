@@ -33,3 +33,44 @@ Tests:
     Expected output: Hello again
 
     Stop HTTP server: script-server
+
+
+  Add endpoint to running server:
+
+    Http server:
+      name: endpoint-test
+      port: 25001
+
+    Http endpoint:
+      /hello:
+        get:
+          output: Hello from endpoint
+
+    GET: http://localhost:25001/hello
+
+    Expected output: Hello from endpoint
+
+    Stop http server: endpoint-test
+
+
+  Add multiple endpoints separately:
+
+    Http server:
+      name: multi-endpoint-test
+      port: 25001
+
+    Do:
+      - Http endpoint:
+          /one:
+            get:
+              output: First
+      - Http endpoint:
+          /two:
+            get:
+              output: Second
+      - GET: http://localhost:25001/one
+      - Expected output: First
+      - GET: http://localhost:25001/two
+      - Expected output: Second
+
+    Stop http server: multi-endpoint-test

@@ -43,7 +43,8 @@ The **name** field is the server's identifier, used to reference and stop it.
 The **port** field defines the listening port, in this case 25001. If omitted, the port defaults to 3000.
 
 You can run multiple servers simultaneously on different ports. If you call **Http server** multiple times with the same
-name, the endpoints you define are added to the existing server.
+name, the endpoints you define are added to the existing server. You can also add endpoints separately using the
+**[Http endpoint](Http%20endpoint.spec.md)** command.
 
 Then you define the **endpoints**. The format is inspired by OpenAPI definitions.
 

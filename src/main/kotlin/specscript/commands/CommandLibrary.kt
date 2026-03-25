@@ -117,6 +117,7 @@ object CommandLibrary {
         HttpRequestDefaults,
 
         // Http server
+        HttpEndpoint,
         HttpServer,
         StopHttpServer,
 
