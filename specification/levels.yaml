@@ -1,0 +1,350 @@
+# SpecScript Language Levels
+#
+# Maps specification files to implementation levels. Each file appears in exactly one level.
+# An implementation at level N must pass all spec tests for levels 0 through N.
+#
+# Levels are cumulative: higher levels build on lower ones. Levels 3 and 4 are independent
+# of each other (either can be implemented first). Level 6 modules are independent of each other.
+#
+# Some .spec.md files contain sections that use commands from higher levels (e.g., file= blocks
+# or shell cli blocks). These sections will fail at lower levels. The test runner should report
+# partial results, not treat the entire file as failed.
+
+levels:
+
+  - name: Core Runtime
+    level: 0
+    description: >
+      YAML-to-command pipeline. Parse YAML, resolve variables, dispatch commands.
+      Includes testing commands so the implementation can self-verify from day one.
+    commands:
+      - Print
+      - Output
+      - As
+      - Assignment
+      - Do
+      - Exit
+      - Error
+      - Script info
+      - Input parameters
+      - Input schema
+      - Assert equals
+      - Assert that
+      - Expected output
+      - Expected console output
+      - Expected error
+      - Test case
+      - Code example
+      - Answers
+      - Tests
+      - Before all tests
+      - After all tests
+    language-features:
+      - YAML multi-document parsing
+      - Top-level array syntax
+      - "Variable resolution: ${...} interpolation and full node replacement"
+      - "Variable path navigation: ${a.b[0].c}, bracket notation"
+      - "Eval syntax: /CommandName inline expressions"
+      - Conditions system (is, is not, contains, matches, comparisons)
+      - Array auto-mapping
+      - DelayedResolver interface
+      - output variable
+    spec-files:
+      # Language
+      - language/SpecScript Yaml Scripts.spec.md
+      - language/Variables.spec.md
+      - language/Eval syntax.spec.md
+      - language/tests/Eval tests.spec.yaml
+      - language/tests/Variables tests.spec.yaml
+
+      # Testing commands
+      - commands/core/testing/Assert equals.spec.md
+      - commands/core/testing/Assert that.spec.md
+      - commands/core/testing/Expected output.spec.md
+      - commands/core/testing/Expected console output.spec.md
+      - commands/core/testing/Expected error.spec.md
+      - commands/core/testing/Test case.spec.md
+      - commands/core/testing/Code example.spec.md
+      - commands/core/testing/Answers.spec.md
+      - commands/core/testing/Tests.spec.md
+      - commands/core/testing/Before all tests.spec.md
+      - commands/core/testing/After all tests.spec.md
+      - commands/core/testing/tests/Assert tests.spec.yaml
+
+      # Variable commands
+      - commands/core/variables/As.spec.md
+      - commands/core/variables/Assignment.spec.md
+      - commands/core/variables/Output.spec.md
+      - commands/core/variables/tests/Assignment tests.spec.yaml
+      - commands/core/variables/tests/Output variable tests.spec.yaml
+      - commands/core/variables/tests/Variable replacement tests.spec.yaml
+
+      # Script info
+      - commands/core/script-info/Script info.spec.md
+      - commands/core/script-info/Input parameters.spec.md
+      - commands/core/script-info/Input schema.spec.md
+      - commands/core/script-info/tests/Input parameters tests.spec.yaml
+      - commands/core/script-info/tests/Input schema tests.spec.yaml
+
+      # Core commands
+      - commands/core/util/Print.spec.md
+      - commands/core/errors/Error.spec.md
+      - commands/core/control-flow/Do.spec.md
+      - commands/core/control-flow/Exit.spec.md
+      - commands/core/control-flow/tests/Do tests.spec.yaml
+      - commands/core/control-flow/tests/Exit tests.spec.yaml
+      - commands/core/control-flow/tests/empty.spec.yaml
+
+  - name: Control Flow and Data
+    level: 1
+    description: >
+      Complete scripting language for data manipulation. Branching, iteration,
+      error handling, and data transformation commands.
+    commands:
+      - If
+      - When
+      - For each
+      - Repeat
+      - On error
+      - On error type
+      - Find
+      - Add
+      - Add to
+      - Append
+      - Fields
+      - Json patch
+      - Replace
+      - Size
+      - Sort
+      - Values
+      - Json
+      - Text
+      - Print Json
+      - Parse Yaml
+      - Base64 encode
+      - Base64 decode
+      - Wait
+    spec-files:
+      # Control flow
+      - commands/core/control-flow/If.spec.md
+      - commands/core/control-flow/When.spec.md
+      - commands/core/control-flow/For each.spec.md
+      - commands/core/control-flow/Repeat.spec.md
+      - commands/core/control-flow/tests/If tests.spec.yaml
+      - commands/core/control-flow/tests/For each tests.spec.yaml
+      - commands/core/control-flow/tests/Repeat tests.spec.yaml
+      - commands/core/control-flow/schema/Schema tests.spec.yaml
+
+      # Data manipulation
+      - commands/core/data-manipulation/Add.spec.md
+      - commands/core/data-manipulation/Add to.spec.md
+      - commands/core/data-manipulation/Append.spec.md
+      - commands/core/data-manipulation/Fields.spec.md
+      - commands/core/data-manipulation/Find.spec.md
+      - commands/core/data-manipulation/Json patch.spec.md
+      - commands/core/data-manipulation/Replace.spec.md
+      - commands/core/data-manipulation/Size.spec.md
+      - commands/core/data-manipulation/Sort.spec.md
+      - commands/core/data-manipulation/Values.spec.md
+      - commands/core/data-manipulation/tests/Add tests.spec.yaml
+      - commands/core/data-manipulation/tests/Append tests.spec.yaml
+      - commands/core/data-manipulation/tests/Json patch tests.spec.yaml
+      - commands/core/data-manipulation/tests/Replace tests.spec.yaml
+      - commands/core/data-manipulation/tests/Size tests.spec.yaml
+      - commands/core/data-manipulation/tests/Sort tests.spec.yaml
+
+      # Error handling
+      - commands/core/errors/On error.spec.md
+      - commands/core/errors/On error type.spec.md
+      - commands/core/errors/tests/Error handling tests.spec.yaml
+
+      # Utility
+      - commands/core/util/Json.spec.md
+      - commands/core/util/Text.spec.md
+      - commands/core/util/Print Json.spec.md
+      - commands/core/util/Parse Yaml.spec.md
+      - commands/core/util/Base64 encode.spec.md
+      - commands/core/util/Base64 decode.spec.md
+      - commands/core/util/Wait.spec.md
+      - commands/core/util/tests/Base64 tests.spec.yaml
+      - commands/core/util/tests/Wait tests.spec.yaml
+
+      # Shared schemas
+      - commands/core/Conditions.schema.yaml
+
+  - name: Markdown Documents
+    level: 2
+    description: >
+      Executable documentation. Parse .spec.md files and run yaml specscript blocks
+      as tests. Unlocks self-testing against the specification.
+    commands: []
+    language-features:
+      - "Markdown scanner: classify code blocks by type"
+      - "Section splitting: each # header becomes a test case"
+      - "Block types: yaml specscript, hidden yaml specscript, output, answers, header, quote"
+    spec-files:
+      - language/SpecScript Markdown Documents.spec.md
+      - language/tests/SpecScript Markdown tests.spec.md
+      - language/SpecScript Best Practices.spec.md
+
+  - name: Files, Shell, and Script Composition
+    level: 3
+    description: >
+      Automation tool that interacts with the OS. File I/O, process spawning,
+      calling other scripts, directory scanning.
+    commands:
+      - Read file
+      - Write file
+      - Temp file
+      - Run script
+      - Shell
+      - Cli
+    language-features:
+      - File system access
+      - Process spawning
+      - Script-to-script calling (shared session)
+      - Local file commands (directory scanning)
+      - specscript-config.yaml
+      - "Built-in variables: SCRIPT_HOME, SCRIPT_TEMP_DIR, env"
+      - "Markdown block types: yaml file=, shell, shell cli"
+    spec-files:
+      # File commands
+      - commands/core/files/Read file.spec.md
+      - commands/core/files/Write file.spec.md
+      - commands/core/files/Temp file.spec.md
+      - commands/core/files/Run script.spec.md
+      - commands/core/files/SpecScript files as commands.spec.md
+      - commands/core/files/tests/Read file tests.spec.yaml
+      - commands/core/files/tests/Run script tests.spec.yaml
+      - commands/core/files/tests/Save as tests.spec.yaml
+      - commands/core/files/tests/Locate files in the same way.spec.yaml
+      - commands/core/files/tests/flat-folder-list.spec.yaml
+      - commands/core/files/tests/greet.spec.yaml
+      - commands/core/files/tests/helper/helper-function.spec.yaml
+      - commands/core/files/tests/helper/call-helper.spec.yaml
+
+      # Shell commands
+      - commands/core/shell/Shell.spec.md
+      - commands/core/shell/Cli.spec.md
+      - commands/core/shell/tests/Shell tests.spec.yaml
+
+      # Language specs that need file/shell features
+      - language/Organizing SpecScript files in directories.spec.md
+      - language/Testing.spec.md
+      - language/tests/Directory tests.spec.md
+
+      # CLI
+      - cli/Command line options.spec.md
+      - cli/Configuration files.spec.md
+      - cli/Running SpecScript files.spec.md
+
+  - name: HTTP
+    level: 4
+    description: >
+      API testing and integration tool. HTTP client and server commands.
+    requires: [1]
+    commands:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      - Http request defaults
+      - Http server
+      - Http endpoint
+      - Stop http server
+    spec-files:
+      - commands/core/http/GET.spec.md
+      - commands/core/http/POST.spec.md
+      - commands/core/http/PUT.spec.md
+      - commands/core/http/PATCH.spec.md
+      - commands/core/http/DELETE.spec.md
+      - commands/core/http/Http request defaults.spec.md
+      - commands/core/http/Http server.spec.md
+      - commands/core/http/Http endpoint.spec.md
+      - commands/core/http/Stop http server.spec.md
+      - commands/core/http/tests/Http client tests.spec.yaml
+      - commands/core/http/tests/Http server tests.spec.yaml
+
+  - name: User Interaction and Connections
+    level: 5
+    description: >
+      Interactive CLI tool framework. Terminal prompts, credential management,
+      type checking, JSON Schema validation.
+    requires: [3]
+    commands:
+      - Prompt
+      - Prompt object
+      - Confirm
+      - Connect to
+      - Credentials
+      - Create credentials
+      - Delete credentials
+      - Get credentials
+      - Get all credentials
+      - Set default credentials
+      - Check type
+      - Validate schema
+    spec-files:
+      # User interaction
+      - commands/core/user-interaction/Prompt.spec.md
+      - commands/core/user-interaction/Prompt object.spec.md
+      - commands/core/user-interaction/Confirm.spec.md
+      - commands/core/user-interaction/tests/Prompt tests.spec.yaml
+      - commands/core/user-interaction/tests/Prompt object tests.spec.yaml
+
+      # Connections
+      - commands/core/connections/Connect to.spec.md
+      - commands/core/connections/Credentials.spec.md
+      - commands/core/connections/Create credentials.spec.md
+      - commands/core/connections/Delete credentials.spec.md
+      - commands/core/connections/Get credentials.spec.md
+      - commands/core/connections/Get all credentials.spec.md
+      - commands/core/connections/Set default credentials.spec.md
+      - commands/core/connections/tests/Connect to tests.spec.yaml
+      - commands/core/connections/tests/Connection inheritance tests.spec.yaml
+      - commands/core/connections/tests/Credentials tests.spec.yaml
+      - commands/core/connections/tests/Upward search tests.spec.yaml
+      - commands/core/connections/tests/connect.spec.yaml
+      - commands/core/connections/tests/setup-test-credentials.spec.yaml
+      - commands/core/connections/tests/override/get-items.spec.yaml
+      - commands/core/connections/tests/upward/get-items.spec.yaml
+
+      # Schema validation and types
+      - commands/core/schema/Validate schema.spec.md
+      - commands/core/schema/tests/Validate tests.spec.yaml
+      - commands/core/types/Types.spec.md
+      - commands/core/types/tests/Type tests.spec.yaml
+
+  - name: SQLite
+    level: 6
+    description: SQLite database commands.
+    requires: [3]
+    commands:
+      - SQLite
+      - SQLite defaults
+      - Store
+    spec-files:
+      - commands/core/db/tests/SQLite tests.spec.yaml
+      - commands/core/db/tests/SQLite defaults tests.spec.yaml
+      - commands/core/db/tests/Store tests.spec.yaml
+
+  - name: MCP
+    level: 6
+    description: Model Context Protocol server and client commands.
+    requires: [4]
+    commands:
+      - Mcp server
+      - Mcp tool
+      - Mcp tool call
+      - Mcp prompt
+      - Mcp resource
+      - Stop mcp server
+    spec-files:
+      - commands/ai/mcp/Mcp server.spec.md
+      - commands/ai/mcp/Mcp tool.spec.md
+      - commands/ai/mcp/Mcp tool call.spec.md
+      - commands/ai/mcp/Mcp prompt.spec.md
+      - commands/ai/mcp/Mcp resource.spec.md
+      - commands/ai/mcp/Stop mcp server.spec.md
+      - commands/ai/mcp/backup-info.spec.yaml
