@@ -84,8 +84,7 @@
 
 # Bugs
 
-* BUG: Connect to resolves from target script's directory, not caller's —
-  see [plan/connect-to-resolution-bug.md](proposals/connect-to-resolution-bug.md)
+* BUG: Connect to resolves from target script's directory, not caller's
 * BUG: First line of output is not captured if shell script asks for user input => command appears to hang
 * BUG: Create connection doesn't work
 
