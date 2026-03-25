@@ -9,13 +9,6 @@ class SpecScriptMarkdown(val document: Path) {
 
     val blocks = mutableListOf<MarkdownBlock>()
 
-    val helperFiles: Map<String, String>
-        get() = blocks
-            .filter { it.type == YamlFile }
-            .associate {
-                (it.getOption("file") ?: error("No file specified for ${it.getContent()}")) to it.getContent()
-            }
-
     val description: String? by lazy {
         // Get first text block
         val mainBlock = blocks.firstOrNull { it.type == Text && it.lines.isNotEmpty() }
