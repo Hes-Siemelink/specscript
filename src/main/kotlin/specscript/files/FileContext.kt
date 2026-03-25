@@ -3,7 +3,6 @@ package specscript.files
 import specscript.commands.CommandLibrary
 import specscript.commands.variables.AssignVariable
 import specscript.language.*
-import specscript.language.canonicalCommandName
 import specscript.language.types.Type
 import specscript.language.types.TypeRegistry
 import specscript.language.types.TypeSpecification
@@ -218,42 +217,24 @@ private fun Path.hasCliCommands(): Boolean {
  * Creates command name from file name by stripping extension and converting dashes to spaces.
  */
 fun asScriptCommand(commandName: String): String {
-    var command = commandName
-
-    // Strip extension
-    if (command.endsWith(YAML_SPEC_EXTENSION)) {
-        command = command.take(commandName.length - YAML_SPEC_EXTENSION.length)
-    }
-    if (command.endsWith(MARKDOWN_SPEC_EXTENSION)) {
-        command = command.take(commandName.length - MARKDOWN_SPEC_EXTENSION.length)
-    }
-
-    // Spaces for dashes
-    command = command.replace('-', ' ')
-
-    // Start with a capital
-    command =
-        command.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
-
-    return command
+    return commandName.stripExtension().replace('-', ' ')
 }
 
+/**
+ * Creates cli command name stripping extension, converting spaces to dashes and making it all lowercase
+ */
 fun asCliCommand(commandName: String): String {
-    var command = commandName
+    return commandName.stripExtension().replace(' ', '-').lowercase(Locale.getDefault())
+}
 
-    // Strip extension
-    if (command.endsWith(YAML_SPEC_EXTENSION)) {
-        command = command.take(commandName.length - YAML_SPEC_EXTENSION.length)
-    }
-    if (command.endsWith(MARKDOWN_SPEC_EXTENSION)) {
-        command = command.take(commandName.length - MARKDOWN_SPEC_EXTENSION.length)
+private fun String.stripExtension(): String {
+    if (endsWith(YAML_SPEC_EXTENSION)) {
+        return take(length - YAML_SPEC_EXTENSION.length)
     }
 
-    // Dashes for spaces
-    command = command.replace(' ', '-')
+    if (endsWith(MARKDOWN_SPEC_EXTENSION)) {
+        return take(length - MARKDOWN_SPEC_EXTENSION.length)
+    }
 
-    // All lower case
-    command = command.lowercase(Locale.getDefault())
-
-    return command
+    return this
 }
