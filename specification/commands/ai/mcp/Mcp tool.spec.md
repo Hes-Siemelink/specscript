@@ -64,6 +64,21 @@ Mcp tool:
 
 The external script file should contain the SpecScript commands to execute when the tool is called.
 
+## Static output
+
+Use `output` to return a fixed value, useful for mock servers and testing:
+
+```yaml specscript
+Code example: Tool with static output
+
+Mcp tool:
+  version:
+    description: Returns the API version
+    output: "2.0.0"
+```
+
+When both `output` and `script` are present, `output` takes precedence.
+
 <!-- yaml specscript
 Stop mcp server: test-server
 -->

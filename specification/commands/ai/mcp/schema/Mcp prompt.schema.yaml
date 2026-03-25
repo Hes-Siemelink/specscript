@@ -21,11 +21,11 @@ additionalProperties:
         required:
           - name
           - description
+    output: {}
     script:
       type:
         - object
         - string
   required:
     - description
-    - script
   additionalProperties: false

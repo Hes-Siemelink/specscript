@@ -41,6 +41,40 @@ Mcp server:
 
 This will start a server with HTTP transport on `http://localhost:8080/mcp`.
 
+### Static output
+
+Use `output` instead of `script` to return a fixed value. This is useful for mock servers where you want predictable
+responses without writing a script.
+
+```yaml specscript
+Code example: MCP server tool with output
+
+Mcp server:
+  name: mock-server
+  version: "1.0.0"
+  port: 8096
+  tools:
+    get_status:
+      description: Returns the system status
+      output:
+        status: ok
+        uptime: 99.9
+
+Mcp tool call:
+  tool: get_status
+  server:
+    url: "http://localhost:8096/mcp"
+
+Expected output:
+  status: ok
+  uptime: 99.9
+
+Stop mcp server: mock-server
+```
+
+The `output` property works on tools, resources, and prompts. When both `output` and `script` are present, `output`
+takes precedence.
+
 Call a tool using the `Mcp tool call` command:
 
 ```yaml specscript

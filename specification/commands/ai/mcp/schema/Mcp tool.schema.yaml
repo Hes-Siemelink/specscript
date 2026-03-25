@@ -17,11 +17,11 @@ additionalProperties:
           type: array
           items:
             type: string
+    output: {}
     script:
       type:
         - object
         - string
   required:
     - description
-    - script
   additionalProperties: false

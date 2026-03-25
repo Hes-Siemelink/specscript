@@ -36,13 +36,13 @@ definitions:
         type: string
       inputSchema:
         $ref: "#/definitions/InputSchema"
+      output: {}
       script:
         type:
           - object
           - string
     required:
       - description
-      - script
     additionalProperties: false
 
   InputSchema:
@@ -66,6 +66,7 @@ definitions:
         type: string
       mimeType:
         type: string
+      output: {}
       script:
         type:
           - object
@@ -73,7 +74,6 @@ definitions:
     required:
       - name
       - description
-      - script
     additionalProperties: false
 
   PromptInfo:
@@ -95,11 +95,11 @@ definitions:
           required:
             - name
             - description
+      output: {}
       script:
         type:
           - object
           - string
     required:
       - description
-      - script
     additionalProperties: false

@@ -10,6 +10,7 @@ additionalProperties:
       type: string
     mimeType:
       type: string
+    output: {}
     script:
       type:
         - object
@@ -17,5 +18,4 @@ additionalProperties:
   required:
     - name
     - description
-    - script
   additionalProperties: false
