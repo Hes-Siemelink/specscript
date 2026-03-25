@@ -1,11 +1,11 @@
 ---
 # specscript-4dc0
 title: TypeScript Level 0 implementation
-status: in-progress
+status: completed
 type: feature
 priority: normal
 created_at: 2026-03-25T20:52:08Z
-updated_at: 2026-03-25T20:59:36Z
+updated_at: 2026-03-25T21:42:02Z
 ---
 
 Implement the SpecScript TypeScript runtime covering Level 0: core YAML-to-command pipeline, variable resolution, conditions, 21 commands, CLI entry point, and spec test runner.
@@ -30,3 +30,5 @@ Implement the SpecScript TypeScript runtime covering Level 0: core YAML-to-comma
 - [x] Update .gitignore with Node exclusions
 - [x] Spec test runner (test/spec-runner.ts)
 - [ ] Run Level 0 spec tests and fix failures
+
+## Summary of Changes\n\nFull Level 0 TypeScript implementation: 37/37 spec tests passing, 1 skipped (Level 3 dependency). Committed on levels branch as 9c436c6.
