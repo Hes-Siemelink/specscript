@@ -171,8 +171,7 @@ When committing changes to the project, follow these rules:
       perspective of a non-developer stakeholder.
     - Avoid technical or code-centric language in the summary; save those details for the content/body.
     - If a new feature is added, start the summary with the 💫 emoji. The 💫 entries tell the story at a glance.
-    - For new commands specifically, use `💫 New command: Command name` or `💫 New commands: Name1, Name2` as the
-      summary.
+    - For new commands specifically, use `💫 New command: Command name` or `💫 New commands: Name1, Name2` as the summary.
     - If the change is a breaking change, use `💫 ⚠️` (both emojis) at the start of the summary. This signals a MINOR
       version bump is needed at release time. For breaking new commands: `💫 ⚠️ New commands: Name1, Name2`.
     - For non-functional updates (refactoring, documentation, etc.), do not use any emoji.
@@ -183,6 +182,8 @@ When committing changes to the project, follow these rules:
       exactly: `Code Cleanup` as the summary.
     - For updates to AI agent context, conversation history, distilled rules, or project meta files (such as .specstory,
       .cursor, AGENTS.md or similar), use exactly: `AI Context` as the summary. Do not mix these with other changes.
+    - For (leftover) planning files in plan or .beans directory, commit them together with exactly: `Plan` as the
+      summary. No body content needed.
 - Content:
     - Each bullet or paragraph must be a separate `-m` argument.
     - Do not use `\n` to separate topics within a single `-m` argument.

@@ -7,6 +7,8 @@
 
 ## In general
 
+* Split into core yaml script, minimal spec + testing; cli; library functions in order to make implementations in other
+  languages.
 * AI to generate scripts: notebook type interaction to write scripts
 * Tutorial / guide documents: "Spec documents are written spec-first — they define behavior before implementation
   exists. This drives a minimalist style: precise, executable, and cheap to change." Create a separate set of
@@ -27,6 +29,7 @@
 
 * `spec --version` CLI flag (needs version baked into jar at build time)
 * Define commands in SpecScript itself
+* Allow list on top level
 * Secrets
 * Properly handle: null, empty, boolean, int
 * Stream and pipe output as Yaml array of lines
