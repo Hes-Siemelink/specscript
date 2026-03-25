@@ -14,14 +14,9 @@
   exists. This drives a minimalist style: precise, executable, and cheap to change." Create a separate set of
   friendlier, tutorial-style "getting started" and "how-to" guides.
 
-# Actually build something
+# Naming alternatives
 
-* Home Recipes
-
-# SpecScript
-
-* Naming alternatives
-    * Spec.it
+* Spec.it
 
 # SpecScript language
 
@@ -67,10 +62,6 @@
 * Support stdin:
   if (System.`in`.available() != 0) { val input = Yaml.mapper.readTree(System.`in`)}
 
-## MCP
-
-* Process MCP result as list
-
 ## AI agents
 
 * Langchain
@@ -84,52 +75,7 @@
 
 # Bugs
 
-* BUG: Connect to resolves from target script's directory, not caller's
 * BUG: First line of output is not captured if shell script asks for user input => command appears to hang
-* BUG: Create connection doesn't work
-
-```shell
-hes@Mac samples % cli digitalai/release/login 
-Login to Digital.ai Release
-
-* Available commands: connect                     Logs in to Digital.ai Release
-
-Instacli scripting error
-
-Unknown command: Create Release connection
-
-In login:
-
-  If:
-    empty: "${endpoint}"
-    then:
-      Create Release connection: true
-      As: "${endpoint}"
-
-```
-
-* BUG: in select connection
-
-```shell
-Login to Digital.ai Release
-
-* Available commands: select-release-connection   Select the default connection
-? Select account to log in with * Create new account
-Please configure a connection to Digital.ai Release
-
-Instacli scripting error
-
-Caused by: java.lang.ClassCastException: class tools.fasterxml.jackson.databind.node.StringNode cannot be cast to class tools.fasterxml.jackson.databind.node.ObjectNode (tools.fasterxml.jackson.databind.node.StringNode and tools.fasterxml.jackson.databind.node.ObjectNode are in unnamed module of loader 'app')
-
-In create-release-connection.cli:
-
-  If:
-    empty: "${account.url}"
-    then:
-      Create release connection: ""
-      As: "${account}"
-
-```
 
 # Where to take it
 
@@ -140,7 +86,6 @@ In create-release-connection.cli:
 * SpecScript as bash replacement
     * Shell and pipe support
     * https://www.gnu.org/software/bash/manual/bash.html
-    * Database support (SQLite or something)
 
 # Blog topics
 

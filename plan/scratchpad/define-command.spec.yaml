@@ -1,9 +1,13 @@
 Define command:
-  name: Get full name
-  input type: FullName
-  output type: string
-  do:
-    Output: ${input.first_name} ${input.last_name}
+  Get full name:
+    input schema:
+      type: object
+      properties:
+        first_name: string
+        last_name: string
+    output schema:
+      type: string
+    output: ${input.first_name} ${input.last_name}
 
 Get full name:
   first_name: Alice
