@@ -5,7 +5,7 @@ Use `Do` to execute one or more other commands.
 | Content type | Supported |
 |--------------|-----------|
 | Value        | no        |
-| List         | implicit  |
+| List         | yes       |
 | Object       | yes       |
 
 [Do.schema.yaml](schema/Do.schema.yaml)
@@ -35,21 +35,6 @@ Hello
 World!
 ```
 
-**Do** makes use of a nifty SpecScript feature: if a command is defined to take object or value content, but not a list,
-you can pass it a list of things, and they will be executed sequentially with the same command. The above example can be
-written more concisely as:
-
-```yaml specscript
-Code example: List-expanding invocation
-
-Print:
-  - Hello
-  - World!
-```
-
-In fact, the definition of **Do** specifies that it only takes one Command object as a child. Using it with a list, as
-in the above example, is just a case of the list-expanding invocation.
-
 The final option is just to stick `---` somewhere in the code to separate the yaml maps. SpecScript will stitch them
 together. This only works on the top-level of course.
 
@@ -61,20 +46,17 @@ Print: Hello
 Print: World!
 ```
 
-## Capture the output
+## Output
 
-**Do** can also be useful if you have multiple commands and you want to capture the output in a list.
+When `Do` executes a list of commands, the output is the result of the **last** command — the same as running a script.
 
 ```yaml specscript
-Code example: The result of Do as a list
+Code example: Output of Do is the last command's output
 
 Do:
   - Output: one
   - Output: two
   - Output: three
 
-Expected output:
-  - one
-  - two
-  - three
+Expected output: three
 ```

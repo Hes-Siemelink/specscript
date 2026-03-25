@@ -1,6 +1,6 @@
 Tests:
 
-  Execution of a list results in a list:
+  Do with a list returns last output:
 
     Output: Hello
     Do:
@@ -8,10 +8,7 @@ Tests:
       - Output: two
       - Output: three
 
-    Expected output:
-      - one
-      - two
-      - three
+    Expected output: three
 
   Chained output in list execution:
 

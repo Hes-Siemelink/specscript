@@ -28,7 +28,7 @@ Tests:
 
     Expected output: one one one
 
-  Repeat checks a list result:
+  Repeat checks Do result:
 
     Output: one
 
@@ -36,4 +36,4 @@ Tests:
       Do:
         - Output: one
         - Output: two
-      until: [ one, two ]
+      until: two
