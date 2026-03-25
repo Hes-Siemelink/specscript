@@ -114,6 +114,13 @@ It's not very pretty, but it works. This is the best option in most cases.
 
 There are some ways to avoid the `---` separator, though.
 
+You can use array syntax at the top level, where each element is a command:
+
+```yaml specscript
+- Print: Hello
+- Print: Hello again!
+```
+
 With most commands you can simply supply the arguments as a list, and they will be executed in sequence:
 
 ```yaml specscript
@@ -124,7 +131,7 @@ Print:
 
 <!-- Print is a bad example!!! It is a list processor designed to print lists "as lists" -->
 
-Another approach is using the `Do` command, that takes a list of command
+Another approach is using the `Do` command, that takes a list of commands:
 
 ```yaml specscript
 Do:

@@ -109,6 +109,9 @@ private fun toCommandList(script: List<JsonNode>): List<Command> {
 }
 
 private fun toCommandList(scriptNode: JsonNode): List<Command> {
+    if (scriptNode.isArray) {
+        return scriptNode.flatMap { element -> toCommandList(element) }
+    }
     return scriptNode.properties().asSequence().map { Command(it.key, it.value) }.toList()
 }
 
