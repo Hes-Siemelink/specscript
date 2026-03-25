@@ -10,7 +10,8 @@ import io.ktor.server.netty.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import specscript.files.SpecScriptFile
+import specscript.commands.server.HandlerInfo
+import specscript.commands.server.run
 import specscript.language.*
 import specscript.util.Json
 import specscript.util.Yaml
@@ -129,12 +130,7 @@ private suspend fun handleRequest(
     localContext.addRequestVariable(call, bodyText, pathParamNames)
 
     // Resolve output via (priority) output -> script
-    val output = when {
-        data.output != null -> data.output.resolve(localContext)
-        data.script is StringNode -> SpecScriptFile(localContext.scriptDir.resolve(data.script.stringValue())).run(localContext)
-        data.script != null -> data.script.run(localContext)
-        else -> throw SpecScriptException("No handler action defined")
-    }
+    val output = data.run(localContext)
 
     // Return JSON (output already a JsonNode)
     output?.let { call.respondText(it.toString(), ContentType.Application.Json) }
@@ -206,9 +202,9 @@ class EndpointData {
 }
 
 data class MethodHandlerData(
-    val output: JsonNode? = null,
-    val script: JsonNode? = null
-) {
+    override val output: JsonNode? = null,
+    override val script: JsonNode? = null
+) : HandlerInfo {
     @JsonCreator
     constructor(textValue: String) : this(script = StringNode(textValue))
 }

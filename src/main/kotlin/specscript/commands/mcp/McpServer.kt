@@ -16,7 +16,8 @@ import kotlinx.io.asSource
 import kotlinx.io.buffered
 import specscript.commands.scriptinfo.InputParameters as InputParametersCommand
 import specscript.commands.scriptinfo.InputSchema as InputSchemaCommand
-import specscript.files.FileContext
+import specscript.commands.server.HandlerInfo
+import specscript.commands.server.run
 import specscript.files.SpecScriptFile
 import specscript.language.*
 import specscript.util.*
@@ -184,19 +185,6 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
         context.session.remove(DEFAULT_MCP_SERVER)
     }
 
-    /** Resolves handler output: output takes precedence, then script (string = file, object = inline). */
-    private fun resolveHandler(output: JsonNode?, script: JsonNode?, context: ScriptContext): JsonNode? {
-        return when {
-            output != null -> output.resolve(context)
-            script is StringNode -> {
-                val file = context.scriptDir.resolve(script.stringValue())
-                SpecScriptFile(file).run(FileContext(file, context, context.variables))
-            }
-            script != null -> script.run(context)
-            else -> throw SpecScriptException("No handler action defined — provide output or script")
-        }
-    }
-
     fun Server.addTool(toolName: String, tool: ToolInfo, localContext: ScriptContext) {
 
         println(" - Tool: $toolName")
@@ -215,7 +203,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
             localContext.variables[INPUT_VARIABLE] = request.arguments?.toJackson() ?: Json.newObject()
 
             try {
-                val result: JsonNode? = resolveHandler(tool.output, tool.script, localContext)
+                val result: JsonNode? = tool.run(localContext)
 
                 // Process result
                 val output = result.toDisplayJson()
@@ -260,7 +248,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
             mimeType = resource.mimeType
         ) { request ->
 
-            val result: JsonNode? = resolveHandler(resource.output, resource.script, localContext)
+            val result: JsonNode? = resource.run(localContext)
 
             ReadResourceResult(
                 contents = listOf(
@@ -288,7 +276,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
             // Set up context for the prompt execution
             localContext.variables[INPUT_VARIABLE] = Json.newObject(request.arguments ?: emptyMap())
 
-            val result: JsonNode? = resolveHandler(prompt.output, prompt.script, localContext)
+            val result: JsonNode? = prompt.run(localContext)
 
             // Process result
             GetPromptResult(
@@ -328,9 +316,9 @@ enum class TransportType {
 data class ToolInfo(
     val description: String,
     val inputSchema: InputSchema?,
-    val output: JsonNode? = null,
-    val script: JsonNode? = null
-)
+    override val output: JsonNode? = null,
+    override val script: JsonNode? = null
+) : HandlerInfo
 
 data class InputSchema(
     val type: String = "object",
@@ -341,17 +329,17 @@ data class InputSchema(
 data class ResourceInfo(
     val name: String,
     val description: String,
-    val output: JsonNode? = null,
-    val script: JsonNode? = null,
+    override val output: JsonNode? = null,
+    override val script: JsonNode? = null,
     val mimeType: String = "text/plain"
-)
+) : HandlerInfo
 
 data class PromptInfo(
     val description: String,
     val arguments: List<PromptArgumentInfo> = emptyList(),
-    val output: JsonNode? = null,
-    val script: JsonNode? = null
-)
+    override val output: JsonNode? = null,
+    override val script: JsonNode? = null
+) : HandlerInfo
 
 data class PromptArgumentInfo(
     val name: String,
