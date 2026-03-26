@@ -1,18 +1,17 @@
 /**
  * Cli command: invoke the SpecScript CLI in-process.
+ *
+ * Delegates to cli.ts for command resolution and file execution,
+ * avoiding duplication of the core CLI logic.
  */
 
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs'
-import { resolve, basename } from 'node:path'
+import { resolve } from 'node:path'
 import type { CommandHandler } from '../language/command-handler.js'
 import type { ScriptContext } from '../language/context.js'
-import { DefaultContext } from '../language/context.js'
 import type { JsonValue } from '../language/types.js'
 import { isObject, isString, CommandFormatError } from '../language/types.js'
-import { Script } from '../language/script.js'
-import { setupStdoutCapture } from '../language/stdout-capture.js'
-import { scanMarkdown } from '../markdown/scanner.js'
-import { splitMarkdownSections } from '../markdown/converter.js'
+import { resolveCommand, executeFile } from '../cli.js'
 import { parseYamlCommands } from '../util/yaml.js'
 
 export const CliCommand: CommandHandler = {
@@ -46,9 +45,9 @@ function runCli(context: ScriptContext, command: string, workingDir?: string): J
     args.shift()
   }
 
-  const { stdout, stderr } = runCliInProcess(args, dir)
+  const { stdout, stderr } = runCliInProcess(args, dir, context)
 
-  // Combine stdout and stderr, preserving trailing newline for comparison with YAML block scalars
+  // Combine stdout and stderr
   const parts = [stdout, stderr].filter(s => s)
   const combined = parts.join('\n')
 
@@ -63,9 +62,13 @@ function runCli(context: ScriptContext, command: string, workingDir?: string): J
 
 /**
  * Run the CLI in-process, capturing stdout/stderr.
- * Mirrors Kotlin's SpecScriptCli: flag parsing, command resolution, directory handling.
+ * Uses shared resolveCommand and executeFile from cli.ts.
  */
-function runCliInProcess(args: string[], workingDir: string): { stdout: string; stderr: string } {
+function runCliInProcess(
+  args: string[],
+  workingDir: string,
+  parentContext: ScriptContext
+): { stdout: string; stderr: string } {
   const stdoutLines: string[] = []
   const stderrLines: string[] = []
 
@@ -98,9 +101,9 @@ function runCliInProcess(args: string[], workingDir: string): { stdout: string; 
       }
     }
 
-    // Resolve command path
+    // Resolve command path (shared with cli.ts)
     const commandName = commands[0]
-    const resolvedPath = resolveCliCommand(commandName, workingDir)
+    const resolvedPath = resolveCommand(commandName, workingDir)
 
     if (resolvedPath === undefined) {
       stderrLines.push(`Could not find spec file for: ${commandName}`)
@@ -114,24 +117,8 @@ function runCliInProcess(args: string[], workingDir: string): { stdout: string; 
       return cliResult(stdoutLines, stderrLines)
     }
 
-    // Execute file
-    const content = readFileSync(resolvedPath, 'utf-8')
-    const ctx = new DefaultContext({ scriptFile: resolvedPath, workingDir })
-    setupStdoutCapture(ctx)
-
-    if (resolvedPath.endsWith('.spec.md')) {
-      const blocks = scanMarkdown(content)
-      const scripts = splitMarkdownSections(blocks)
-      for (const script of scripts) {
-        if (script.commands.length === 0) continue
-        const captured = ctx.session.get('capturedOutput') as string[] | undefined
-        if (captured) captured.length = 0
-        script.run(ctx)
-      }
-    } else {
-      const script = Script.fromString(content)
-      script.run(ctx)
-    }
+    // Execute file (shared with cli.ts)
+    executeFile(resolvedPath, parentContext)
   } catch (e) {
     if (e instanceof Error) {
       stderrLines.push(`Error: ${e.message}`)
@@ -153,29 +140,8 @@ function cliResult(stdoutLines: string[], stderrLines: string[]): { stdout: stri
   }
 }
 
-/**
- * Resolve a command name to a file or directory path.
- * Tries: exact match → .spec.yaml → .spec.md
- */
-function resolveCliCommand(command: string, workingDir: string): string | undefined {
-  // Try exact match
-  const exact = resolve(workingDir, command)
-  if (existsSync(exact)) return exact
+// --- CLI display helpers (not shared — only needed for in-process invocation) ---
 
-  // Try with .spec.yaml extension
-  const yaml = resolve(workingDir, `${command}.spec.yaml`)
-  if (existsSync(yaml)) return yaml
-
-  // Try with .spec.md extension
-  const md = resolve(workingDir, `${command}.spec.md`)
-  if (existsSync(md)) return md
-
-  return undefined
-}
-
-/**
- * Print CLI usage/help text matching Kotlin's StandardOutput.printUsage().
- */
 function printUsage(lines: string[]): void {
   lines.push('SpecScript -- Create instantly runnable specs using Yaml and Markdown!')
   lines.push('')
@@ -191,11 +157,7 @@ function printUsage(lines: string[]): void {
   lines.push('  --test, -t      Run in test mode. Only tests will be executed.')
 }
 
-/**
- * Print directory info and available commands, matching Kotlin's StandardOutput.printDirectoryInfo() + printCommands().
- */
 function printDirectoryInfo(dirPath: string, lines: string[]): void {
-  // Try to get description from README.md
   const readmePath = resolve(dirPath, 'README.md')
   if (existsSync(readmePath)) {
     const readmeContent = readFileSync(readmePath, 'utf-8')
@@ -206,7 +168,6 @@ function printDirectoryInfo(dirPath: string, lines: string[]): void {
     }
   }
 
-  // List .spec.yaml and .spec.md files
   const entries = readdirSync(dirPath)
   const commands: { name: string; description: string }[] = []
 
@@ -232,9 +193,6 @@ function printDirectoryInfo(dirPath: string, lines: string[]): void {
   }
 }
 
-/**
- * Extract description from README.md: first paragraph after the heading.
- */
 function extractDescriptionFromMarkdown(content: string): string {
   const markdownLines = content.split('\n')
   let foundHeading = false
@@ -259,11 +217,6 @@ function extractDescriptionFromMarkdown(content: string): string {
   return descriptionLines.join(' ')
 }
 
-/**
- * Get the description from a SpecScript file.
- * For .spec.yaml: looks for "Script info:" command.
- * For .spec.md: uses first paragraph after heading.
- */
 function getScriptDescription(filePath: string, fileName: string): string {
   try {
     const content = readFileSync(filePath, 'utf-8')
@@ -272,7 +225,6 @@ function getScriptDescription(filePath: string, fileName: string): string {
       return extractDescriptionFromMarkdown(content)
     }
 
-    // Parse YAML commands and look for Script info command
     const commands = parseYamlCommands(content)
     for (const cmd of commands) {
       if (cmd.name === 'Script info') {
@@ -291,7 +243,6 @@ function getScriptDescription(filePath: string, fileName: string): string {
     // Fall through to default
   }
 
-  // Default: derive from filename
   return stripSpecExtension(fileName).replace(/-/g, ' ')
 }
 

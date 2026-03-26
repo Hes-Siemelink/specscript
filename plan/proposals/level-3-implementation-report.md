@@ -76,22 +76,27 @@ whitespace. Adding `.trim()` to `ExpectedConsoleOutput` fixed the issue.
 **For the Go implementer:** Use trimmed comparison for `Expected console output` but strict
 structural equality for `Expected output`. These are different commands with different semantics.
 
-## 3. Cli command: in-process execution complexity
+## 3. Cli command: in-process execution and circular imports
 
-The `Cli` command is the most complex Level 3 command. Kotlin calls `SpecScriptCli.main(args)`
-in-process, which reuses the entire CLI stack. The TypeScript implementation can't do the same
-because the CLI entry point has side effects (process.exit calls, stdin handling).
+The `Cli` command is the most complex Level 3 command. Kotlin's `SpecScriptCli` is designed for
+in-process invocation — the companion `main(args, workingDir)` returns an `Int` exit code and
+never calls `System.exit()`. The actual `main(args)` entry point is a one-liner that delegates
+to it.
 
-Instead, `runCliInProcess` reimplements the core CLI logic: flag parsing (`--help`/`-h`),
-command resolution (exact match → `.spec.yaml` → `.spec.md`), directory listing with README
-description extraction and Script info parsing.
+The TypeScript implementation follows this pattern: `cli.ts` exports `resolveCommand()` and
+`executeFile()` as library functions. The Cli command imports and calls them directly, sharing
+command resolution and file execution logic instead of reimplementing it.
 
-This duplication is fragile — CLI behavior changes must be mirrored in two places. But it's
-the pragmatic choice for a test-oriented implementation.
+The remaining Cli-specific logic (flag parsing, `--help` output, directory listing) stays in
+`cli-command.ts` because these are CLI display concerns, not shared execution logic.
 
-**For the Go implementer:** If your CLI entry point is structured as a library function that
-returns results rather than calling `os.Exit()`, the Cli command can simply call it. Design
-the CLI with in-process invocation in mind from the start.
+One pitfall: `cli.ts` originally called `registerAllCommands()` at module load time. Since
+`registerAllCommands()` imports `CliCommand` from `cli-command.ts`, which imports from `cli.ts`,
+this creates a circular dependency that crashes at import time. The fix: defer
+`registerAllCommands()` to the `main()` function body. The import remains static, but the
+call is lazy — by the time `main()` runs, all modules are fully loaded.
+
+**For the Go implementer:** Design the CLI as a library function from the start — `func RunCli(args []string, workingDir string) int`. The Cli command can call it directly. Avoid `os.Exit()` in any function reachable from the Cli command.
 
 **For the SpecScript maintainer:** The Cli command implicitly depends on the exact format of
 `--help` output, directory listing format, and README description extraction. These are all
@@ -170,7 +175,7 @@ blocks. Set `show output: true` explicitly in the converter.
 ### For the Go implementer (priority order)
 
 1. Test YAML block scalar behavior with strings that lack trailing newlines; apply conditional stripping if needed (§1)
-2. Design the CLI entry point for in-process invocation from the start (§3)
+2. Design the CLI as a library function returning an exit code, never calling os.Exit() (§3)
 3. Set up the two-directory context (scriptDir + SCRIPT_HOME) for spec.md test execution (§4)
 4. Use YAML serialization (not JSON) for Shell env var export (§5)
 5. Create fresh child contexts per Run script iteration, sharing session but not variables (§6)

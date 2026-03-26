@@ -1,67 +1,101 @@
 #!/usr/bin/env node
 
-import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
+import { readFileSync, existsSync } from 'node:fs'
+import { resolve, dirname } from 'node:path'
 import { Script } from './language/script.js'
 import { DefaultContext } from './language/context.js'
+import type { ScriptContext } from './language/context.js'
 import { registerAllCommands } from './commands/register.js'
 import { setupStdoutCapture } from './language/stdout-capture.js'
 import { scanMarkdown } from './markdown/scanner.js'
-import { splitMarkdownSections, getTestTitle } from './markdown/converter.js'
-import type { SpecScriptCommandError } from './language/types.js'
+import { splitMarkdownSections } from './markdown/converter.js'
 
-registerAllCommands()
-
+/**
+ * CLI entry point. Registers commands and translates the exit code to process.exit.
+ */
 function main(): void {
+  registerAllCommands()
   const args = process.argv.slice(2)
+  const code = runCli(args, process.cwd())
+  if (code !== 0) process.exit(code)
+}
 
+/**
+ * Core CLI logic. Returns an exit code (0 = success).
+ * Designed for in-process invocation — never calls process.exit().
+ * Mirrors Kotlin's SpecScriptCli.main(args, workingDir).
+ */
+export function runCli(args: string[], workingDir: string): number {
   if (args.length === 0) {
     console.error('Usage: spec-ts <file.spec.yaml|file.spec.md>')
-    process.exit(1)
+    return 1
   }
 
-  const filePath = resolve(args[0])
-  const content = readFileSync(filePath, 'utf-8')
+  const filePath = resolve(workingDir, args[0])
 
-  if (filePath.endsWith('.spec.md')) {
-    runMarkdown(filePath, content)
-  } else {
-    runYaml(filePath, content)
+  if (!existsSync(filePath)) {
+    console.error(`File not found: ${filePath}`)
+    return 1
   }
-}
-
-function runYaml(filePath: string, content: string): void {
-  const script = Script.fromString(content)
-  const context = new DefaultContext({ scriptFile: filePath })
-  setupStdoutCapture(context)
 
   try {
-    script.run(context)
+    executeFile(filePath)
   } catch (e) {
     reportError(e)
-    process.exit(1)
+    return 1
   }
+
+  return 0
 }
 
-function runMarkdown(filePath: string, content: string): void {
-  const blocks = scanMarkdown(content)
-  const scripts = splitMarkdownSections(blocks)
-  const context = new DefaultContext({ scriptFile: filePath })
-  setupStdoutCapture(context)
+/**
+ * Resolve a command name to a file or directory path.
+ * Tries: exact match → .spec.yaml → .spec.md
+ */
+export function resolveCommand(command: string, workingDir: string): string | undefined {
+  const exact = resolve(workingDir, command)
+  if (existsSync(exact)) return exact
 
-  for (const script of scripts) {
-    if (script.commands.length === 0) continue
+  const yaml = resolve(workingDir, `${command}.spec.yaml`)
+  if (existsSync(yaml)) return yaml
 
-    // Reset captured output before each section
-    const captured = context.session.get('capturedOutput') as string[] | undefined
-    if (captured) captured.length = 0
+  const md = resolve(workingDir, `${command}.spec.md`)
+  if (existsSync(md)) return md
 
-    try {
+  return undefined
+}
+
+/**
+ * Execute a spec file (yaml or md). When a parent context is provided,
+ * the new context shares its session (for stdout capture) but gets fresh variables.
+ */
+export function executeFile(filePath: string, parent?: ScriptContext): void {
+  const content = readFileSync(filePath, 'utf-8')
+  const workingDir = parent?.workingDir ?? dirname(filePath)
+
+  const context = new DefaultContext({
+    scriptFile: filePath,
+    workingDir,
+    session: parent?.session,
+  })
+
+  if (!parent) {
+    setupStdoutCapture(context)
+  }
+
+  if (filePath.endsWith('.spec.md')) {
+    const blocks = scanMarkdown(content)
+    const scripts = splitMarkdownSections(blocks)
+
+    for (const script of scripts) {
+      if (script.commands.length === 0) continue
+      const captured = context.session.get('capturedOutput') as string[] | undefined
+      if (captured) captured.length = 0
       script.run(context)
-    } catch (e) {
-      reportError(e)
-      process.exit(1)
     }
+  } else {
+    const script = Script.fromString(content)
+    script.run(context)
   }
 }
 
