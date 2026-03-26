@@ -1,5 +1,6 @@
-import { readFileSync, existsSync } from 'node:fs'
+import { readFileSync, existsSync, mkdtempSync } from 'node:fs'
 import { join, dirname } from 'node:path'
+import { tmpdir } from 'node:os'
 import { describe, it, beforeAll, afterAll, expect } from 'vitest'
 import { Script, toCommandList } from '../src/language/script.js'
 import { DefaultContext } from '../src/language/context.js'
@@ -73,12 +74,29 @@ const LEVEL_2_TEST_FILES = [
   'language/SpecScript Best Practices.spec.md',
 ]
 
+/** Level 3 spec.yaml test files (relative to specification/) */
+const LEVEL_3_TEST_FILES = [
+  'commands/core/files/tests/Read file tests.spec.yaml',
+  'commands/core/files/tests/Save as tests.spec.yaml',
+  'commands/core/files/tests/Locate files in the same way.spec.yaml',
+  'commands/core/shell/tests/Shell tests.spec.yaml',
+  'commands/core/files/tests/Run script tests.spec.yaml',
+]
+
+/** Level 3 spec.md test files (relative to specification/) */
+const LEVEL_3_MD_FILES = [
+  'commands/core/files/Read file.spec.md',
+  'commands/core/files/Write file.spec.md',
+  'commands/core/files/Temp file.spec.md',
+  'commands/core/files/Run script.spec.md',
+  'commands/core/files/SpecScript files as commands.spec.md',
+  'commands/core/shell/Shell.spec.md',
+  'commands/core/shell/Cli.spec.md',
+]
+
 /** Tests that depend on commands from higher levels (skip) */
 const SKIP_TESTS = new Set([
-  'SCRIPT_HOME is different from SCRIPT_TEMP_DIR',        // needs Temp file (Level 3)
   'Schema validation - Add should only accept arrays',     // needs Validate schema (Level 5)
-  'For each with variable syntax in sample data',          // needs Read file (Level 3)
-  'For each with variable syntax in sample data and implicit loop variable', // needs Read file (Level 3)
 ])
 
 /** Test files to skip entirely (all tests use higher-level commands) */
@@ -150,7 +168,7 @@ function runStructuredTests(script: Script, fullPath: string): void {
 
   if (setupCommands !== undefined) {
     beforeAll(() => {
-      sharedContext = new DefaultContext({ scriptFile: fullPath })
+      sharedContext = new DefaultContext({ scriptFile: fullPath, workingDir: SPECSCRIPT_HOME })
       setupSilentCapture(sharedContext)
       const setupScript = Script.fromData(setupCommands!)
       setupScript.run(sharedContext)
@@ -174,7 +192,7 @@ function runStructuredTests(script: Script, fullPath: string): void {
         continue
       }
       it(testName, () => {
-        const context = sharedContext ? sharedContext.clone() as DefaultContext : new DefaultContext({ scriptFile: fullPath })
+        const context = sharedContext ? sharedContext.clone() as DefaultContext : new DefaultContext({ scriptFile: fullPath, workingDir: SPECSCRIPT_HOME })
         setupSilentCapture(context)
         const testScript = Script.fromData(testBody)
         testScript.run(context)
@@ -191,14 +209,14 @@ function runFlatTests(script: Script, relativePath: string, fullPath: string): v
 
   if (testCases.length === 1 && testCases[0].name === 'default') {
     it(relativePath, () => {
-      const context = new DefaultContext({ scriptFile: fullPath })
+      const context = new DefaultContext({ scriptFile: fullPath, workingDir: SPECSCRIPT_HOME })
       setupSilentCapture(context)
       script.run(context)
     }, TEST_TIMEOUT)
   } else {
     for (const testCase of testCases) {
       it(testCase.name, () => {
-        const context = new DefaultContext({ scriptFile: fullPath })
+        const context = new DefaultContext({ scriptFile: fullPath, workingDir: SPECSCRIPT_HOME })
         setupSilentCapture(context)
         testCase.script.run(context)
       }, TEST_TIMEOUT)
@@ -220,8 +238,17 @@ function runSpecMdFile(relativePath: string): void {
   const blocks = scanMarkdown(content)
   const scripts = splitMarkdownSections(blocks)
 
-  // Shared context across all sections in the document
-  const sharedContext = new DefaultContext({ scriptFile: fullPath })
+  // Mirror Kotlin's getCodeExamplesAsTests():
+  // - Create a temp dir that serves as BOTH scriptDir AND tempDir
+  // - Override SCRIPT_HOME to point to the original spec file's directory
+  // This ensures that `file=` blocks (which create Temp files) write to the temp dir,
+  // and `resource:` lookups (which use scriptDir) find them there.
+  const testDir = mkdtempSync(join(tmpdir(), 'specscript-'))
+  const sharedContext = new DefaultContext({ scriptFile: join(testDir, 'test.spec.md'), workingDir: SPECSCRIPT_HOME })
+  // Set SCRIPT_TEMP_DIR before accessing tempDir so it uses the same directory
+  sharedContext.variables.set('SCRIPT_TEMP_DIR', testDir)
+  // Override SCRIPT_HOME to point to the real spec file's directory
+  sharedContext.variables.set('SCRIPT_HOME', dirname(fullPath))
   setupSilentCapture(sharedContext)
 
   let hasTests = false
@@ -302,6 +329,28 @@ describe('Level 1 Spec Tests', () => {
 
 describe('Level 2 Spec Tests', () => {
   for (const file of LEVEL_2_TEST_FILES) {
+    describe(file, () => {
+      runSpecMdFile(file)
+    })
+  }
+})
+
+describe('Level 3 Spec Tests', () => {
+  for (const file of LEVEL_3_TEST_FILES) {
+    if (SKIP_FILES.has(file)) {
+      describe.skip(file, () => {
+        it.skip('all tests skipped (higher-level dependency)', () => {})
+      })
+      continue
+    }
+    describe(file, () => {
+      runSpecFile(file)
+    })
+  }
+})
+
+describe('Level 3 Spec Tests (Markdown)', () => {
+  for (const file of LEVEL_3_MD_FILES) {
     describe(file, () => {
       runSpecMdFile(file)
     })

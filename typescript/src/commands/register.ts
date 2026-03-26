@@ -20,9 +20,13 @@ import {
   Add, AddTo, Append, Fields, Values, Size, Sort, Find, Replace,
 } from './data-manipulation.js'
 import { JsonPatchCommand } from './json-patch.js'
+import { TempFileCommand, ReadFileCommand, WriteFileCommand } from './files.js'
+import { ShellCommand } from './shell.js'
+import { RunScriptCommand } from './run-script.js'
+import { CliCommand } from './cli-command.js'
 
 /**
- * Register all commands (Level 0 + Level 1).
+ * Register all commands (Level 0 + Level 1 + Level 3).
  */
 export function registerAllCommands(): void {
   // Register YAML display formatter for variable interpolation
@@ -94,6 +98,22 @@ export function registerAllCommands(): void {
   registerCommand(Base64Encode)
   registerCommand(Base64Decode)
   registerCommand(WaitCommand)
+
+  // --- Level 3 ---
+
+  // File commands
+  registerCommand(TempFileCommand)
+  registerCommand(ReadFileCommand)
+  registerCommand(WriteFileCommand)
+
+  // Shell
+  registerCommand(ShellCommand)
+
+  // Script composition
+  registerCommand(RunScriptCommand)
+
+  // CLI
+  registerCommand(CliCommand)
 }
 
 /**

@@ -73,4 +73,8 @@ function reportError(e: unknown): void {
   }
 }
 
-main()
+// Only run main when executed directly (not imported)
+const isMainModule = process.argv[1] && resolve(process.argv[1]).includes('cli')
+if (isMainModule) {
+  main()
+}

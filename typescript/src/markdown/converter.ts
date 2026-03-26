@@ -11,7 +11,7 @@ import {
   YamlFile, ShellBlock, ShellCli,
 } from './scanner.js'
 import { Script, toCommandList } from '../language/script.js'
-import type { Command } from '../language/types.js'
+import type { Command, JsonValue } from '../language/types.js'
 import { parseYamlCommands } from '../util/yaml.js'
 import { parseYaml } from '../util/yaml.js'
 
@@ -48,7 +48,9 @@ export function blocksToScript(blocks: MarkdownBlock[]): Script {
     if (block.type === SpecScriptYaml || block.type === HiddenSpecScriptYaml) {
       const content = block.getContent()
       if (content.trim()) {
-        commands.push(...parseYamlCommands(content))
+        // getContent() never ends with \n, so block scalars need trailing \n stripped
+        // to match Jackson's behavior (which only adds \n when source ends with \n)
+        commands.push(...parseYamlCommands(content, true))
       }
       continue
     }
@@ -73,18 +75,51 @@ export function blocksToScript(blocks: MarkdownBlock[]): Script {
     }
 
     // Level 3+ block types: skip unless 'ignore'
-    if (block.type === ShellBlock || block.type === ShellCli) {
+    if (block.type === ShellBlock) {
       if (block.headerLine.includes('ignore')) {
         continue // Ignored blocks produce no commands
       }
-      // Non-ignored shell/cli blocks need Level 3 commands — skip
-      skippedBlocks.push(block.type.name)
+      const content = block.getContent()
+      const cd = block.getOption('cd')
+      const showOutput = block.getOption('show_output')
+      const showCommand = block.getOption('show_command')
+      // Markdown shell blocks default to show output: true (unlike the YAML command default)
+      const data: Record<string, JsonValue> = {
+        command: content,
+        'show output': showOutput !== undefined ? showOutput === 'true' : true,
+        'show command': showCommand === 'true',
+      }
+      if (cd) data.cd = cd
+      commands.push({ name: 'Shell', data })
+      continue
+    }
+
+    if (block.type === ShellCli) {
+      if (block.headerLine.includes('ignore')) {
+        continue // Ignored blocks produce no commands
+      }
+      const content = block.getContent()
+      const cd = block.getOption('cd')
+      if (cd) {
+        commands.push({ name: 'Cli', data: { command: content, cd } })
+      } else {
+        commands.push({ name: 'Cli', data: content })
+      }
       continue
     }
 
     if (block.type === YamlFile) {
-      // Needs Temp file command (Level 3) — skip
-      skippedBlocks.push(block.type.name)
+      // YamlFile → Temp file command with filename from file= option
+      const filename = block.getOption('file')
+      const resolveOpt = block.getOption('resolve')
+      const content = block.getContent()
+      // Markdown yaml file blocks default resolve to false (unlike the YAML command default of true)
+      const resolveFlag = resolveOpt !== undefined ? resolveOpt === 'true' : false
+      if (filename) {
+        commands.push({ name: 'Temp file', data: { filename, content, resolve: resolveFlag } })
+      } else {
+        commands.push({ name: 'Temp file', data: { content, resolve: resolveFlag } })
+      }
       continue
     }
 

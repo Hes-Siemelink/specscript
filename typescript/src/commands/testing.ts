@@ -85,7 +85,7 @@ export const ExpectedConsoleOutput: CommandHandler = {
 
     const expected = typeof data === 'string' ? data : toDisplayYaml(data)
 
-    if (actual !== expected) {
+    if (actual.trim() !== expected.trim()) {
       throw new SpecScriptCommandError(
         `Expected console output:\n${expected}\nActual console output:\n${actual}`,
         'assertion-error'

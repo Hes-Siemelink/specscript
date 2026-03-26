@@ -1,11 +1,11 @@
 ---
 # specscript-eky6
 title: 'TypeScript Level 2: Markdown Documents'
-status: in-progress
+status: completed
 type: feature
 priority: normal
 created_at: 2026-03-26T05:48:36Z
-updated_at: 2026-03-26T05:52:59Z
+updated_at: 2026-03-26T06:25:33Z
 ---
 
 ## Todo
@@ -14,4 +14,6 @@ updated_at: 2026-03-26T05:52:59Z
 - [x] Skip sections needing L3+ commands (Prompt, Read file, Shell, Temp file)
 - [x] Handle .spec.md files with no executable blocks (Best Practices)
 - [x] Run tests and verify all Level 0+1+2 pass
-- [ ] Commit Level 2 implementation
+- [x] Commit Level 2 implementation
+
+## Summary of Changes\n\nLevel 2 was committed in c0ee7b7. All markdown document scanning and section-based test execution is working.

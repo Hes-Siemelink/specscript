@@ -8,8 +8,14 @@ import type { Command } from '../language/types.js'
  *
  * Unlike standard YAML-to-JSON conversion, this preserves duplicate keys
  * in mappings as separate commands (SpecScript's command model).
+ *
+ * When `stripBlockScalarNewlines` is true, trailing newlines are stripped from
+ * YAML block scalar (| and >) string values. This matches Jackson's behavior
+ * when parsing YAML from a string that doesn't end with a newline (e.g.,
+ * content from Markdown getContent()). The JS yaml library always appends a
+ * trailing newline to block scalar values regardless of source termination.
  */
-export function parseYamlCommands(content: string): Command[] {
+export function parseYamlCommands(content: string, stripBlockScalarNewlines: boolean = false): Command[] {
   const docs = parseAllDocuments(content, { uniqueKeys: false })
   const commands: Command[] = []
 
@@ -25,7 +31,7 @@ export function parseYamlCommands(content: string): Command[] {
       for (const pair of node.items) {
         if (isPair(pair)) {
           const name = scalarToString(pair.key)
-          const data = nodeToJson(pair.value)
+          const data = nodeToJson(pair.value, stripBlockScalarNewlines)
           commands.push({ name, data })
         }
       }
@@ -35,7 +41,7 @@ export function parseYamlCommands(content: string): Command[] {
         if (isMap(item)) {
           for (const pair of item.items) {
             if (isPair(pair)) {
-              commands.push({ name: scalarToString(pair.key), data: nodeToJson(pair.value) })
+              commands.push({ name: scalarToString(pair.key), data: nodeToJson(pair.value, stripBlockScalarNewlines) })
             }
           }
         }
@@ -116,25 +122,35 @@ function scalarToString(node: unknown): string {
 }
 
 /** Convert a yaml AST node to a plain JsonValue, preserving duplicate-key maps as last-wins. */
-function nodeToJson(node: unknown): JsonValue {
+function nodeToJson(node: unknown, stripBlockScalarNewlines: boolean = false): JsonValue {
   if (node === null || node === undefined) return null
   if (isScalar(node)) {
     const v = node.value
     if (v === null || v === undefined) return null
-    if (typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean') return v
+    if (typeof v === 'string') {
+      // Strip trailing newline from block scalar values (| and >) when flag is set.
+      // The JS yaml library always appends \n to block scalars, but Jackson only does
+      // so when the source string ends with \n. Since getContent() never ends with \n,
+      // we strip to match Jackson's behavior for Markdown-sourced content.
+      if (stripBlockScalarNewlines && (node.type === 'BLOCK_LITERAL' || node.type === 'BLOCK_FOLDED')) {
+        return v.replace(/\n$/, '')
+      }
+      return v
+    }
+    if (typeof v === 'number' || typeof v === 'boolean') return v
     return String(v)
   }
   if (isMap(node)) {
     const obj: JsonObject = {}
     for (const pair of node.items) {
       if (isPair(pair)) {
-        obj[scalarToString(pair.key)] = nodeToJson(pair.value)
+        obj[scalarToString(pair.key)] = nodeToJson(pair.value, stripBlockScalarNewlines)
       }
     }
     return obj
   }
   if (isSeq(node)) {
-    return node.items.map((item: unknown) => nodeToJson(item))
+    return node.items.map((item: unknown) => nodeToJson(item, stripBlockScalarNewlines))
   }
   // Fallback
   if (typeof node === 'object' && node !== null && 'toJSON' in node) {
