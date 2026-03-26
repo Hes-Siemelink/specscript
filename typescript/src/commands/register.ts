@@ -24,9 +24,11 @@ import { TempFileCommand, ReadFileCommand, WriteFileCommand } from './files.js'
 import { ShellCommand } from './shell.js'
 import { RunScriptCommand } from './run-script.js'
 import { CliCommand } from './cli-command.js'
+import { HttpServerCommand, HttpEndpointCommand, StopHttpServerCommand } from './http-server.js'
+import { GetCommand, PostCommand, PutCommand, PatchCommand, DeleteCommand, HttpRequestDefaultsCommand } from './http.js'
 
 /**
- * Register all commands (Level 0 + Level 1 + Level 3).
+ * Register all commands (Level 0 + Level 1 + Level 3 + Level 4).
  */
 export function registerAllCommands(): void {
   // Register YAML display formatter for variable interpolation
@@ -114,6 +116,21 @@ export function registerAllCommands(): void {
 
   // CLI
   registerCommand(CliCommand)
+
+  // --- Level 4 ---
+
+  // HTTP server
+  registerCommand(HttpServerCommand)
+  registerCommand(HttpEndpointCommand)
+  registerCommand(StopHttpServerCommand)
+
+  // HTTP client
+  registerCommand(GetCommand)
+  registerCommand(PostCommand)
+  registerCommand(PutCommand)
+  registerCommand(PatchCommand)
+  registerCommand(DeleteCommand)
+  registerCommand(HttpRequestDefaultsCommand)
 }
 
 /**

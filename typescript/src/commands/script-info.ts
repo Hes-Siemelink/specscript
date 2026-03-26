@@ -58,7 +58,7 @@ export const InputSchema: CommandHandler = {
  * Get the input variable as an object, ensuring it exists.
  */
 function getInput(context: ScriptContext): JsonObject {
-  const input = context.variables.get('input')
+  const input = context.variables.get('input') as JsonValue
   if (isObject(input)) return input
   const obj: JsonObject = {}
   context.variables.set('input', obj)

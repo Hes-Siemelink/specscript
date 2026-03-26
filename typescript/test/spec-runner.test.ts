@@ -12,6 +12,7 @@ import { parseYamlCommands } from '../src/util/yaml.js'
 import { scanMarkdown } from '../src/markdown/scanner.js'
 import { splitMarkdownSections, getTestTitle } from '../src/markdown/converter.js'
 import { getCommandHandler } from '../src/language/command-handler.js'
+import { stopServer, stopAllServers } from '../src/commands/http-server.js'
 
 // Register commands once
 registerAllCommands()
@@ -92,6 +93,25 @@ const LEVEL_3_MD_FILES = [
   'commands/core/files/SpecScript files as commands.spec.md',
   'commands/core/shell/Shell.spec.md',
   'commands/core/shell/Cli.spec.md',
+]
+
+/** Level 4 spec.yaml test files (relative to specification/) */
+const LEVEL_4_TEST_FILES = [
+  'commands/core/http/tests/Http client tests.spec.yaml',
+  'commands/core/http/tests/Http server tests.spec.yaml',
+]
+
+/** Level 4 spec.md test files (relative to specification/) */
+const LEVEL_4_MD_FILES = [
+  'commands/core/http/GET.spec.md',
+  'commands/core/http/POST.spec.md',
+  'commands/core/http/PUT.spec.md',
+  'commands/core/http/PATCH.spec.md',
+  'commands/core/http/DELETE.spec.md',
+  'commands/core/http/Http request defaults.spec.md',
+  'commands/core/http/Http server.spec.md',
+  'commands/core/http/Http endpoint.spec.md',
+  'commands/core/http/Stop http server.spec.md',
 ]
 
 /** Tests that depend on commands from higher levels (skip) */
@@ -265,9 +285,13 @@ function runSpecMdFile(relativePath: string): void {
       continue
     }
 
-    // Skip sections that use commands not available at this level
+    // Skip sections that use commands not available at this level.
+    // Only skip for known higher-level commands (e.g., Prompt). Unknown commands
+    // might be local file commands created at runtime by Temp file or yaml file= blocks.
+    const HIGHER_LEVEL_COMMANDS = new Set(['Prompt', 'Prompt object', 'Confirm', 'Connect to',
+      'Credentials', 'Validate schema', 'Check type', 'Mcp server', 'Mcp tool', 'SQLite'])
     const unavailable = script.commands.find(
-      c => !isAssignment(c.name) && !getCommandHandler(c.name)
+      c => !isAssignment(c.name) && !getCommandHandler(c.name) && HIGHER_LEVEL_COMMANDS.has(c.name)
     )
     if (unavailable) {
       it.skip(`${title} (needs ${unavailable.name})`, () => {})
@@ -351,6 +375,63 @@ describe('Level 3 Spec Tests', () => {
 
 describe('Level 3 Spec Tests (Markdown)', () => {
   for (const file of LEVEL_3_MD_FILES) {
+    describe(file, () => {
+      runSpecMdFile(file)
+    })
+  }
+})
+
+// --- Level 4: HTTP ---
+// Start the sample server before HTTP tests, stop it after.
+
+describe('Level 4 Spec Tests', () => {
+  let sampleServerContext: DefaultContext
+
+  beforeAll(() => {
+    // Start the sample server on port 2525 (used by HTTP client tests)
+    const sampleServerPath = join(SPECSCRIPT_HOME, 'samples/http-server/sample-server/sample-server.spec.yaml')
+    const content = readFileSync(sampleServerPath, 'utf-8')
+    sampleServerContext = new DefaultContext({ scriptFile: sampleServerPath, workingDir: SPECSCRIPT_HOME })
+    setupSilentCapture(sampleServerContext)
+    const script = Script.fromString(content)
+    script.run(sampleServerContext)
+  })
+
+  afterAll(() => {
+    stopAllServers()
+  })
+
+  for (const file of LEVEL_4_TEST_FILES) {
+    if (SKIP_FILES.has(file)) {
+      describe.skip(file, () => {
+        it.skip('all tests skipped (higher-level dependency)', () => {})
+      })
+      continue
+    }
+    describe(file, () => {
+      runSpecFile(file)
+    })
+  }
+})
+
+describe('Level 4 Spec Tests (Markdown)', () => {
+  let sampleServerContext: DefaultContext
+
+  beforeAll(() => {
+    // Start the sample server on port 2525 (used by HTTP client MD tests)
+    const sampleServerPath = join(SPECSCRIPT_HOME, 'samples/http-server/sample-server/sample-server.spec.yaml')
+    const content = readFileSync(sampleServerPath, 'utf-8')
+    sampleServerContext = new DefaultContext({ scriptFile: sampleServerPath, workingDir: SPECSCRIPT_HOME })
+    setupSilentCapture(sampleServerContext)
+    const script = Script.fromString(content)
+    script.run(sampleServerContext)
+  })
+
+  afterAll(() => {
+    stopAllServers()
+  })
+
+  for (const file of LEVEL_4_MD_FILES) {
     describe(file, () => {
       runSpecMdFile(file)
     })
