@@ -1,10 +1,11 @@
 ---
 # specscript-inkq
 title: TypeScript Level 1 implementation
-status: in-progress
+status: completed
 type: feature
+priority: normal
 created_at: 2026-03-25T21:50:42Z
-updated_at: 2026-03-25T21:50:42Z
+updated_at: 2026-03-26T05:48:32Z
 ---
 
 ## Phases

@@ -8,6 +8,9 @@ import { setupSilentCapture } from '../src/language/stdout-capture.js'
 import type { JsonValue } from '../src/language/types.js'
 import { isObject } from '../src/language/types.js'
 import { parseYamlCommands } from '../src/util/yaml.js'
+import { scanMarkdown } from '../src/markdown/scanner.js'
+import { splitMarkdownSections, getTestTitle } from '../src/markdown/converter.js'
+import { getCommandHandler } from '../src/language/command-handler.js'
 
 // Register commands once
 registerAllCommands()
@@ -61,6 +64,13 @@ const LEVEL_1_TEST_FILES = [
   'commands/core/data-manipulation/tests/Sort tests.spec.yaml',
   'commands/core/util/tests/Base64 tests.spec.yaml',
   'commands/core/util/tests/Wait tests.spec.yaml',
+]
+
+/** Level 2 spec.md test files (relative to specification/) */
+const LEVEL_2_TEST_FILES = [
+  'language/SpecScript Markdown Documents.spec.md',
+  'language/tests/SpecScript Markdown tests.spec.md',
+  'language/SpecScript Best Practices.spec.md',
 ]
 
 /** Tests that depend on commands from higher levels (skip) */
@@ -196,6 +206,76 @@ function runFlatTests(script: Script, relativePath: string, fullPath: string): v
   }
 }
 
+/**
+ * Run a .spec.md file as a Vitest test suite.
+ *
+ * Each # section in the Markdown file becomes a separate test case.
+ * Sections share a context within the same document.
+ * Sections with no executable commands are silently skipped.
+ */
+function runSpecMdFile(relativePath: string): void {
+  const fullPath = join(SPEC_DIR, relativePath)
+  const content = readFileSync(fullPath, 'utf-8')
+
+  const blocks = scanMarkdown(content)
+  const scripts = splitMarkdownSections(blocks)
+
+  // Shared context across all sections in the document
+  const sharedContext = new DefaultContext({ scriptFile: fullPath })
+  setupSilentCapture(sharedContext)
+
+  let hasTests = false
+
+  for (const script of scripts) {
+    // Skip sections with no executable commands
+    if (script.commands.length === 0) continue
+
+    const title = getTestTitle(script)
+
+    if (SKIP_TESTS.has(title)) {
+      it.skip(title, () => {})
+      hasTests = true
+      continue
+    }
+
+    // Skip sections that use commands not available at this level
+    const unavailable = script.commands.find(
+      c => !isAssignment(c.name) && !getCommandHandler(c.name)
+    )
+    if (unavailable) {
+      it.skip(`${title} (needs ${unavailable.name})`, () => {})
+      hasTests = true
+      continue
+    }
+
+    // Skip sections that have skipped blocks (L3+ shell/file blocks)
+    if (script.skippedBlocks.length > 0) {
+      it.skip(`${title} (needs ${script.skippedBlocks[0]})`, () => {})
+      hasTests = true
+      continue
+    }
+
+    hasTests = true
+    it(title, () => {
+      // Reset captured output before each section
+      const captured = sharedContext.session.get('capturedOutput') as string[] | undefined
+      if (captured) captured.length = 0
+
+      script.run(sharedContext)
+    }, TEST_TIMEOUT)
+  }
+
+  // If no sections produced tests, add a placeholder to avoid empty suite error
+  if (!hasTests) {
+    it.skip('no executable sections at this level', () => {})
+  }
+}
+
+/** Check if a command name is a variable assignment (${...}: value) */
+function isAssignment(name: string): boolean {
+  return name.startsWith('${') || name.startsWith('$-{')
+}
+
 // --- Generate test suites ---
 
 describe('Level 0 Spec Tests', () => {
@@ -216,6 +296,14 @@ describe('Level 1 Spec Tests', () => {
     }
     describe(file, () => {
       runSpecFile(file)
+    })
+  }
+})
+
+describe('Level 2 Spec Tests', () => {
+  for (const file of LEVEL_2_TEST_FILES) {
+    describe(file, () => {
+      runSpecMdFile(file)
     })
   }
 })

@@ -14,10 +14,13 @@ import { parseYamlCommands } from '../util/yaml.js'
 export class Script {
   readonly commands: Command[]
   readonly title?: string
+  /** Block types from the source that were skipped (needs higher-level commands) */
+  readonly skippedBlocks: string[]
 
-  constructor(commands: Command[], title?: string) {
+  constructor(commands: Command[], title?: string, skippedBlocks: string[] = []) {
     this.commands = commands
     this.title = title
+    this.skippedBlocks = skippedBlocks
   }
 
   /**
