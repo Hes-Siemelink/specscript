@@ -22,8 +22,8 @@ export function resolveVariables(node: JsonValue, variables: Map<string, JsonVal
   if (isObject(node)) {
     const result: JsonObject = {}
     for (const [key, value] of Object.entries(node)) {
-      const resolvedKey = typeof key === 'string' ? resolveStringValue(key, variables) : key
-      result[resolvedKey] = resolveVariables(value, variables)
+      // Keys are NOT resolved — only values. Matches Kotlin's JsonProcessor behavior.
+      result[key] = resolveVariables(value, variables)
     }
     return result
   }

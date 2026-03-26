@@ -8,6 +8,7 @@ import {
 import type { CommandHandler } from './command-handler.js'
 import type { ScriptContext } from './context.js'
 import { resolveVariables } from './variables.js'
+import { evalExpressions } from './eval.js'
 
 /**
  * Run a single command through the full pipeline: resolve → dispatch.
@@ -59,12 +60,13 @@ function runSingleCommand(handler: CommandHandler, rawData: JsonValue, context: 
 }
 
 /**
- * Resolve a JSON value: deep copy, then substitute variables.
- * (Eval is Level 1, so at Level 0 we only do variable resolution.)
+ * Resolve a JSON value: deep copy, eval inline commands, then substitute variables.
+ * Exported so DelayedResolver commands can selectively resolve sub-expressions.
  */
-function resolve(data: JsonValue, context: ScriptContext): JsonValue {
+export function resolve(data: JsonValue, context: ScriptContext): JsonValue {
   const copied = deepCopy(data)
-  return resolveVariables(copied, context.variables)
+  const evaluated = evalExpressions(copied, context)
+  return resolveVariables(evaluated, context.variables)
 }
 
 /**

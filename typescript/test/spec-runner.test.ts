@@ -3,14 +3,17 @@ import { join, dirname } from 'node:path'
 import { describe, it, beforeAll, afterAll, expect } from 'vitest'
 import { Script, toCommandList } from '../src/language/script.js'
 import { DefaultContext } from '../src/language/context.js'
-import { registerLevel0Commands } from '../src/commands/register.js'
+import { registerAllCommands } from '../src/commands/register.js'
 import { setupSilentCapture } from '../src/language/stdout-capture.js'
 import type { JsonValue } from '../src/language/types.js'
 import { isObject } from '../src/language/types.js'
 import { parseYamlCommands } from '../src/util/yaml.js'
 
 // Register commands once
-registerLevel0Commands()
+registerAllCommands()
+
+/** Per-test timeout in ms — guards against infinite loops from Repeat/ForEach */
+const TEST_TIMEOUT = 10_000
 
 /**
  * Find the SpecScript home directory (repo root with specification/).
@@ -43,9 +46,34 @@ const LEVEL_0_TEST_FILES = [
   'commands/core/control-flow/tests/empty.spec.yaml',
 ]
 
-/** Tests that depend on commands from higher levels (skip at Level 0) */
+/** Level 1 spec.yaml test files (relative to specification/) */
+const LEVEL_1_TEST_FILES = [
+  'language/tests/Eval tests.spec.yaml',
+  'commands/core/control-flow/tests/If tests.spec.yaml',
+  'commands/core/control-flow/tests/For each tests.spec.yaml',
+  'commands/core/control-flow/tests/Repeat tests.spec.yaml',
+  'commands/core/errors/tests/Error handling tests.spec.yaml',
+  'commands/core/data-manipulation/tests/Add tests.spec.yaml',
+  'commands/core/data-manipulation/tests/Append tests.spec.yaml',
+  'commands/core/data-manipulation/tests/Json patch tests.spec.yaml',
+  'commands/core/data-manipulation/tests/Replace tests.spec.yaml',
+  'commands/core/data-manipulation/tests/Size tests.spec.yaml',
+  'commands/core/data-manipulation/tests/Sort tests.spec.yaml',
+  'commands/core/util/tests/Base64 tests.spec.yaml',
+  'commands/core/util/tests/Wait tests.spec.yaml',
+]
+
+/** Tests that depend on commands from higher levels (skip) */
 const SKIP_TESTS = new Set([
-  'SCRIPT_HOME is different from SCRIPT_TEMP_DIR', // needs Temp file (Level 3)
+  'SCRIPT_HOME is different from SCRIPT_TEMP_DIR',        // needs Temp file (Level 3)
+  'Schema validation - Add should only accept arrays',     // needs Validate schema (Level 5)
+  'For each with variable syntax in sample data',          // needs Read file (Level 3)
+  'For each with variable syntax in sample data and implicit loop variable', // needs Read file (Level 3)
+])
+
+/** Test files to skip entirely (all tests use higher-level commands) */
+const SKIP_FILES = new Set([
+  'commands/core/control-flow/schema/Schema tests.spec.yaml', // needs Validate schema (Level 5)
 ])
 
 /**
@@ -140,7 +168,7 @@ function runStructuredTests(script: Script, fullPath: string): void {
         setupSilentCapture(context)
         const testScript = Script.fromData(testBody)
         testScript.run(context)
-      })
+      }, TEST_TIMEOUT)
     }
   }
 }
@@ -156,14 +184,14 @@ function runFlatTests(script: Script, relativePath: string, fullPath: string): v
       const context = new DefaultContext({ scriptFile: fullPath })
       setupSilentCapture(context)
       script.run(context)
-    })
+    }, TEST_TIMEOUT)
   } else {
     for (const testCase of testCases) {
       it(testCase.name, () => {
         const context = new DefaultContext({ scriptFile: fullPath })
         setupSilentCapture(context)
         testCase.script.run(context)
-      })
+      }, TEST_TIMEOUT)
     }
   }
 }
@@ -172,6 +200,20 @@ function runFlatTests(script: Script, relativePath: string, fullPath: string): v
 
 describe('Level 0 Spec Tests', () => {
   for (const file of LEVEL_0_TEST_FILES) {
+    describe(file, () => {
+      runSpecFile(file)
+    })
+  }
+})
+
+describe('Level 1 Spec Tests', () => {
+  for (const file of LEVEL_1_TEST_FILES) {
+    if (SKIP_FILES.has(file)) {
+      describe.skip(file, () => {
+        it.skip('all tests skipped (higher-level dependency)', () => {})
+      })
+      continue
+    }
     describe(file, () => {
       runSpecFile(file)
     })
