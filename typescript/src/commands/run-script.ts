@@ -13,7 +13,6 @@ import { Script } from '../language/script.js'
 import { scanMarkdown } from '../markdown/scanner.js'
 import { splitMarkdownSections } from '../markdown/converter.js'
 import { resolvePath } from './files.js'
-import { setupSilentCapture } from '../language/stdout-capture.js'
 
 export const RunScriptCommand: CommandHandler = {
   name: 'Run script',
@@ -76,12 +75,6 @@ export async function runScriptFile(filePath: string, input: JsonValue, parentCo
 
   // Create a child context with fresh variables but shared session
   const childContext = (parentContext as DefaultContext).createChildContext(filePath, input)
-
-  // Copy stdout capture from parent
-  const parentStdout = parentContext.session.get('stdout')
-  if (parentStdout) {
-    setupSilentCapture(childContext)
-  }
 
   if (filePath.endsWith('.spec.md')) {
     return runMarkdownScript(content, childContext)
