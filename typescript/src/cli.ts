@@ -527,8 +527,8 @@ async function invokeDirectory(
   log: (...args: unknown[]) => void,
   logError: (...args: unknown[]) => void,
 ): Promise<void> {
-  // No subcommand → print directory info
-  if (subcommands.length === 0 || options.help) {
+  // No subcommand → print directory info (and available commands)
+  if (subcommands.length === 0) {
     printDirectoryInfo(dirPath, log)
     return
   }

@@ -26,6 +26,7 @@ import { RunScriptCommand } from './run-script.js'
 import { CliCommand } from './cli-command.js'
 import { HttpServerCommand, HttpEndpointCommand, StopHttpServerCommand } from './http-server.js'
 import { GetCommand, PostCommand, PutCommand, PatchCommand, DeleteCommand, HttpRequestDefaultsCommand } from './http.js'
+import { CheckTypeCommand } from './check-type.js'
 
 /**
  * Register all commands (Level 0 + Level 1 + Level 3 + Level 4).
@@ -131,6 +132,11 @@ export function registerAllCommands(): void {
   registerCommand(PatchCommand)
   registerCommand(DeleteCommand)
   registerCommand(HttpRequestDefaultsCommand)
+
+  // --- Level 5 ---
+
+  // Schema / Types
+  registerCommand(CheckTypeCommand)
 }
 
 /**

@@ -8,6 +8,7 @@ import type { CommandHandler } from './command-handler.js'
 import { getCommandHandler, canonicalName } from './command-handler.js'
 import { createAssignment } from '../commands/variables.js'
 import { parseYaml } from '../util/yaml.js'
+import { TypeRegistry, loadTypes } from './type-system.js'
 
 const ASSIGNMENT_REGEX = /^\$\{(.+)}$/
 
@@ -41,6 +42,9 @@ export interface ScriptContext {
   /** Current unhandled error, if any */
   error: SpecScriptCommandError | undefined
 
+  /** Type registry for Check type command */
+  readonly types: TypeRegistry
+
   /** Convenience getter/setter for variables.get('output') */
   get output(): JsonValue | undefined
   set output(value: JsonValue | undefined)
@@ -66,6 +70,7 @@ export class DefaultContext implements ScriptContext {
   private _workingDir?: string
   private _tempDir?: string
   private _commandResolver?: (name: string) => CommandHandler
+  private _types?: TypeRegistry
 
   constructor(options?: {
     scriptFile?: string
@@ -124,6 +129,24 @@ export class DefaultContext implements ScriptContext {
       }
     }
     return this._tempDir
+  }
+
+  get types(): TypeRegistry {
+    if (!this._types) {
+      this._types = new TypeRegistry()
+      // Load types from types.yaml in script directory (if it exists)
+      try {
+        const typesFile = join(this.scriptDir, 'types.yaml')
+        const content = readFileSync(typesFile, 'utf-8')
+        const data = parseYaml(content)
+        if (data && typeof data === 'object' && !Array.isArray(data)) {
+          loadTypes(this._types, data as JsonObject)
+        }
+      } catch {
+        // No types.yaml or not readable — use base types only
+      }
+    }
+    return this._types
   }
 
   get output(): JsonValue | undefined {
@@ -232,6 +255,7 @@ export class DefaultContext implements ScriptContext {
     })
     ctx._scriptDir = this._scriptDir
     ctx._tempDir = this._tempDir
+    ctx._types = this._types
     ctx.error = this.error
     return ctx
   }

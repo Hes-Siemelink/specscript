@@ -153,6 +153,9 @@ const LEVEL_3_MD_FILES = [
   'language/SpecScript Yaml Scripts.spec.md',
   // NOT included: 'language/Testing.spec.md' — first block runs `spec --test .` which hangs
   'language/tests/Directory tests.spec.md',
+  // CLI docs (use shell cli blocks)
+  'cli/Command line options.spec.md',
+  'cli/Running SpecScript files.spec.md',
 ]
 
 /** Level 4 spec.yaml test files (relative to specification/) */
@@ -172,6 +175,8 @@ const LEVEL_4_MD_FILES = [
   'commands/core/http/Http server.spec.md',
   'commands/core/http/Http endpoint.spec.md',
   'commands/core/http/Stop http server.spec.md',
+  // Testing command docs that use HTTP
+  'commands/core/testing/Before all tests.spec.md',
 ]
 
 /** Tests that depend on commands from higher levels (skip).
@@ -191,6 +196,7 @@ const SKIP_TESTS = new Set([
   'language/Organizing SpecScript files in directories.spec.md > Importing files from another directory',  // needs specscript-config.yaml imports
   'language/tests/Directory tests.spec.md > Empty directory',           // runs spec binary via shell cli
   'language/tests/Directory tests.spec.md > Imported helper scripts',   // needs specscript-config.yaml imports
+  'cli/Command line options.spec.md > --debug',                         // error output references Kotlin stacktrace
 ])
 
 /** Test files to skip entirely (all tests use higher-level commands) */
@@ -364,7 +370,7 @@ function runSpecMdFile(relativePath: string): void {
     // Only skip for known higher-level commands (e.g., Prompt). Unknown commands
     // might be local file commands created at runtime by Temp file or yaml file= blocks.
     const HIGHER_LEVEL_COMMANDS = new Set(['Prompt', 'Prompt object', 'Confirm', 'Connect to',
-      'Credentials', 'Validate schema', 'Check type', 'Mcp server', 'Mcp tool', 'SQLite'])
+      'Credentials', 'Validate schema', 'Mcp server', 'Mcp tool', 'SQLite'])
     const unavailable = script.commands.find(
       c => !isAssignment(c.name) && !getCommandHandler(c.name) && HIGHER_LEVEL_COMMANDS.has(c.name)
     )
@@ -497,6 +503,32 @@ describe('Level 4 Spec Tests', () => {
   }
 
   for (const file of LEVEL_4_MD_FILES) {
+    describe(file, () => {
+      runSpecMdFile(file)
+    })
+  }
+})
+
+// --- Level 5: Schema / Types ---
+
+/** Level 5 spec.yaml test files (relative to specification/) */
+const LEVEL_5_TEST_FILES = [
+  'commands/core/types/tests/Type tests.spec.yaml',
+]
+
+/** Level 5 spec.md test files (relative to specification/) */
+const LEVEL_5_MD_FILES = [
+  'commands/core/types/Types.spec.md',
+]
+
+describe('Level 5 Spec Tests', () => {
+  for (const file of LEVEL_5_TEST_FILES) {
+    describe(file, () => {
+      runSpecFile(file)
+    })
+  }
+
+  for (const file of LEVEL_5_MD_FILES) {
     describe(file, () => {
       runSpecMdFile(file)
     })
