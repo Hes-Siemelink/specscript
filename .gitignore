@@ -23,6 +23,7 @@ test.db
 # Node / TypeScript
 node_modules
 typescript/dist
+typescript/out
 typescript/pnpm-lock.yaml
 
 # Specscript
