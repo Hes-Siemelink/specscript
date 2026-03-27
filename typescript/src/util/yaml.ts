@@ -1,4 +1,4 @@
-import { parseAllDocuments, parseDocument, isMap, isSeq, isScalar, isPair, Pair, type Document, type Node } from 'yaml'
+import { parseAllDocuments, parseDocument, isMap, isSeq, isScalar, isPair, Pair, stringify, type Document, type Node } from 'yaml'
 import type { JsonValue, JsonObject } from '../language/types.js'
 import type { Command } from '../language/types.js'
 
@@ -93,7 +93,6 @@ export function toDisplayYaml(value: JsonValue): string {
   if (typeof value === 'number' || typeof value === 'boolean') return String(value)
 
   // Use YAML stringify for objects and arrays
-  const { stringify } = require('yaml') as typeof import('yaml')
   const result = stringify(value, {
     lineWidth: 0,        // don't wrap lines
     minContentWidth: 0,

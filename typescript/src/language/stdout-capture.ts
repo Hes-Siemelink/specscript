@@ -2,16 +2,20 @@ import type { ScriptContext } from './context.js'
 
 /**
  * Set up stdout capture on a context.
- * Print commands will write to the captured buffer instead of directly to console.
+ * Print commands will write to the captured buffer and also to the provided output function.
  * ExpectedConsoleOutput reads from the buffer.
+ *
+ * @param log - output function, defaults to console.log. In-process Cli command passes a
+ *              capture function here so Print output doesn't leak to the real console.
  */
-export function setupStdoutCapture(context: ScriptContext): void {
+export function setupStdoutCapture(context: ScriptContext, log?: (...args: unknown[]) => void): void {
   const captured: string[] = []
   context.session.set('capturedOutput', captured)
 
+  const out = log ?? console.log
   context.session.set('stdout', (text: string) => {
     captured.push(text)
-    console.log(text)
+    out(text)
   })
 }
 
