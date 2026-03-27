@@ -13,18 +13,20 @@ fun ObjectDefinition.toDisplayString(): String {
 
     val builder = StringBuilder()
 
-    val width = properties.maxOf { it.key.length } + 2
-    properties.forEach {
-        val key = buildString {
+    val keySummaries = properties.map { (name, definition) ->
+        buildString {
             append("--")
-            append(it.key)
-            if (it.value.shortOption != null) {
+            append(name)
+            if (definition.shortOption != null) {
                 append(", -")
-                append(it.value.shortOption)
+                append(definition.shortOption)
             }
         }
+    }
+    val width = keySummaries.maxOf { it.length }
+    properties.entries.zip(keySummaries).forEach { (entry, keySummary) ->
         builder.append("  ")
-        builder.append(infoString(key, it.value.description ?: "", width))
+        builder.append(infoString(keySummary, entry.value.description ?: "", width))
         builder.appendLine()
     }
 
