@@ -252,7 +252,7 @@ Input schema:
 Different input options
 
 Options:
-  --user, -u   Username
+  --user, -u       Username
   --password, -p   Password
 ```
 
