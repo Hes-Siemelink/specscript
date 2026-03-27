@@ -1,9 +1,11 @@
 import type { CommandHandler } from '../language/command-handler.js'
 import type { JsonValue, JsonObject } from '../language/types.js'
-import { isObject, SpecScriptError, MissingInputError } from '../language/types.js'
+import { isObject, isString, SpecScriptError, MissingInputError } from '../language/types.js'
 import type { ScriptContext } from '../language/context.js'
 import { resolveVariables } from '../language/variables.js'
 import { toCondition } from '../language/conditions.js'
+import { getAnswers } from '../language/user-prompt.js'
+import { doPrompt } from './prompt.js'
 
 /**
  * Script info: declares metadata about a script. No-op during execution.
@@ -29,7 +31,7 @@ export const InputParameters: CommandHandler = {
   async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     if (!isObject(data)) return getInput(context)
 
-    populateInputVariables(context, data)
+    await populateInputVariables(context, data)
     return getInput(context)
   },
 }
@@ -49,7 +51,7 @@ export const InputSchema: CommandHandler = {
     const properties = data['properties']
     if (!isObject(properties)) return getInput(context)
 
-    populateInputVariables(context, properties)
+    await populateInputVariables(context, properties)
     return getInput(context)
   },
 }
@@ -68,13 +70,16 @@ function getInput(context: ScriptContext): JsonObject {
 /**
  * Populate input variables from parameter definitions.
  *
- * For each parameter:
- * 1. If it already exists in input, copy to top-level variable
- * 2. Check condition (resolved against current variables) — skip if false
- * 3. Use default value, env variable, or throw if missing
- * 4. Set in input object AND as top-level variable
+ * Resolution order (matches Kotlin's InputParameters):
+ * 1. Already exists in input → copy to top-level variable
+ * 2. Check condition → skip if false
+ * 3. Environment variable → use env value
+ * 4. Default value → use default
+ * 5. Recorded answers → use answer from Answers command
+ * 6. Interactive mode → prompt user via doPrompt()
+ * 7. Error → throw MissingInputError
  */
-function populateInputVariables(context: ScriptContext, parameters: JsonObject): void {
+async function populateInputVariables(context: ScriptContext, parameters: JsonObject): Promise<void> {
   const input = getInput(context)
 
   for (const [name, paramDef] of Object.entries(parameters)) {
@@ -98,29 +103,42 @@ function populateInputVariables(context: ScriptContext, parameters: JsonObject):
     }
 
     // Find value
-    let value: JsonValue
+    let value: JsonValue | undefined
 
     // Check environment variable
     if ('env' in def && typeof def['env'] === 'string') {
       const envValue = process.env[def['env']]
       if (envValue !== undefined) {
-        value = envValue
-        setInputValue(context, input, name, value)
+        setInputValue(context, input, name, envValue)
         continue
       }
     }
 
     // Use default
     if ('default' in def) {
-      value = def['default']
-      setInputValue(context, input, name, value)
+      setInputValue(context, input, name, def['default'])
       continue
     }
 
-    // No value available — in non-interactive mode, throw
-    if (!context.interactive) {
-      throw new MissingInputError(`No value provided for: ${name}`, name)
+    // Check recorded answers (matches Kotlin: Answers.hasRecordedAnswer before interactive)
+    const question = (isString(def['description']) ? def['description'] : undefined) ?? name
+    const answers = getAnswers(context.session)
+    if (answers.has(question)) {
+      setInputValue(context, input, name, answers.get(question)!)
+      continue
     }
+
+    // Interactive mode — prompt user
+    if (context.interactive) {
+      const result = await doPrompt(context, def as JsonObject, name)
+      if (result !== null && result !== undefined) {
+        setInputValue(context, input, name, result)
+      }
+      continue
+    }
+
+    // No value available — throw
+    throw new MissingInputError(`No value provided for: ${name}`, name)
   }
 }
 

@@ -506,7 +506,7 @@ async function invokeFile(
 
   // Execute file with parameters
   const parameters = toParameterMap(options.commandArgs)
-  const result = await executeFile(filePath, undefined, parameters, log)
+  const result = await executeFile(filePath, undefined, parameters, log, options.interactive)
 
   // Print output
   if (result !== undefined && result !== null) {
@@ -527,9 +527,58 @@ async function invokeDirectory(
   log: (...args: unknown[]) => void,
   logError: (...args: unknown[]) => void,
 ): Promise<void> {
-  // No subcommand → print directory info (and available commands)
+  // No subcommand
   if (subcommands.length === 0) {
-    printDirectoryInfo(dirPath, log)
+    // Always print directory description first (matches Kotlin: printDirectoryInfo before command selection)
+    const description = getDirectoryDescription(dirPath)
+    if (description) {
+      log(description)
+      log('')
+    }
+
+    const commands = getDirectoryCommands(dirPath)
+
+    // Interactive mode — show selection menu
+    if (options.interactive && !options.help) {
+      if (commands.length === 0) {
+        log('No commands available.')
+        return
+      }
+
+      const { select } = await import('@inquirer/prompts')
+      const width = Math.max(...commands.map(c => c.name.length))
+      const selected = await select({
+        message: 'Available commands:',
+        choices: commands.map(cmd => ({
+          name: infoString(cmd.name, cmd.description, width),
+          value: cmd.name,
+        })),
+      })
+
+      // Resolve and execute selected command
+      const resolvedPath = resolveCommand(selected, dirPath)
+      if (resolvedPath === undefined) {
+        throw new CliInvocationError(`Command '${selected}' not found in ${basename(dirPath)}`)
+      }
+      const stat = statSync(resolvedPath)
+      if (stat.isDirectory()) {
+        await invokeDirectory(resolvedPath, [], options, log, logError)
+      } else {
+        await invokeFile(resolvedPath, options, log, logError)
+      }
+      return
+    }
+
+    // Non-interactive — print commands listing
+    if (commands.length === 0) {
+      log('No commands available.')
+    } else {
+      log('Available commands:')
+      const width = Math.max(...commands.map(c => c.name.length))
+      for (const cmd of commands) {
+        log(`  ${infoString(cmd.name, cmd.description, width)}`)
+      }
+    }
     return
   }
 
@@ -582,6 +631,7 @@ export async function executeFile(
   parent?: ScriptContext,
   inputParameters?: Record<string, string>,
   log?: (...args: unknown[]) => void,
+  interactive?: boolean,
 ): Promise<JsonValue | undefined> {
   const content = readFileSync(filePath, 'utf-8')
   const workingDir = parent?.workingDir ?? dirname(filePath)
@@ -590,6 +640,7 @@ export async function executeFile(
     scriptFile: filePath,
     workingDir,
     session: parent?.session,
+    interactive: interactive ?? parent?.interactive ?? false,
   })
 
   if (!parent) {

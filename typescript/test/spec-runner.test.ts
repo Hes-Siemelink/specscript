@@ -369,7 +369,7 @@ function runSpecMdFile(relativePath: string): void {
     // Skip sections that use commands not available at this level.
     // Only skip for known higher-level commands (e.g., Prompt). Unknown commands
     // might be local file commands created at runtime by Temp file or yaml file= blocks.
-    const HIGHER_LEVEL_COMMANDS = new Set(['Prompt', 'Prompt object', 'Confirm', 'Connect to',
+    const HIGHER_LEVEL_COMMANDS = new Set(['Connect to',
       'Credentials', 'Validate schema', 'Mcp server', 'Mcp tool', 'SQLite'])
     const unavailable = script.commands.find(
       c => !isAssignment(c.name) && !getCommandHandler(c.name) && HIGHER_LEVEL_COMMANDS.has(c.name)
@@ -514,11 +514,17 @@ describe('Level 4 Spec Tests', () => {
 /** Level 5 spec.yaml test files (relative to specification/) */
 const LEVEL_5_TEST_FILES = [
   'commands/core/types/tests/Type tests.spec.yaml',
+  'commands/core/user-interaction/tests/Prompt tests.spec.yaml',
+  'commands/core/user-interaction/tests/Prompt object tests.spec.yaml',
 ]
 
 /** Level 5 spec.md test files (relative to specification/) */
 const LEVEL_5_MD_FILES = [
   'commands/core/types/Types.spec.md',
+  'commands/core/user-interaction/Prompt.spec.md',
+  'commands/core/user-interaction/Prompt object.spec.md',
+  'commands/core/user-interaction/Confirm.spec.md',
+  'commands/core/testing/Answers.spec.md',
 ]
 
 describe('Level 5 Spec Tests', () => {

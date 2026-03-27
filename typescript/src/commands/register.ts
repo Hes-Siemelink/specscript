@@ -27,6 +27,9 @@ import { CliCommand } from './cli-command.js'
 import { HttpServerCommand, HttpEndpointCommand, StopHttpServerCommand } from './http-server.js'
 import { GetCommand, PostCommand, PutCommand, PatchCommand, DeleteCommand, HttpRequestDefaultsCommand } from './http.js'
 import { CheckTypeCommand } from './check-type.js'
+import { PromptCommand } from './prompt.js'
+import { PromptObjectCommand } from './prompt-object.js'
+import { ConfirmCommand } from './confirm.js'
 
 /**
  * Register all commands (Level 0 + Level 1 + Level 3 + Level 4).
@@ -137,6 +140,11 @@ export function registerAllCommands(): void {
 
   // Schema / Types
   registerCommand(CheckTypeCommand)
+
+  // User interaction
+  registerCommand(PromptCommand)
+  registerCommand(PromptObjectCommand)
+  registerCommand(ConfirmCommand)
 }
 
 /**
