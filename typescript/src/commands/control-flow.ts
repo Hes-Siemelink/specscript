@@ -18,7 +18,7 @@ export const Do: CommandHandler = {
   delayedResolver: true,
   handlesLists: true,
 
-  execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     const script = Script.fromData(data)
     return script.run(context)
   },
@@ -30,7 +30,7 @@ export const Do: CommandHandler = {
 export const Exit: CommandHandler = {
   name: 'Exit',
 
-  execute(data: JsonValue, _context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, _context: ScriptContext): Promise<JsonValue | undefined> {
     throw new Break(data)
   },
 }
@@ -42,7 +42,7 @@ export const Exit: CommandHandler = {
  * and return the matching branch (unresolved) or null.
  * Exported for When to reuse.
  */
-export function evaluateIf(data: JsonObject, context: ScriptContext): JsonValue | undefined {
+export async function evaluateIf(data: JsonObject, context: ScriptContext): Promise<JsonValue | undefined> {
   const workingCopy: JsonObject = { ...data }
   const thenBranch = workingCopy['then']
   if (thenBranch === undefined) {
@@ -54,7 +54,7 @@ export function evaluateIf(data: JsonObject, context: ScriptContext): JsonValue 
   delete workingCopy['else']
 
   // Resolve the condition part (everything except then/else)
-  const resolvedCondition = resolve(workingCopy, context)
+  const resolvedCondition = await resolve(workingCopy, context)
   const condition = toCondition(resolvedCondition)
 
   return condition.isTrue() ? thenBranch : elseBranch
@@ -63,7 +63,7 @@ export function evaluateIf(data: JsonObject, context: ScriptContext): JsonValue 
 /**
  * Run a branch as a sub-script.
  */
-function runBranch(branch: JsonValue, context: ScriptContext): JsonValue | undefined {
+async function runBranch(branch: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
   const script = Script.fromData(branch)
   return script.run(context)
 }
@@ -75,11 +75,11 @@ export const If: CommandHandler = {
   name: 'If',
   delayedResolver: true,
 
-  execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     if (!isObject(data)) {
       throw new CommandFormatError('If expects an object')
     }
-    const branch = evaluateIf(data, context)
+    const branch = await evaluateIf(data, context)
     if (branch === undefined) return undefined
     return runBranch(branch, context)
   },
@@ -95,7 +95,7 @@ export const When: CommandHandler = {
   delayedResolver: true,
   handlesLists: true,
 
-  execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     if (!isArray(data)) {
       throw new CommandFormatError('When expects an array')
     }
@@ -111,7 +111,7 @@ export const When: CommandHandler = {
       }
 
       // Execute matching 'if' and exit
-      const branch = evaluateIf(ifStatement, context)
+      const branch = await evaluateIf(ifStatement, context)
       if (branch !== undefined) {
         return runBranch(branch, context)
       }
@@ -145,7 +145,7 @@ export const ForEach: CommandHandler = {
   name: 'For each',
   delayedResolver: true,
 
-  execute(data: JsonValue, context: ScriptContext): JsonValue {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue> {
     if (!isObject(data)) {
       throw new CommandFormatError('For each expects an object')
     }
@@ -173,7 +173,7 @@ export const ForEach: CommandHandler = {
     }
 
     // Resolve the items (but not the body)
-    const items = resolve(itemData, context)
+    const items = await resolve(itemData, context)
     const enumerated = enumerateForEach(items)
 
     // Determine output shape based on input shape
@@ -188,7 +188,7 @@ export const ForEach: CommandHandler = {
       // Deep copy the body for each iteration (resolve is destructive)
       const bodyCopy = JSON.parse(JSON.stringify(body)) as JsonObject
       const script = Script.fromData(bodyCopy)
-      const result = script.run(context)
+      const result = await script.run(context)
 
       if (result !== undefined) {
         if (isObjectIteration && isObject(item)) {
@@ -213,7 +213,7 @@ export const Repeat: CommandHandler = {
   name: 'Repeat',
   delayedResolver: true,
 
-  execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     if (!isObject(data)) {
       throw new CommandFormatError('Repeat expects an object')
     }
@@ -232,16 +232,16 @@ export const Repeat: CommandHandler = {
       // Deep copy the body for each iteration
       const bodyCopy = JSON.parse(JSON.stringify(body)) as JsonObject
       const script = Script.fromData(bodyCopy)
-      const result = script.run(context) ?? context.output
+      const result = (await script.run(context)) ?? context.output
 
       if (isObject(until)) {
         // Condition-based until
-        const resolvedCondition = resolve(deepCopy(until), context)
+        const resolvedCondition = await resolve(deepCopy(until), context)
         const condition = toCondition(resolvedCondition)
         finished = condition.isTrue()
       } else {
         // Simple value comparison
-        const resolvedUntil = resolve(deepCopy(until), context)
+        const resolvedUntil = await resolve(deepCopy(until), context)
         finished = (result === resolvedUntil)
       }
     }

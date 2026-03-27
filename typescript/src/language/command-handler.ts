@@ -26,7 +26,7 @@ export interface CommandHandler {
   handlesLists?: boolean
 
   /** Execute the command. Returns the result (stored as ${output}) or undefined. */
-  execute(data: JsonValue, context: ScriptContext): JsonValue | undefined
+  execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined>
 }
 
 /**

@@ -187,19 +187,19 @@ function runStructuredTests(script: Script, fullPath: string): void {
   let sharedContext: DefaultContext | undefined
 
   if (setupCommands !== undefined) {
-    beforeAll(() => {
+    beforeAll(async () => {
       sharedContext = new DefaultContext({ scriptFile: fullPath, workingDir: SPECSCRIPT_HOME })
       setupSilentCapture(sharedContext)
       const setupScript = Script.fromData(setupCommands!)
-      setupScript.run(sharedContext)
+      await setupScript.run(sharedContext)
     })
   }
 
   if (teardownCommands !== undefined) {
-    afterAll(() => {
+    afterAll(async () => {
       if (sharedContext) {
         const teardownScript = Script.fromData(teardownCommands!)
-        teardownScript.run(sharedContext)
+        await teardownScript.run(sharedContext)
       }
     })
   }
@@ -211,11 +211,11 @@ function runStructuredTests(script: Script, fullPath: string): void {
         it.skip(testName, () => {})
         continue
       }
-      it(testName, () => {
+      it(testName, async () => {
         const context = sharedContext ? sharedContext.clone() as DefaultContext : new DefaultContext({ scriptFile: fullPath, workingDir: SPECSCRIPT_HOME })
         setupSilentCapture(context)
         const testScript = Script.fromData(testBody)
-        testScript.run(context)
+        await testScript.run(context)
       }, TEST_TIMEOUT)
     }
   }
@@ -228,17 +228,17 @@ function runFlatTests(script: Script, relativePath: string, fullPath: string): v
   const testCases = script.splitTestCases()
 
   if (testCases.length === 1 && testCases[0].name === 'default') {
-    it(relativePath, () => {
+    it(relativePath, async () => {
       const context = new DefaultContext({ scriptFile: fullPath, workingDir: SPECSCRIPT_HOME })
       setupSilentCapture(context)
-      script.run(context)
+      await script.run(context)
     }, TEST_TIMEOUT)
   } else {
     for (const testCase of testCases) {
-      it(testCase.name, () => {
+      it(testCase.name, async () => {
         const context = new DefaultContext({ scriptFile: fullPath, workingDir: SPECSCRIPT_HOME })
         setupSilentCapture(context)
-        testCase.script.run(context)
+        await testCase.script.run(context)
       }, TEST_TIMEOUT)
     }
   }
@@ -307,12 +307,12 @@ function runSpecMdFile(relativePath: string): void {
     }
 
     hasTests = true
-    it(title, () => {
+    it(title, async () => {
       // Reset captured output before each section
       const captured = sharedContext.session.get('capturedOutput') as string[] | undefined
       if (captured) captured.length = 0
 
-      script.run(sharedContext)
+      await script.run(sharedContext)
     }, TEST_TIMEOUT)
   }
 
@@ -382,23 +382,21 @@ describe('Level 3 Spec Tests (Markdown)', () => {
 })
 
 // --- Level 4: HTTP ---
-// Start the sample server before HTTP tests, stop it after.
+// Start the sample server once before all HTTP tests, stop it after.
 
 describe('Level 4 Spec Tests', () => {
-  let sampleServerContext: DefaultContext
-
-  beforeAll(() => {
-    // Start the sample server on port 2525 (used by HTTP client tests)
+  beforeAll(async () => {
+    // Start the sample server on port 2525 (used by all HTTP tests)
     const sampleServerPath = join(SPECSCRIPT_HOME, 'samples/http-server/sample-server/sample-server.spec.yaml')
     const content = readFileSync(sampleServerPath, 'utf-8')
-    sampleServerContext = new DefaultContext({ scriptFile: sampleServerPath, workingDir: SPECSCRIPT_HOME })
+    const sampleServerContext = new DefaultContext({ scriptFile: sampleServerPath, workingDir: SPECSCRIPT_HOME })
     setupSilentCapture(sampleServerContext)
     const script = Script.fromString(content)
-    script.run(sampleServerContext)
+    await script.run(sampleServerContext)
   })
 
-  afterAll(() => {
-    stopAllServers()
+  afterAll(async () => {
+    await stopAllServers()
   })
 
   for (const file of LEVEL_4_TEST_FILES) {
@@ -412,24 +410,6 @@ describe('Level 4 Spec Tests', () => {
       runSpecFile(file)
     })
   }
-})
-
-describe('Level 4 Spec Tests (Markdown)', () => {
-  let sampleServerContext: DefaultContext
-
-  beforeAll(() => {
-    // Start the sample server on port 2525 (used by HTTP client MD tests)
-    const sampleServerPath = join(SPECSCRIPT_HOME, 'samples/http-server/sample-server/sample-server.spec.yaml')
-    const content = readFileSync(sampleServerPath, 'utf-8')
-    sampleServerContext = new DefaultContext({ scriptFile: sampleServerPath, workingDir: SPECSCRIPT_HOME })
-    setupSilentCapture(sampleServerContext)
-    const script = Script.fromString(content)
-    script.run(sampleServerContext)
-  })
-
-  afterAll(() => {
-    stopAllServers()
-  })
 
   for (const file of LEVEL_4_MD_FILES) {
     describe(file, () => {

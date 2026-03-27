@@ -1,16 +1,14 @@
 /**
  * HTTP client: shared request processing for GET, POST, PUT, PATCH, DELETE.
  *
- * Uses raw TCP sockets for synchronous HTTP requests. This avoids blocking
- * the Node.js event loop (unlike spawnSync), which is critical when an HTTP
- * server is running in the same process.
+ * Uses native async fetch() for HTTP requests. Now that the engine is async,
+ * we can use fetch() directly without spawning child processes.
  *
  * Mirrors Kotlin's HttpClient.kt and HttpParameters.kt.
  */
 
 import { writeFileSync, mkdirSync } from 'node:fs'
 import { dirname, resolve as pathResolve } from 'node:path'
-import { spawnSync } from 'node:child_process'
 import type { ScriptContext } from '../language/context.js'
 import type { JsonValue, JsonObject } from '../language/types.js'
 import { isObject, SpecScriptCommandError } from '../language/types.js'
@@ -21,7 +19,7 @@ const HTTP_DEFAULTS_KEY = 'http.defaults'
 /**
  * Process an HTTP request from a value form (URL string).
  */
-export function processValueRequest(urlString: string, context: ScriptContext, method: string): JsonValue | undefined {
+export async function processValueRequest(urlString: string, context: ScriptContext, method: string): Promise<JsonValue | undefined> {
   const encoded = encodePath(urlString)
 
   let data: JsonObject
@@ -42,7 +40,7 @@ export function processValueRequest(urlString: string, context: ScriptContext, m
 /**
  * Process an HTTP request from an object form.
  */
-export function processObjectRequest(data: JsonObject, context: ScriptContext, method: string): JsonValue | undefined {
+export async function processObjectRequest(data: JsonObject, context: ScriptContext, method: string): Promise<JsonValue | undefined> {
   const defaults = getDefaults(context)
   const merged = mergeWithDefaults({ ...data }, defaults)
 
@@ -62,7 +60,7 @@ export function processObjectRequest(data: JsonObject, context: ScriptContext, m
   const body = buildBody(merged, headers)
   const saveAs = merged['save as'] as string | undefined
 
-  return executeSyncRequest(url, method, headers, body, saveAs, context)
+  return executeAsyncRequest(url, method, headers, body, saveAs, context)
 }
 
 // --- Defaults management ---
@@ -161,92 +159,38 @@ function buildBody(params: JsonObject, headers: Record<string, string>): string 
   return JSON.stringify(body)
 }
 
-// --- Synchronous HTTP execution ---
+// --- Async HTTP execution ---
 
 /**
- * Execute an HTTP request synchronously using a child process.
- *
- * We spawn a separate Node.js process to perform the async fetch() call.
- * The child process is independent and doesn't share the event loop with
- * the parent, so it can make network requests without deadlocking.
- *
- * NOTE: This approach works even when an HTTP server runs in the parent
- * process — the server's event loop is NOT blocked by spawnSync because
- * Node.js continues to accept connections on the listening socket even
- * when the main JS thread is blocked. The OS TCP stack buffers incoming
- * connections, and they are processed when the event loop resumes.
- *
- * HOWEVER, this only works if the server handler can respond without
- * running JS on the main thread. For the file-based IPC handler model,
- * the main thread must poll for request files, which can't happen during
- * spawnSync. Therefore, this client is paired with a server that runs
- * handlers synchronously in the child process itself (for static output)
- * or in a separate handler process.
+ * Execute an HTTP request using native async fetch().
+ * Now that the engine is async, we can use fetch() directly.
  */
-function executeSyncRequest(
+async function executeAsyncRequest(
   url: string,
   method: string,
   headers: Record<string, string>,
   body: string | undefined,
   saveAs: string | undefined,
   context: ScriptContext,
-): JsonValue | undefined {
-  const requestData = JSON.stringify({ url, method, headers, body })
+): Promise<JsonValue | undefined> {
+  const opts: RequestInit = { method, headers }
+  if (body !== undefined) opts.body = body
 
-  const script = `
-    const data = JSON.parse(process.argv[1]);
-    (async () => {
-      const opts = { method: data.method, headers: data.headers };
-      if (data.body !== undefined) opts.body = data.body;
-      const r = await fetch(data.url, opts);
-      const bodyText = await r.text();
-      process.stdout.write(JSON.stringify({
-        status: r.status,
-        bodyText,
-        contentLength: r.headers.get('content-length'),
-      }));
-    })().catch(e => {
-      process.stdout.write(JSON.stringify({ error: e.message }));
-    });
-  `
-
-  const result = spawnSync(process.execPath, ['-e', script, requestData], {
-    encoding: 'utf-8',
-    timeout: 30_000,
-    stdio: ['pipe', 'pipe', 'pipe'],
-  })
-
-  if (result.error) {
-    throw new SpecScriptCommandError(
-      `HTTP request failed: ${result.error.message}`,
-      'connection'
-    )
-  }
-
-  if (result.status !== 0) {
-    throw new SpecScriptCommandError(
-      `HTTP request failed: ${result.stderr || 'unknown error'}`,
-      'connection'
-    )
-  }
-
-  let response: { status: number; bodyText: string; contentLength: string | null; error?: string }
+  let response: Response
   try {
-    response = JSON.parse(result.stdout)
-  } catch {
+    response = await fetch(url, opts)
+  } catch (e) {
     throw new SpecScriptCommandError(
-      `HTTP request failed: could not parse response`,
+      `HTTP request failed: ${e instanceof Error ? e.message : String(e)}`,
       'connection'
     )
   }
 
-  if (response.error) {
-    throw new SpecScriptCommandError(`HTTP request failed: ${response.error}`, 'connection')
-  }
+  const bodyText = await response.text()
 
   // Non-2xx → error
   if (response.status < 200 || response.status >= 300) {
-    const data = parseYamlIfPossible(response.bodyText)
+    const data = parseYamlIfPossible(bodyText)
     throw new SpecScriptCommandError(
       'Http request returned an error',
       String(response.status),
@@ -255,7 +199,8 @@ function executeSyncRequest(
   }
 
   // No content
-  if (response.contentLength === '0' || (!response.bodyText && response.contentLength === null)) {
+  const contentLength = response.headers.get('content-length')
+  if (contentLength === '0' || (!bodyText && contentLength === null)) {
     return undefined
   }
 
@@ -263,10 +208,10 @@ function executeSyncRequest(
   if (saveAs) {
     const filePath = pathResolve(context.workingDir, saveAs)
     mkdirSync(dirname(filePath), { recursive: true })
-    writeFileSync(filePath, response.bodyText, 'utf-8')
+    writeFileSync(filePath, bodyText, 'utf-8')
     return undefined
   }
 
   // Parse response body
-  return parseYamlIfPossible(response.bodyText)
+  return parseYamlIfPossible(bodyText)
 }

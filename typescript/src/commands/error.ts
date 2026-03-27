@@ -10,7 +10,7 @@ import { Script } from '../language/script.js'
 export const ErrorCommand: CommandHandler = {
   name: 'Error',
 
-  execute(data: JsonValue, _context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, _context: ScriptContext): Promise<JsonValue | undefined> {
     if (typeof data === 'string') {
       throw new SpecScriptCommandError(data)
     }
@@ -44,7 +44,7 @@ function errorToJson(error: SpecScriptCommandError): JsonValue {
  * Run error handling: set ${error}, clear context.error, run handler, remove ${error}.
  * Exported for OnErrorType to reuse.
  */
-export function runErrorHandling(handlerBody: JsonValue, context: ScriptContext): void {
+export async function runErrorHandling(handlerBody: JsonValue, context: ScriptContext): Promise<void> {
   const error = context.error
   if (!error) return
 
@@ -52,7 +52,7 @@ export function runErrorHandling(handlerBody: JsonValue, context: ScriptContext)
   context.error = undefined
 
   const script = Script.fromData(handlerBody)
-  script.run(context)
+  await script.run(context)
 
   context.variables.delete('error')
 }
@@ -65,8 +65,8 @@ export const OnError: CommandHandler = {
   delayedResolver: true,
   errorHandler: true,
 
-  execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
-    runErrorHandling(data, context)
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
+    await runErrorHandling(data, context)
     return undefined
   },
 }
@@ -81,14 +81,14 @@ export const OnErrorType: CommandHandler = {
   delayedResolver: true,
   errorHandler: true,
 
-  execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     if (!isObject(data)) {
       throw new CommandFormatError('On error type expects an object')
     }
 
     for (const [key, value] of Object.entries(data)) {
       if (key === 'any' || key === context.error?.type) {
-        runErrorHandling(value, context)
+        await runErrorHandling(value, context)
         break
       }
     }

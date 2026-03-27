@@ -12,7 +12,7 @@ export const ScriptInfo: CommandHandler = {
   name: 'Script info',
   delayedResolver: true,
 
-  execute(_data: JsonValue, _context: ScriptContext): JsonValue | undefined {
+  async execute(_data: JsonValue, _context: ScriptContext): Promise<JsonValue | undefined> {
     return undefined
   },
 }
@@ -26,7 +26,7 @@ export const InputParameters: CommandHandler = {
   name: 'Input parameters',
   delayedResolver: true,
 
-  execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     if (!isObject(data)) return getInput(context)
 
     populateInputVariables(context, data)
@@ -42,7 +42,7 @@ export const InputSchema: CommandHandler = {
   name: 'Input schema',
   delayedResolver: true,
 
-  execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     if (!isObject(data)) return getInput(context)
 
     // Extract properties from JSON Schema format

@@ -48,7 +48,7 @@ export const Add: CommandHandler = {
   name: 'Add',
   handlesLists: true,
 
-  execute(data: JsonValue, _context: ScriptContext): JsonValue {
+  async execute(data: JsonValue, _context: ScriptContext): Promise<JsonValue> {
     if (!isArray(data)) {
       // Single item — return as-is
       return data
@@ -82,7 +82,7 @@ function toArray(data: JsonValue): JsonValue[] {
 export const AddTo: CommandHandler = {
   name: 'Add to',
 
-  execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     if (!isObject(data)) {
       throw new CommandFormatError('Add to expects an object')
     }
@@ -114,7 +114,7 @@ export const Append: CommandHandler = {
   name: 'Append',
   handlesLists: true,
 
-  execute(data: JsonValue, context: ScriptContext): JsonValue {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue> {
     let total = context.output
     if (total === undefined) return data
 
@@ -133,7 +133,7 @@ export const Append: CommandHandler = {
 export const Fields: CommandHandler = {
   name: 'Fields',
 
-  execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     if (isObject(data)) {
       return Object.keys(data)
     }
@@ -154,7 +154,7 @@ export const Fields: CommandHandler = {
 export const Values: CommandHandler = {
   name: 'Values',
 
-  execute(data: JsonValue, _context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, _context: ScriptContext): Promise<JsonValue | undefined> {
     if (!isObject(data)) {
       throw new CommandFormatError('Values expects an object')
     }
@@ -171,7 +171,7 @@ export const Size: CommandHandler = {
   name: 'Size',
   handlesLists: true,
 
-  execute(data: JsonValue, _context: ScriptContext): JsonValue {
+  async execute(data: JsonValue, _context: ScriptContext): Promise<JsonValue> {
     if (isArray(data)) return data.length
     if (isObject(data)) return Object.keys(data).length
     if (isString(data)) return data.length
@@ -189,7 +189,7 @@ export const Size: CommandHandler = {
 export const Sort: CommandHandler = {
   name: 'Sort',
 
-  execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     if (!isObject(data)) {
       throw new CommandFormatError('Sort expects an object with items and by')
     }
@@ -279,7 +279,7 @@ function navigateJsonPointer(value: JsonValue, segments: string[]): JsonValue | 
 export const Find: CommandHandler = {
   name: 'Find',
 
-  execute(data: JsonValue, _context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, _context: ScriptContext): Promise<JsonValue | undefined> {
     if (!isObject(data)) {
       throw new CommandFormatError('Find expects an object with path and in')
     }
@@ -333,7 +333,7 @@ function replaceInValue(
 export const Replace: CommandHandler = {
   name: 'Replace',
 
-  execute(data: JsonValue, context: ScriptContext): JsonValue {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue> {
     if (!isObject(data)) {
       throw new CommandFormatError('Replace expects an object')
     }

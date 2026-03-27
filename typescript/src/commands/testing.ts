@@ -15,7 +15,7 @@ import { toDisplayYaml } from '../util/yaml.js'
 export const AssertEquals: CommandHandler = {
   name: 'Assert equals',
 
-  execute(data: JsonValue, _context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, _context: ScriptContext): Promise<JsonValue | undefined> {
     if (!isObject(data)) {
       throw new CommandFormatError('Assert equals requires an object with "actual" and "expected"')
     }
@@ -37,7 +37,7 @@ export const AssertEquals: CommandHandler = {
 export const AssertThat: CommandHandler = {
   name: 'Assert that',
 
-  execute(data: JsonValue, _context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, _context: ScriptContext): Promise<JsonValue | undefined> {
     if (!isObject(data)) {
       throw new CommandFormatError('Assert that requires a condition object')
     }
@@ -59,7 +59,7 @@ export const ExpectedOutput: CommandHandler = {
   name: 'Expected output',
   handlesLists: true,
 
-  execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     const actual = context.output
     if (actual === undefined && data === null) return undefined
     if (!deepEquals(actual ?? null, data)) {
@@ -78,7 +78,7 @@ export const ExpectedOutput: CommandHandler = {
 export const ExpectedConsoleOutput: CommandHandler = {
   name: 'Expected console output',
 
-  execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     const captured = context.session.get('capturedOutput') as string[] | undefined
     const actualLines = captured ?? []
     const actual = actualLines.join('\n')
@@ -106,7 +106,7 @@ export const ExpectedError: CommandHandler = {
   name: 'Expected error',
   errorHandler: true,
 
-  execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     const error = context.error
     if (!error) {
       throw new MissingExpectedError('Expected an error but none occurred')
@@ -148,7 +148,7 @@ export const ExpectedError: CommandHandler = {
 export const TestCase: CommandHandler = {
   name: 'Test case',
 
-  execute(_data: JsonValue, _context: ScriptContext): JsonValue | undefined {
+  async execute(_data: JsonValue, _context: ScriptContext): Promise<JsonValue | undefined> {
     return undefined
   },
 }
@@ -159,7 +159,7 @@ export const TestCase: CommandHandler = {
 export const CodeExample: CommandHandler = {
   name: 'Code example',
 
-  execute(_data: JsonValue, _context: ScriptContext): JsonValue | undefined {
+  async execute(_data: JsonValue, _context: ScriptContext): Promise<JsonValue | undefined> {
     return undefined
   },
 }
@@ -170,7 +170,7 @@ export const CodeExample: CommandHandler = {
 export const Answers: CommandHandler = {
   name: 'Answers',
 
-  execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     if (isObject(data)) {
       const existing = (context.session.get('answers') as Map<string, JsonValue>) ?? new Map<string, JsonValue>()
       for (const [key, value] of Object.entries(data)) {
@@ -191,7 +191,7 @@ export const Tests: CommandHandler = {
   delayedResolver: true,
   handlesLists: true,
 
-  execute(_data: JsonValue, _context: ScriptContext): JsonValue | undefined {
+  async execute(_data: JsonValue, _context: ScriptContext): Promise<JsonValue | undefined> {
     return undefined
   },
 }
@@ -205,7 +205,7 @@ export const BeforeAllTests: CommandHandler = {
   delayedResolver: true,
   handlesLists: true,
 
-  execute(_data: JsonValue, _context: ScriptContext): JsonValue | undefined {
+  async execute(_data: JsonValue, _context: ScriptContext): Promise<JsonValue | undefined> {
     return undefined
   },
 }
@@ -219,7 +219,7 @@ export const AfterAllTests: CommandHandler = {
   delayedResolver: true,
   handlesLists: true,
 
-  execute(_data: JsonValue, _context: ScriptContext): JsonValue | undefined {
+  async execute(_data: JsonValue, _context: ScriptContext): Promise<JsonValue | undefined> {
     return undefined
   },
 }

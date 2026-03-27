@@ -48,10 +48,10 @@ let tempFileCounter = 0
 export const TempFileCommand: CommandHandler = {
   name: 'Temp file',
   delayedResolver: true,
-  execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     if (isString(data) || typeof data === 'number' || typeof data === 'boolean' || data === null) {
       // Value form: content as-is, resolve it first
-      const resolved = resolveData(data, context)
+      const resolved = await resolveData(data, context)
       const filePath = createTempFile(context)
       writeFileSync(filePath, toDisplayYaml(resolved))
       return filePath
@@ -62,7 +62,7 @@ export const TempFileCommand: CommandHandler = {
       const shouldResolve = data.resolve !== false
       const contentRaw = 'content' in data ? data.content : null
 
-      const content = shouldResolve ? resolveData(contentRaw ?? null, context) : (contentRaw ?? null)
+      const content = shouldResolve ? await resolveData(contentRaw ?? null, context) : (contentRaw ?? null)
       const filePath = filename
         ? createNamedTempFile(context, filename)
         : createTempFile(context)
@@ -93,7 +93,7 @@ function createNamedTempFile(context: ScriptContext, filename: string): string {
 
 export const ReadFileCommand: CommandHandler = {
   name: 'Read file',
-  execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     const filePath = resolvePath(data, context)
 
     if (!existsSync(filePath)) {
@@ -113,7 +113,7 @@ export const ReadFileCommand: CommandHandler = {
 
 export const WriteFileCommand: CommandHandler = {
   name: 'Write file',
-  execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     let filename: string
     let content: JsonValue
 

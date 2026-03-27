@@ -14,7 +14,7 @@ import { processValueRequest, processObjectRequest, storeDefaults, getDefaults }
 function createHttpVerbCommand(name: string, method: string, supportsValue: boolean): CommandHandler {
   return {
     name,
-    execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
+    async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
       if (supportsValue && isString(data)) {
         return processValueRequest(data, context, method)
       }
@@ -38,7 +38,7 @@ export const DeleteCommand = createHttpVerbCommand('DELETE', 'DELETE', true)
 /** Http request defaults — store/retrieve session-scoped defaults */
 export const HttpRequestDefaultsCommand: CommandHandler = {
   name: 'Http request defaults',
-  execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     if (isObject(data)) {
       storeDefaults(context, data)
       return undefined

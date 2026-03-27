@@ -10,7 +10,7 @@ import { toDisplayYaml } from '../util/yaml.js'
 export const Print: CommandHandler = {
   name: 'Print',
 
-  execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     const text = typeof data === 'string' ? data : toDisplayYaml(data)
     const writer = context.session.get('stdout') as ((s: string) => void) | undefined
     if (writer) {

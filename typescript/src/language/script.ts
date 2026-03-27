@@ -43,9 +43,9 @@ export class Script {
    * Run this script in the given context.
    * Returns the final output value (or undefined).
    */
-  run(context: ScriptContext): JsonValue | undefined {
+  async run(context: ScriptContext): Promise<JsonValue | undefined> {
     try {
-      this.runCommands(context)
+      await this.runCommands(context)
     } catch (e) {
       if (e instanceof Break) {
         return e.output
@@ -59,7 +59,7 @@ export class Script {
    * Execute all commands in sequence.
    * Handles error state: non-ErrorHandler commands are skipped when context.error is set.
    */
-  runCommands(context: ScriptContext): void {
+  async runCommands(context: ScriptContext): Promise<void> {
     for (const command of this.commands) {
       const handler = context.getCommandHandler(command.name)
 
@@ -69,7 +69,7 @@ export class Script {
       }
 
       try {
-        runCommand(handler, command.data, context)
+        await runCommand(handler, command.data, context)
       } catch (e) {
         if (e instanceof Break) throw e
         if (e instanceof SpecScriptCommandError) {

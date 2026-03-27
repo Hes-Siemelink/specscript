@@ -276,9 +276,9 @@ export function fileToCommandName(filename: string): string | undefined {
  * Registry for the runScriptFile function.
  * Set by run-script.ts at registration time to break the circular dependency.
  */
-let _runScriptFileFn: ((filePath: string, input: JsonValue, parentContext: ScriptContext) => JsonValue | undefined) | undefined
+let _runScriptFileFn: ((filePath: string, input: JsonValue, parentContext: ScriptContext) => Promise<JsonValue | undefined>) | undefined
 
-export function setRunScriptFileFn(fn: (filePath: string, input: JsonValue, parentContext: ScriptContext) => JsonValue | undefined): void {
+export function setRunScriptFileFn(fn: (filePath: string, input: JsonValue, parentContext: ScriptContext) => Promise<JsonValue | undefined>): void {
   _runScriptFileFn = fn
 }
 
@@ -289,7 +289,7 @@ export function setRunScriptFileFn(fn: (filePath: string, input: JsonValue, pare
 function createFileCommandHandler(name: string, filePath: string): CommandHandler {
   return {
     name,
-    execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
+    async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
       if (!_runScriptFileFn) {
         throw new SpecScriptError('Run script command not registered. Register Level 3 commands before using local file commands.')
       }

@@ -11,7 +11,7 @@ import { isObject, isString, CommandFormatError, SpecScriptCommandError, toDispl
 
 export const ShellCommand: CommandHandler = {
   name: 'Shell',
-  execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     // Reset expected console output
     resetExpectedConsoleOutput(context)
 

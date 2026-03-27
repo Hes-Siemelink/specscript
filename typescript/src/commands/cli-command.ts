@@ -16,7 +16,7 @@ import { parseYamlCommands } from '../util/yaml.js'
 
 export const CliCommand: CommandHandler = {
   name: 'Cli',
-  execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     if (isString(data)) {
       return runCli(context, data)
     }
@@ -36,7 +36,7 @@ export const CliCommand: CommandHandler = {
   },
 }
 
-function runCli(context: ScriptContext, command: string, workingDir?: string): JsonValue {
+async function runCli(context: ScriptContext, command: string, workingDir?: string): Promise<JsonValue> {
   const dir = workingDir ?? context.workingDir
 
   // Parse command: drop first token if it's "spec"
@@ -45,7 +45,7 @@ function runCli(context: ScriptContext, command: string, workingDir?: string): J
     args.shift()
   }
 
-  const { stdout, stderr } = runCliInProcess(args, dir, context)
+  const { stdout, stderr } = await runCliInProcess(args, dir, context)
 
   // Combine stdout and stderr
   const parts = [stdout, stderr].filter(s => s)
@@ -64,11 +64,11 @@ function runCli(context: ScriptContext, command: string, workingDir?: string): J
  * Run the CLI in-process, capturing stdout/stderr.
  * Uses shared resolveCommand and executeFile from cli.ts.
  */
-function runCliInProcess(
+async function runCliInProcess(
   args: string[],
   workingDir: string,
   parentContext: ScriptContext
-): { stdout: string; stderr: string } {
+): Promise<{ stdout: string; stderr: string }> {
   const stdoutLines: string[] = []
   const stderrLines: string[] = []
 
@@ -118,7 +118,7 @@ function runCliInProcess(
     }
 
     // Execute file (shared with cli.ts)
-    executeFile(resolvedPath, parentContext)
+    await executeFile(resolvedPath, parentContext)
   } catch (e) {
     if (e instanceof Error) {
       stderrLines.push(`Error: ${e.message}`)

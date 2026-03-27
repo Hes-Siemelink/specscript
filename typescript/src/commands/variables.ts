@@ -9,7 +9,7 @@ export const Output: CommandHandler = {
   name: 'Output',
   handlesLists: true,
 
-  execute(data: JsonValue, _context: ScriptContext): JsonValue {
+  async execute(data: JsonValue, _context: ScriptContext): Promise<JsonValue> {
     return data
   },
 }
@@ -21,7 +21,7 @@ export const As: CommandHandler = {
   name: 'As',
   delayedResolver: true,
 
-  execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     if (typeof data !== 'string') return undefined
     // Strip ${...} wrapping if present
     const varName = data.replace(/^\$\{(.+)}$/, '$1')
@@ -42,7 +42,7 @@ export function createAssignment(varName: string): CommandHandler {
     name: `\${${varName}}`,
     handlesLists: true,
 
-    execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
+    async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
       context.variables.set(varName, data)
       return undefined
     },

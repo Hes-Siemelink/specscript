@@ -14,7 +14,7 @@ import { evalExpressions } from './eval.js'
  * Run a single command through the full pipeline: resolve → dispatch.
  * Handles auto-list iteration for commands that don't handle arrays.
  */
-export function runCommand(handler: CommandHandler, rawData: JsonValue, context: ScriptContext): JsonValue | undefined {
+export async function runCommand(handler: CommandHandler, rawData: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
   // Auto-list: if data is an array and handler doesn't handle lists, iterate
   if (isArray(rawData) && !handler.handlesLists) {
     return runCommandOnList(handler, rawData, context)
@@ -26,12 +26,12 @@ export function runCommand(handler: CommandHandler, rawData: JsonValue, context:
  * Auto-iterate an array, calling the handler once per element.
  * Collects results into a new array.
  */
-function runCommandOnList(handler: CommandHandler, list: JsonValue[], context: ScriptContext): JsonValue | undefined {
+async function runCommandOnList(handler: CommandHandler, list: JsonValue[], context: ScriptContext): Promise<JsonValue | undefined> {
   const results: JsonValue[] = []
   let hasResults = false
 
   for (const item of list) {
-    const result = runSingleCommand(handler, item, context)
+    const result = await runSingleCommand(handler, item, context)
     if (result !== undefined) {
       results.push(result)
       hasResults = true
@@ -49,11 +49,11 @@ function runCommandOnList(handler: CommandHandler, list: JsonValue[], context: S
 /**
  * Execute a single command: resolve data, then dispatch to handler.
  */
-function runSingleCommand(handler: CommandHandler, rawData: JsonValue, context: ScriptContext): JsonValue | undefined {
+async function runSingleCommand(handler: CommandHandler, rawData: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
   // Resolve phase: eval + variable substitution (unless delayed)
   const data = handler.delayedResolver
     ? rawData
-    : resolve(rawData, context)
+    : await resolve(rawData, context)
 
   // Dispatch phase
   return handleCommand(handler, data, context)
@@ -63,18 +63,18 @@ function runSingleCommand(handler: CommandHandler, rawData: JsonValue, context: 
  * Resolve a JSON value: deep copy, eval inline commands, then substitute variables.
  * Exported so DelayedResolver commands can selectively resolve sub-expressions.
  */
-export function resolve(data: JsonValue, context: ScriptContext): JsonValue {
+export async function resolve(data: JsonValue, context: ScriptContext): Promise<JsonValue> {
   const copied = deepCopy(data)
-  const evaluated = evalExpressions(copied, context)
+  const evaluated = await evalExpressions(copied, context)
   return resolveVariables(evaluated, context.variables)
 }
 
 /**
  * Dispatch to the handler with error wrapping.
  */
-function handleCommand(handler: CommandHandler, data: JsonValue, context: ScriptContext): JsonValue | undefined {
+async function handleCommand(handler: CommandHandler, data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
   try {
-    const result = handler.execute(data, context)
+    const result = await handler.execute(data, context)
     if (result !== undefined) {
       context.output = result
     }

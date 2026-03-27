@@ -13,10 +13,10 @@ import { splitMarkdownSections } from './markdown/converter.js'
 /**
  * CLI entry point. Registers commands and translates the exit code to process.exit.
  */
-function main(): void {
+async function main(): Promise<void> {
   registerAllCommands()
   const args = process.argv.slice(2)
-  const code = runCli(args, process.cwd())
+  const code = await runCli(args, process.cwd())
   if (code !== 0) process.exit(code)
 }
 
@@ -25,7 +25,7 @@ function main(): void {
  * Designed for in-process invocation — never calls process.exit().
  * Mirrors Kotlin's SpecScriptCli.main(args, workingDir).
  */
-export function runCli(args: string[], workingDir: string): number {
+export async function runCli(args: string[], workingDir: string): Promise<number> {
   if (args.length === 0) {
     console.error('Usage: spec-ts <file.spec.yaml|file.spec.md>')
     return 1
@@ -39,7 +39,7 @@ export function runCli(args: string[], workingDir: string): number {
   }
 
   try {
-    executeFile(filePath)
+    await executeFile(filePath)
   } catch (e) {
     reportError(e)
     return 1
@@ -69,7 +69,7 @@ export function resolveCommand(command: string, workingDir: string): string | un
  * Execute a spec file (yaml or md). When a parent context is provided,
  * the new context shares its session (for stdout capture) but gets fresh variables.
  */
-export function executeFile(filePath: string, parent?: ScriptContext): void {
+export async function executeFile(filePath: string, parent?: ScriptContext): Promise<void> {
   const content = readFileSync(filePath, 'utf-8')
   const workingDir = parent?.workingDir ?? dirname(filePath)
 
@@ -91,11 +91,11 @@ export function executeFile(filePath: string, parent?: ScriptContext): void {
       if (script.commands.length === 0) continue
       const captured = context.session.get('capturedOutput') as string[] | undefined
       if (captured) captured.length = 0
-      script.run(context)
+      await script.run(context)
     }
   } else {
     const script = Script.fromString(content)
-    script.run(context)
+    await script.run(context)
   }
 }
 

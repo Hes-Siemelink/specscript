@@ -11,7 +11,7 @@ export const Json: CommandHandler = {
   name: 'Json',
   handlesLists: true,
 
-  execute(data: JsonValue, _context: ScriptContext): JsonValue {
+  async execute(data: JsonValue, _context: ScriptContext): Promise<JsonValue> {
     return JSON.stringify(data)
   },
 }
@@ -23,7 +23,7 @@ export const Text: CommandHandler = {
   name: 'Text',
   handlesLists: true,
 
-  execute(data: JsonValue, _context: ScriptContext): JsonValue {
+  async execute(data: JsonValue, _context: ScriptContext): Promise<JsonValue> {
     return toDisplayString(data)
   },
 }
@@ -35,7 +35,7 @@ export const PrintJson: CommandHandler = {
   name: 'Print Json',
   handlesLists: true,
 
-  execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     const json = JSON.stringify(data, null, 2)
     const writer = context.session.get('stdout') as ((s: string) => void) | undefined
     if (writer) {
@@ -53,7 +53,7 @@ export const PrintJson: CommandHandler = {
 export const ParseYamlCommand: CommandHandler = {
   name: 'Parse Yaml',
 
-  execute(data: JsonValue, _context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, _context: ScriptContext): Promise<JsonValue | undefined> {
     if (!isString(data)) {
       throw new CommandFormatError('Parse Yaml expects a string value')
     }
@@ -71,7 +71,7 @@ export const ParseYamlCommand: CommandHandler = {
 export const Base64Encode: CommandHandler = {
   name: 'Base64 encode',
 
-  execute(data: JsonValue, _context: ScriptContext): JsonValue {
+  async execute(data: JsonValue, _context: ScriptContext): Promise<JsonValue> {
     if (!isString(data)) {
       throw new CommandFormatError('Base64 encode expects a string value')
     }
@@ -85,7 +85,7 @@ export const Base64Encode: CommandHandler = {
 export const Base64Decode: CommandHandler = {
   name: 'Base64 decode',
 
-  execute(data: JsonValue, _context: ScriptContext): JsonValue {
+  async execute(data: JsonValue, _context: ScriptContext): Promise<JsonValue> {
     if (!isString(data)) {
       throw new CommandFormatError('Base64 decode expects a string value')
     }
@@ -94,20 +94,17 @@ export const Base64Decode: CommandHandler = {
 }
 
 /**
- * Wait: sleeps for N seconds. Returns null.
+ * Wait: sleeps for N seconds using async setTimeout.
  */
 export const WaitCommand: CommandHandler = {
   name: 'Wait',
 
-  execute(data: JsonValue, _context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, _context: ScriptContext): Promise<JsonValue | undefined> {
     if (typeof data !== 'number') {
       throw new CommandFormatError("Invalid value for 'Wait' command.")
     }
     const ms = data * 1000
-    // Synchronous sleep using Atomics.wait on a SharedArrayBuffer
-    const buf = new SharedArrayBuffer(4)
-    const arr = new Int32Array(buf)
-    Atomics.wait(arr, 0, 0, ms)
+    await new Promise<void>(resolve => setTimeout(resolve, ms))
     return undefined
   },
 }

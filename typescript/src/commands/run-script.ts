@@ -17,7 +17,7 @@ import { setupSilentCapture } from '../language/stdout-capture.js'
 
 export const RunScriptCommand: CommandHandler = {
   name: 'Run script',
-  execute(data: JsonValue, context: ScriptContext): JsonValue | undefined {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     if (isString(data)) {
       // Value form: filename relative to scriptDir (not workingDir!)
       const filePath = resolve(context.scriptDir, data)
@@ -42,7 +42,7 @@ export const RunScriptCommand: CommandHandler = {
         const results: (JsonValue | undefined)[] = []
         let hasResults = false
         for (const item of input) {
-          const result = runScriptFile(filePath, item, context)
+          const result = await runScriptFile(filePath, item, context)
           if (result !== undefined) {
             results.push(result)
             hasResults = true
@@ -67,7 +67,7 @@ export const RunScriptCommand: CommandHandler = {
  * Run a script file with the given input, creating a child context.
  * Exported for use by local file command resolution.
  */
-export function runScriptFile(filePath: string, input: JsonValue, parentContext: ScriptContext): JsonValue | undefined {
+export async function runScriptFile(filePath: string, input: JsonValue, parentContext: ScriptContext): Promise<JsonValue | undefined> {
   if (!existsSync(filePath)) {
     throw new CommandFormatError(`File not found: ${filePath}`)
   }
@@ -90,18 +90,18 @@ export function runScriptFile(filePath: string, input: JsonValue, parentContext:
   }
 }
 
-function runYamlScript(content: string, context: ScriptContext): JsonValue | undefined {
+async function runYamlScript(content: string, context: ScriptContext): Promise<JsonValue | undefined> {
   const script = Script.fromString(content)
   return script.run(context)
 }
 
-function runMarkdownScript(content: string, context: ScriptContext): JsonValue | undefined {
+async function runMarkdownScript(content: string, context: ScriptContext): Promise<JsonValue | undefined> {
   const blocks = scanMarkdown(content)
   const scripts = splitMarkdownSections(blocks)
 
   for (const script of scripts) {
     if (script.commands.length === 0) continue
-    script.run(context)
+    await script.run(context)
   }
 
   return context.output

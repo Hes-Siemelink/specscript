@@ -10,7 +10,7 @@ import { applyJsonPatch } from '../util/json-patch.js'
 export const JsonPatchCommand: CommandHandler = {
   name: 'Json patch',
 
-  execute(data: JsonValue, context: ScriptContext): JsonValue {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue> {
     if (!isObject(data)) {
       throw new CommandFormatError('Json patch expects an object')
     }

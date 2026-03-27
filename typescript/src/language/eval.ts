@@ -12,9 +12,13 @@ import { runCommand } from './command-execution.js'
  * executes the command, and replaces the node with the result.
  * Runs during resolve() phase, BEFORE variable substitution.
  */
-export function evalExpressions(data: JsonValue, context: ScriptContext): JsonValue {
+export async function evalExpressions(data: JsonValue, context: ScriptContext): Promise<JsonValue> {
   if (isArray(data)) {
-    return data.map(item => evalExpressions(item, context))
+    const results: JsonValue[] = []
+    for (const item of data) {
+      results.push(await evalExpressions(item, context))
+    }
+    return results
   }
 
   if (!isObject(data)) {
@@ -24,13 +28,13 @@ export function evalExpressions(data: JsonValue, context: ScriptContext): JsonVa
   const entries = Object.entries(data)
   for (let i = 0; i < entries.length; i++) {
     const [key, value] = entries[i]
-    const evaluatedValue = evalExpressions(value, context)
+    const evaluatedValue = await evalExpressions(value, context)
     data[key] = evaluatedValue
 
     if (key.startsWith('/')) {
       const commandName = key.substring(1)
       const handler = context.getCommandHandler(commandName)
-      const result = runCommand(handler, evaluatedValue, context)
+      const result = await runCommand(handler, evaluatedValue, context)
       return result ?? ''
     }
   }
