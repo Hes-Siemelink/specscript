@@ -1,5 +1,6 @@
 package specscript.commands.userinteraction
 
+import specscript.commands.testing.getAnswers
 import specscript.language.CommandHandler
 import specscript.language.ScriptContext
 import specscript.language.SpecScriptCommandError
@@ -27,7 +28,7 @@ object Confirm : CommandHandler("Confirm", "core/user-interaction"), ValueHandle
             enum = listOf(yes, no)
         )
 
-        val answer = confirmationDialog.prompt()
+        val answer = confirmationDialog.prompt(answers = context.getAnswers())
 
         if (answer == no) {
             throw SpecScriptCommandError("No confirmation -- action canceled.")

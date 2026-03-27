@@ -10,8 +10,6 @@ import specscript.cli.reportError
 import specscript.commands.testing.CodeExample
 import specscript.commands.testing.TestCase
 import specscript.commands.testing.Tests
-import specscript.commands.userinteraction.TestPrompt
-import specscript.commands.userinteraction.UserPrompt
 import specscript.files.*
 import specscript.language.*
 import specscript.util.Yaml
@@ -70,8 +68,6 @@ class TestFailure(
 //
 
 fun Path.getTests(): List<DynamicNode> {
-
-    UserPrompt.default = TestPrompt
 
     if (isDirectory()) {
         return listDirectoryEntries().mapNotNull {

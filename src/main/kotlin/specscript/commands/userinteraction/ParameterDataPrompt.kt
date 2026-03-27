@@ -16,40 +16,40 @@ import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.StringNode
 
 
-fun PropertyDefinition.prompt(label: String? = null): JsonNode {
+fun PropertyDefinition.prompt(label: String? = null, answers: AnswersMap = emptyMap()): JsonNode {
     val message = description ?: label ?: ""
 
     return when {
         enum != null && select == "single" ->
-            promptChoice(message)
+            promptChoice(message, answers = answers)
 
         enum != null && select == "multiple" ->
-            promptChoice(message, multiple = true)
+            promptChoice(message, multiple = true, answers = answers)
 
         secret ->
-            promptText(message, password = true)
+            promptText(message, password = true, answers = answers)
 
         type != null ->
-            promptByType(message, type!!)
+            promptByType(message, type!!, answers)
 
         else ->
-            promptText(message)
+            promptText(message, answers = answers)
     }
 }
 
-private fun PropertyDefinition.promptText(message: String, password: Boolean = false): JsonNode {
-    return UserPrompt.prompt(message, default?.asString() ?: "", password)
+private fun PropertyDefinition.promptText(message: String, password: Boolean = false, answers: AnswersMap = emptyMap()): JsonNode {
+    return UserPrompt.prompt(message, default?.asString() ?: "", password, answers)
 }
 
-private fun PropertyDefinition.promptBoolean(message: String): JsonNode {
+private fun PropertyDefinition.promptBoolean(message: String, answers: AnswersMap = emptyMap()): JsonNode {
 
-    val answer = UserPrompt.prompt(message, default?.asString() ?: "")
+    val answer = UserPrompt.prompt(message, default?.asString() ?: "", answers = answers)
 
     return if (answer.stringValue() == "true") TRUE
     else FALSE
 }
 
-private fun PropertyDefinition.promptChoice(message: String, multiple: Boolean = false): JsonNode {
+private fun PropertyDefinition.promptChoice(message: String, multiple: Boolean = false, answers: AnswersMap = emptyMap()): JsonNode {
 
     val choices = enum?.map { choiceData ->
         if (displayProperty == null) {
@@ -59,17 +59,17 @@ private fun PropertyDefinition.promptChoice(message: String, multiple: Boolean =
         }
     } ?: emptyList()
 
-    val answer = UserPrompt.select(message, choices, multiple)
+    val answer = UserPrompt.select(message, choices, multiple, answers)
 
     return answer.onlyWith(valueProperty)
 }
 
-private fun PropertyDefinition.promptByType(message: String, type: TypeSpecification): JsonNode {
+private fun PropertyDefinition.promptByType(message: String, type: TypeSpecification, answers: AnswersMap = emptyMap()): JsonNode {
 
     // Primitive types
     when (type.name) {
-        "boolean" -> return promptBoolean(message)
-        "string" -> return promptText(message)
+        "boolean" -> return promptBoolean(message, answers)
+        "string" -> return promptText(message, answers = answers)
         // TODO support other primitive types
     }
 
@@ -77,12 +77,12 @@ private fun PropertyDefinition.promptByType(message: String, type: TypeSpecifica
     // Primitive types
 
     return when {
-        type.properties != null -> type.properties.promptObject()
-        type.listOf != null -> promptList(message, type.listOf)
+        type.properties != null -> type.properties.promptObject(answers)
+        type.listOf != null -> promptList(message, type.listOf, answers)
         type.base != null -> {
             when (type.base) {
-                "boolean" -> promptBoolean(message)
-                "string" -> promptText(message)
+                "boolean" -> promptBoolean(message, answers)
+                "string" -> promptText(message, answers = answers)
                 else -> throw CommandFormatException("Base type not supported: ${type.base}")
             }
         }
@@ -91,9 +91,9 @@ private fun PropertyDefinition.promptByType(message: String, type: TypeSpecifica
     }
 }
 
-private fun ObjectProperties.promptObject(): JsonNode {
+private fun ObjectProperties.promptObject(answers: AnswersMap = emptyMap()): JsonNode {
 
-    val answers = Json.newObject()
+    val result = Json.newObject()
 
     // Temporary variables that will hold the contents of the entries so later ones can refer to previous ones
     val variables = mutableMapOf<String, JsonNode>()
@@ -104,14 +104,14 @@ private fun ObjectProperties.promptObject(): JsonNode {
         parameter.conditionValid() || continue
 
         // Ask user
-        val answer = parameter.prompt(name)
+        val answer = parameter.prompt(name, answers)
 
         // Add answer to result and to list of variables
-        answers.set(name, answer)
+        result.set(name, answer)
         variables[name] = answer
     }
 
-    return answers
+    return result
 }
 
 private fun JsonNode.onlyWith(field: String?): JsonNode {
@@ -137,7 +137,7 @@ private fun JsonNode.onlyWith(field: String?): JsonNode {
 }
 
 
-private fun promptList(message: String, type: TypeSpecification): ArrayNode {
+private fun promptList(message: String, type: TypeSpecification, answers: AnswersMap = emptyMap()): ArrayNode {
     val list = Json.newArray()
 
     val name = type.name ?: "item"
@@ -148,7 +148,7 @@ private fun promptList(message: String, type: TypeSpecification): ArrayNode {
 
         val choice = ParameterData(
             enum = listOf(add, done)
-        ).promptChoice(message)
+        ).promptChoice(message, answers = answers)
 
         if (choice == done) {
             break
@@ -156,7 +156,7 @@ private fun promptList(message: String, type: TypeSpecification): ArrayNode {
 
         val item = ParameterData(
             type = type
-        ).promptByType("Enter new item", type)
+        ).promptByType("Enter new item", type, answers)
         list.add(item)
     }
 

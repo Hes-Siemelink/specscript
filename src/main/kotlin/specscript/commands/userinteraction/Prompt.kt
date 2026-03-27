@@ -1,5 +1,6 @@
 package specscript.commands.userinteraction
 
+import specscript.commands.testing.getAnswers
 import specscript.language.CommandHandler
 import specscript.language.ObjectHandler
 import specscript.language.ScriptContext
@@ -16,7 +17,7 @@ import tools.jackson.databind.node.ValueNode
 object Prompt : CommandHandler("Prompt", "core/user-interaction"), ValueHandler, ObjectHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode {
-        return UserPrompt.prompt(data.stringValue())
+        return UserPrompt.prompt(data.stringValue(), answers = context.getAnswers())
     }
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
@@ -26,6 +27,6 @@ object Prompt : CommandHandler("Prompt", "core/user-interaction"), ValueHandler,
         // Only ask if condition is true
         parameterData.conditionValid() || return null
 
-        return parameterData.prompt()
+        return parameterData.prompt(answers = context.getAnswers())
     }
 }

@@ -1,5 +1,6 @@
 package specscript.commands.userinteraction
 
+import specscript.commands.testing.getAnswers
 import specscript.language.*
 import specscript.language.types.ParameterData
 import specscript.util.toDomainObject
@@ -27,7 +28,7 @@ object PromptObject : CommandHandler("Prompt object", "core/user-interaction"), 
             parameter.conditionValid() || continue
 
             // Ask user
-            val answer = parameter.prompt(name)
+            val answer = parameter.prompt(name, answers = context.getAnswers())
 
             // Add answer to result and to list of variables
             answers.set(name, answer)

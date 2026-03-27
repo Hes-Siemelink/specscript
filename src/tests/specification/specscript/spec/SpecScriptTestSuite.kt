@@ -2,8 +2,6 @@ package specscript.spec
 
 import org.junit.jupiter.api.*
 import specscript.commands.http.HttpServer
-import specscript.commands.userinteraction.TestPrompt
-import specscript.commands.userinteraction.UserPrompt
 import specscript.files.SpecScriptFile
 import specscript.test.getCodeExamplesAsTests
 import specscript.test.getTests
@@ -16,11 +14,6 @@ object TestPaths {
 }
 
 class SpecScriptTestSuite {
-
-    @BeforeEach
-    fun setup() {
-        UserPrompt.default = TestPrompt
-    }
 
     @TestFactory
     fun `Main README_md`(): List<DynamicNode> {
