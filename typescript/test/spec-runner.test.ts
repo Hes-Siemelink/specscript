@@ -124,6 +124,7 @@ const LEVEL_2_TEST_FILES = [
   'language/SpecScript Best Practices.spec.md',
   'language/Eval syntax.spec.md',
   'language/Variables.spec.md',
+  'language/Testing.spec.md',
 ]
 
 /** Level 3 spec.yaml test files (relative to specification/) */
@@ -151,7 +152,7 @@ const LEVEL_3_MD_FILES = [
   // Language docs that need file/cli support
   'language/Organizing SpecScript files in directories.spec.md',
   'language/SpecScript Yaml Scripts.spec.md',
-  // NOT included: 'language/Testing.spec.md' — first block runs `spec --test .` which hangs
+  'language/Testing.spec.md',
   'language/tests/Directory tests.spec.md',
   // CLI docs (use shell cli blocks)
   'cli/Command line options.spec.md',
@@ -187,6 +188,7 @@ const SKIP_TESTS = new Set([
   'commands/core/script-info/Input parameters.spec.md > Using types',   // needs Types command
   'commands/core/script-info/Input schema.spec.md > Cli help',          // runs spec binary via shell cli
   'commands/core/script-info/Script info.spec.md > Hidden commands',    // Expected console output mismatch (Script info format)
+  'language/Testing.spec.md > Testing',                                     // runs spec --test . which hangs
   'language/SpecScript Yaml Scripts.spec.md > Hello world example',     // runs spec binary via shell cli
   'language/SpecScript Yaml Scripts.spec.md > The command sequence',    // runs spec binary via shell cli (needs Prompt)
   'language/SpecScript Yaml Scripts.spec.md > Script info',             // runs spec binary via shell cli
