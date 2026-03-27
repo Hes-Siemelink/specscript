@@ -331,15 +331,30 @@ function getDirectoryDescription(dirPath: string): string | undefined {
   return undefined
 }
 
+/**
+ * Recursively checks whether a directory (or any nested subdirectory) contains
+ * at least one .spec.yaml or .spec.md file.
+ */
+function hasCliCommands(dirPath: string): boolean {
+  for (const entry of readdirSync(dirPath)) {
+    if (entry.endsWith('.spec.yaml') || entry.endsWith('.spec.md')) return true
+    const full = resolve(dirPath, entry)
+    try {
+      if (statSync(full).isDirectory() && hasCliCommands(full)) return true
+    } catch { /* skip unreadable entries */ }
+  }
+  return false
+}
+
 function getDirectoryCommands(dirPath: string): CommandInfo[] {
   const entries = readdirSync(dirPath)
   const commands: CommandInfo[] = []
 
   for (const entry of entries) {
-    if (entry.endsWith('.spec.yaml') || entry.endsWith('.spec.md')) {
-      const filePath = resolve(dirPath, entry)
+    const filePath = resolve(dirPath, entry)
 
-      // Check for hidden scripts
+    // Spec files → file commands
+    if (entry.endsWith('.spec.yaml') || entry.endsWith('.spec.md')) {
       if (entry.endsWith('.spec.yaml')) {
         try {
           const content = readFileSync(filePath, 'utf-8')
@@ -352,7 +367,18 @@ function getDirectoryCommands(dirPath: string): CommandInfo[] {
       const name = stripSpecExtension(entry).replace(/ /g, '-').toLowerCase()
       const description = getScriptDescription(filePath, entry)
       commands.push({ name, description })
+      continue
     }
+
+    // Subdirectories → directory commands (skip "tests" directory)
+    if (entry === 'tests') continue
+    try {
+      if (statSync(filePath).isDirectory() && hasCliCommands(filePath)) {
+        const name = entry.replace(/ /g, '-').toLowerCase()
+        const description = getDirectoryDescription(filePath) ?? ''
+        commands.push({ name, description })
+      }
+    } catch { /* skip unreadable entries */ }
   }
 
   commands.sort((a, b) => a.name.localeCompare(b.name))
