@@ -107,36 +107,35 @@ export const ExpectedError: CommandHandler = {
   errorHandler: true,
 
   async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
-    const error = context.error
-    if (!error) {
+    if (isString(data)) {
+      // String value: data is the message to show if there was NO error
+      if (!context.error) {
+        throw new MissingExpectedError(data)
+      }
+      context.error = undefined
+      return undefined
+    }
+
+    if (isObject(data)) {
+      // Object value: keys are error types to match (or "any" for catch-all)
+      for (const key of Object.keys(data)) {
+        if (key === 'any' || key === context.error?.type) {
+          context.error = undefined
+          return undefined
+        }
+      }
+      const dataYaml = toDisplayYaml(data)
+      if (!context.error) {
+        throw new MissingExpectedError(dataYaml)
+      } else {
+        throw new MissingExpectedError(`${dataYaml}\nGot instead: ${context.error.message}`)
+      }
+    }
+
+    // Fallback: just check error exists
+    if (!context.error) {
       throw new MissingExpectedError('Expected an error but none occurred')
     }
-
-    // If data specifies what to check, validate the error
-    if (isString(data)) {
-      // data is the expected error message
-      if (error.message !== data) {
-        throw new SpecScriptCommandError(
-          `Expected error message: ${data}\nActual error message: ${error.message}`,
-          'assertion-error'
-        )
-      }
-    } else if (isObject(data)) {
-      if ('message' in data && error.message !== data['message']) {
-        throw new SpecScriptCommandError(
-          `Expected error message: ${data['message']}\nActual error message: ${error.message}`,
-          'assertion-error'
-        )
-      }
-      if ('type' in data && error.type !== data['type']) {
-        throw new SpecScriptCommandError(
-          `Expected error type: ${data['type']}\nActual error type: ${error.type}`,
-          'assertion-error'
-        )
-      }
-    }
-
-    // Clear the error
     context.error = undefined
     return undefined
   },

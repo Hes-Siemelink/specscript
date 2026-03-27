@@ -68,11 +68,62 @@ const LEVEL_1_TEST_FILES = [
   'commands/core/util/tests/Wait tests.spec.yaml',
 ]
 
+/** Level 1 spec.md test files — command reference docs with executable examples */
+const LEVEL_1_MD_FILES = [
+  // Control flow
+  'commands/core/control-flow/Do.spec.md',
+  'commands/core/control-flow/Exit.spec.md',
+  'commands/core/control-flow/For each.spec.md',
+  'commands/core/control-flow/If.spec.md',
+  'commands/core/control-flow/Repeat.spec.md',
+  'commands/core/control-flow/When.spec.md',
+  // Data manipulation
+  'commands/core/data-manipulation/Add.spec.md',
+  'commands/core/data-manipulation/Add to.spec.md',
+  'commands/core/data-manipulation/Append.spec.md',
+  'commands/core/data-manipulation/Fields.spec.md',
+  'commands/core/data-manipulation/Find.spec.md',
+  'commands/core/data-manipulation/Json patch.spec.md',
+  'commands/core/data-manipulation/Replace.spec.md',
+  'commands/core/data-manipulation/Size.spec.md',
+  'commands/core/data-manipulation/Sort.spec.md',
+  'commands/core/data-manipulation/Values.spec.md',
+  // Errors
+  'commands/core/errors/Error.spec.md',
+  'commands/core/errors/On error.spec.md',
+  'commands/core/errors/On error type.spec.md',
+  // Testing
+  'commands/core/testing/After all tests.spec.md',
+  'commands/core/testing/Assert equals.spec.md',
+  'commands/core/testing/Assert that.spec.md',
+  'commands/core/testing/Code example.spec.md',
+  'commands/core/testing/Expected console output.spec.md',
+  'commands/core/testing/Expected error.spec.md',
+  'commands/core/testing/Expected output.spec.md',
+  'commands/core/testing/Test case.spec.md',
+  'commands/core/testing/Tests.spec.md',
+  // Util
+  'commands/core/util/Base64 decode.spec.md',
+  'commands/core/util/Base64 encode.spec.md',
+  'commands/core/util/Json.spec.md',
+  'commands/core/util/Parse Yaml.spec.md',
+  'commands/core/util/Print Json.spec.md',
+  'commands/core/util/Print.spec.md',
+  'commands/core/util/Text.spec.md',
+  'commands/core/util/Wait.spec.md',
+  // Variables
+  'commands/core/variables/As.spec.md',
+  'commands/core/variables/Assignment.spec.md',
+  'commands/core/variables/Output.spec.md',
+]
+
 /** Level 2 spec.md test files (relative to specification/) */
 const LEVEL_2_TEST_FILES = [
   'language/SpecScript Markdown Documents.spec.md',
   'language/tests/SpecScript Markdown tests.spec.md',
   'language/SpecScript Best Practices.spec.md',
+  'language/Eval syntax.spec.md',
+  'language/Variables.spec.md',
 ]
 
 /** Level 3 spec.yaml test files (relative to specification/) */
@@ -93,6 +144,15 @@ const LEVEL_3_MD_FILES = [
   'commands/core/files/SpecScript files as commands.spec.md',
   'commands/core/shell/Shell.spec.md',
   'commands/core/shell/Cli.spec.md',
+  // Script info docs (use file= and shell cli blocks)
+  'commands/core/script-info/Input parameters.spec.md',
+  'commands/core/script-info/Input schema.spec.md',
+  'commands/core/script-info/Script info.spec.md',
+  // Language docs that need file/cli support
+  'language/Organizing SpecScript files in directories.spec.md',
+  'language/SpecScript Yaml Scripts.spec.md',
+  // NOT included: 'language/Testing.spec.md' — first block runs `spec --test .` which hangs
+  'language/tests/Directory tests.spec.md',
 ]
 
 /** Level 4 spec.yaml test files (relative to specification/) */
@@ -114,9 +174,23 @@ const LEVEL_4_MD_FILES = [
   'commands/core/http/Stop http server.spec.md',
 ]
 
-/** Tests that depend on commands from higher levels (skip) */
+/** Tests that depend on commands from higher levels (skip).
+ *  Format: 'relative/path > Test name' or just 'Test name' for global match. */
 const SKIP_TESTS = new Set([
   'Schema validation - Add should only accept arrays',     // needs Validate schema (Level 5)
+  'commands/core/script-info/Input parameters.spec.md > Cli help',      // runs spec binary via shell cli
+  'commands/core/script-info/Input parameters.spec.md > Using types',   // needs Types command
+  'commands/core/script-info/Input schema.spec.md > Cli help',          // runs spec binary via shell cli
+  'commands/core/script-info/Script info.spec.md > Hidden commands',    // Expected console output mismatch (Script info format)
+  'language/SpecScript Yaml Scripts.spec.md > Hello world example',     // runs spec binary via shell cli
+  'language/SpecScript Yaml Scripts.spec.md > The command sequence',    // runs spec binary via shell cli (needs Prompt)
+  'language/SpecScript Yaml Scripts.spec.md > Script info',             // runs spec binary via shell cli
+  'language/SpecScript Yaml Scripts.spec.md > Defining script input',   // runs spec binary via shell cli
+  'language/SpecScript Yaml Scripts.spec.md > Script output',           // runs spec binary via shell cli
+  'language/Organizing SpecScript files in directories.spec.md > Directory description',  // needs specscript-config.yaml description
+  'language/Organizing SpecScript files in directories.spec.md > Importing files from another directory',  // needs specscript-config.yaml imports
+  'language/tests/Directory tests.spec.md > Empty directory',           // runs spec binary via shell cli
+  'language/tests/Directory tests.spec.md > Imported helper scripts',   // needs specscript-config.yaml imports
 ])
 
 /** Test files to skip entirely (all tests use higher-level commands) */
@@ -279,7 +353,8 @@ function runSpecMdFile(relativePath: string): void {
 
     const title = getTestTitle(script)
 
-    if (SKIP_TESTS.has(title)) {
+    const qualifiedTitle = `${relativePath} > ${title}`
+    if (SKIP_TESTS.has(title) || SKIP_TESTS.has(qualifiedTitle)) {
       it.skip(title, () => {})
       hasTests = true
       continue
@@ -308,7 +383,9 @@ function runSpecMdFile(relativePath: string): void {
 
     hasTests = true
     it(title, async () => {
-      // Reset captured output before each section
+      // Reset state before each section (matches Kotlin TestCaseRunner)
+      sharedContext.error = undefined
+      sharedContext.variables.delete('input')
       const captured = sharedContext.session.get('capturedOutput') as string[] | undefined
       if (captured) captured.length = 0
 
@@ -347,6 +424,14 @@ describe('Level 1 Spec Tests', () => {
     }
     describe(file, () => {
       runSpecFile(file)
+    })
+  }
+})
+
+describe('Level 1 Spec Tests (Markdown)', () => {
+  for (const file of LEVEL_1_MD_FILES) {
+    describe(file, () => {
+      runSpecMdFile(file)
     })
   }
 })
