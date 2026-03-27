@@ -2,7 +2,9 @@ package specscript.commands.scriptinfo
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
-import specscript.commands.testing.Answers
+import specscript.commands.testing.getAnswers
+import specscript.commands.testing.getRecordedAnswer
+import specscript.commands.testing.hasRecordedAnswer
 import specscript.commands.toCondition
 import specscript.commands.userinteraction.prompt
 import specscript.language.*
@@ -62,6 +64,7 @@ object InputParameters : CommandHandler("Input parameters", "core/script-info"),
 
             // Find answer
             val question = info.description ?: name
+            val answers = context.getAnswers()
             val answer: JsonNode = when {
 
                 // Get from environment variable
@@ -71,10 +74,10 @@ object InputParameters : CommandHandler("Input parameters", "core/script-info"),
                 info.default != null -> info.default!!
 
                 // Get from answers
-                Answers.hasRecordedAnswer(question) -> Answers.getRecordedAnswer(question)
+                context.hasRecordedAnswer(question) -> context.getRecordedAnswer(question)
 
                 // Ask user
-                context.interactive -> info.prompt(name)
+                context.interactive -> info.prompt(name, answers = answers)
 
 
                 else -> throw MissingInputException(

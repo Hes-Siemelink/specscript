@@ -56,7 +56,7 @@ class SpecScriptCli(
         val context = if (parent == null) {
             FileContext(resolvedFile, interactive = options.interactive, workingDir = workingDir)
         } else {
-            FileContext(resolvedFile, parent)
+            FileContext(resolvedFile, session = parent.session, interactive = options.interactive, workingDir = workingDir)
         }
 
         // Handle file or directory
@@ -117,7 +117,7 @@ class SpecScriptCli(
     }
 
     companion object {
-        fun main(args: Array<String>, workingDir: Path = Path.of(".")): Int {
+        fun main(args: Array<String>, workingDir: Path = Path.of("."), parent: ScriptContext? = null): Int {
             val options = try {
                 CliCommandLineOptions(args.toList())
             } catch (e: CliInvocationException) {
@@ -126,7 +126,7 @@ class SpecScriptCli(
             }
 
             try {
-                SpecScriptCli(options, workingDir = workingDir).run()
+                SpecScriptCli(options, workingDir = workingDir).run(parent)
 
             } catch (e: CliInvocationException) {
                 CliErrorReporter.reportInvocationError(e)

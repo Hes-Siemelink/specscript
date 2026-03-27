@@ -33,7 +33,7 @@ object Cli : CommandHandler("Cli", "core/shell"), ValueHandler, ObjectHandler {
 
         // Capture console output
         val (stdout, stderr) = IO.captureSystemOutAndErr {
-            SpecScriptCli.main(args, workingDir = workingDir)
+            SpecScriptCli.main(args, workingDir = workingDir, parent = context)
         }
 
         // Make sure we can check the output
