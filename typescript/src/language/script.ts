@@ -58,8 +58,11 @@ export class Script {
   /**
    * Execute all commands in sequence.
    * Handles error state: non-ErrorHandler commands are skipped when context.error is set.
+   * Returns the last non-undefined output value.
    */
-  async runCommands(context: ScriptContext): Promise<void> {
+  async runCommands(context: ScriptContext): Promise<JsonValue | undefined> {
+    let output: JsonValue | undefined = undefined
+
     for (const command of this.commands) {
       const handler = context.getCommandHandler(command.name)
 
@@ -69,7 +72,8 @@ export class Script {
       }
 
       try {
-        await runCommand(handler, command.data, context)
+        const result = await runCommand(handler, command.data, context)
+        if (result !== undefined) output = result
       } catch (e) {
         if (e instanceof Break) throw e
         if (e instanceof SpecScriptCommandError) {
@@ -86,6 +90,8 @@ export class Script {
       context.error = undefined
       throw error
     }
+
+    return output
   }
 
   /**

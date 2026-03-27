@@ -52,7 +52,7 @@ export async function runErrorHandling(handlerBody: JsonValue, context: ScriptCo
   context.error = undefined
 
   const script = Script.fromData(handlerBody)
-  await script.run(context)
+  await script.runCommands(context)
 
   context.variables.delete('error')
 }

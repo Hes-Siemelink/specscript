@@ -20,7 +20,7 @@ export const Do: CommandHandler = {
 
   async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     const script = Script.fromData(data)
-    return script.run(context)
+    return script.runCommands(context)
   },
 }
 
@@ -65,7 +65,7 @@ export async function evaluateIf(data: JsonObject, context: ScriptContext): Prom
  */
 async function runBranch(branch: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
   const script = Script.fromData(branch)
-  return script.run(context)
+  return script.runCommands(context)
 }
 
 /**
@@ -188,7 +188,7 @@ export const ForEach: CommandHandler = {
       // Deep copy the body for each iteration (resolve is destructive)
       const bodyCopy = JSON.parse(JSON.stringify(body)) as JsonObject
       const script = Script.fromData(bodyCopy)
-      const result = await script.run(context)
+      const result = await script.runCommands(context)
 
       if (result !== undefined) {
         if (isObjectIteration && isObject(item)) {
@@ -232,7 +232,7 @@ export const Repeat: CommandHandler = {
       // Deep copy the body for each iteration
       const bodyCopy = JSON.parse(JSON.stringify(body)) as JsonObject
       const script = Script.fromData(bodyCopy)
-      const result = (await script.run(context)) ?? context.output
+      const result = (await script.runCommands(context)) ?? context.output
 
       if (isObject(until)) {
         // Condition-based until

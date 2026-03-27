@@ -5,3 +5,16 @@ Tests:
     Exit: Expected exit from test
 
     Expected output: We are not supposed to get here
+
+  Exit from inside If branch:
+
+    If:
+      item: yes
+      equals: yes
+      then:
+        - Exit: Exited from branch
+        - Print: should not reach here
+
+    Print: should not reach here either
+
+    Expected output: should not reach here either
