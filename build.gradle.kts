@@ -95,6 +95,23 @@ tasks.named("check") {
 }
 
 //
+// TypeScript tests
+//
+
+tasks.register<Exec>("typescriptTest") {
+    group = "verification"
+    description = "Runs the TypeScript implementation tests"
+    workingDir = file("typescript")
+    commandLine("npm", "test")
+}
+
+tasks.register("checkAll") {
+    group = "verification"
+    description = "Runs all checks including TypeScript tests"
+    dependsOn("check", "typescriptTest")
+}
+
+//
 // Executable jar file
 //
 
