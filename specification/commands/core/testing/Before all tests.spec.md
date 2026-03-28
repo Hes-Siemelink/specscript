@@ -20,6 +20,29 @@ Place `Before all tests` before `Tests`. The nested commands run once before the
 the same context as the tests, so variables and state carry forward.
 
 ```yaml specscript
+Code example: Before all tests sets up shared state
+
+Before all tests:
+  ${base_url}: http://localhost:2525
+  ${app_name}: SpecScript
+
+Tests:
+  Variables from setup are available:
+    Assert equals:
+      actual: ${base_url}
+      expected: http://localhost:2525
+
+  All tests share the same context:
+    Assert equals:
+      actual: ${app_name}
+      expected: SpecScript
+```
+
+## Using with HTTP commands
+
+A common use case is setting up HTTP defaults for API testing.
+
+```yaml specscript
 Code example: Before all tests with Http request defaults
 
 Before all tests:

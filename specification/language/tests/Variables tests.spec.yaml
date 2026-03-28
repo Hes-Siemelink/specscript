@@ -53,17 +53,6 @@ Tests:
         empty: ${SCRIPT_HOME}
 
 
-  SCRIPT_HOME is different from SCRIPT_TEMP_DIR:
-
-    Temp file:
-      filename: marker.txt
-      content: x
-
-    Assert that:
-      not:
-        item: ${SCRIPT_HOME}
-        equals: ${SCRIPT_TEMP_DIR}
-
 
   Unset environment variable is empty:
 

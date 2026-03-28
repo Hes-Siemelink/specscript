@@ -1,14 +1,25 @@
 # SpecScript Language Levels
 #
-# Maps specification files to implementation levels. Each file appears in exactly one level.
+# Maps commands and specification files to implementation levels.
 # An implementation at level N must pass all spec tests for levels 0 through N.
 #
-# Levels are cumulative: higher levels build on lower ones. Levels 3 and 4 are independent
-# of each other (either can be implemented first). Level 6 modules are independent of each other.
+# Levels 0 and 1 together form the "kernel" — the complete data manipulation and scripting
+# language. Level 0 provides the execution pipeline, testing, and error handling; Level 1 adds
+# control flow and data commands. Most implementers should treat them as a single milestone.
 #
-# Some .spec.md files contain sections that use commands from higher levels (e.g., file= blocks
-# or shell cli blocks). These sections will fail at lower levels. The test runner should report
-# partial results, not treat the entire file as failed.
+# A spec file is assigned to the level of the command it documents. Some files contain sections
+# that require higher-level commands (e.g., yaml file= blocks, shell cli blocks, or Prompt).
+# These sections are listed in skip-sections and will only pass at the higher level.
+# The test runner should report partial results for skipped sections, not treat the entire
+# file as failed.
+#
+# Dependency graph:
+#   0 → 1 → 2 (cumulative kernel + markdown)
+#   2 → 3 (files, shell)
+#   2 → 4 (http) — independent of 3
+#   3 → 5 (user interaction, connections)
+#   2 → 6/MCP — independent of 4 and 5
+#   3 → 6/SQLite
 
 levels:
 
@@ -16,15 +27,18 @@ levels:
     level: 0
     description: >
       YAML-to-command pipeline. Parse YAML, resolve variables, dispatch commands.
-      Includes testing commands so the implementation can self-verify from day one.
+      Includes testing and error handling commands so the implementation can
+      self-verify from day one.
     commands:
       - Print
       - Output
       - As
-      - Assignment
+      - Assignment  # registered as '${}'  in the command registry
       - Do
       - Exit
       - Error
+      - On error
+      - On error type
       - Script info
       - Input parameters
       - Input schema
@@ -50,8 +64,18 @@ levels:
       - output variable
     spec-files:
       # Language
-      - language/SpecScript Yaml Scripts.spec.md
-      - language/Variables.spec.md
+      - language/SpecScript Yaml Scripts.spec.md:
+          skip-sections:
+            - "Hello world example"     # yaml file=, shell cli (L3)
+            - "The command sequence"    # yaml file=, Prompt (L3/L5)
+            - "Script info"             # yaml file=, shell cli (L3)
+            - "Defining script input"   # yaml file=, shell cli (L3)
+            - "Script output"           # yaml file=, Run script (L3)
+      - language/Variables.spec.md:
+          skip-sections:
+            - "Script output"           # yaml file=, Run script (L3)
+            - "Script Input & Output"   # yaml file= (L3)
+            - "SCRIPT_HOME"             # shell cli (L3)
       - language/tests/Variables tests.spec.yaml
 
       # Testing commands
@@ -62,30 +86,47 @@ levels:
       - commands/core/testing/Expected error.spec.md
       - commands/core/testing/Test case.spec.md
       - commands/core/testing/Code example.spec.md
-      - commands/core/testing/Answers.spec.md
+      - commands/core/testing/Answers.spec.md:
+          skip-sections:
+            - "Prerecording prompt answers"  # uses Prompt (L5)
       - commands/core/testing/Tests.spec.md
-      - commands/core/testing/Before all tests.spec.md
+      - commands/core/testing/Before all tests.spec.md:
+          skip-sections:
+            - "Using with HTTP commands"  # uses Http request defaults, GET (L4)
       - commands/core/testing/After all tests.spec.md
       - commands/core/testing/tests/Assert tests.spec.yaml
 
       # Variable commands
       - commands/core/variables/As.spec.md
       - commands/core/variables/Assignment.spec.md
-      - commands/core/variables/Output.spec.md
+      - commands/core/variables/Output.spec.md:
+          skip-sections:
+            - "Output in For each"      # uses For each (L1)
       - commands/core/variables/tests/Assignment tests.spec.yaml
       - commands/core/variables/tests/Output variable tests.spec.yaml
       - commands/core/variables/tests/Variable replacement tests.spec.yaml
 
       # Script info
-      - commands/core/script-info/Script info.spec.md
-      - commands/core/script-info/Input parameters.spec.md
-      - commands/core/script-info/Input schema.spec.md
+      - commands/core/script-info/Script info.spec.md:
+          skip-sections:
+            - "Hidden commands"         # shell cli (L3)
+      - commands/core/script-info/Input parameters.spec.md:
+          skip-sections:
+            - "Cli help"                # shell cli (L3)
+            - "Using types"             # shell cli (L3)
+      - commands/core/script-info/Input schema.spec.md:
+          skip-sections:
+            - "Cli help"                        # shell cli (L3)
+            - "Compatibility with MCP tool definitions"  # Mcp tool (L6)
       - commands/core/script-info/tests/Input parameters tests.spec.yaml
       - commands/core/script-info/tests/Input schema tests.spec.yaml
 
       # Core commands
       - commands/core/util/Print.spec.md
       - commands/core/errors/Error.spec.md
+      - commands/core/errors/On error.spec.md
+      - commands/core/errors/On error type.spec.md
+      - commands/core/errors/tests/Error handling tests.spec.yaml
       - commands/core/control-flow/Do.spec.md
       - commands/core/control-flow/Exit.spec.md
       - commands/core/control-flow/tests/Do tests.spec.yaml
@@ -96,14 +137,12 @@ levels:
     level: 1
     description: >
       Complete scripting language for data manipulation. Branching, iteration,
-      error handling, and data transformation commands.
+      and data transformation commands.
     commands:
       - If
       - When
       - For each
       - Repeat
-      - On error
-      - On error type
       - Find
       - Add
       - Add to
@@ -136,7 +175,6 @@ levels:
       - commands/core/control-flow/tests/If tests.spec.yaml
       - commands/core/control-flow/tests/For each tests.spec.yaml
       - commands/core/control-flow/tests/Repeat tests.spec.yaml
-      - commands/core/control-flow/schema/Schema tests.spec.yaml
 
       # Data manipulation
       - commands/core/data-manipulation/Add.spec.md
@@ -156,11 +194,6 @@ levels:
       - commands/core/data-manipulation/tests/Size tests.spec.yaml
       - commands/core/data-manipulation/tests/Sort tests.spec.yaml
 
-      # Error handling
-      - commands/core/errors/On error.spec.md
-      - commands/core/errors/On error type.spec.md
-      - commands/core/errors/tests/Error handling tests.spec.yaml
-
       # Utility
       - commands/core/util/Json.spec.md
       - commands/core/util/Text.spec.md
@@ -174,6 +207,7 @@ levels:
 
       # Shared schemas
       - commands/core/Conditions.schema.yaml
+      - commands/core/ParameterData.schema.yaml
 
   - name: Markdown Documents
     level: 2
@@ -186,7 +220,17 @@ levels:
       - "Section splitting: each # header becomes a test case"
       - "Block types: yaml specscript, hidden yaml specscript, output, answers, header, quote"
     spec-files:
-      - language/SpecScript Markdown Documents.spec.md
+      - language/SpecScript Markdown Documents.spec.md:
+          skip-sections:
+            - "Hidden code"                     # Read file (L3)
+            - "Predefined answers"              # Prompt (L5)
+            - "Helper files"                    # Read file (L3)
+            - "Variables inside temp files"     # Read file (L3)
+            - "Shell commands"                  # Shell (L3)
+            - "Setting the current directory"   # Shell (L3)
+            - "Options to show command and output"  # Shell (L3)
+            - "Shell ignore"                    # Shell (L3)
+            - "Invoking SpecScript itself"      # shell cli (L3)
       - language/tests/SpecScript Markdown tests.spec.md
       - language/SpecScript Best Practices.spec.md
 
@@ -241,11 +285,13 @@ levels:
       - cli/Configuration files.spec.md
       - cli/Running SpecScript files.spec.md
 
+      # Contaminated test cases moved from lower levels
+      - commands/core/control-flow/tests/For each tests - L3.spec.yaml  # variable syntax in sample data (uses Read file)
+
   - name: HTTP
     level: 4
     description: >
       API testing and integration tool. HTTP client and server commands.
-    requires: [1]
     commands:
       - GET
       - POST
@@ -319,6 +365,9 @@ levels:
       - commands/core/types/Types.spec.md
       - commands/core/types/tests/Type tests.spec.yaml
 
+      # Contaminated test cases moved from lower levels
+      - commands/core/control-flow/schema/Schema tests.spec.yaml  # uses Validate schema
+
   - name: SQLite
     level: 6
     description: SQLite database commands.
@@ -335,7 +384,7 @@ levels:
   - name: MCP
     level: 6
     description: Model Context Protocol server and client commands.
-    requires: [4]
+    requires: [1]
     commands:
       - Mcp server
       - Mcp tool

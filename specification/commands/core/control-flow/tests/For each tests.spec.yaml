@@ -130,19 +130,4 @@ Tests:
       - name: runner (Remote runner)
         value: 123
 
-  For each with variable syntax in sample data:
-
-    Read file:
-      resource: data-with-variable-syntax.yaml
-
-    For each:
-      ${item} in: ${output}
-      Print: ${item}
-
-  For each with variable syntax in sample data and implicit loop variable:
-
-    Read file:
-      resource: data-with-variable-syntax.yaml
-
-    For each:
-      Print: ${item}
+  # "For each with variable syntax in sample data" tests moved to For each tests - L3.spec.yaml (uses Read file)

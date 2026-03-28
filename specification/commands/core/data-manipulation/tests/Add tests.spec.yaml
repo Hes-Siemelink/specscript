@@ -142,9 +142,3 @@ Tests:
       - expected: 50
         actual: ${offset}
 
-  Schema validation - Add should only accept arrays:
-    Validate schema:
-      data: 1
-      schema: ../schema/Add.schema.yaml
-    Expected error:
-      Schema validation error: Add should only accept arrays

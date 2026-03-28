@@ -12,10 +12,26 @@
 
 ## Basic usage
 
-Automated tests will hang on user interaction. With **Answers**, you can define the canned response so the tests can
-pass.
+`Answers` provides values for `Input parameters` so scripts can run non-interactively in tests.
 
-To give an answer, simply define the question and answer under **Answers** like this:
+```yaml specscript
+Code example: Answers provides input parameter values
+
+Answers:
+  Your name: Alice
+
+Input parameters:
+  name:
+    description: Your name
+
+Assert equals:
+  actual: ${name}
+  expected: Alice
+```
+
+## Prerecording prompt answers
+
+When testing scripts that use `Prompt`, `Answers` prevents the test from hanging on user input.
 
 ```yaml specscript
 Code example: Prerecord an answer to a prompt
