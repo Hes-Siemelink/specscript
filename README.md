@@ -70,8 +70,7 @@ spec greetings.spec.yaml --name Hes --language English
 Hi Hes!
 ```
 
-That's it. `Input schema` defines your CLI options. `POST` makes the HTTP request. The result is
-printed automatically.
+That's it. `Input schema` defines your CLI options. `POST` makes the HTTP request. The result is printed automatically.
 
 You get `--help` for free:
 
@@ -366,7 +365,7 @@ Change the spec, run the tests; if they pass, the documentation is correct by de
 
 Run SpecScript using the wrapper script:
 
-    spec
+    ./spec
 
 This downloads the version specified in [specscript.conf](specscript.conf) and runs it. Copy `spec` and
 `specscript.conf` to your own project to use SpecScript there.
