@@ -78,7 +78,7 @@ And we get the result in Spanish:
 ¡Hola Hes!
 ```
 
-# Documentation
+## Documentation
 
 All of SpecScript is defined in the **[specification](specification)** directory.
 
@@ -102,9 +102,9 @@ This will download the version of SpecScript specified in [specscript.conf](spec
 You can use the `spec` wrapper script in your project by copying the following files:
 
     spec
-    specscriptr.conf
+    specscript.conf
 
-# Build form source
+# Build from source
 
 The SpecScript implementation is in Kotlin.
 
@@ -143,6 +143,8 @@ The following example will provide an interactive experience and connect to the 
 When connecting to Spotify for the first time, the script will ask you for your login credentials: App Client ID and
 Client secret -- you should already have those.
 
+---
+
 # Highlight Reel
 
 SpecScript has two main ideas:
@@ -152,7 +154,7 @@ SpecScript has two main ideas:
 
 ## Hello world
 
-This is the simplest SpecScript progam, **[hello.spec.yaml](samples/hello.spec.yaml)**:
+This is the simplest SpecScript program, **[hello.spec.yaml](samples/hello.spec.yaml)**:
 
 ```yaml file=hello.spec.yaml
 Print: Hello from SpecScript!
@@ -379,7 +381,7 @@ Hello from SpecScript!
 ```
 
 Some commands work directly with the output variable. This helps in having a more declarative and readable script. For
-example, you don;t need to pass the `${output}` variable to the **[Expected output
+example, you don't need to pass the `${output}` variable to the **[Expected output
 ](specification/commands/core/testing/Expected%20output.spec.md)** command.
 
 ```yaml specscript
