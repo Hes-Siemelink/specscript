@@ -2,11 +2,11 @@
 
 `Add` adds an item to something else
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | no            |
-| List       | auto-iterate  |
-| Object     | yes           |
+| Input  | Supported    |
+|--------|--------------|
+| Scalar | no           |
+| List   | auto-iterate |
+| Object | yes          |
 
 [Add.schema.yaml](schema/Add.schema.yaml)
 
