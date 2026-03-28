@@ -1,14 +1,37 @@
 # SpecScript
 
-Spec your projects the human _and_ AI-friendly way using Markdown and Yaml.
+Write a GET request in one line. Make it a CLI with a handful more lines. Add endpoints and it's a server. No
+boilerplate, no build step.
 
-Use SpecScript to quickly prototype and test specifications. Sprinkle in some user interaction.
+SpecScript is for people who want to get things done -- call an API, build a quick CLI tool, prototype a server --
+without setting up a project first.
 
-As-code, but without the complexity of actual code.
+SpecScript is built on Yaml and Markdown. Simple to read, simple to write. Say what you want to do in a declarative
+style and you're in business.
 
-## Example
+## See it in action
 
-Get a flavor of SpecScript with this example file `greetings.spec.yaml`:
+This is how you do a GET request in SpecScript:
+
+```yaml file=greet.spec.yaml
+GET: http://localhost:2525/hello
+```
+
+It's that simple. Save it as `greet.spec.yaml`, run it like this:
+
+```shell cli
+spec greet.spec.yaml
+```
+
+And you get the response:
+
+```output
+Hello from SpecScript!
+```
+
+Now let's make something more interesting — a script that takes input and calls an API.
+
+Here's a file called `greetings.spec.yaml`:
 
 ```yaml file=greetings.spec.yaml
 Script info: Multi-language greeting
@@ -32,7 +55,7 @@ POST:
     language: ${input.language}
 ```
 
-Run the script with this command:
+Run it:
 
 <!-- answers
 Your name: Hes
@@ -40,23 +63,21 @@ Select a language: English
 -->
 
 ```shell cli
-./spec greetings.spec.yaml --name Hes --language English
+spec greetings.spec.yaml --name Hes --language English
 ```
-
-When running it, we get prompted for input before a POST request is made to the server. The greeting that we get back is
-printed.
 
 ```output
 Hi Hes!
 ```
 
-You can specify the parameters as arguments. Find out what to pass with the `--help` option:
+That's it. `Input schema` defines your CLI options. `POST` makes the HTTP request. The result is
+printed automatically.
+
+You get `--help` for free:
 
 ```shell cli
-./spec --help greetings.spec.yaml
+spec --help greetings.spec.yaml
 ```
-
-Will print:
 
 ```output
 Multi-language greeting
@@ -66,123 +87,104 @@ Options:
   --language   Select a language
 ```
 
-We can call the example again with the parameters filled in:
-
-```shell cli
-./spec greetings.spec.yaml --name Hes --language Spanish
-```
-
-And we get the result in Spanish:
-
-```output
-¡Hola Hes!
-```
-
-## Documentation
-
-All of SpecScript is defined in the **[specification](specification)** directory.
-
-* [CLI](specification/cli/README.md) defines the `cli` shell command
-* [Language](specification/language/README.md) defines the structure of the SpecScript scripting language
-* [Command reference](specification/commands/README.md) defines all commands with descriptions, code examples and tests.
-
-## SpecScript versions
-
-For the latest versions, check the [SpecScript Releases](https://github.com/Hes-Siemelink/specscript/releases) page on
-GitHub.
-
-## Running SpecScript
-
-Run SpecScript by invoking the wrapper script:
-
-    ./spec
-
-This will download the version of SpecScript specified in [specscript.conf](specscript.conf) and run it.
-
-You can use the `spec` wrapper script in your project by copying the following files:
-
-    spec
-    specscript.conf
-
-# Build from source
-
-The SpecScript implementation is in Kotlin.
-
-Install a current JDK, and build with Gradle:
-
-```shell ignore
-./gradlew build
-alias spec="java -jar `pwd`/build/libs/specscript-*-full.jar"
-```
-
-This will run the "Hello world" example:
-
-```shell ignore
-spec samples/hello.spec.yaml
-```
-
-See [Running SpecScript files](specification/cli/Running%20SpecScript%20files.spec.md) for more information on the `cli`
-command.
-
-## Explore
-
-There are more examples in the **[samples](samples)** directory - check them out!
-
-Explore them all with the command:
-
-```shell ignore
-./spec samples
-```
-
-The following example will provide an interactive experience and connect to the Spotify API:
-
-```shell ignore
-./spec samples/spotify
-```
-
-When connecting to Spotify for the first time, the script will ask you for your login credentials: App Client ID and
-Client secret -- you should already have those.
-
 ---
 
-# Highlight Reel
+# It's just Yaml
 
-SpecScript has two main ideas:
-
-1. Everything is Markdown or Yaml.
-2. Keep it simple.
-
-## Hello world
-
-This is the simplest SpecScript program, **[hello.spec.yaml](samples/hello.spec.yaml)**:
+No special syntax — it's Yaml all the way down. Here's the obligatory hello world,
+**[hello.spec.yaml](samples/hello.spec.yaml)**:
 
 ```yaml file=hello.spec.yaml
 Print: Hello from SpecScript!
 ```
 
-Invoke it with
-
 ```shell cli
-./spec hello.spec.yaml
+spec hello.spec.yaml
 ```
-
-And it will print the expected message:
 
 ```output
 Hello from SpecScript!
 ```
 
-## HTTP requests as code
+Commands are Yaml keys that start with a capital letter. A script is a sequence of commands, top to bottom.
 
-Tired of remembering the exact curl syntax or forgetting which tab had that request that worked in Postman?
+## Variables
 
-Simply write your **[GET](specification/commands/core/http/GET.spec.md)** request as-code with SpecScript:
+Define [variables](specification/language/Variables.spec.md) with `${...}` syntax. Navigate nested data with dot and
+bracket notation.
+
+```yaml specscript
+Code example: Define a variable
+
+${var}:
+  name: my variable
+  content:
+    a: one
+    b: two
+
+Print: ${var.content}
+```
+
+```output
+a: one
+b: two
+```
+
+Every command stores its result in `${output}`, which you can capture with
+**[As](specification/commands/core/variables/As.spec.md)**:
+
+```yaml specscript
+Code example: Assign output to a named variable
+
+GET: http://localhost:2525/hello
+As: ${result}
+
+Print:
+  The result of GET /hello was: ${result}
+```
+
+## Control flow
+
+```yaml specscript
+Code example: If statement
+
+If:
+  item: this
+  equals: that
+  then:
+    Print: I'm confused!
+```
+
+```yaml specscript
+Code example: For each statement
+
+For each:
+  ${name} in:
+    - Alice
+    - Bob
+    - Carol
+  Print: Hello ${name}!
+```
+
+```output
+Hello Alice!
+Hello Bob!
+Hello Carol!
+```
+
+---
+
+# HTTP as code
+
+Tired of remembering curl syntax or losing that Postman tab that worked?
+
+Write your **[GET](specification/commands/core/http/GET.spec.md)** request as Yaml:
 
 ```yaml specscript
 GET: http://localhost:2525/greetings
 ```
 
-Here's a **[POST](specification/commands/core/http/POST.spec.md)**:
+A **[POST](specification/commands/core/http/POST.spec.md)** with a body:
 
 ```yaml specscript
 POST:
@@ -193,9 +195,27 @@ POST:
     language: Dutch
 ```
 
-## Define input
+For prototyping, SpecScript can run an [HTTP server](specification/commands/core/http/Http%20server.spec.md) too:
 
-Define all command-line options in Yaml. Take this file `simple-options.spec.yaml`
+```yaml specscript
+Code example: Running an HTTP server
+
+Http server:
+  name: sample-server
+  port: 2525
+  endpoints:
+    /hello-example:
+      get:
+        script:
+          Output: Hello from SpecScript!
+```
+
+---
+
+# Instant CLI
+
+Every SpecScript file is already a command-line tool. Add an `Input schema` and you get options, help text, and
+interactive prompts automatically.
 
 ```yaml file=simple-options.spec.yaml
 Script info:
@@ -210,10 +230,8 @@ Input schema:
       description: Preferred language
 ```
 
-This will automatically generate a command description and command line options:
-
 ```shell cli
-./spec --help simple-options.spec.yaml
+spec --help simple-options.spec.yaml
 ```
 
 ```output
@@ -224,65 +242,23 @@ Options:
   --language   Preferred language
 ```
 
-## Input schema
+## Subcommands
 
-SpecScript allows you to specify the type and format of input parameters by way of
-an [Input schema](specification/commands/core/script-info/Input%20schema.spec.md). Here's an example file
-`input-parameters.spec.yaml`
+Organize script files in directories and you get subcommands:
 
-```yaml file=input-parameters.spec.yaml
-Script info:
-  description: Different input options
-
-Input schema:
-  type: object
-  properties:
-    user:
-      description: Username
-      short option: u
-    password:
-      description: Password
-      secret: true
-      short option: p
-```
-
-```shell cli
-./spec --help input-parameters.spec.yaml
+```shell cli cd=.
+spec samples basic greet
 ```
 
 ```output
-Different input options
-
-Options:
-  --user, -u       Username
-  --password, -p   Password
-```
-
-## Subcommand support
-
-Easily provide subcommand support by organizing your cli files in directories.
-
-For example, to run the greeting example from the **[samples](samples)** directory, you can write
-
-```shell cli cd=.
-./spec samples basic greet
-```
-
-with output:
-
-```
 Hello, World!
 ```
 
-SpecScript will show the commands if you pass a directory.
-
-For example:
+Pass a directory to see what's available:
 
 ```shell cli cd=.
-./spec samples
+spec samples
 ```
-
-will print the info message:
 
 ```
 samples has several subcommands.
@@ -299,9 +275,7 @@ Available commands:
 
 ## User interaction
 
-Easily construct [user prompts](specification/commands/core/user-interaction/Prompt.spec.md) with SpecScript.
-
-Here's an example of how to ask the user to pick something from a list, in a file called `prompt.spec.yaml`:
+Build [interactive prompts](specification/commands/core/user-interaction/Prompt.spec.md) with a few lines of Yaml:
 
 ```yaml file=prompt.spec.yaml 
 Prompt:
@@ -315,15 +289,13 @@ Output:
   You selected: ${output}
 ```
 
-You will be presented with an interactive selector when running it:
-
-```shell cli
-./spec prompt.spec.yaml
-```
-
 <!-- answers
 Select a language: English
 -->
+
+```shell cli
+spec prompt.spec.yaml
+```
 
 ```output
 ? Select a language 
@@ -334,161 +306,11 @@ Select a language: English
 You selected: English
 ```
 
-## Variables
+---
 
-Define [variables](specification/language/Variables.spec.md) in `${...}` syntax and pick and choose content using the
-path notation.
+# Testing built in
 
-```yaml specscript
-Code example: Define a variable
-
-${var}:
-  name: my variable
-  content:
-    a: one
-    b: two
-
-Print: ${var.content}
-```
-
-will print
-
-```output
-a: one
-b: two
-```
-
-## The output variable
-
-The result of a command is always stored in the variable `${output}`.
-
-This makes it easy to pick up in a subsequent command
-
-For example
-
-```yaml specscript
-Code example: Using the output variable
-
-GET: http://localhost:2525/hello
-
-Print: ${output}
-```
-
-Will print the output of the GET request:
-
-```output
-Hello from SpecScript!
-```
-
-Some commands work directly with the output variable. This helps in having a more declarative and readable script. For
-example, you don't need to pass the `${output}` variable to the **[Expected output
-](specification/commands/core/testing/Expected%20output.spec.md)** command.
-
-```yaml specscript
-Code example: Implicit output variable
-
-GET: http://localhost:2525/hello
-
-Expected output: Hello from SpecScript!
-```
-
-If you are going to use the output variable later on, best practice is to assign it to a named variable using **[As
-](specification/commands/core/variables/As.spec.md)**.
-
-```yaml specscript
-Code example: Assign output to a named variable
-
-GET: http://localhost:2525/hello
-As: ${result}
-
-Print:
-  The result of GET /hello was: ${result}
-```
-
-## Http Server
-
-For quick API prototyping, SpecScript will run an [HTTP server](specification/commands/core/http/Http%20server.spec.md)
-for you. Define some endpoints and back them by SpecScript Yaml scripts:
-
-```yaml specscript
-Code example: Running an HTTP server
-
-Http server:
-  name: sample-server
-  port: 2525
-  endpoints:
-    /hello-example:
-      get:
-        script:
-          Output: Hello from SpecScript!
-```
-
-Take a look at the [sample server](samples/http-server/sample-server/sample-server.spec.yaml) that serves all requests
-from the SpecScript documentation and test suite.
-
-## If statement
-
-SpecScript supports various programming logic constructs, like 'if', 'repeat', 'for each'
-
-This is what an **[If](specification/commands/core/control-flow/If.spec.md)** statement looks like:
-
-```yaml specscript
-Code example: If statement
-
-If:
-  item: this
-  equals: that
-  then:
-    Print: I'm confused!
-```
-
-## For each
-
-With **[For each](specification/commands/core/control-flow/For%20each.spec.md)** you can loop over collections and do
-stuff.
-
-```yaml specscript
-Code example: For each statement
-
-For each:
-  ${name} in:
-    - Alice
-    - Bob
-    - Carol
-  Print: Hello ${name}!
-```
-
-Output:
-
-```output
-Hello Alice!
-Hello Bob!
-Hello Carol!
-```
-
-You can use **For each**
-to [transform a list](specification/commands/core/control-flow/For%20each.spec.md#transform-a-list) into something else,
-like the `map()` function in some programming languages.
-
-```yaml specscript
-Code example: For each to transform a list
-
-For each:
-  ${name} in:
-    - Alice
-    - Bob
-    - Carol
-  Output: Hello ${name}!
-
-Expected output:
-  - Hello Alice!
-  - Hello Bob!
-  - Hello Carol!
-```
-
-## Testing in SpecScript
-
-Writing tests in SpecScript is straightforward:
+Writing tests in SpecScript is just more Yaml:
 
 ```yaml specscript
 Tests:
@@ -503,17 +325,24 @@ Tests:
       in: [ one, two, three ]
 ```
 
-In fact, all tests for the SpecScript language and commands are written in SpecScript itself and can be found in the
-**[specification](specification)** directory, in the `tests` subfolders. For example, take a look at
-the [tests for assertions](specification/commands/core/testing/tests/Assert%20tests.spec.yaml)
+---
 
-## Documenting SpecScript
+# Documentation
 
-All documentation can be found in the **[specification](specification)** directory.
+There is a lot more to SpecScript than what's shown here. The complete language is documented in the
+**[specification](specification)** directory:
 
-SpecScript documentation is in Markdown and contains runnable code that is run as part of the test suite.
+* [Language](specification/language/README.md) -- how variables, commands, and control flow work
+* [Command reference](specification/commands/README.md) -- all commands, each with runnable examples
+* [CLI](specification/cli/README.md) -- running scripts, options, and subcommands
 
-Here's an example of SpecScript documentation:
+---
+
+# The spec IS the test suite
+
+This is the part where it gets meta.
+
+The specification documents are Markdown files with embedded Yaml examples -- and every example actually runs as a test:
 
     ## Code examples
     
@@ -523,7 +352,66 @@ Here's an example of SpecScript documentation:
     Print: Hello from SpecScript!
     ```
 
-You can do 'Spec-driven development' with SpecScript. For new features, write the documentation first, then run it.
-Since you haven't implemented anything yet, the test suite will fail. Then write the implementation, and once the tests
-are green, you're done!
+The ` ```yaml specscript ``` ` code block is executable. When you run `./gradlew specificationTest`, all examples in the
+specification execute and must pass. Documentation that lies breaks the build.
 
+SpecScript is specified in SpecScript. The documentation _is_ the test suite, and the test suite _is_ the documentation.
+Change the spec, run the tests; if they pass, the documentation is correct by definition.
+
+---
+
+# Get started
+
+## Running SpecScript
+
+Run SpecScript using the wrapper script:
+
+    spec
+
+This downloads the version specified in [specscript.conf](specscript.conf) and runs it. Copy `spec` and
+`specscript.conf` to your own project to use SpecScript there.
+
+For the latest versions, see [SpecScript Releases](https://github.com/Hes-Siemelink/specscript/releases) on GitHub.
+
+## Build from source
+
+The reference implementation is in **Kotlin**. Install a current JDK and build with Gradle:
+
+```shell ignore
+./gradlew build
+alias spec="java -jar `pwd`/build/libs/specscript-*-full.jar"
+```
+
+Run the hello world example:
+
+```shell ignore
+spec samples/hello.spec.yaml
+```
+
+There is also an incubating **[TypeScript](typescript)** implementation. It was generated by AI agents working from the
+specification -- a good test of whether the spec is clear enough for both humans and machines. Try it with:
+
+```shell ignore
+cd typescript && npm install && npm start -- ../samples/hello.spec.yaml
+```
+
+## Explore
+
+There are more examples in the **[samples](samples)** directory. Explore them interactively:
+
+```shell ignore
+spec samples
+```
+
+Use the `--interactive` (or `-i`) flag to run any script in interactive mode -- SpecScript will prompt for any input it
+needs:
+
+```shell ignore
+spec --interactive samples/basic/greet
+```
+
+Try the Spotify example for a fully interactive experience connecting to a real API:
+
+```shell ignore
+spec -i samples/spotify
+```
