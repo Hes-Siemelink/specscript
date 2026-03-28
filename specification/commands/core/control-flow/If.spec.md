@@ -2,11 +2,12 @@
 
 `If` exectues commands if a condition holds
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | no        |
-| List         | implicit  |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | no            |
+| List       | auto-iterate  |
+| Object     | yes           |
+| Raw input  | yes           |
 
 [If.schema.yaml](schema/If.schema.yaml)
 

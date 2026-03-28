@@ -2,11 +2,12 @@
 
 `Mcp tool` defines tools for an MCP server.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | no        |
-| List         | implicit  |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | no            |
+| List       | auto-iterate  |
+| Object     | yes           |
+| Raw input  | yes           |
 
 [Mcp tool.schema.yaml](schema/Mcp%20tool.schema.yaml)
 

@@ -2,11 +2,12 @@
 
 `When` executes a single command from a list of conditions
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | no        |
-| List         | yes       |
-| Object       | no        |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | no            |
+| List       | yes           |
+| Object     | no            |
+| Raw input  | yes           |
 
 [When.schema.yaml](schema/When.schema.yaml)
 

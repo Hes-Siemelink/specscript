@@ -2,11 +2,11 @@
 
 Sets the default credentials for an endpoint.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | no        |
-| List         | implicit  |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | no            |
+| List       | auto-iterate  |
+| Object     | yes           |
 
 [Set default credentials.schema.yaml](schema/Set%20default%20credentials.schema.yaml)
 

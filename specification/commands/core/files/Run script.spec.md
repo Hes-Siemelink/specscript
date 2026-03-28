@@ -3,11 +3,11 @@
 Use **Run script** to run another SpecScript script. See
 also [SpecScript files as commands](SpecScript%20files%20as%20commands.spec.md)
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | no        |
-| List         | implicit  |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | no            |
+| List       | auto-iterate  |
+| Object     | yes           |
 
 [Run script.schema.yaml](schema/Run%20script.schema.yaml)
 

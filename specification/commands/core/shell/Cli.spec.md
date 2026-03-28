@@ -3,11 +3,11 @@
 With **Cli** you execute the SpecScript command without popping into a new shell. This is mainly useful to document and
 test the behavior of the `cli` command line interface.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | yes       |
-| List         | implicit  |
-| Object       | no        |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | yes           |
+| List       | auto-iterate  |
+| Object     | no            |
 
 [Cli.schema.yaml](schema/Cli.schema.yaml)
 

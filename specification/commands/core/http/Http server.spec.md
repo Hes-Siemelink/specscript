@@ -3,11 +3,12 @@
 `Http server` starts an embedded HTTP server, based on an OpenAPI-flavored spec and backed by SpecScript scripts. Use
 **Http server** to quickly prototype an API.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | no        |
-| List         | implicit  |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | no            |
+| List       | auto-iterate  |
+| Object     | yes           |
+| Raw input  | yes           |
 
 [Http server.schema.yaml](schema/Http%20server.schema.yaml)
 

@@ -2,11 +2,11 @@
 
 `Expected output` tests the `${output}` variable against a given value
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | yes       |
-| List         | yes       |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | yes           |
+| List       | yes           |
+| Object     | yes           |
 
 [Expected output.schema.yaml](schema/Expected%20output.schema.yaml)
 

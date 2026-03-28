@@ -2,11 +2,11 @@
 
 With `Add to`, you can add stuff to variables in a concise way.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | no        |
-| List         | implicit  |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | no            |
+| List       | auto-iterate  |
+| Object     | yes           |
 
 [Add to.schema.yaml](schema/Add%20to.schema.yaml)
 

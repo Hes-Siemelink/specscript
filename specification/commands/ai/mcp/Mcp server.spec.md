@@ -2,11 +2,12 @@
 
 `Mcp server` starts an MCP server.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | no        |
-| List         | no        |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | no            |
+| List       | no            |
+| Object     | yes           |
+| Raw input  | yes           |
 
 [Mcp server.schema.yaml](schema/Mcp%20server.schema.yaml)
 

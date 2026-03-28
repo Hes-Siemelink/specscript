@@ -2,11 +2,11 @@
 
 `Wait` just waits a while
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | yes       |
-| List         | no        |
-| Object       | no        |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | yes           |
+| List       | no            |
+| Object     | no            |
 
 [Wait.schema.yaml](schema/Wait.schema.yaml)
 

@@ -2,11 +2,11 @@
 
 `PUT` sends a PUT request to an HTTP endpoint.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | no        |
-| List         | implicit  |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | no            |
+| List       | auto-iterate  |
+| Object     | yes           |
 
 [PUT.schema.yaml](schema/PUT.schema.yaml)
 

@@ -2,11 +2,12 @@
 
 `Script info` contains the description of a script and the definition of the input.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | yes       |
-| List         | no        |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | yes           |
+| List       | no            |
+| Object     | yes           |
+| Raw input  | yes           |
 
 [Script info.schema.yaml](schema/Script%20info.schema.yaml)
 

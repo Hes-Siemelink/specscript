@@ -2,11 +2,11 @@
 
 Use **Shell** to execute a shell command
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | yes       |
-| List         | implicit  |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | yes           |
+| List       | auto-iterate  |
+| Object     | yes           |
 
 [Shell.schema.yaml](schema/Shell.schema.yaml)
 

@@ -3,11 +3,11 @@
 Applies [RFC 6902 JSON Patch](https://datatracker.ietf.org/doc/html/rfc6902) operations to a JSON document. Supports
 `add`, `remove`, `replace`, `move`, `copy`, and `test` operations.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | no        |
-| List         | no        |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | no            |
+| List       | no            |
+| Object     | yes           |
 
 [Json patch.schema.yaml](schema/Json%20patch.schema.yaml)
 

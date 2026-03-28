@@ -2,11 +2,11 @@
 
 Use `Base64 decode` to decode stuff. See [Base64 encode](Base64%20encode.spec.md).
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | yes       |
-| List         | implicit  |
-| Object       | no        |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | yes           |
+| List       | auto-iterate  |
+| Object     | no            |
 
 [Base64 decode.schema.yaml](schema/Base64%20decode.schema.yaml)
 

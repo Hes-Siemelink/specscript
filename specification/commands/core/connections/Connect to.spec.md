@@ -3,11 +3,11 @@
 By using `Connect to`, setting up a connection to an Http Endpoint is simplified by moving the connection logic behind
 the scenes.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | Yes       |
-| List         | implicit  |
-| Object       | no        |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | yes           |
+| List       | auto-iterate  |
+| Object     | no            |
 
 [Connect to.schema.yaml](schema/Connect%20to.schema.yaml)
 

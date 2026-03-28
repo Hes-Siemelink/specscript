@@ -2,11 +2,11 @@
 
 `Values` returns the list of values in an object, without the field names
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | no        |
-| List         | implicit  |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | no            |
+| List       | auto-iterate  |
+| Object     | yes           |
 
 [Values.schema.yaml](schema/Values.schema.yaml)
 

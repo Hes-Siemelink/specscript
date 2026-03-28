@@ -2,11 +2,11 @@
 
 Does a text-based find & replace.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | yes       |
-| List         | yes       |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | yes           |
+| List       | yes           |
+| Object     | yes           |
 
 [Replace.schema.yaml](schema/Replace.schema.yaml)
 

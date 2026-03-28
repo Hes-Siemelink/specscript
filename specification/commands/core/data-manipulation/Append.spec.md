@@ -2,11 +2,11 @@
 
 Use `Append` to add stuff to the output variable.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | no        |
-| List         | implicit  |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | no            |
+| List       | auto-iterate  |
+| Object     | yes           |
 
 [Append.schema.yaml](schema/Append.schema.yaml)
 

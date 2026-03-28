@@ -26,74 +26,11 @@ Most contamination has been addressed. This document tracks the remaining open i
 
 ## Remaining Recommendations
 
-### J. Make command handler traits explicit in the spec
+### ~~J. Make command handler traits explicit in the spec~~ — DONE
 
-Every command spec already has a "Content type / Supported" table documenting which YAML shapes the command accepts
-(Value, List, Object). This covers `ValueHandler`, `ListHandler`, and `ObjectHandler`. But two critical traits are
-missing from the specs entirely:
-
-- **DelayedResolver** (19 commands) — the command receives raw YAML before variable resolution; it controls when and
-  whether `${...}` expressions are evaluated. Essential for control flow (`If`, `For each`, `When`), error handling
-  (`On error`), and structural commands (`Tests`, `As`, `Http server`, all MCP commands).
-
-- **ErrorHandler** (2 commands: `On error`, `On error type`) — the command catches errors from subsequent commands
-  rather than propagating them.
-
-These traits fundamentally change how the engine dispatches a command. The TypeScript port had to reverse-engineer them
-from Kotlin source — the spec documents don't mention them.
-
-**Fix**: Add these traits to each command's spec file by extending the Content type table with additional rows.
-
-The current table also has naming issues. The names are implementation jargon — "Content type" is vague, "implicit"
-is mysterious, and "DelayedResolver" is a Kotlin interface name. Proposed renamings:
-
-| Current name     | Proposed name        | Why |
-|------------------|----------------------|-----|
-| Content type     | **Input**            | The table describes what shape of input the command accepts |
-| Value            | **Scalar**           | "Value" is overloaded everywhere; "Scalar" is unambiguous (string, number, boolean) |
-| List             | **List**             | Fine as-is |
-| Object           | **Object**           | Fine as-is |
-| implicit         | **auto-iterate**     | Says what actually happens: the engine iterates over list items and calls the command once per item |
-| DelayedResolver  | **Raw input**        | The command receives its input before variable resolution — it gets the raw YAML |
-| ErrorHandler     | **Error trap**       | The command catches errors from subsequent commands |
-
-Result for `If`:
-
-```markdown
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | no            |
-| List       | auto-iterate  |
-| Object     | yes           |
-| Raw input  | yes           |
-| Error trap | no            |
-```
-
-Result for `On error`:
-
-```markdown
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | no            |
-| List       | auto-iterate  |
-| Object     | yes           |
-| Raw input  | yes           |
-| Error trap | yes           |
-```
-
-Result for `Print` (simple command, all defaults):
-
-```markdown
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | yes           |
-| List       | yes           |
-| Object     | yes           |
-```
-
-For simple commands where Raw input and Error trap are both `no`, those rows can be omitted — they default to `no`.
-This keeps the table compact for the ~50 commands that don't use either trait, while making the ~19 delayed resolvers
-and 2 error handlers immediately visible.
+All 77 command spec files updated: Content type → Input, Value → Scalar, implicit → auto-iterate.
+Raw input row added to 23 DelayedResolver commands. Error trap row added to 3 ErrorHandler commands.
+Rows omitted when `no` (default).
 
 ### M. Consider making levels.yaml a proper spec
 

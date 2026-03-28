@@ -2,11 +2,11 @@
 
 `Find` retrieves a snippet of JSON from a larger object
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | no        |
-| List         | implicit  |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | no            |
+| List       | auto-iterate  |
+| Object     | yes           |
 
 [Find.schema.yaml](schema/Find.schema.yaml)
 

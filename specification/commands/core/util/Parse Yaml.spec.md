@@ -2,11 +2,11 @@
 
 Use `Parse Yaml` to convert a JSON or YAML string into the structured data format.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | yes       |
-| List         | implicit  |
-| Object       | no        |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | yes           |
+| List       | auto-iterate  |
+| Object     | no            |
 
 [ Parse yaml.schema.yaml ](schema/Parse%20Yaml.schema.yaml)
 

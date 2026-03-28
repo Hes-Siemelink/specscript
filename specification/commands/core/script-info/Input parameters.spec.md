@@ -5,11 +5,12 @@
 
 `Input parameters` contains the definitions of the input parameters for a script.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | no        |
-| List         | no        |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | no            |
+| List       | no            |
+| Object     | yes           |
+| Raw input  | yes           |
 
 [Input.parameters.yaml](schema/Input%parameters.schema.yaml)
 

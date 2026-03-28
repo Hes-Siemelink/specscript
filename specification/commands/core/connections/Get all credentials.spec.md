@@ -2,11 +2,11 @@
 
 Gets all credentials for an endpoint.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | yes       |
-| List         | implicit  |
-| Object       | no        |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | yes           |
+| List       | auto-iterate  |
+| Object     | no            |
 
 [Get all credentials.schema.yaml](schema/Get%20all%20credentials.schema.yaml)
 

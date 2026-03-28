@@ -2,11 +2,11 @@
 
 `Output` sets the `${output}` variable, that can be the output of a script
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | yes       |
-| List         | yes       |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | yes           |
+| List       | yes           |
+| Object     | yes           |
 
 [Output.schema.yaml](schema/Output.schema.yaml)
 

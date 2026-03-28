@@ -2,11 +2,11 @@
 
 Error handling in CLI scripts
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | yes       |
-| List         | no        |
-| Object       | Yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | yes           |
+| List       | no            |
+| Object     | yes           |
 
 [Error.schema.yaml](schema/Error.schema.yaml)
 

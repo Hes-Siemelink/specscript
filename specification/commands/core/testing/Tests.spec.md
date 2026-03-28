@@ -6,11 +6,12 @@ to execute.
 `Tests`, like `Before all tests` and `After all tests`, is only executed in test mode (`spec --test`). In normal execution
 it is ignored.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | no        |
-| List         | no        |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | no            |
+| List       | no            |
+| Object     | yes           |
+| Raw input  | yes           |
 
 [Tests.schema.yaml](schema/Tests.schema.yaml)
 

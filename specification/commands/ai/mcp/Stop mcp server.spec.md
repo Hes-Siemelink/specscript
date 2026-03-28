@@ -2,11 +2,11 @@
 
 `Stop mcp server` stops a running MCP server by name.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | yes       |
-| List         | no        |
-| Object       | no        |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | yes           |
+| List       | no            |
+| Object     | no            |
 
 [Stop mcp server.schema.yaml](schema/Stop%20mcp%20server.schema.yaml)
 

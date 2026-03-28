@@ -2,11 +2,11 @@
 
 `POST` sends a POST request to an HTTP endpoint.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | no        |
-| List         | implicit  |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | no            |
+| List       | auto-iterate  |
+| Object     | yes           |
 
 [POST.schema.yaml](schema/POST.schema.yaml)
 

@@ -2,11 +2,11 @@
 
 `Read file` loads Yaml from a file
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | yes       |
-| List         | no        |
-| Object       | no        |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | yes           |
+| List       | no            |
+| Object     | no            |
 
 [Read file.schema.yaml](schema/Read%20file.schema.yaml)
 

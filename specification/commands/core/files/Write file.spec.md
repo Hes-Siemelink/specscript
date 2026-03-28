@@ -2,11 +2,11 @@
 
 `Write file` saves output to a file.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | yes       |
-| List         | no        |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | yes           |
+| List       | no            |
+| Object     | yes           |
 
 [Write file.schema.yaml](schema/Write%20file.schema.yaml)
 

@@ -2,11 +2,12 @@
 
 `As` sets a variable based on the `${output}` variable, that can be the output of a script
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | yes       |
-| List         | implicit  |
-| Object       | no        |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | yes           |
+| List       | auto-iterate  |
+| Object     | no            |
+| Raw input  | yes           |
 
 [As.schema.yaml](schema/As.schema.yaml)
 

@@ -2,11 +2,11 @@
 
 Use `Text` to convert structured data into a string.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | yes       |
-| List         | yes       |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | yes           |
+| List       | yes           |
+| Object     | yes           |
 
 ## Basic usage
 

@@ -2,11 +2,11 @@
 
 `Answers` prerecords answers for prompts, so they can pass automated tests.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | no        |
-| List         | no        |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | no            |
+| List       | no            |
+| Object     | yes           |
 
 [Answers.schema.yaml](schema/Answers.schema.yaml)
 

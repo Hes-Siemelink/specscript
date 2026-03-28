@@ -2,11 +2,12 @@
 
 Executes a block of code until a condition is satisfied.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | no        |
-| List         | implicit  |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | no            |
+| List       | auto-iterate  |
+| Object     | yes           |
+| Raw input  | yes           |
 
 [Repeat.schema.yaml](schema/Repeat.schema.yaml)
 

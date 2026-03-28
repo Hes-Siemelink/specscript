@@ -3,11 +3,12 @@
 `Input schema` defines the input parameters of a script using standard JSON Schema syntax. It is the recommended way to
 define input parameters for new scripts, replacing the older `Input parameters` command.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | no        |
-| List         | no        |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | no            |
+| List       | no            |
+| Object     | yes           |
+| Raw input  | yes           |
 
 [Input.schema.yaml](schema/Input%schema.schema.yaml)
 

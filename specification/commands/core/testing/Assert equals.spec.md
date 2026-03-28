@@ -2,11 +2,11 @@
 
 `Assert equals` tests two objects for equality.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | no        |
-| List         | implicit  |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | no            |
+| List       | auto-iterate  |
+| Object     | yes           |
 
 [Assert equals.schema.yaml](schema/Assert%20equals.schema.yaml)
 

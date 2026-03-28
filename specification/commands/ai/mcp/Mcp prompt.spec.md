@@ -2,11 +2,12 @@
 
 `Mcp prompt` defines prompts for an MCP server.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | no        |
-| List         | implicit  |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | no            |
+| List       | auto-iterate  |
+| Object     | yes           |
+| Raw input  | yes           |
 
 [Mcp prompt.schema.yaml](schema/Mcp%20prompt.schema.yaml)
 

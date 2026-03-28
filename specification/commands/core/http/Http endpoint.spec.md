@@ -3,11 +3,12 @@
 `Http endpoint` adds endpoints to an existing HTTP server. Use it to define endpoints separately from the server
 definition, analogous to how `Mcp tool` adds tools to an MCP server.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | no        |
-| List         | implicit  |
-| Object       | yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | no            |
+| List       | auto-iterate  |
+| Object     | yes           |
+| Raw input  | yes           |
 
 [Http endpoint.schema.yaml](schema/Http%20endpoint.schema.yaml)
 

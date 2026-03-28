@@ -2,11 +2,11 @@
 
 `Code example` marks the start of example code in a Markdown document.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | yes       |
-| List         | no        |
-| Object       | no        |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | yes           |
+| List       | no            |
+| Object     | no            |
 
 [Code example.schema.yaml](schema/Code%20example.schema.yaml)
 

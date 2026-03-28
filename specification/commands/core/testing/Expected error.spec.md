@@ -2,11 +2,12 @@
 
 `Expected error` tests if an error was raised previously.
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | yes       |
-| List         | no        |
-| Object       | no        |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | yes           |
+| List       | no            |
+| Object     | no            |
+| Error trap | yes           |
 
 [Expected error.schema.yaml](schema/Expected%20error.schema.yaml)
 

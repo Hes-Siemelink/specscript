@@ -2,11 +2,13 @@
 
 Error handling in CLI scripts
 
-| Content type | Supported |
-|--------------|-----------|
-| Value        | no        |
-| List         | implicit  |
-| Object       | Yes       |
+| Input      | Supported     |
+|------------|---------------|
+| Scalar     | no            |
+| List       | auto-iterate  |
+| Object     | yes           |
+| Raw input  | yes           |
+| Error trap | yes           |
 
 [On error type.schema.yaml](schema/On%20error%20type.schema.yaml)
 
