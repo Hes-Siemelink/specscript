@@ -68,3 +68,16 @@ This style is deliberately dry. Friendlier tutorial-style guides are a separate 
 - **`.spec.md`**: Executable documentation with `yaml specscript` blocks
 - **`.spec.yaml`**: Pure SpecScript YAML scripts
 - Never use `yaml file=filename.spec.yaml` as a substitute for executable code in `.spec.md` files
+
+## Spec document hygiene
+
+Lessons from implementing a second (TypeScript) implementation against the spec:
+
+- **Avoid asserting on exact formatted output** when the intent is to test behavior, not formatting. Use pattern
+  matching or partial assertions. Exact output assertions make formatting quirks de-facto spec — a second implementation
+  is forced to replicate bugs.
+- **YAML output format varies between libraries** (indentation, quoting style, flow vs. block). Prefer comparing parsed
+  structures (semantic equality) over formatted YAML strings where possible.
+- **Watch for cross-level contamination** in spec files. If a Level 0–1 spec file uses `file=` blocks or `shell cli`
+  blocks (Level 3+ features), it forces test runners to handle partial failures. Keep spec sections within their level,
+  or move cross-level sections to separate files.

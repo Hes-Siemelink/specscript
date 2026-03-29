@@ -44,6 +44,6 @@ Load the `specscript-specs` skill for details on code block types and specificat
 
 ## Phase 4: Testing
 
-1. Rapid iteration (skip tests during build): `./gradlew build fatJar -x test -x specificationTest`
+1. Rapid iteration (skip tests during build): `./gradlew build fullJar -x test -x specificationTest`
 2. Validate individual spec: `spec your-spec.spec.md`
 3. Full suite: `./gradlew specificationTest`

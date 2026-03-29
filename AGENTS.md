@@ -17,7 +17,8 @@ interaction, testing, and more.
 
 The `specification/` directory contains the complete language specification written in SpecScript Markdown itself. This
 includes tests written in SpecScript yaml. The `samples` directory contains SpecScript example code. The `src/`
-directory contains the Kotlin implementation of the SpecScript language.
+directory contains the Kotlin implementation (reference implementation). The `typescript/` directory contains a
+TypeScript implementation. Both implementations pass the same specification tests.
 
 When doing a full build, both the specification tests and the unit tests run. The specification tests execute all the
 code examples in the documentation, ensuring that the documentation is always accurate and up-to-date.
@@ -61,7 +62,7 @@ before proceeding. Git is the backup system — don't create backup files in a g
 ./gradlew test                    # Unit tests
 ./gradlew specificationTest       # Specification tests (440+ tests)
 ./gradlew check                   # All tests including specification tests
-./gradlew build fatJar            # Build fat JAR (self-contained)
+./gradlew build fullJar           # Build fat JAR (self-contained)
 ./gradlew githubRelease           # Create GitHub release (pass -PreleaseHeadline="..." for description)
 ```
 
@@ -103,6 +104,7 @@ included as a resource directory for runtime access.
 ### Architectural Principles
 
 - The project is split into `specification` (the language specification) and `src` (the Kotlin implementation).
+- The `typescript/` directory contains an independent TypeScript implementation that passes the same specification tests.
 - Commands are implemented as singleton objects extending `specscript.language.CommandHandler`.
 - The command's name and group are registered in the `CommandHandler` constructor, e.g.,
   `CommandHandler("Mcp server", "ai/mcp")`.
@@ -110,6 +112,14 @@ included as a resource directory for runtime access.
 - Two JAR artifacts are built: thin and fat for different deployment scenarios.
 - The project uses "specscript" internally but is branded as "SpecScript" externally.
 - Command implementations reference `"core/"` paths instead of legacy `"specscript/"` paths.
+
+### Porting guides
+
+Lessons from the TypeScript port are captured in `plan/proposals/`:
+
+- `language-designer-lessons-learned.md` — spec gaps, surprising behaviors, and improvement suggestions discovered
+  during the TypeScript port
+- `go-implementer-guide.md` — level-by-level implementation guide with gotchas, for future implementations
 
 ## Key Technologies
 
@@ -123,19 +133,23 @@ included as a resource directory for runtime access.
 
 - **JSON Schema:** For map-like structures, use `additionalProperties: { ... }`. Do not use `patternProperties`.
 - **Kotlin:** Follow the standard Kotlin style guide.
+- **Declarative style:** More "what" than "how". Code should speak for itself. Prefer a purpose-named method that
+  describes *what* you want over exposing mechanism at the call site. Null handling, type parameters, and
+  library-specific ceremony belong behind the API. For example, prefer `Json.toObject(nullableMap)` over
+  `Json.valueToTree<ObjectNode>(nullableMap ?: emptyMap<String, Any>())`.
 - **Good OO / encapsulation:** Encapsulate logic within appropriate classes and provide utility functions to reduce
   client code complexity. For example, McpServer encapsulates server context management rather than exposing raw session
   key manipulation.
+- **Good naming over comments:** If you need a comment, the name is wrong. Use `typealias` to make type signatures
+  self-documenting. No abbreviations (e.g., don't use "FQN" — use "full name").
 - **Sparse commenting:** Most code should be self-explanatory. Use comments only for TODOs, non-obvious business logic,
-  and KDoc for public methods when purpose isn't immediately clear.
+  and KDoc for public methods when purpose isn't immediately clear. Delete comments that describe what the code already
+  says.
+- **Formatting:** Blank line before `else` in `when` blocks.
 - **File Naming:** Specification files use spaces in their names (e.g., `Mcp server.spec.md`), which is important for
   file system operations.
 - **Directory config:** Each directory can have a `specscript-config.yaml` file for metadata (description, imports,
   connections). Loaded by `DirectoryInfo.kt`. Not a SpecScript script — plain YAML config.
-- **API design over inline ceremony:** Prefer a purpose-named method that describes *what* you want over exposing
-  mechanism at the call site. Null handling, type parameters, and library-specific ceremony belong behind the API. For
-  example, prefer `Json.toObject(nullableMap)` over
-  `Json.valueToTree<ObjectNode>(nullableMap ?: emptyMap<String, Any>())`.
 
 ## Specification writing style
 
@@ -152,6 +166,19 @@ style: precise, executable, and cheap to change.
 - **Edge cases go in `tests/` files**, not in the main spec document.
 
 This style is deliberately dry. Friendlier tutorial-style guides are a separate concern (see TODO.md).
+
+## Specification document hygiene
+
+Lessons from implementing a second (TypeScript) implementation against the spec:
+
+- **Avoid asserting on exact formatted output** when the intent is to test behavior, not formatting. Use pattern
+  matching or partial assertions. Exact output assertions make formatting quirks de-facto spec — a second implementation
+  is forced to replicate bugs.
+- **YAML output format varies between libraries** (indentation, quoting style, flow vs. block). Prefer comparing parsed
+  structures (semantic equality) over formatted YAML strings where possible.
+- **Watch for cross-level contamination** in spec files. If a Level 0–1 spec file uses `file=` blocks or `shell cli`
+  blocks (Level 3+ features), it forces test runners to handle partial failures. Keep spec sections within their level,
+  or move cross-level sections to separate files.
 
 ## Sensitive areas
 
