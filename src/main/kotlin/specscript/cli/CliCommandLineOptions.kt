@@ -13,6 +13,7 @@ class CliCommandLineOptions private constructor(
     val help: Boolean,
     val debug: Boolean,
     val testMode: Boolean,
+    val packagePath: String?,
     val commands: List<String>,
     private val commandArgs: List<String>
 
@@ -25,9 +26,11 @@ class CliCommandLineOptions private constructor(
             Yaml.readResource("cli/specscript-command-line-options.yaml").toDomainObject(CommandLineParameters::class)
         }
 
+        private val valueBearingOptions = setOf("package-path", "p")
+
         operator fun invoke(args: List<String> = emptyList()): CliCommandLineOptions {
 
-            val (globalArgs, commands, commandArgs) = splitArguments(args)
+            val (globalArgs, commands, commandArgs) = splitArguments(args, valueBearingOptions)
             val options = definedOptions.validateArgs(globalArgs)
 
             return CliCommandLineOptions(
@@ -36,6 +39,9 @@ class CliCommandLineOptions private constructor(
                 help = options.contains("help"),
                 debug = options.contains("debug"),
                 testMode = options.contains("test"),
+                packagePath = globalArgs.firstNotNullOfOrNull { (key, value) ->
+                    value.takeIf { key == "package-path" || key == "p" }
+                },
                 commands,
                 commandArgs
             )
@@ -43,10 +49,10 @@ class CliCommandLineOptions private constructor(
     }
 }
 
-private fun CommandLineParameters.validateArgs(options: List<String>): CommandLineParameters {
+private fun CommandLineParameters.validateArgs(options: List<Pair<String, String?>>): CommandLineParameters {
     val parameters = mutableMapOf<String, ParameterData>()
     options.forEach {
-        val (key, value) = getOption(it)
+        val (key, value) = getOption(it.first)
         parameters[key] = value
     }
 
@@ -70,17 +76,34 @@ private fun CommandLineParameters.getOutputOption(): OutputOption = when {
 
 private enum class ArgType { GLOBAL_OPTIONS, FILENAME, COMMAND_ARGS }
 
-private fun splitArguments(args: List<String>): Triple<List<String>, List<String>, List<String>> {
-    val globalArgs = mutableListOf<String>()
+private fun splitArguments(
+    args: List<String>,
+    valueBearingOptions: Set<String>
+): Triple<List<Pair<String, String?>>, List<String>, List<String>> {
+    val globalArgs = mutableListOf<Pair<String, String?>>()
     val filenames = mutableListOf<String>()
     val commandArgs = mutableListOf<String>()
 
     var state = GLOBAL_OPTIONS
+    var expectValue: String? = null
 
     for (argument in args) {
+        if (expectValue != null) {
+            globalArgs.add(expectValue to argument)
+            expectValue = null
+            continue
+        }
+
         if (state == GLOBAL_OPTIONS) {
             if (isFlag(argument)) {
-                globalArgs.add(normalize(argument))
+                val normalized = normalize(argument)
+                if (normalized in valueBearingOptions) {
+                    expectValue = normalized
+                }
+
+                else {
+                    globalArgs.add(normalized to null)
+                }
             } else {
                 state = FILENAME
             }

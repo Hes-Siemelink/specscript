@@ -135,7 +135,7 @@ Expected output:
 
 Each directory can have a `specscript-config.yaml` file that contains metadata about the directory.
 
-You can give the directory a readable description, import cli files from other directories and manage http connection
+You can give the directory a readable description, import commands from other directories, and manage http connection
 data.
 
 ### Directory description
@@ -159,8 +159,8 @@ Available commands:
   create-greeting   Creates a greeting
 ```
 
-If there is no `specscript-config.yaml` file, or it doesn't have a description, SpecScript will use the first sentence of
-the README.md file in the directory.
+If there is no `specscript-config.yaml` file, or it doesn't have a description, SpecScript will use the first sentence
+of the README.md file in the directory.
 <!-- TODO: Add example and test cases -->
 
 ### Hidden directory
@@ -171,7 +171,7 @@ For example take the following `specscript-config.yaml` file in the `subcommand`
 
 ```yaml file=subcommand/specscript-config.yaml
 Script info:
-  hiddent: true
+  hidden: true
 ```
 
 It will not show up as a subcommand when invoking `cli --help`.
@@ -185,31 +185,31 @@ Script info:
   specscript-version: v0.1
 ```
 
-### Importing files from another directory
+### Importing commands from another directory
 
-Out-of-the-box, you
-can [call a script from within the same directory](Organizing%20SpecScript%20files%20in%20directories.spec.md#calling-another-script)
-as a regular SpecScript command.
+Scripts can call other scripts in the same directory as regular commands (see
+[Calling another script](#calling-another-script) above). To import commands from other directories or external
+packages, use the `imports` section in `specscript-config.yaml`. See **[Packages](Packages.spec.md)** for the full
+import system including packages, wildcards, aliased imports and import scope.
 
-To call a script from another directory, you can import it in the `specscript-config.yaml` file. This will import it for
-all scripts in that directory.
-
-For example, if we have the file `helper/say-something.spec.yaml`:
+Here is a simple example of importing from a local subdirectory. Given the file
+`helper/say-something.spec.yaml`:
 
 ```yaml file=helper/say-something.spec.yaml
 Output: Something ${input.what}
 ```
 
-And we have it in the `specscript-config.yaml` file as follows:
+Import from the local `helper` subdirectory in `specscript-config.yaml`:
 
 ```yaml file=specscript-config.yaml
 Script info: This is an example directory
 
 imports:
-  - helper/say-something.spec.yaml
+  ./helper:
+    - say-something
 ```
 
-Then you can call it like this from your script `call-helper.spec.yaml`:
+Now call it from `call-helper.spec.yaml`:
 
 ```yaml file=call-helper.spec.yaml
 Code example: Calling a script that was imported from another directory
@@ -220,19 +220,22 @@ Say something:
 Expected output: Something funny
 ```
 
-Run it
+Run it:
 
 ```shell cli
 spec call-helper
 ```
 
-And it will output:
+And the expected output is:
 
 ```output
 Something funny
 ```
 
-### Specifying connection data
+See **[Packages](Packages.spec.md)** for more info on the syntax, for example how to import from external packages, and
+how to alias imports.
+
+### Connections
 
 The `specscript-config.yaml` file also contains a `connections` settings for retrieving HTTP connection credentials. See
 the

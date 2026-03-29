@@ -1,3 +1,5 @@
+Package info: Simple CRUD goals application
+
 connections:
   Goal DB:
     SQLite defaults:

@@ -61,6 +61,8 @@ class FileContext(
     init {
         variables[SCRIPT_DIR_VARIABLE] = StringNode(scriptDir.toAbsolutePath().toString())
         variables[ENV_VARIABLE] = Json.newObject(System.getenv())
+
+        PackageRegistry.autoPackagePath = PackageRegistry.findEnclosingPackageLibrary(scriptDir)
     }
 
     override val tempDir: Path
@@ -143,11 +145,23 @@ class FileContext(
     }
 
     private fun findImportedCommands(): Map<String, SpecScriptFile> {
-
         val commands = mutableMapOf<String, SpecScriptFile>()
 
-        for (cliFile in info.imports) {
-            addCommand(commands, scriptDir.resolve(cliFile))
+        for (packageImport in info.parsedImports) {
+            if (packageImport.local) {
+                commands.putAll(
+                    PackageRegistry.scanLocalCommands(
+                        scriptDir, packageImport.source, packageImport.items
+                    )
+                )
+            }
+
+            else {
+                val packageDir = PackageRegistry.findPackage(packageImport.source) ?: continue
+                commands.putAll(
+                    PackageRegistry.scanCommands(packageDir, packageImport.items)
+                )
+            }
         }
 
         return commands

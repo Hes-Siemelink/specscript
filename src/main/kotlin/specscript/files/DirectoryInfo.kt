@@ -1,5 +1,6 @@
 package specscript.files
 
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import specscript.language.CommandInfo
 import specscript.util.IO.isTempDir
@@ -23,10 +24,17 @@ class DirectoryInfo : CommandInfo {
     @JsonProperty("specscript-version")
     override var specScriptVersion: String = "unknown"
 
-    var imports = mutableListOf<String>()
+    @JsonProperty("Package info")
+    var packageInfo: PackageInfo? = null
+
+    var imports: JsonNode? = null
     var connections = Json.newObject()
 
     var types = Json.newObject()
+
+    val parsedImports: List<PackageImport> by lazy {
+        PackageImport.parse(imports)
+    }
 
     companion object {
 
@@ -69,6 +77,15 @@ class DirectoryInfo : CommandInfo {
                 ""
             }
         }
+    }
+}
+
+class PackageInfo() {
+    var description: String = ""
+
+    @JsonCreator
+    constructor(textValue: String) : this() {
+        this.description = textValue
     }
 }
 

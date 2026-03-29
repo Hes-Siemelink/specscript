@@ -11,6 +11,7 @@ import { toDisplayYaml } from './util/yaml.js'
 import { parseYamlCommands } from './util/yaml.js'
 import type { JsonValue, JsonObject, Command } from './language/types.js'
 import { SpecScriptError, SpecScriptCommandError, MissingInputError, isObject } from './language/types.js'
+import { setPackagePath } from './language/package-registry.js'
 
 // ---------------------------------------------------------------------------
 // Global option definitions (mirrors specscript-command-line-options.yaml)
@@ -19,6 +20,7 @@ import { SpecScriptError, SpecScriptCommandError, MissingInputError, isObject } 
 interface OptionDef {
   description: string
   shortOption: string
+  valueBearing?: boolean
 }
 
 const GLOBAL_OPTIONS: Record<string, OptionDef> = {
@@ -28,6 +30,7 @@ const GLOBAL_OPTIONS: Record<string, OptionDef> = {
   'interactive':  { description: 'SpecScript may prompt for user input if it needs more information', shortOption: 'i' },
   'debug':        { description: 'Run in debug mode. Prints stacktraces when an error occurs.', shortOption: 'd' },
   'test':         { description: 'Run in test mode. Only tests will be executed.', shortOption: 't' },
+  'package-path': { description: 'Directory containing packages', shortOption: 'p', valueBearing: true },
 }
 
 // ---------------------------------------------------------------------------
@@ -42,6 +45,7 @@ interface CliOptions {
   debug: boolean
   testMode: boolean
   interactive: boolean
+  packagePath: string | undefined
   commands: string[]
   commandArgs: string[]
 }
@@ -97,9 +101,13 @@ function parseCliOptions(args: string[]): CliOptions {
 
   // Validate global args against known options
   const activeOptions = new Set<string>()
-  for (const arg of globalArgs) {
-    const option = resolveOption(arg)
+  let packagePath: string | undefined
+  for (const [key, value] of globalArgs) {
+    const option = resolveOption(key)
     activeOptions.add(option)
+    if (option === 'package-path' && value !== undefined) {
+      packagePath = value
+    }
   }
 
   const printOutput: OutputOption = activeOptions.has('output-json')
@@ -112,6 +120,7 @@ function parseCliOptions(args: string[]): CliOptions {
     debug: activeOptions.has('debug'),
     testMode: activeOptions.has('test'),
     interactive: activeOptions.has('interactive'),
+    packagePath,
     commands,
     commandArgs,
   }
@@ -125,20 +134,32 @@ function resolveOption(normalized: string): string {
 }
 
 function splitArguments(args: string[]): {
-  globalArgs: string[]
+  globalArgs: Array<[string, string | undefined]>
   commands: string[]
   commandArgs: string[]
 } {
-  const globalArgs: string[] = []
+  const globalArgs: Array<[string, string | undefined]> = []
   const commands: string[] = []
   const commandArgs: string[] = []
 
   let state: 'global' | 'commands' | 'commandArgs' = 'global'
+  let expectValue: string | undefined
 
   for (const arg of args) {
+    if (expectValue !== undefined) {
+      globalArgs.push([expectValue, arg])
+      expectValue = undefined
+      continue
+    }
+
     if (state === 'global') {
       if (isFlag(arg)) {
-        globalArgs.push(normalize(arg))
+        const normalized = normalize(arg)
+        if (isValueBearingOption(normalized)) {
+          expectValue = normalized
+        } else {
+          globalArgs.push([normalized, undefined])
+        }
       } else {
         state = 'commands'
       }
@@ -158,6 +179,15 @@ function splitArguments(args: string[]): {
   }
 
   return { globalArgs, commands, commandArgs }
+}
+
+function isValueBearingOption(normalized: string): boolean {
+  for (const [name, def] of Object.entries(GLOBAL_OPTIONS)) {
+    if ((name === normalized || def.shortOption === normalized) && def.valueBearing) {
+      return true
+    }
+  }
+  return false
 }
 
 function isFlag(item: string): boolean {
@@ -464,6 +494,9 @@ export async function runCli(
     }
     throw e
   }
+
+  // Set package path before command dispatch (resolve relative to workingDir)
+  setPackagePath(options.packagePath ? resolve(workingDir, options.packagePath) : undefined)
 
   // No commands → print usage
   if (options.commands.length === 0) {

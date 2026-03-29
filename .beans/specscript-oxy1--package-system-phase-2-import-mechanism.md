@@ -1,11 +1,11 @@
 ---
 # specscript-oxy1
 title: 'Package system Phase 2: Import mechanism'
-status: todo
+status: scrapped
 type: task
 priority: normal
 created_at: 2026-03-28T20:45:53Z
-updated_at: 2026-03-28T20:46:06Z
+updated_at: 2026-03-29T14:08:16Z
 parent: specscript-iglq
 ---
 
@@ -22,3 +22,5 @@ Implement the imports section in specscript-config.yaml with compact map syntax:
 - [ ] Wire imported package commands into FileContext as priority 4
 - [ ] Write unit tests for imports
 - [ ] Verify draft spec import tests pass
+
+## Reasons for Scrapping\n\nThis work was completed as part of specscript-krm1 (Package system v2 implementation). Import mechanism with compact map syntax, aliased imports, collision detection, and FileContext wiring were all implemented and committed in earlier commits.

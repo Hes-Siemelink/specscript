@@ -9,6 +9,7 @@ These topics define the basic infrastructure of SpecScript:
 * [Variables](Variables.spec.md)
 * [Eval syntax](Eval%20syntax.spec.md)
 * [Organizing SpecScript files in directories](Organizing%20SpecScript%20files%20in%20directories.spec.md)
+* [Packages](Packages.spec.md)
 
 ## Core library
 

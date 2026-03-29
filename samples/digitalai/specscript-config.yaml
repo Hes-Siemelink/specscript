@@ -1,5 +1,4 @@
-Script info: |
-  Interact with Digital.ai products and services.
+Package info: Interact with Digital.ai products and services.
 
 connections:
   Digital.ai Release: release/credentials/login.spec.yaml

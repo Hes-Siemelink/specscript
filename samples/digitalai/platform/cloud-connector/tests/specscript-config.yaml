@@ -2,8 +2,9 @@ Script info: |
   Manage Cloud Connector installations.
 
 imports:
-  - ../create-agent.spec.yaml
-  - ../list-agents.spec.yaml
+  digitalai:
+    - platform/cloud-connector/create-agent
+    - platform/cloud-connector/list-agents
 
 connections:
   Digital.ai Platform:

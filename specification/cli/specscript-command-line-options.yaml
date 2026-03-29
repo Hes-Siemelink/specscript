@@ -29,3 +29,7 @@ test:
   default: false
   type: boolean
   short option: t
+
+package-path:
+  description: Directory containing packages
+  short option: p

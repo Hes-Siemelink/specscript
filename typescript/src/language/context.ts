@@ -1,5 +1,5 @@
 import { dirname, resolve } from 'node:path'
-import { mkdtempSync, readdirSync, statSync, readFileSync } from 'node:fs'
+import { mkdtempSync, readdirSync, statSync, readFileSync, existsSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import type { JsonValue, JsonObject } from './types.js'
@@ -9,6 +9,8 @@ import { getCommandHandler, canonicalName } from './command-handler.js'
 import { createAssignment } from '../commands/variables.js'
 import { parseYaml } from '../util/yaml.js'
 import { TypeRegistry, loadTypes } from './type-system.js'
+import { parseImports } from './package-import.js'
+import * as PackageRegistry from './package-registry.js'
 
 const ASSIGNMENT_REGEX = /^\$\{(.+)}$/
 
@@ -71,6 +73,7 @@ export class DefaultContext implements ScriptContext {
   private _tempDir?: string
   private _commandResolver?: (name: string) => CommandHandler
   private _types?: TypeRegistry
+  private _importedCommands?: Map<string, CommandHandler>
 
   constructor(options?: {
     scriptFile?: string
@@ -91,6 +94,13 @@ export class DefaultContext implements ScriptContext {
     // Set built-in variables if not already present
     if (!this.variables.has('SCRIPT_HOME') && this.scriptFile !== '<inline>') {
       this.variables.set('SCRIPT_HOME', this.scriptDir)
+    }
+
+    // Auto-discover enclosing package library for search path
+    if (this.scriptFile !== '<inline>') {
+      PackageRegistry.setAutoPackagePath(
+        PackageRegistry.findEnclosingPackageLibrary(this.scriptDir)
+      )
     }
     if (!this.variables.has('env')) {
       const envObj: Record<string, JsonValue> = {}
@@ -219,29 +229,47 @@ export class DefaultContext implements ScriptContext {
   }
 
   /**
-   * Check specscript-config.yaml imports for matching commands.
+   * Resolve imported commands from specscript-config.yaml using the package system.
    */
   private findImportedCommand(name: string): CommandHandler | undefined {
-    const canonical = canonicalName(name)
+    if (!this._importedCommands) {
+      this._importedCommands = this.resolveImportedCommands()
+    }
+    return this._importedCommands.get(canonicalName(name))
+  }
+
+  private resolveImportedCommands(): Map<string, CommandHandler> {
     const configPath = join(this.scriptDir, 'specscript-config.yaml')
     try {
       const content = readFileSync(configPath, 'utf-8')
       const config = parseYaml(content) as JsonObject | null
-      if (!config || !Array.isArray(config.imports)) return undefined
+      if (!config) return new Map()
 
-      for (const importPath of config.imports) {
-        if (typeof importPath !== 'string') continue
-        const fullPath = resolve(this.scriptDir, importPath)
-        const fileName = importPath.split('/').pop() ?? ''
-        const commandName = fileToCommandName(fileName)
-        if (commandName && canonicalName(commandName) === canonical) {
-          return createFileCommandHandler(commandName, fullPath)
+      const imports = parseImports(config.imports)
+      const commands = new Map<string, CommandHandler>()
+
+      for (const packageImport of imports) {
+        if (packageImport.local) {
+          const localCommands = PackageRegistry.scanLocalCommands(
+            this.scriptDir, packageImport.source, packageImport.items
+          )
+          for (const [key, handler] of localCommands) {
+            commands.set(key, handler)
+          }
+        } else {
+          const packageDir = PackageRegistry.findPackage(packageImport.source)
+          if (!packageDir) continue
+          const packageCommands = PackageRegistry.scanCommands(packageDir, packageImport.items)
+          for (const [key, handler] of packageCommands) {
+            commands.set(key, handler)
+          }
         }
       }
+
+      return commands
     } catch {
-      // No config file or not readable
+      return new Map()
     }
-    return undefined
   }
 
   clone(): ScriptContext {
@@ -310,7 +338,7 @@ export function setRunScriptFileFn(fn: (filePath: string, input: JsonValue, pare
  * Create a CommandHandler that runs a script file.
  * Used for local file commands and imported commands.
  */
-function createFileCommandHandler(name: string, filePath: string): CommandHandler {
+export function createFileCommandHandler(name: string, filePath: string): CommandHandler {
   return {
     name,
     async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {

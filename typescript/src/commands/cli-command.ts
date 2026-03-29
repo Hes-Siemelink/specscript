@@ -25,7 +25,7 @@ export const CliCommand: CommandHandler = {
         throw new CommandFormatError("Cli: missing required 'command' parameter")
       }
       const cd = isString(data.cd) ? data.cd : undefined
-      const workingDir = cd ? resolve(context.workingDir, cd) : context.workingDir
+      const workingDir = cd ? resolve(context.workingDir, cd) : undefined
       return invokeCli(context, command, workingDir)
     }
 
@@ -34,7 +34,7 @@ export const CliCommand: CommandHandler = {
 }
 
 async function invokeCli(context: ScriptContext, command: string, workingDir?: string): Promise<JsonValue> {
-  const dir = workingDir ?? context.workingDir
+  const dir = workingDir ?? context.tempDir
 
   // Parse command string into args, dropping leading "spec" token
   const args = command.split(/\s+/)

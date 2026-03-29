@@ -1,6 +1,7 @@
 package specscript.cli
 
 import specscript.files.FileContext
+import specscript.files.PackageRegistry
 import specscript.files.SpecScriptFile
 import specscript.language.*
 import specscript.language.types.toDisplayString
@@ -35,6 +36,11 @@ class SpecScriptCli(
     ) : this(CliCommandLineOptions(args.toList()), workingDir, input, output)
 
     fun run(parent: ScriptContext? = null) {
+
+        // Set package lib path
+        options.packagePath?.let {
+            PackageRegistry.packagePath = workingDir.resolve(it).toAbsolutePath().normalize()
+        }
 
         // Show usage when no commands are given
         if (options.commands.isEmpty()) {

@@ -1,3 +1,4 @@
 imports:
-  - helper/helper-function.spec.yaml
-  - helper/call-helper.spec.yaml
+  ./helper:
+    - helper-function
+    - call-helper

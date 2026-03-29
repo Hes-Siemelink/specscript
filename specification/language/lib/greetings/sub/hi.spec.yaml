@@ -1,0 +1,7 @@
+Input schema:
+  type: object
+  properties:
+    name:
+      type: string
+
+Output: Hi ${name}!

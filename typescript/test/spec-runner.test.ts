@@ -151,6 +151,7 @@ const LEVEL_3_MD_FILES = [
   'commands/core/script-info/Script info.spec.md',
   // Language docs that need file/cli support
   'language/Organizing SpecScript files in directories.spec.md',
+  'language/Packages.spec.md',
   'language/SpecScript Yaml Scripts.spec.md',
   'language/Testing.spec.md',
   'language/tests/Directory tests.spec.md',
@@ -194,10 +195,6 @@ const SKIP_TESTS = new Set([
   'language/SpecScript Yaml Scripts.spec.md > Script info',             // runs spec binary via shell cli
   'language/SpecScript Yaml Scripts.spec.md > Defining script input',   // runs spec binary via shell cli
   'language/SpecScript Yaml Scripts.spec.md > Script output',           // runs spec binary via shell cli
-  'language/Organizing SpecScript files in directories.spec.md > Directory description',  // needs specscript-config.yaml description
-  'language/Organizing SpecScript files in directories.spec.md > Importing files from another directory',  // needs specscript-config.yaml imports
-  'language/tests/Directory tests.spec.md > Empty directory',           // runs spec binary via shell cli
-  'language/tests/Directory tests.spec.md > Imported helper scripts',   // needs specscript-config.yaml imports
   'cli/Command line options.spec.md > --debug',                         // error output references Kotlin stacktrace
 ])
 
