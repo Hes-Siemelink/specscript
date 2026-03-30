@@ -18,6 +18,14 @@ interface ScriptContext {
     var error: SpecScriptCommandError?
     val types: TypeRegistry
 
+    /**
+     * The directory where the original script file lives. For normal scripts, this equals scriptDir.
+     * For Markdown test execution where scriptDir points to a temp dir, this points to the real
+     * spec file's parent directory.
+     */
+    val scriptHome: Path
+        get() = scriptDir
+
     fun getCommandHandler(command: String): CommandHandler
     fun clone(): ScriptContext
 }

@@ -27,7 +27,7 @@ export const ConfirmCommand: CommandHandler = {
     const answers = getAnswers(context.session)
     const stdout = context.session.get('stdout') as ((text: string) => void) | undefined
 
-    const answer = await promptSelect(answers, message, choices, false, stdout)
+    const answer = await promptSelect(answers, message, choices, false, stdout, context.interactive)
 
     if (answer === 'No') {
       throw new SpecScriptCommandError(

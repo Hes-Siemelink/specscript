@@ -28,7 +28,7 @@ object PromptObject : CommandHandler("Prompt object", "core/user-interaction"), 
             parameter.conditionValid() || continue
 
             // Ask user
-            val answer = parameter.prompt(name, answers = context.getAnswers())
+            val answer = parameter.prompt(name, answers = context.getAnswers(), interactive = context.interactive)
 
             // Add answer to result and to list of variables
             answers.set(name, answer)

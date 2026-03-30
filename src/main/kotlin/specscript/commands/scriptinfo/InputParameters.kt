@@ -77,7 +77,7 @@ object InputParameters : CommandHandler("Input parameters", "core/script-info"),
                 context.hasRecordedAnswer(question) -> context.getRecordedAnswer(question)
 
                 // Ask user
-                context.interactive -> info.prompt(name, answers = answers)
+                context.interactive -> info.prompt(name, answers = answers, interactive = true)
 
 
                 else -> throw MissingInputException(

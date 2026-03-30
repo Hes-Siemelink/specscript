@@ -17,7 +17,7 @@ import tools.jackson.databind.node.ValueNode
 object Prompt : CommandHandler("Prompt", "core/user-interaction"), ValueHandler, ObjectHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode {
-        return UserPrompt.prompt(data.stringValue(), answers = context.getAnswers())
+        return UserPrompt.prompt(data.stringValue(), answers = context.getAnswers(), interactive = context.interactive)
     }
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
@@ -27,6 +27,6 @@ object Prompt : CommandHandler("Prompt", "core/user-interaction"), ValueHandler,
         // Only ask if condition is true
         parameterData.conditionValid() || return null
 
-        return parameterData.prompt(answers = context.getAnswers())
+        return parameterData.prompt(answers = context.getAnswers(), interactive = context.interactive)
     }
 }

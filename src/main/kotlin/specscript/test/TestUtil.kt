@@ -6,15 +6,14 @@ import org.junit.jupiter.api.DynamicNode
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.junit.jupiter.api.function.Executable
-import specscript.cli.reportError
 import specscript.commands.testing.CodeExample
 import specscript.commands.testing.TestCase
 import specscript.commands.testing.Tests
 import specscript.files.*
 import specscript.language.*
+import specscript.util.IO
 import specscript.util.Yaml
 import specscript.util.toDisplayYaml
-import tools.jackson.databind.node.StringNode
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.isDirectory
@@ -97,18 +96,22 @@ class TestCaseRunner(
     override fun execute() {
         context.error = null
         context.variables.remove(INPUT_VARIABLE)
-        try {
-            script.run(context)
-        } catch (a: Break) {
-            a.output
-        } catch (e: SpecScriptCommandError) {
-            e.error.data?.let {
-                System.err.println(it.toDisplayYaml())
+
+        var failure: Throwable? = null
+        val (stdout, stderr) = IO.captureSystemOutAndErr(echo = false) {
+            try {
+                script.run(context)
+            } catch (a: Break) {
+                a.output
+            } catch (e: Throwable) {
+                failure = e
             }
-            throw e
-        } catch (e: SpecScriptException) {
-            e.reportError(printStackTrace = false)
-            throw e
+        }
+
+        if (failure != null) {
+            if (stdout.isNotBlank()) System.out.print(stdout)
+            if (stderr.isNotBlank()) System.err.print(stderr)
+            throw failure!!
         }
     }
 }
@@ -158,19 +161,18 @@ private fun SpecScriptFile.getTests(context: ScriptContext): List<DynamicTest> {
 
 /**
  * Extracts the yaml code from Markdown sections as individual tests.
+ *
+ * Creates a temp dir that serves as both scriptDir and tempDir (so file= blocks and
+ * file resolution share the same directory). The scriptHome parameter preserves the
+ * real spec file location for SCRIPT_HOME.
  */
 fun SpecScriptFile.getCodeExamplesAsTests(): List<DynamicTest> {
 
-    // Set up test dir
     val testDir = Files.createTempDirectory("specscript-")
     testDir.toFile().deleteOnExit()
-    val context = FileContext(testDir)
+    val scriptHome = file.toAbsolutePath().normalize().parent
+    val context = FileContext(testDir, scriptHome = scriptHome)
     context.setTempDir(testDir)
-
-    // SCRIPT_HOME points to the original spec file's directory, not the temp dir
-    context.variables[SCRIPT_DIR_VARIABLE] = StringNode(
-        file.toAbsolutePath().normalize().parent.toString()
-    )
 
     val scripts = splitMarkdown()
     val tests: List<DynamicTest> = scripts

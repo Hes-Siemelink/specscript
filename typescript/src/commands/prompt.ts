@@ -73,15 +73,15 @@ export async function doPrompt(
   // 7. default → text prompt
 
   if (enumValues !== undefined && selectMode === 'single') {
-    return promptChoice(answers, message, enumValues, displayProperty, valueProperty, false, stdout)
+    return promptChoice(answers, message, enumValues, displayProperty, valueProperty, false, stdout, context.interactive)
   }
 
   if (enumValues !== undefined && selectMode === 'multiple') {
-    return promptChoice(answers, message, enumValues, displayProperty, valueProperty, true, stdout)
+    return promptChoice(answers, message, enumValues, displayProperty, valueProperty, true, stdout, context.interactive)
   }
 
   if (secret) {
-    const result = await promptText(answers, message, defaultValue, true, stdout)
+    const result = await promptText(answers, message, defaultValue, true, stdout, context.interactive)
     return result
   }
 
@@ -89,7 +89,7 @@ export async function doPrompt(
     return promptByType(context, answers, message, type, defaultValue, stdout)
   }
 
-  const result = await promptText(answers, message, defaultValue, false, stdout)
+  const result = await promptText(answers, message, defaultValue, false, stdout, context.interactive)
   return result
 }
 
@@ -105,6 +105,7 @@ async function promptChoice(
   valueProperty: string | undefined,
   multiple: boolean,
   stdout?: (text: string) => void,
+  interactive: boolean = false,
 ): Promise<JsonValue> {
   const choices: Choice[] = enumValues.map(choiceData => {
     if (displayProperty && isObject(choiceData)) {
@@ -113,7 +114,7 @@ async function promptChoice(
     return { displayName: toDisplayYaml(choiceData), value: choiceData }
   })
 
-  const answer = await promptSelect(answers, message, choices, multiple, stdout)
+  const answer = await promptSelect(answers, message, choices, multiple, stdout, interactive)
 
   return onlyWith(answer, valueProperty)
 }
@@ -150,9 +151,9 @@ async function promptByType(
   // String type name
   if (isString(type)) {
     switch (type) {
-      case 'boolean': return promptBoolean(answers, message, defaultValue, stdout)
-      case 'string': return promptText(answers, message, defaultValue, false, stdout)
-      default: return promptText(answers, message, defaultValue, false, stdout)
+      case 'boolean': return promptBoolean(answers, message, defaultValue, stdout, context.interactive)
+      case 'string': return promptText(answers, message, defaultValue, false, stdout, context.interactive)
+      default: return promptText(answers, message, defaultValue, false, stdout, context.interactive)
     }
   }
 
@@ -167,13 +168,13 @@ async function promptByType(
     // Base type
     if (isString(typeObj['base'])) {
       switch (typeObj['base']) {
-        case 'boolean': return promptBoolean(answers, message, defaultValue, stdout)
-        case 'string': return promptText(answers, message, defaultValue, false, stdout)
+        case 'boolean': return promptBoolean(answers, message, defaultValue, stdout, context.interactive)
+        case 'string': return promptText(answers, message, defaultValue, false, stdout, context.interactive)
       }
     }
   }
 
-  return promptText(answers, message, defaultValue, false, stdout)
+  return promptText(answers, message, defaultValue, false, stdout, context.interactive)
 }
 
 async function promptBoolean(
@@ -181,8 +182,9 @@ async function promptBoolean(
   message: string,
   defaultValue: string,
   stdout?: (text: string) => void,
+  interactive: boolean = false,
 ): Promise<boolean> {
-  const answer = await promptText(answers, message, defaultValue, false, stdout)
+  const answer = await promptText(answers, message, defaultValue, false, stdout, interactive)
   return answer === true || answer === 'true'
 }
 
@@ -216,7 +218,7 @@ async function promptObjectProperties(
     const propMessage = (isString(def['description']) ? def['description'] : name) ?? name
     const propDefault = def['default'] !== undefined ? String(def['default']) : ''
 
-    const answer = await promptText(answers, propMessage, propDefault, def['secret'] === true, stdout)
+    const answer = await promptText(answers, propMessage, propDefault, def['secret'] === true, stdout, context.interactive)
     result[name] = answer
   }
 

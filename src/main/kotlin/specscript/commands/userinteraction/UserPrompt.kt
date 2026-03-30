@@ -20,24 +20,43 @@ const val ANSWERS_SESSION_KEY = "answers"
 /**
  * User prompt functions for interactive input.
  *
- * When the answers map is non-empty, answers are looked up from the map and
- * simulated output is printed (test mode). When empty, real terminal prompts
- * are shown via KInquirer.
+ * Resolution order for text prompts:
+ * - Recorded answer → default value → interactive prompt (if allowed) → empty string
+ *
+ * Resolution order for select prompts:
+ * - Recorded answer → interactive prompt (if allowed) → error
  */
 object UserPrompt {
 
-    fun prompt(message: String, default: String = "", password: Boolean = false, answers: AnswersMap = emptyMap()): JsonNode {
-        if (answers.isNotEmpty()) {
-            return testPrompt(message, default, password, answers)
+    fun prompt(message: String, default: String = "", password: Boolean = false, answers: AnswersMap = emptyMap(), interactive: Boolean = false): JsonNode {
+        val recorded = answers[message]
+        if (recorded != null) {
+            return testPrompt(message, password, recorded)
         }
-        return realPrompt(message, default, password)
+
+        if (default.isNotEmpty()) {
+            println(KInquirer.renderInput(message, default))
+            return StringNode(default)
+        }
+
+        if (interactive) {
+            return realPrompt(message, default, password)
+        }
+
+        return StringNode("")
     }
 
-    fun select(message: String, choices: List<Choice<JsonNode>>, multiple: Boolean = false, answers: AnswersMap = emptyMap()): JsonNode {
-        if (answers.isNotEmpty()) {
-            return testSelect(message, choices, multiple, answers)
+    fun select(message: String, choices: List<Choice<JsonNode>>, multiple: Boolean = false, answers: AnswersMap = emptyMap(), interactive: Boolean = false): JsonNode {
+        val recorded = answers[message]
+        if (recorded != null) {
+            return testSelect(message, choices, multiple, recorded)
         }
-        return realSelect(message, choices, multiple)
+
+        if (interactive) {
+            return realSelect(message, choices, multiple)
+        }
+
+        throw SpecScriptException("No prerecorded answer for '$message' and not in interactive mode")
     }
 
     // -- Real prompts (KInquirer) --
@@ -61,25 +80,16 @@ object UserPrompt {
 
     // -- Test prompts (simulated output from recorded answers) --
 
-    private fun testPrompt(message: String, default: String, password: Boolean, answers: AnswersMap): JsonNode {
-        val answer: JsonNode = answers[message] ?: if (default.isNotEmpty()) {
-            StringNode(default)
-        } else {
-            StringNode("")
-        }
-
+    private fun testPrompt(message: String, password: Boolean, answer: JsonNode): JsonNode {
         if (password) {
             println(KInquirer.renderInput(message, "********"))
         } else {
             println(KInquirer.renderInput(message, answer.toDisplayYaml()))
         }
-
         return answer
     }
 
-    private fun testSelect(message: String, choices: List<Choice<JsonNode>>, multiple: Boolean, answers: AnswersMap): JsonNode {
-        val selectedAnswer =
-            answers[message] ?: throw IllegalStateException("No prerecorded answer for '$message'")
+    private fun testSelect(message: String, choices: List<Choice<JsonNode>>, multiple: Boolean, selectedAnswer: JsonNode): JsonNode {
 
         if (multiple) {
             val set = selectedAnswer.toList().map { it.stringValue() }

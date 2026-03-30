@@ -339,15 +339,17 @@ function runSpecMdFile(relativePath: string): void {
 
   // Mirror Kotlin's getCodeExamplesAsTests():
   // - Create a temp dir that serves as BOTH scriptDir AND tempDir
-  // - Override SCRIPT_HOME to point to the original spec file's directory
+  // - Use scriptHome to point SCRIPT_HOME to the original spec file's directory
   // This ensures that `file=` blocks (which create Temp files) write to the temp dir,
   // and `resource:` lookups (which use scriptDir) find them there.
   const testDir = mkdtempSync(join(tmpdir(), 'specscript-'))
-  const sharedContext = new DefaultContext({ scriptFile: join(testDir, 'test.spec.md'), workingDir: SPECSCRIPT_HOME })
-  // Set SCRIPT_TEMP_DIR before accessing tempDir so it uses the same directory
+  const sharedContext = new DefaultContext({
+    scriptFile: join(testDir, 'test.spec.md'),
+    workingDir: SPECSCRIPT_HOME,
+    scriptHome: dirname(fullPath),
+  })
+  // Align tempDir with scriptDir so file= blocks write to the same directory
   sharedContext.variables.set('SCRIPT_TEMP_DIR', testDir)
-  // Override SCRIPT_HOME to point to the real spec file's directory
-  sharedContext.variables.set('SCRIPT_HOME', dirname(fullPath))
   setupSilentCapture(sharedContext)
 
   let hasTests = false

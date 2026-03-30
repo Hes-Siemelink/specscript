@@ -7,24 +7,30 @@ import java.nio.file.Path
 import java.nio.file.Paths
 
 object IO {
-    fun captureSystemOut(doThis: () -> Unit): String {
+    fun captureSystemOut(echo: Boolean = true, doThis: () -> Unit): String {
 
-        val (originalOut, capturedOut) = rewireSystemOut()
+        val original = System.out
+        val captured = ByteArrayOutputStream()
+        System.setOut(if (echo) dualStream(original, captured) else PrintStream(captured))
 
         try {
             doThis()
 
-            capturedOut.flush()
-            return capturedOut.toString()
+            captured.flush()
+            return captured.toString()
         } finally {
-            System.setOut(originalOut)
+            System.setOut(original)
         }
     }
 
-    fun captureSystemOutAndErr(doThis: () -> Unit): Pair<String, String> {
+    fun captureSystemOutAndErr(echo: Boolean = true, doThis: () -> Unit): Pair<String, String> {
 
-        val (originalOut, capturedOut) = rewireSystemOut()
-        val (originalErr, capturedErr) = rewireSystemErr()
+        val originalOut = System.out
+        val originalErr = System.err
+        val capturedOut = ByteArrayOutputStream()
+        val capturedErr = ByteArrayOutputStream()
+        System.setOut(if (echo) dualStream(originalOut, capturedOut) else PrintStream(capturedOut))
+        System.setErr(if (echo) dualStream(originalErr, capturedErr) else PrintStream(capturedErr))
 
         try {
             doThis()

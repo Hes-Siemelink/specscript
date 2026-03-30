@@ -32,7 +32,7 @@ fun JsonNode.toPath(context: ScriptContext, directory: Path? = null): Path {
             if (file.exists()) {
                 file
             } else {
-                throw CommandFormatException("File not found: ${file.toRealPath()}")
+                throw CommandFormatException("File not found: ${file.toAbsolutePath()}")
             }
         }
 

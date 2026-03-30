@@ -2,11 +2,10 @@
  * User prompt abstraction for interactive input.
  *
  * Two modes of operation:
- * - TestPrompt: reads pre-recorded answers from context.session, prints simulated TUI output
- * - InquirerPrompt: uses @inquirer/prompts for real terminal interaction
- *
- * Dispatch is per-call: if a recorded answer exists for the question, TestPrompt behavior
- * is used. Otherwise, falls through to @inquirer/prompts.
+ * - Recorded answers: if a pre-recorded answer exists for the message, use it and print simulated output
+ * - Default value: if no recorded answer but a default exists, use the default
+ * - Interactive: if no recorded answer and no default, prompt the user (only when interactive=true)
+ * - Non-interactive with no answer/default: return empty string
  */
 
 import { input, password, select, checkbox } from '@inquirer/prompts'
@@ -31,8 +30,7 @@ type AnswersMap = Map<string, JsonValue>
 
 /**
  * Prompt for text input.
- * If a recorded answer exists for the message, returns it with its original type (TestPrompt behavior).
- * Otherwise, uses @inquirer/prompts input() which always returns a string.
+ * Resolution: recorded answer → default value → interactive prompt (if allowed) → empty string.
  */
 export async function promptText(
   answers: AnswersMap,
@@ -40,6 +38,7 @@ export async function promptText(
   defaultValue: string = '',
   isPassword: boolean = false,
   stdout?: (text: string) => void,
+  interactive: boolean = false,
 ): Promise<JsonValue> {
   const recorded = answers.get(message)
   if (recorded !== undefined) {
@@ -49,7 +48,6 @@ export async function promptText(
     } else {
       writeOutput(stdout, renderTextPrompt(message, displayValue))
     }
-    // Return the raw recorded value, preserving its original type (matches Kotlin's TestPrompt)
     return recorded
   }
 
@@ -59,17 +57,21 @@ export async function promptText(
     return defaultValue
   }
 
-  // Real interactive prompt
-  if (isPassword) {
-    return await password({ message })
+  // Real interactive prompt (only when explicitly allowed)
+  if (interactive) {
+    if (isPassword) {
+      return await password({ message })
+    }
+    return await input({ message, default: defaultValue || undefined })
   }
-  return await input({ message, default: defaultValue || undefined })
+
+  // Non-interactive with no answer and no default
+  return ''
 }
 
 /**
  * Prompt for selection from a list of choices.
- * If a recorded answer exists, uses it (TestPrompt behavior).
- * Otherwise, uses @inquirer/prompts select() or checkbox().
+ * Resolution: recorded answer → interactive prompt (if allowed) → error.
  */
 export async function promptSelect(
   answers: AnswersMap,
@@ -77,12 +79,11 @@ export async function promptSelect(
   choices: Choice[],
   multiple: boolean = false,
   stdout?: (text: string) => void,
+  interactive: boolean = false,
 ): Promise<JsonValue> {
   const recorded = answers.get(message)
-
   if (recorded !== undefined) {
     if (multiple) {
-      // Answer is an array of display names
       const selectedNames = Array.isArray(recorded)
         ? recorded.map(v => typeof v === 'string' ? v : toDisplayYaml(v))
         : [typeof recorded === 'string' ? recorded : toDisplayYaml(recorded)]
@@ -90,7 +91,6 @@ export async function promptSelect(
       writeOutput(stdout, renderSelectPrompt(message, choices, selection))
       return selection.map(c => c.value)
     } else {
-      // Answer is a display name string
       const answerStr = typeof recorded === 'string' ? recorded : toDisplayYaml(recorded)
       const selection = choices.find(c => c.displayName === answerStr)
       if (!selection) {
@@ -101,20 +101,25 @@ export async function promptSelect(
     }
   }
 
-  // Real interactive prompt
-  if (multiple) {
-    const result = await checkbox({
-      message,
-      choices: choices.map(c => ({ name: c.displayName, value: c.value })),
-    })
-    return result
-  } else {
-    const result = await select({
-      message,
-      choices: choices.map(c => ({ name: c.displayName, value: c.value })),
-    })
-    return result
+  // Real interactive prompt (only when explicitly allowed)
+  if (interactive) {
+    if (multiple) {
+      const result = await checkbox({
+        message,
+        choices: choices.map(c => ({ name: c.displayName, value: c.value })),
+      })
+      return result
+    } else {
+      const result = await select({
+        message,
+        choices: choices.map(c => ({ name: c.displayName, value: c.value })),
+      })
+      return result
+    }
   }
+
+  // Non-interactive with no recorded answer — select prompts can't default
+  throw new Error(`No prerecorded answer for '${message}' and not in interactive mode`)
 }
 
 // ---------------------------------------------------------------------------

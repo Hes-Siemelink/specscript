@@ -1,10 +1,11 @@
-import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs'
-import { resolve, dirname, basename } from 'node:path'
+import { readFileSync, existsSync, readdirSync, statSync, mkdtempSync } from 'node:fs'
+import { resolve, dirname, basename, join } from 'node:path'
+import { tmpdir } from 'node:os'
 import { Script } from './language/script.js'
 import { DefaultContext } from './language/context.js'
 import type { ScriptContext } from './language/context.js'
 import { registerAllCommands } from './commands/register.js'
-import { setupStdoutCapture } from './language/stdout-capture.js'
+import { setupStdoutCapture, setupSilentCapture } from './language/stdout-capture.js'
 import { scanMarkdown } from './markdown/scanner.js'
 import { splitMarkdownSections } from './markdown/converter.js'
 import { toDisplayYaml } from './util/yaml.js'
@@ -810,7 +811,7 @@ async function runYamlTests(
     scriptFile: filePath,
     workingDir: dirname(filePath),
   })
-  setupStdoutCapture(context, log)
+  setupSilentCapture(context)
 
   if (hasNewTests) {
     const suite = script.splitTests()
@@ -862,11 +863,15 @@ async function runMarkdownTests(
   const blocks = scanMarkdown(content)
   const scripts = splitMarkdownSections(blocks)
 
+  const testDir = mkdtempSync(join(tmpdir(), 'specscript-'))
   const context = new DefaultContext({
-    scriptFile: filePath,
+    scriptFile: join(testDir, 'test.spec.md'),
     workingDir: dirname(filePath),
+    scriptHome: dirname(filePath),
   })
-  setupStdoutCapture(context, log)
+  // Align tempDir with scriptDir so file= blocks write to the same directory
+  context.variables.set('SCRIPT_TEMP_DIR', testDir)
+  setupSilentCapture(context)
 
   for (const script of scripts) {
     if (script.commands.length === 0) continue
@@ -901,6 +906,10 @@ async function runSingleTest(
     await script.run(context)
     report.passed++
   } catch (e) {
+    // Dump captured output on failure
+    if (captured && captured.length > 0) {
+      console.log(captured.join('\n'))
+    }
     report.failed++
     const message = e instanceof Error ? e.message : String(e)
     report.details.push({ testCase: name, error: message })

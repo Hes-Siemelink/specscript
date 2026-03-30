@@ -28,7 +28,10 @@ class FileContext(
     override val variables: MutableMap<String, JsonNode> = mutableMapOf(),
     override val session: MutableMap<String, Any?> = mutableMapOf(),
     override val interactive: Boolean = false,
-    override val workingDir: Path = Path.of(".")
+    override val workingDir: Path = Path.of("."),
+    override val scriptHome: Path = scriptFile.let {
+        if (it.isDirectory()) it else it.toAbsolutePath().normalize().parent
+    }
 ) : ScriptContext {
 
     constructor(cliFile: Path, parent: ScriptContext, variables: MutableMap<String, JsonNode> = mutableMapOf()) : this(
@@ -47,7 +50,7 @@ class FileContext(
     }
 
     override fun clone(): ScriptContext {
-        return FileContext(scriptFile, variables.toMutableMap(), session.toMutableMap(), interactive, workingDir)
+        return FileContext(scriptFile, variables.toMutableMap(), session.toMutableMap(), interactive, workingDir, scriptHome)
     }
 
     override val scriptDir: Path by lazy {
@@ -59,7 +62,7 @@ class FileContext(
     }
 
     init {
-        variables[SCRIPT_DIR_VARIABLE] = StringNode(scriptDir.toAbsolutePath().toString())
+        variables[SCRIPT_DIR_VARIABLE] = StringNode(scriptHome.toAbsolutePath().toString())
         variables[ENV_VARIABLE] = Json.newObject(System.getenv())
 
         PackageRegistry.autoPackagePath = PackageRegistry.findEnclosingPackageLibrary(scriptDir)

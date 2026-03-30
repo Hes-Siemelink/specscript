@@ -32,6 +32,13 @@ export interface ScriptContext {
   /** Directory containing the current script */
   readonly scriptDir: string
 
+  /**
+   * The directory where the original script file lives. For normal scripts, this equals scriptDir.
+   * For Markdown test execution where scriptDir points to a temp dir, this points to the real
+   * spec file's parent directory.
+   */
+  readonly scriptHome: string
+
   /** Working directory for file resolution */
   readonly workingDir: string
 
@@ -74,6 +81,7 @@ export class DefaultContext implements ScriptContext {
   private _commandResolver?: (name: string) => CommandHandler
   private _types?: TypeRegistry
   private _importedCommands?: Map<string, CommandHandler>
+  private _scriptHome?: string
 
   constructor(options?: {
     scriptFile?: string
@@ -82,6 +90,7 @@ export class DefaultContext implements ScriptContext {
     session?: Map<string, unknown>
     commandResolver?: (name: string) => CommandHandler
     workingDir?: string
+    scriptHome?: string
   }) {
     this.scriptFile = options?.scriptFile ?? '<inline>'
     this.interactive = options?.interactive ?? false
@@ -90,10 +99,11 @@ export class DefaultContext implements ScriptContext {
     this.error = undefined
     this._commandResolver = options?.commandResolver
     this._workingDir = options?.workingDir
+    this._scriptHome = options?.scriptHome
 
     // Set built-in variables if not already present
     if (!this.variables.has('SCRIPT_HOME') && this.scriptFile !== '<inline>') {
-      this.variables.set('SCRIPT_HOME', this.scriptDir)
+      this.variables.set('SCRIPT_HOME', this.scriptHome)
     }
 
     // Auto-discover enclosing package library for search path
@@ -121,6 +131,10 @@ export class DefaultContext implements ScriptContext {
         : dirname(resolve(this.scriptFile))
     }
     return this._scriptDir
+  }
+
+  get scriptHome(): string {
+    return this._scriptHome ?? this.scriptDir
   }
 
   get workingDir(): string {
@@ -280,6 +294,7 @@ export class DefaultContext implements ScriptContext {
       session: this.session, // shared, not cloned
       commandResolver: this._commandResolver,
       workingDir: this._workingDir,
+      scriptHome: this._scriptHome,
     })
     ctx._scriptDir = this._scriptDir
     ctx._tempDir = this._tempDir
