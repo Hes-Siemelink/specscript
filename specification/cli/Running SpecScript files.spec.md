@@ -1,10 +1,11 @@
 # Running SpecScript files
 
-You run an SpecScript file with the `cli` command.
+You run a SpecScript file with the `spec` command. See [Running SpecScript](/README.md#running-specscript) for setup
+instructions.
 
 ## Global options
 
-When running `cli` or `cli --help`, the global options will be printed
+When running `spec` or `spec --help`, the global options will be printed
 
 ```shell cli
 spec
@@ -38,7 +39,7 @@ Hello World" command:
 Print: Hello from SpecScript!
 ```
 
-After [installing SpecScript](/README.md#build--run), run it with the following command
+Run it with the following command
 
 ```shell cli cd=samples
 spec hello.spec.yaml
@@ -64,21 +65,21 @@ Hello from SpecScript!
 
 In the samples directory, there is a subdirectory **[basic](/samples/basic)** with more SpecScript examples.
 
-Running SpecScript on a directory show the commands that are available in that directory.
+Running SpecScript on a directory shows the commands that are available in that directory.
 
-```shell ignore
+```shell cli cd=samples
 spec basic
 ```
 
-```
+```output
 Simple SpecScript example scripts
 
-* Available commands: 
-   create-greeting   Creates a greeting and puts it in the output
-   greet             Prints a greeting
-   multiple-choice   Interaction example
-   output            Sets test output
-   simple-question   Simple interactive prompt
+Available commands:
+  create-greeting   Creates a greeting and puts it in the output
+  greet             Prints a greeting
+  multiple-choice   Interaction example
+  output            Sets test output
+  prompt            Simple interactive prompt
 ```
 
 Once you know which script you want to execute, simply chain them as commands on the command line. For example, to

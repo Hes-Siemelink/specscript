@@ -1,6 +1,7 @@
 # Spotlight
 
-* Rewrite README
+* Introduce tutorials
+* Document .spec wrapper file
 * Use Markdown front matter for SpecScript files to define metadata
 * LLM commands
 * Agent definitions
@@ -116,3 +117,4 @@
 * Towers of Hanoi
 * Made it a Lisp by adding 30 lines of code.
 * Define SpecScript in SpecScript itself
+* Clean spec allows AI to create and maintain TypeScript implementation without human intervention
