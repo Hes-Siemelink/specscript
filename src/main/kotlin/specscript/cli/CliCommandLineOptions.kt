@@ -69,7 +69,7 @@ private fun CommandLineParameters.getOption(option: String): Pair<String, Parame
 }
 
 private fun CommandLineParameters.getOutputOption(): OutputOption = when {
-    contains("output") -> OutputOption.YAML
+    contains("no-output") -> OutputOption.NONE
     contains("output-json") -> OutputOption.JSON
     else -> OutputOption.YAML
 }

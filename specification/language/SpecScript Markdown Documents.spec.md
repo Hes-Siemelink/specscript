@@ -579,7 +579,7 @@ Usage:
 
 Global options:
   --help, -h           Print help on a script or directory and does not run anything
-  --output, -o         Print the output at the end of the script in Yaml format
+  --no-output, -n      Suppress the output at the end of the script
   --output-json, -j    Print the output at the end of the script in Json format
   --interactive, -i    SpecScript may prompt for user input if it needs more information
   --debug, -d          Run in debug mode. Prints stacktraces when an error occurs.
@@ -606,7 +606,7 @@ Usage:
 
 Global options:
   --help, -h           Print help on a script or directory and does not run anything
-  --output, -o         Print the output at the end of the script in Yaml format
+  --no-output, -n      Suppress the output at the end of the script
   --output-json, -j    Print the output at the end of the script in Json format
   --interactive, -i    SpecScript may prompt for user input if it needs more information
   --debug, -d          Run in debug mode. Prints stacktraces when an error occurs.

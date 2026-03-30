@@ -19,7 +19,7 @@ Usage:
 
 Global options:
   --help, -h           Print help on a script or directory and does not run anything
-  --output, -o         Print the output at the end of the script in Yaml format
+  --no-output, -n      Suppress the output at the end of the script
   --output-json, -j    Print the output at the end of the script in Json format
   --interactive, -i    SpecScript may prompt for user input if it needs more information
   --debug, -d          Run in debug mode. Prints stacktraces when an error occurs.
@@ -75,11 +75,15 @@ With the expected output:
 Hello, Alice!
 ```
 
+### --no-output
+
+By default, the script result is printed in Yaml format after execution. Use `--no-output` or `-n` to suppress this.
+
+`Print` statements are not affected — they still print to the console during execution.
+
 ### --output-json
 
-Most SpecScript scripts will produce output. By default, the `cli` command prints the output in Yaml format.
-
-To show the output in the script in Json format, use `--output-json` or the shortcut  `-j`:
+To show the output in Json format instead of Yaml, use `--output-json` or the shortcut `-j`:
 
 ```shell cli cd=samples
 spec --output-json basic create-greeting --name Bob

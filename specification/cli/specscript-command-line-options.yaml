@@ -4,9 +4,11 @@ help:
   type: boolean
   short option: h
 
-output:
-  description: Print the output at the end of the script in Yaml format
-  short option: o
+no-output:
+  description: Suppress the output at the end of the script
+  default: false
+  type: boolean
+  short option: n
 
 output-json:
   description: Print the output at the end of the script in Json format

@@ -2,9 +2,7 @@
 
 * Introduce tutorials
 * Document .spec wrapper file
-* Use Markdown front matter for SpecScript files to define metadata
-* LLM commands
-* Agent definitions
+* LLM commands and Agent definitions
 
 ## In general
 
@@ -35,6 +33,7 @@
   TestUtil.getCodeExamplesAsTests() currently creates a temp dir as scriptFile, then overrides SCRIPT_HOME to point back
   to the real spec location. If tests ran in the real dir and used Temp file for scratch files, this special logic could
   be removed.
+* Use Markdown front matter for SpecScript files to define metadata
 
 ## User interaction
 

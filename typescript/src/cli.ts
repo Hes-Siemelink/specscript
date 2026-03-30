@@ -25,7 +25,7 @@ interface OptionDef {
 
 const GLOBAL_OPTIONS: Record<string, OptionDef> = {
   'help':         { description: 'Print help on a script or directory and does not run anything', shortOption: 'h' },
-  'output':       { description: 'Print the output at the end of the script in Yaml format', shortOption: 'o' },
+  'no-output':    { description: 'Suppress the output at the end of the script', shortOption: 'n' },
   'output-json':  { description: 'Print the output at the end of the script in Json format', shortOption: 'j' },
   'interactive':  { description: 'SpecScript may prompt for user input if it needs more information', shortOption: 'i' },
   'debug':        { description: 'Run in debug mode. Prints stacktraces when an error occurs.', shortOption: 'd' },
@@ -110,9 +110,11 @@ function parseCliOptions(args: string[]): CliOptions {
     }
   }
 
-  const printOutput: OutputOption = activeOptions.has('output-json')
-    ? 'json'
-    : 'yaml' // Default is YAML, matching Kotlin
+  const printOutput: OutputOption = activeOptions.has('no-output')
+    ? 'none'
+    : activeOptions.has('output-json')
+      ? 'json'
+      : 'yaml'
 
   return {
     help: activeOptions.has('help'),

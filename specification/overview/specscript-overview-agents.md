@@ -45,10 +45,10 @@ Requires JDK 21+.
 ## CLI usage
 
 ```bash
-spec script.spec.yaml                  # Run a script
+spec script.spec.yaml                  # Run a script (output printed as YAML by default)
 spec script.spec.yaml --name Alice     # Pass input parameters
 spec --help script.spec.yaml           # Show script description and options
-spec --output script.spec.yaml         # Print script output as YAML
+spec --no-output script.spec.yaml      # Suppress the script output
 spec --output-json script.spec.yaml    # Print script output as JSON
 spec --test tests/                     # Run all tests in a directory
 spec directory/                        # List available scripts in directory
