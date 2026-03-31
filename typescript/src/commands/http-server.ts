@@ -100,11 +100,11 @@ export const HttpEndpointCommand: CommandHandler = {
 
 export const StopHttpServerCommand: CommandHandler = {
   name: 'Stop http server',
-  async execute(data: JsonValue, _context: ScriptContext): Promise<JsonValue | undefined> {
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     if (typeof data !== 'string') {
       throw new CommandFormatError('Stop http server: expected a server name string')
     }
-    await stopServer(data)
+    await stopServer(data, context)
     return undefined
   },
 }
@@ -141,6 +141,12 @@ function parseCookies(req: IncomingMessage): Record<string, string> {
 
 // --- Server lifecycle ---
 
+function writeToContext(context: ScriptContext | undefined, text: string): void {
+  const writer = context?.session.get('stdout') as ((s: string) => void) | undefined
+  if (writer) writer(text)
+  else console.log(text)
+}
+
 async function ensureRunning(name: string, port: number, context: ScriptContext): Promise<ManagedServer> {
   const existing = servers.get(name)
   if (existing) return existing
@@ -169,6 +175,7 @@ async function ensureRunning(name: string, port: number, context: ScriptContext)
     server.listen(port, () => resolve())
   })
 
+  writeToContext(context, `Starting SpecScript Http Server '${name}' on port ${port}`)
   return managed
 }
 
@@ -293,10 +300,11 @@ async function runScriptHandler(
   }
 }
 
-export async function stopServer(name: string): Promise<void> {
+export async function stopServer(name: string, context?: ScriptContext): Promise<void> {
   const managed = servers.get(name)
   if (!managed) return
 
+  writeToContext(context, `Stopping SpecScript Http Server '${name}'`)
   servers.delete(name)
 
   await new Promise<void>((resolve) => {

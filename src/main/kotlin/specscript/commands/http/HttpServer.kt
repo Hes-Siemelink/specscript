@@ -19,6 +19,7 @@ import specscript.util.toDomainObject
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.StringNode
+import kotlin.concurrent.thread
 
 
 object HttpServer : CommandHandler("Http server", "core/http"), ObjectHandler, DelayedResolver {
@@ -32,6 +33,7 @@ object HttpServer : CommandHandler("Http server", "core/http"), ObjectHandler, D
 
     // Active servers keyed by name
     private val servers = mutableMapOf<String, HttpServerInstance>()
+    private val keepAliveThreads = mutableMapOf<String, Thread>()
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val info = data.toDomainObject(HttpServerInfo::class)
@@ -50,6 +52,7 @@ object HttpServer : CommandHandler("Http server", "core/http"), ObjectHandler, D
 
     fun stop(name: String) {
         println("Stopping SpecScript Http Server '$name'")
+        keepAliveThreads.remove(name)?.interrupt()
         servers.remove(name)?.stop(100, 200)
     }
 
@@ -65,7 +68,12 @@ object HttpServer : CommandHandler("Http server", "core/http"), ObjectHandler, D
     private fun ensureRunning(serverName: String, port: Int): HttpServerInstance {
         return servers.getOrPut(serverName) {
             println("Starting SpecScript Http Server '$serverName' on port $port")
-            embeddedServer(Netty, port = port) { }.also { it.start(wait = false) }
+            embeddedServer(Netty, port = port) { }.also {
+                it.start(wait = false)
+                keepAliveThreads[serverName] = thread(isDaemon = false, name = "HTTP keep-alive - $serverName") {
+                    try { Thread.currentThread().join() } catch (_: InterruptedException) { }
+                }
+            }
         }
     }
 

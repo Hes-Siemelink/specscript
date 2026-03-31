@@ -489,7 +489,7 @@ describe('Level 3 Spec Tests (Markdown)', () => {
 describe('Level 4 Spec Tests', () => {
     beforeAll(async () => {
         // Start the sample server on port 2525 (used by all HTTP tests)
-        const sampleServerPath = join(SPECSCRIPT_HOME, 'specification/code-examples/sample-server/sample-server.spec.yaml')
+        const sampleServerPath = join(SPECSCRIPT_HOME, 'specification/code-examples/sample-server/start.spec.yaml')
         const content = readFileSync(sampleServerPath, 'utf-8')
         const sampleServerContext = new DefaultContext({scriptFile: sampleServerPath, workingDir: SPECSCRIPT_HOME})
         setupSilentCapture(sampleServerContext)

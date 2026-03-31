@@ -3,12 +3,12 @@
 `Http server` starts an embedded HTTP server, based on an OpenAPI-flavored spec and backed by SpecScript scripts. Use
 **Http server** to quickly prototype an API.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | no            |
-| List       | auto-iterate  |
-| Object     | yes           |
-| Raw input  | yes           |
+| Input     | Supported    |
+|-----------|--------------|
+| Scalar    | no           |
+| List      | auto-iterate |
+| Object    | yes          |
+| Raw input | yes          |
 
 [Http server.schema.yaml](schema/Http%20server.schema.yaml)
 
@@ -28,6 +28,8 @@ Http server:
     /hello:
       get:
         output: Hello World!
+
+Expected console output: Starting SpecScript Http Server 'hello-server' on port 25001
 
 # Test the server
 GET: http://localhost:25001/hello

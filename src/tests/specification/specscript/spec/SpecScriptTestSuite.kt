@@ -13,7 +13,7 @@ import java.nio.file.Path
 object TestPaths {
     val README: Path = Path.of("README.md")
     val SPEC: Path = Path.of("specification")
-    val SAMPLE_SERVER: Path = Path.of("specification/code-examples/sample-server/sample-server.spec.yaml")
+    val SAMPLE_SERVER: Path = Path.of("specification/code-examples/sample-server/start.spec.yaml")
 }
 
 class SpecScriptTestSuite {
