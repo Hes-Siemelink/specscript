@@ -31,11 +31,11 @@ Global options:
 
 The `--help` option prints help on a script or directory and then exits. No scripts are run.
 
-For this example we run from the **[samples](/specification/code-examples)** directory. It contains a directory `basic`.
-Let's use the
+For this example we run from the **[specification/code-examples](../code-examples)** directory. It contains a directory
+`basic`. Let's use the
 `--help` option to see what SpecScript commands it contains
 
-```shell cli cd=specification/code-examples
+```shell cli cd=${SCRIPT_HOME}/../code-examples
 spec --help basic
 ```
 
@@ -50,10 +50,10 @@ Available commands:
   prompt            Simple interactive prompt
 ```
 
-Using `--help` on the **[greet](/specification/code-examples/basic/greet.spec.yaml)** command will give us a description
-and show which command line options it supports
+Using `--help` on the **[greet](../code-examples/basic/greet.spec.yaml)** command will give us a description and show
+which command line options it supports
 
-```shell cli cd=specification/code-examples
+```shell cli cd=${SCRIPT_HOME}/../code-examples
 spec --help basic greet
 ```
 
@@ -66,7 +66,7 @@ Options:
 
 With that information we can call it with a parameter that is specific to that command:
 
-```shell cli cd=specification/code-examples
+```shell cli cd=${SCRIPT_HOME}/../code-examples
 spec basic greet --name Alice
 ```
 
@@ -86,7 +86,7 @@ By default, the script result is printed in Yaml format after execution. Use `--
 
 To show the output in Json format instead of Yaml, use `--output-json` or the shortcut `-j`:
 
-```shell cli cd=specification/code-examples
+```shell cli cd=${SCRIPT_HOME}/../code-examples
 spec --output-json basic create-greeting --name Bob
 ```
 
@@ -111,7 +111,7 @@ Without debug mode you get the following error message
 spec script-with-error.spec.yaml
 ```
 
-```output
+```
 Scripting error
 
 Caused by: java.net.URISyntaxException: Illegal character in opaque part at index 5: http:\\localhost
