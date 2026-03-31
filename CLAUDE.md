@@ -40,7 +40,7 @@ alias spec="java -jar `pwd`/build/libs/specscript-*-full.jar"
 ### Run examples
 
 ```bash
-spec samples/hello.spec.yaml
+spec specification/hello-world.spec.yaml
 spec samples                       # Interactive selection
 ```
 

@@ -1,5 +1,5 @@
 Script info:
-  description: Multi-language greeting
+  description: Get a greeting form the server
 
 Input schema:
   type: object

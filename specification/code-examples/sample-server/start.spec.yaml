@@ -1,16 +1,17 @@
 Script info:
-  description: Starts the SpecScript Sample Server
+  description: Start the SpecScript Sample Server
 
 Http server:
   name: sample-server
   port: 2525
+
   endpoints:
     /hello:
       get:
         output: Hello from SpecScript!
 
     /greeting:
-      post: handlers/create-greeting.spec.yaml
+      post: create-greeting.spec.yaml
 
     /greetings:
       get:

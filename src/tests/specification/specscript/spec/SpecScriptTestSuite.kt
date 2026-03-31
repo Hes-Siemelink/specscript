@@ -1,6 +1,9 @@
 package specscript.spec
 
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.DynamicNode
+import org.junit.jupiter.api.TestFactory
 import specscript.commands.http.HttpServer
 import specscript.files.SpecScriptFile
 import specscript.test.getCodeExamplesAsTests
@@ -10,14 +13,14 @@ import java.nio.file.Path
 object TestPaths {
     val README: Path = Path.of("README.md")
     val SPEC: Path = Path.of("specification")
-    val SAMPLE_SERVER: Path = Path.of("samples/http-server/sample-server/sample-server.spec.yaml")
+    val SAMPLE_SERVER: Path = Path.of("specification/code-examples/sample-server/sample-server.spec.yaml")
 }
 
 class SpecScriptTestSuite {
 
     @TestFactory
     fun `Main README_md`(): List<DynamicNode> {
-        return SpecScriptFile(TestPaths.README).getCodeExamplesAsTests() + SpecScriptFile(Path.of("README-2.md")).getCodeExamplesAsTests() + SpecScriptFile(Path.of("README-old.md")).getCodeExamplesAsTests()
+        return SpecScriptFile(TestPaths.README).getCodeExamplesAsTests() + SpecScriptFile(Path.of("README-old.md")).getCodeExamplesAsTests()
     }
 
     @TestFactory

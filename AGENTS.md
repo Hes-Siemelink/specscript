@@ -70,8 +70,8 @@ Create a local executable:
 
 ```bash
 alias spec="java -jar `pwd`/build/libs/specscript-*-full.jar"
-spec samples/hello.spec.yaml      # Run a script
-spec samples                      # Interactive selection
+spec specification/hello-world.spec.yaml   # Run a script
+spec samples                                 # Interactive selection
 ```
 
 ## Architecture
@@ -104,7 +104,8 @@ included as a resource directory for runtime access.
 ### Architectural Principles
 
 - The project is split into `specification` (the language specification) and `src` (the Kotlin implementation).
-- The `typescript/` directory contains an independent TypeScript implementation that passes the same specification tests.
+- The `typescript/` directory contains an independent TypeScript implementation that passes the same specification
+  tests.
 - Commands are implemented as singleton objects extending `specscript.language.CommandHandler`.
 - The command's name and group are registered in the `CommandHandler` constructor, e.g.,
   `CommandHandler("Mcp server", "ai/mcp")`.
@@ -165,8 +166,8 @@ style: precise, executable, and cheap to change.
 - **Keep prose to one or two sentences** introducing the feature and its core rule. Then show the example.
 - **Edge cases go in `tests/` files**, not in the main spec document.
 - **Always introduce code blocks with text.** Markdown viewers hide the ```` ``` ```` header, so the reader cannot see
-  block type, language, or `file=` annotations. Every code block needs a preceding sentence that provides context —
-  what the block is, what file it creates, or what it demonstrates.
+  block type, language, or `file=` annotations. Every code block needs a preceding sentence that provides context — what
+  the block is, what file it creates, or what it demonstrates.
 
 This style is deliberately dry. Friendlier tutorial-style guides are a separate concern (see TODO.md).
 
@@ -185,9 +186,9 @@ Lessons from implementing a second (TypeScript) implementation against the spec:
 
 ## Sensitive areas
 
-- **`samples/basic/` directory**: Adding or removing files here breaks 2 spec files that hardcode directory listing
-  output (`Running SpecScript files.spec.md`, `Command line options.spec.md`). Update those specs if you modify the
-  directory contents.
+- **`specification/code-examples/basic/` directory**: Adding or removing files here breaks 2 spec files that hardcode
+  directory listing output (`Running SpecScript files.spec.md`, `Command line options.spec.md`). Update those specs if
+  you modify the directory contents.
 
 ## Git commit rules
 

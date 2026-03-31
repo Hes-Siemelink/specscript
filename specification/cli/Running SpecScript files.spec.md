@@ -31,43 +31,42 @@ For more information on the options, see [Command line options](Command%20line%2
 
 ### Running a single file
 
-In the **[samples](/samples)** directory, there is a file **[hello.spec.yaml](/samples/hello.spec.yaml)** that contains
-a simple "
-Hello World" command:
+In the **[specification](..)** directory, there is a file
+**[hello-world.spec.yaml](../hello-world.spec.yaml)** that contains a simple "Hello World" command:
 
-```yaml file=hello.spec.yaml
-Print: Hello from SpecScript!
+```yaml
+Print: Hello World!
 ```
 
 Run it with the following command
 
-```shell cli cd=samples
-spec hello.spec.yaml
+```shell cli cd=${SCRIPT_HOME}/..
+spec hello-world.spec.yaml
 ```
 
 And you will see this output:
 
 ```output
-Hello from SpecScript!
+Hello World!
 ```
 
 You can omit the `.spec.yaml` extension to make it look more like a "cli command":
 
-```shell cli cd=samples
-spec hello
+```shell cli cd=${SCRIPT_HOME}/..
+spec hello-world
 ```
 
 ```output
-Hello from SpecScript!
+Hello World!
 ```
 
 ## Running a directory
 
-In the samples directory, there is a subdirectory **[basic](/samples/basic)** with more SpecScript examples.
+In the samples directory, there is a subdirectory **[basic](../code-examples/basic)** with more SpecScript examples.
 
 Running SpecScript on a directory shows the commands that are available in that directory.
 
-```shell cli cd=samples
+```shell cli cd=${SCRIPT_HOME}/../code-examples
 spec basic
 ```
 
@@ -85,7 +84,7 @@ Available commands:
 Once you know which script you want to execute, simply chain them as commands on the command line. For example, to
 execute the `greet.spec.yaml` script in the `basic` directory, do:
 
-```shell cli cd=samples
+```shell cli cd=${SCRIPT_HOME}/../code-examples
 spec basic greet
 ```
 
@@ -102,7 +101,7 @@ Hello, World!
 Some scripts take input. Use the [--help](Command%20line%20options.spec.md#--help) option to list the supported
 parameters
 
-```shell cli cd=samples
+```shell cli cd=${SCRIPT_HOME}/../code-examples
 spec --help basic greet
 ```
 
@@ -115,7 +114,7 @@ Options:
 
 With that information we can give the script some custom input:
 
-```shell cli cd=samples
+```shell cli cd=${SCRIPT_HOME}/../code-examples
 spec basic greet --name Alice
 ```
 

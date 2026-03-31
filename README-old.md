@@ -118,7 +118,7 @@ alias spec="java -jar `pwd`/build/libs/specscript-*-full.jar"
 This will run the "Hello world" example:
 
 ```shell ignore
-spec samples/hello.spec.yaml
+spec specification/hello-world.spec.yaml
 ```
 
 See [Running SpecScript files](specification/cli/Running%20SpecScript%20files.spec.md) for more information on the `cli`
@@ -154,7 +154,7 @@ SpecScript has two main ideas:
 
 ## Hello world
 
-This is the simplest SpecScript program, **[hello.spec.yaml](samples/hello.spec.yaml)**:
+This is the simplest SpecScript program, **[hello.spec.yaml](specification/hello-world.spec.yaml)**:
 
 ```yaml file=hello.spec.yaml
 Print: Hello from SpecScript!
@@ -262,39 +262,33 @@ Options:
 
 Easily provide subcommand support by organizing your cli files in directories.
 
-For example, to run the greeting example from the **[samples](samples)** directory, you can write
+For example, to run the greeting example from the **[specification/code-examples](specification/code-examples)**
+directory, you can write
 
-```shell cli cd=.
-./spec samples basic greet
+```shell cli cd=${SCRIPT_HOME}/specification/code-examples
+./spec basic greet
 ```
 
 with output:
 
-```
+```output
 Hello, World!
 ```
 
 SpecScript will show the commands if you pass a directory.
 
-For example:
-
-```shell cli cd=.
-./spec samples
+```shell cli cd=${SCRIPT_HOME}
+./spec specification/code-examples
 ```
 
 will print the info message:
 
-```
-samples has several subcommands.
+```output
+Reference code used by specification tests
 
 Available commands:
-  basic         Simple SpecScript example scripts
-  digitalai     Interact with Digital.ai products and services.
-  hello         Hello
-  http-server   Use SpecScript to run a web server
-  programming   Programming examples in SpecScript
-  spotify       Spotify API examples
-
+  basic           Simple SpecScript example scripts
+  sample-server   Interact with the SpecScript Sample Server
 ```
 
 ## User interaction
@@ -423,8 +417,8 @@ Http server:
           Output: Hello from SpecScript!
 ```
 
-Take a look at the [sample server](samples/http-server/sample-server/sample-server.spec.yaml) that serves all requests
-from the SpecScript documentation and test suite.
+Take a look at the [sample server](specification/code-examples/sample-server/sample-server.spec.yaml) that serves all
+requests from the SpecScript documentation and test suite.
 
 ## If statement
 

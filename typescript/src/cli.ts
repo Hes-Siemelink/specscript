@@ -436,23 +436,17 @@ function getScriptDescription(filePath: string, fileName: string): string {
 
 function extractDescriptionFromMarkdown(content: string): string | undefined {
   const lines = content.split('\n')
-  let foundHeading = false
-  const descriptionLines: string[] = []
 
   for (const line of lines) {
-    if (!foundHeading) {
-      if (line.startsWith('# ')) foundHeading = true
-      continue
-    }
     const trimmed = line.trim()
-    if (trimmed === '') {
-      if (descriptionLines.length > 0) break
-      continue
-    }
-    descriptionLines.push(trimmed)
+    if (trimmed === '') continue
+    if (trimmed.startsWith('#')) continue
+    if (trimmed.startsWith('<!--')) continue
+    if (trimmed.startsWith('```')) continue
+    return trimmed
   }
 
-  return descriptionLines.length > 0 ? descriptionLines.join(' ') : undefined
+  return undefined
 }
 
 function stripSpecExtension(name: string): string {

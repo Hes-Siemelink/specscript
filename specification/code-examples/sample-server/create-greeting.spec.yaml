@@ -1,5 +1,5 @@
 Script info:
-  description: Creates a greeting in different languages
+  description: Script to create a greeting in different languages
 
 Input schema:
   type: object

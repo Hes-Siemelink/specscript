@@ -1,6 +1,7 @@
 # SpecScript TypeScript Implementation
 
-TypeScript implementation of the SpecScript language. This is the secondary implementation — the Kotlin version on the `main` branch is the source of truth.
+TypeScript implementation of the SpecScript language. This is the secondary implementation — the Kotlin version on the
+`main` branch is the source of truth.
 
 ## Prerequisites
 
@@ -18,10 +19,10 @@ pnpm run build
 
 ```bash
 # Via tsx (development)
-pnpm start samples/hello.spec.yaml
+pnpm start specification/hello-world.spec.yaml
 
 # Via built output
-node dist/cli.js samples/hello.spec.yaml
+node dist/cli.js specification/hello-world.spec.yaml
 
 # Interactive directory selection
 node dist/cli.js -i samples
@@ -43,7 +44,8 @@ pnpm test            # Run all tests
 pnpm test:watch      # Watch mode
 ```
 
-Tests execute the specification files from `../specification/` against the TypeScript implementation. Tests are organized in levels matching implementation maturity:
+Tests execute the specification files from `../specification/` against the TypeScript implementation. Tests are
+organized in levels matching implementation maturity:
 
 - **Level 1** — Core language: variables, control flow, data manipulation, expressions
 - **Level 2** — Markdown documents, testing, eval syntax
