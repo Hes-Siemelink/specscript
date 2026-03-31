@@ -3,40 +3,35 @@
 With one or more files in a directory, you can run the directory as a cli command. The SpecScript files will be
 subcommands.
 
-For this example we run from the **[samples](/samples)** directory. It contains a directory `basic` with the following
-files:
+For this example we use the [my-scripts](my-scripts) directory next to this spec, which has the following structure:
 
 ```
-create-greeting.spec.yaml
-greet.spec.yaml
-greeting.yaml
-multiple-choice.spec.yaml
-output.spec.yaml
-simple-question.spec.yaml
+my-scripts/
+├── README.md
+├── count.spec.yaml
+└── greet.spec.yaml
 ```
 
-We can now run `basic` as a cli command with subcommands for each of the files. First, let's use the `--help` option to
-see some more descriptions
+Now let's pass `my-scripts` as a cli parameter. The `--help` option lists the available subcommands:
 
-```shell cli cd=samples
-spec --help basic
+```shell cli cd=${SCRIPT_HOME}
+spec --help my-scripts
 ```
+
+Shows:
 
 ```output
-Simple SpecScript example scripts
+A collection of simple scripts
 
 Available commands:
-  create-greeting   Creates a greeting and puts it in the output
-  greet             Prints a greeting
-  multiple-choice   Interaction example
-  output            Sets test output
-  prompt            Simple interactive prompt
+  count   Counts to three
+  greet   Prints a greeting
 ```
 
-We can now invoke the **greet** command like this:
+Invoke the **greet** script as a subcommand:
 
-```shell cli cd=samples
-spec basic greet
+```shell cli cd=${SCRIPT_HOME}
+spec my-scripts greet
 ```
 
 With the expected output:
@@ -47,16 +42,16 @@ Hello, World!
 
 Note that it's optional to specify the `.spec.yaml` extension. The following three commands are equivalent:
 
-```shell cli cd=samples
-spec basic greet
+```shell cli cd=${SCRIPT_HOME}
+spec my-scripts greet
 ```
 
-```shell cli cd=samples
-spec basic greet.spec.yaml
+```shell cli cd=${SCRIPT_HOME}
+spec my-scripts greet.spec.yaml
 ```
 
-```shell cli cd=samples
-spec basic/greet.spec.yaml
+```shell cli cd=${SCRIPT_HOME}
+spec my-scripts/greet.spec.yaml
 ```
 
 ### Interactive command chooser
@@ -67,18 +62,15 @@ prompt. This is a great way to explore the commands and subcommands!
 <!-- Insert gif here -->
 
 ```shell ignore
-spec basic       
+spec my-scripts
 ```
 
 ```
-Simple SpecScript example scripts
+A collection of simple scripts
 
 * Available commands: 
- > create-greeting          Creates a greeting and puts it in the output
-   greet                    Prints a greeting
-   output                   Sets test output
-   prompt-multiple-choice   Interaction example
-   prompt-simple-question   Simple interactive prompt
+ > count   Counts to three
+   greet   Prints a greeting
 ```
 
 ### Calling another script

@@ -36,9 +36,9 @@ The files in `specification/language/` are the authoritative reference for SpecS
 7. Keep main spec documents concise — one or two examples per feature to illustrate the concept
 8. Put edge cases, combinations, and thorough coverage in a separate `tests/<Topic> tests.spec.yaml` file next to the
    spec document (e.g., `specification/language/tests/Variables tests.spec.yaml` for `Variables.spec.md`)
-9. When using `` ```yaml file=filename.ext `` blocks, always mention the filename in the prose **before** the code
-   block (e.g. "Given a script `inner-script.spec.yaml`:" or "Suppose we have a file `config.yaml`:"). The rendered
-   Markdown on GitHub hides the `` ``` `` header, so the reader won't know which file is being created otherwise.
+9. **Always introduce code blocks with text.** Markdown viewers hide the ```` ``` ```` header, so the reader cannot
+   see block type, language, or `file=` annotations. Every code block needs a preceding sentence that provides
+   context — what the block is, what file it creates, or what it demonstrates.
 
 ## Writing style
 
@@ -54,7 +54,8 @@ style: precise, executable, and cheap to change.
 - **Keep prose to one or two sentences** introducing the feature and its core rule. Then show the example.
 - **Edge cases go in `tests/` files**, not in the main spec document.
 
-This style is deliberately dry. Friendlier tutorial-style guides are a separate concern (see TODO.md).
+This style is deliberately concise, but should build up the functionality from simple to complex within the document.
+More elaborate tutorial-style guides are a separate concern (see TODO.md).
 
 ## Sample server endpoints (available during tests)
 

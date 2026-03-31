@@ -72,18 +72,23 @@ Expected output:
 ## Finding the script
 
 In the example above, we used the property `resource` to indicate that the script to be called was in the same directory
-as the current script.
+as the current script. It also works with subdirectories. Given a script `subdir/say-hello.spec.yaml`:
 
-Use the `file` property to look for a script in the directory that you are calling SpecScript from.
+```yaml file=subdir/say-hello.spec.yaml
+Output: Hello ${input.name}!
+```
 
 ```yaml specscript
-Code example: Call another SpecScript file from working dir
+Code example: Call a script in a subdirectory
 
 Run script:
-  file: samples/basic/create-greeting.spec.yaml
+  resource: subdir/say-hello.spec.yaml
   input:
     name: Clarice
 
 Expected output: Hello Clarice!
 ```
+
+Use the `file` property to look for a script relative to the working directory (the directory you are calling SpecScript
+from) instead of the script's own directory.
 

@@ -3,17 +3,17 @@
 With **Cli** you execute the SpecScript command without popping into a new shell. This is mainly useful to document and
 test the behavior of the `cli` command line interface.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | yes           |
-| List       | auto-iterate  |
-| Object     | no            |
+| Input  | Supported    |
+|--------|--------------|
+| Scalar | yes          |
+| List   | auto-iterate |
+| Object | no           |
 
 [Cli.schema.yaml](schema/Cli.schema.yaml)
 
 ## Basic usage
 
-Show SpecScript help
+Just pass your CLI arguments as a string to run a single CLI command. Here we use it to show the SpecScript help:
 
 ```yaml specscript
 Code example: Execute SpecScript command
@@ -39,22 +39,20 @@ Expected console output: |
 ## Specifying the working dir
 
 Use the long format to specify the working directory. This is useful when you want to run a command in a different
-directory than the one where the script is located.
+directory than the one where the script is located. The [cli-example](cli-example) directory next to this spec contains
+two small scripts.
 
 ```yaml specscript
 Code example: Cli in a different directory
 
 Cli:
-  command: spec basic
-  cd: samples
+  command: spec .
+  cd: ${SCRIPT_HOME}/cli-example
 
 Expected console output: |
-  Simple SpecScript example scripts
+  Example commands
 
   Available commands:
-    create-greeting   Creates a greeting and puts it in the output
-    greet             Prints a greeting
-    multiple-choice   Interaction example
-    output            Sets test output
-    prompt            Simple interactive prompt
+    count   Counts to three
+    greet   Prints a greeting
 ```

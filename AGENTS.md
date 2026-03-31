@@ -164,6 +164,9 @@ style: precise, executable, and cheap to change.
 - **Add new features as sections in existing spec files** rather than creating new spec files.
 - **Keep prose to one or two sentences** introducing the feature and its core rule. Then show the example.
 - **Edge cases go in `tests/` files**, not in the main spec document.
+- **Always introduce code blocks with text.** Markdown viewers hide the ```` ``` ```` header, so the reader cannot see
+  block type, language, or `file=` annotations. Every code block needs a preceding sentence that provides context —
+  what the block is, what file it creates, or what it demonstrates.
 
 This style is deliberately dry. Friendlier tutorial-style guides are a separate concern (see TODO.md).
 
@@ -182,9 +185,9 @@ Lessons from implementing a second (TypeScript) implementation against the spec:
 
 ## Sensitive areas
 
-- **`samples/basic/` directory**: Adding or removing files here breaks 3 spec files that hardcode directory listing
-  output (`Organizing SpecScript files in directories.spec.md`, `Command line options.spec.md`, `Cli.spec.md`). Update
-  those specs if you modify the directory contents.
+- **`samples/basic/` directory**: Adding or removing files here breaks 2 spec files that hardcode directory listing
+  output (`Running SpecScript files.spec.md`, `Command line options.spec.md`). Update those specs if you modify the
+  directory contents.
 
 ## Git commit rules
 
