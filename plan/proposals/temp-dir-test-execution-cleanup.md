@@ -7,9 +7,9 @@ SpecScript has two test execution paths for `.spec.md` files:
 1. **JUnit `specificationTest`** (Kotlin `getCodeExamplesAsTests()`, TypeScript `spec-runner.test.ts`)
 2. **`spec --test`** CLI command (Kotlin `runTests()`, TypeScript `runMarkdownTests()`)
 
-Both paths need to handle the same core challenge: `file=` blocks in Markdown create temp files (via the `Temp file`
-command), and those files need to be findable by `Run script:`, `resource:`, and other commands that look in
-`context.scriptDir`.
+Both paths need to handle the same core challenge: `temp-file=` blocks in Markdown create temp files (via the
+`Temp file` command), and those files need to be findable by `Run script:`, `resource:`, and other commands that look
+in `context.scriptDir`.
 
 The current solution is a hack in the JUnit path: create a temp dir, set `scriptFile` to that temp dir (so
 `scriptDir = tempDir`), then manually override `SCRIPT_HOME` back to the real spec file's directory. This works but
@@ -22,15 +22,15 @@ is confusing and creates inconsistency between the two test paths.
 | Temp dir created? | Yes, upfront | Yes (same code as JUnit) | No |
 | `scriptDir` | Temp dir (the hack) | Temp dir (same hack) | Real file's directory |
 | `SCRIPT_HOME` | Overridden to real dir | Overridden (same) | Real dir (natural) |
-| `file=` blocks findable? | Yes | Yes | No (broken) |
+| `temp-file=` blocks findable? | Yes | Yes | No (broken) |
 
 The Kotlin `spec --test` path calls `getCodeExamplesAsTests()` which uses the JUnit `DynamicTest` type, even though
 it doesn't run under JUnit. This is a leaky abstraction — the CLI test runner shouldn't depend on JUnit types.
 
 ### Why `scriptDir = tempDir` is needed
 
-The `file=` mechanism converts file blocks to `Temp file` commands which write to `context.tempDir`. For those files
-to be resolvable by commands that look in `context.scriptDir` (like `Run script:`, `resource:`), scriptDir must
+The `temp-file=` mechanism converts file blocks to `Temp file` commands which write to `context.tempDir`. For those
+files to be resolvable by commands that look in `context.scriptDir` (like `Run script:`, `resource:`), scriptDir must
 equal tempDir. The hack achieves this by setting `scriptFile = tempDir`.
 
 But then `SCRIPT_HOME` (initialized from `scriptDir`) would point to the wrong place, so it gets manually
@@ -64,10 +64,10 @@ resolution path includes `tempDir` as a fallback.
 - `SCRIPT_HOME` override hack: **deleted**
 - `scriptFile = tempDir` hack: **deleted**
 - `setTempDir()` pre-initialization: **deleted** (lazy creation suffices)
-- 85 `file=` blocks: **unchanged** (still write to tempDir)
-- 28 `SCRIPT_TEMP_DIR` references: **unchanged** (tempDir still exists, same path)
-- 10 `SCRIPT_HOME` references: **unchanged** (now naturally correct)
-- TypeScript `spec --test`: **fixed** (currently broken for `file=` blocks)
+- 93 `temp-file=` blocks: **unchanged** (still write to tempDir)
+- 58 `SCRIPT_TEMP_DIR` references: **unchanged** (tempDir still exists, same path)
+- 14 `SCRIPT_HOME` references: **unchanged** (now naturally correct)
+- TypeScript `spec --test`: **fixed** (currently broken for `temp-file=` blocks)
 
 ### Risk
 
@@ -79,48 +79,15 @@ One edge case: a spec creates a temp file with the same name as a real file in `
 wins (because `scriptDir = tempDir`). With the fallback approach, the real file wins (scriptDir checked first).
 This would be the correct behavior — real files should take precedence over temp files.
 
-## Proposal B: Minimal Fix — Just Fix the TypeScript `spec --test` Path
+## ~~Proposal B: Minimal Fix~~ (Superseded)
 
-Don't change the architecture. Just port the same hack from the JUnit paths into the TypeScript `spec --test`
-(`runMarkdownTests`) function.
+Previously proposed porting the same hack to TypeScript. Now that the shell/CLI cleanup has established clean
+defaults (`SCRIPT_HOME` as default working directory, `temp-file=` naming), this approach just perpetuates the
+hack without benefit.
 
-### Changes
+## ~~Proposal C: Make `Temp file` Write to `scriptDir` Instead~~ (Rejected)
 
-1. In TypeScript's `runMarkdownTests()`, add the same temp dir setup as `spec-runner.test.ts`:
-   - Create temp dir
-   - Set `scriptFile` to `join(testDir, 'test.spec.md')`
-   - Set `SCRIPT_TEMP_DIR` to `testDir`
-   - Override `SCRIPT_HOME` to `dirname(fullPath)`
-
-2. Extract a shared `setupMarkdownTestContext()` helper used by both `spec-runner.test.ts` and `runMarkdownTests`.
-
-### Impact
-
-- Fixes TypeScript `spec --test`: **yes**
-- Removes hacks: **no**
-- Removes JUnit dependency from CLI: **no**
-- Simplifies mental model: **no**
-
-### Risk
-
-Low. Just duplicating an existing pattern.
-
-## Proposal C: Make `Temp file` Write to `scriptDir` Instead
-
-Flip the direction: instead of making `scriptDir` match `tempDir`, make temp files write to `scriptDir`.
-
-### Changes
-
-1. `Temp file` command writes to `context.scriptDir` instead of `context.tempDir`.
-2. `SCRIPT_TEMP_DIR` becomes an alias for `SCRIPT_HOME` (or is removed entirely).
-3. `Cli` command defaults `workingDir` to `context.scriptDir` instead of `context.tempDir`.
-
-### Why this is a bad idea
-
-For `.spec.yaml` scripts, `scriptDir` is the directory containing the real script. Writing temp files there would
-pollute the user's project directory. The entire point of `tempDir` is to provide a disposable scratch space.
-
-**Rejected.**
+Would pollute the user's project directory. The entire point of `tempDir` is disposable scratch space.
 
 ## Recommendation
 
@@ -128,7 +95,9 @@ pollute the user's project directory. The entire point of `tempDir` is to provid
 eliminates the JUnit type dependency from the CLI, and makes the mental model simpler: "scriptDir is where your
 script lives, tempDir is scratch space, and file lookups check both."
 
-Proposal B is the fallback if A is deemed too risky for now, but it just adds more of the same hack.
+The recent shell/CLI cleanup (SCRIPT_HOME defaults, `temp-file=` rename) makes Proposal A even more natural:
+the naming now clearly communicates that `temp-file=` writes to a separate temp directory, so "check tempDir as
+fallback" is an obvious resolution strategy.
 
 ## Implementation Plan for Proposal A
 
