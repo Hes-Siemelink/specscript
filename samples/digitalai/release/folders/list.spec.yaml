@@ -10,4 +10,4 @@ Flat folder list:
 
 For each:
   ${folder} in: ${output}
-  Print: ${folder.title}
+  Output: ${folder.title}

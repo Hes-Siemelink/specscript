@@ -10,14 +10,14 @@ As: ${folders}
 
 ---
 Prompt:
-  description: Select source
+  description: Select the folder you want to move
   enum: ${folders}
   display property: title
 As: ${source}
 
 ---
 Prompt:
-  description: Select target
+  description: Select the new parent folder
   enum: ${folders}
   display property: title
 As: ${target}
@@ -29,4 +29,4 @@ POST:
 
 ---
 Print: "New folder structure:\n"
-List: ""
+List: { }

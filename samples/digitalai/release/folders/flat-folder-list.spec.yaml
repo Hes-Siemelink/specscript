@@ -1,5 +1,5 @@
 Script info:
-  description: Get all folder names
+  description: Makes a flat list of folders from a Digital.ai Release folder tree
   hidden: true
 
 Input schema:
