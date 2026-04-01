@@ -30,6 +30,11 @@ import { CheckTypeCommand } from './check-type.js'
 import { PromptCommand } from './prompt.js'
 import { PromptObjectCommand } from './prompt-object.js'
 import { ConfirmCommand } from './confirm.js'
+import {
+  CredentialsCommand, GetAllCredentialsCommand, GetCredentialsCommand,
+  SetDefaultCredentialsCommand, CreateCredentialsCommand, DeleteCredentialsCommand,
+} from './credentials.js'
+import { ConnectToCommand } from './connect-to.js'
 
 /**
  * Register all commands (Level 0 + Level 1 + Level 3 + Level 4).
@@ -145,6 +150,15 @@ export function registerAllCommands(): void {
   registerCommand(PromptCommand)
   registerCommand(PromptObjectCommand)
   registerCommand(ConfirmCommand)
+
+  // Connections
+  registerCommand(ConnectToCommand)
+  registerCommand(CredentialsCommand)
+  registerCommand(GetAllCredentialsCommand)
+  registerCommand(GetCredentialsCommand)
+  registerCommand(SetDefaultCredentialsCommand)
+  registerCommand(CreateCredentialsCommand)
+  registerCommand(DeleteCredentialsCommand)
 }
 
 /**

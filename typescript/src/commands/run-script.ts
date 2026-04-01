@@ -13,6 +13,7 @@ import { Script } from '../language/script.js'
 import { scanMarkdown } from '../markdown/scanner.js'
 import { splitMarkdownSections } from '../markdown/converter.js'
 import { resolvePath } from './files.js'
+import { propagateConnectionOverrides } from './connect-to.js'
 
 export const RunScriptCommand: CommandHandler = {
   name: 'Run script',
@@ -75,6 +76,9 @@ export async function runScriptFile(filePath: string, input: JsonValue, parentCo
 
   // Create a child context with fresh variables but shared session
   const childContext = (parentContext as DefaultContext).createChildContext(filePath, input)
+
+  // Propagate parent's connection definitions for inheritance (first one wins)
+  propagateConnectionOverrides(parentContext.scriptDir, childContext)
 
   if (filePath.endsWith('.spec.md')) {
     return runMarkdownScript(content, childContext)

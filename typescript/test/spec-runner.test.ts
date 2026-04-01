@@ -181,6 +181,14 @@ const LEVEL_4_MD_FILES = [
     'commands/core/testing/Before all tests.spec.md',
 ]
 
+/** Level 5 connection spec.yaml test files (relative to specification/) */
+const LEVEL_5_CONNECTION_TEST_FILES = [
+    'commands/core/connections/tests/Connect to tests.spec.yaml',
+    'commands/core/connections/tests/Connection inheritance tests.spec.yaml',
+    'commands/core/connections/tests/Upward search tests.spec.yaml',
+    'commands/core/connections/tests/Credentials tests.spec.yaml',
+]
+
 /** Tests that depend on commands from higher levels (skip).
  *  Format: 'relative/path > Test name' or just 'Test name' for global match. */
 const SKIP_TESTS = new Set([
@@ -375,8 +383,7 @@ function runSpecMdFile(relativePath: string): void {
         // Skip sections that use commands not available at this level.
         // Only skip for known higher-level commands (e.g., Prompt). Unknown commands
         // might be local file commands created at runtime by Temp file or yaml file= blocks.
-        const HIGHER_LEVEL_COMMANDS = new Set(['Connect to',
-            'Credentials', 'Validate schema', 'Mcp server', 'Mcp tool', 'SQLite'])
+        const HIGHER_LEVEL_COMMANDS = new Set(['Validate schema', 'Mcp server', 'Mcp tool', 'SQLite'])
         const unavailable = script.commands.find(
             c => !isAssignment(c.name) && !getCommandHandler(c.name) && HIGHER_LEVEL_COMMANDS.has(c.name)
         )
@@ -519,6 +526,13 @@ describe('Level 4 Spec Tests', () => {
             runSpecMdFile(file)
         })
     }
+
+    // Connection tests share the same sample server on port 2525
+    for (const file of LEVEL_5_CONNECTION_TEST_FILES) {
+        describe(file, () => {
+            runSpecFile(file)
+        })
+    }
 })
 
 // --- Level 5: Schema / Types ---
@@ -552,3 +566,5 @@ describe('Level 5 Spec Tests', () => {
         })
     }
 })
+
+
