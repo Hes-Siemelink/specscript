@@ -18,6 +18,8 @@ import kotlin.io.path.name
 class CliInvocationException(message: String) : Exception(message)
 
 fun main(args: Array<String>) {
+    // Avoid 5s mDNS timeout on macOS when resolving .local hostnames via IPv6
+    System.setProperty("java.net.preferIPv4Stack", "true")
     SpecScriptCli.main(args)
 }
 

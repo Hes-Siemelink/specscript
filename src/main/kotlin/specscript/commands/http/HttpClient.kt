@@ -1,16 +1,6 @@
 package specscript.commands.http
 
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.plugins.auth.*
-import io.ktor.client.plugins.auth.providers.*
-import io.ktor.client.request.*
-import io.ktor.client.request.forms.*
-import io.ktor.client.statement.*
 import io.ktor.http.*
-import io.ktor.util.cio.*
-import io.ktor.utils.io.*
-import kotlinx.coroutines.runBlocking
 import specscript.language.ScriptContext
 import specscript.language.SpecScriptCommandError
 import specscript.util.Json
@@ -21,9 +11,14 @@ import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.StringNode
 import tools.jackson.databind.node.ValueNode
 import java.net.URI
+import java.net.URLEncoder
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse.BodyHandlers
 import java.nio.file.Path
 
 object HttpClient {
+
+    private val client = java.net.http.HttpClient.newHttpClient()
 
     fun processRequest(data: ValueNode, context: ScriptContext, method: HttpMethod): JsonNode? {
 
@@ -40,114 +35,101 @@ object HttpClient {
     }
 
     fun processRequest(data: ObjectNode, context: ScriptContext, method: HttpMethod): JsonNode? {
-        return runBlocking {
-            processRequest(HttpParameters.create(data, HttpRequestDefaults.getFrom(context), method))
-        }
+        val parameters = HttpParameters.create(data, HttpRequestDefaults.getFrom(context), method)
+        return processRequest(parameters)
     }
 
-    private suspend fun processRequest(parameters: HttpParameters): JsonNode? {
+    private fun processRequest(parameters: HttpParameters): JsonNode? {
 
-        val client = createClient(parameters)
-
-        val response: HttpResponse =
-            client.request(parameters.url, createRequest(parameters))
+        val request = buildRequest(parameters)
+        val response = client.send(request, BodyHandlers.ofByteArray())
 
         return handleResponse(response, parameters)
     }
 
-    private fun createClient(parameters: HttpParameters) = HttpClient {
-        if (parameters.username != null) {
-            install(Auth) {
-                basic {
-                    credentials {
-                        BasicAuthCredentials(
-                            username = parameters.username,
-                            password = parameters.password ?: ""
-                        )
-                    }
-                }
-            }
-        }
+    private fun buildRequest(parameters: HttpParameters): HttpRequest {
+        val builder = HttpRequest.newBuilder()
+            .uri(URI.create(parameters.url))
+            .method(parameters.method.value, bodyPublisher(parameters))
+
+        headers(builder, parameters)
+        cookies(builder, parameters)
+        basicAuth(builder, parameters)
+
+        return builder.build()
     }
 
-    private fun createRequest(parameters: HttpParameters): HttpRequestBuilder.() -> Unit =
-        {
-            method = parameters.method
+    private fun bodyPublisher(parameters: HttpParameters): HttpRequest.BodyPublisher {
+        val body = parameters.body ?: return HttpRequest.BodyPublishers.noBody()
 
-            headers(parameters)
-            cookies(parameters)
-            body(parameters)
+        val contentType = parameters.headers?.get("Content-Type")?.stringValue()
+        if (contentType == ContentType.Application.FormUrlEncoded.toString()) {
+            val formData = body.properties().joinToString("&") { entry ->
+                "${URLEncoder.encode(entry.key, Charsets.UTF_8)}=${URLEncoder.encode(entry.value.toDisplayYaml(), Charsets.UTF_8)}"
+            }
+            return HttpRequest.BodyPublishers.ofString(formData)
         }
 
-    private fun HttpRequestBuilder.headers(parameters: HttpParameters) {
+        return HttpRequest.BodyPublishers.ofString(body.toString())
+    }
+
+    private fun headers(builder: HttpRequest.Builder, parameters: HttpParameters) {
         parameters.headers?.properties()?.forEach { header ->
-            header(header.key, header.value.stringValue())
+            builder.header(header.key, header.value.stringValue())
         }
 
-        if (!headers.contains(HttpHeaders.ContentType)) {
-            contentType(ContentType.Application.Json)
+        if (parameters.headers?.has("Content-Type") != true) {
+            builder.header("Content-Type", ContentType.Application.Json.toString())
         }
-        if (!headers.contains(HttpHeaders.Accept)) {
-            accept(ContentType.Any)
-        }
-    }
-
-    private fun HttpRequestBuilder.cookies(parameters: HttpParameters) {
-        parameters.cookies?.properties()?.forEach { cookie ->
-            cookie(cookie.key, cookie.value.stringValue())
+        if (parameters.headers?.has("Accept") != true) {
+            builder.header("Accept", "*/*")
         }
     }
 
-    private fun HttpRequestBuilder.body(parameters: HttpParameters) {
-        parameters.body ?: return
-
-        if (headers[HttpHeaders.ContentType] == ContentType.Application.FormUrlEncoded.toString()) {
-            val formData = Parameters.build {
-                parameters.body.properties().forEach {
-                    append(it.key, it.value.toDisplayYaml())
-                }
-            }
-            setBody(FormDataContent(formData))
-        } else {
-            setBody(parameters.body.toString())
-        }
+    private fun cookies(builder: HttpRequest.Builder, parameters: HttpParameters) {
+        val cookies = parameters.cookies ?: return
+        val cookieHeader = cookies.properties().joinToString("; ") { "${it.key}=${it.value.stringValue()}" }
+        builder.header("Cookie", cookieHeader)
     }
 
-    private suspend fun handleResponse(
-        response: HttpResponse,
+    private fun basicAuth(builder: HttpRequest.Builder, parameters: HttpParameters) {
+        val username = parameters.username ?: return
+        val password = parameters.password ?: ""
+        val encoded = java.util.Base64.getEncoder()
+            .encodeToString("$username:$password".toByteArray())
+        builder.header("Authorization", "Basic $encoded")
+    }
+
+    private fun handleResponse(
+        response: java.net.http.HttpResponse<ByteArray>,
         parameters: HttpParameters
     ): JsonNode? {
 
+        val statusCode = response.statusCode()
+
         // Error
-        if (!response.status.isSuccess()) {
-            val data = Yaml.parseIfPossible(response.bodyAsText())
-            val type = response.status.value.toString()
+        if (statusCode !in 200..299) {
+            val data = Yaml.parseIfPossible(String(response.body()))
+            val type = statusCode.toString()
             throw SpecScriptCommandError("Http request returned an error", type = type, data = data)
         }
 
         // No content
-        if (response.contentLength() == 0.toLong()) return null
+        val body = response.body()
+        if (body.isEmpty()) return null
 
         // Save to file
         if (parameters.saveAs != null) {
-            streamBodyToFile(response, Path.of(parameters.saveAs))
+            Path.of(parameters.saveAs).toFile().writeBytes(body)
             return null
         }
 
         // Parse body
         return try {
-            // Parse result as JSON node
-            val body = response.body<String>()
-            Yaml.parse(body)
+            Yaml.parse(String(body))
         } catch (e: Exception) {
-            // If there are any parsing or encoding errors, just return a String in StringNode
-            val byteArrayBody: ByteArray = response.body()
-            StringNode(String(byteArrayBody))
+            StringNode(String(body))
         }
-    }
-
-    private suspend fun streamBodyToFile(response: HttpResponse, file: Path) {
-        response.bodyAsChannel().copyTo(file.toFile().writeChannel())
     }
 }
 
