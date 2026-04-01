@@ -202,6 +202,8 @@ When committing changes to the project, follow these rules:
       perspective of a non-developer stakeholder.
     - Avoid technical or code-centric language in the summary; save those details for the content/body.
     - If a new feature is added, start the summary with the 💫 emoji. The 💫 entries tell the story at a glance.
+      This applies only to spec-level new features, NOT to implementations catching up (e.g., TypeScript porting
+      existing commands). Port/catch-up commits use a plain summary like "TypeScript: Feature name".
     - For new commands specifically, use `💫 New command: Command name` or `💫 New commands: Name1, Name2` as the summary.
     - If the change is a breaking change, use `💫 ⚠️` (both emojis) at the start of the summary. This signals a MINOR
       version bump is needed at release time. For breaking new commands: `💫 ⚠️ New commands: Name1, Name2`.
