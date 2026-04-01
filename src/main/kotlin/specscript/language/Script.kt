@@ -139,7 +139,7 @@ fun List<MarkdownBlock>.toScript(): Script {
 
             YamlFile -> {
                 val data = TempFileData(
-                    filename = block.getOption("file"),
+                    filename = block.getOption("temp-file"),
                     content = StringNode(block.getContent()),
                     resolve = block.getOption("resolve")?.toBoolean() ?: false,
                 )
@@ -163,11 +163,18 @@ fun List<MarkdownBlock>.toScript(): Script {
             ShellBlock -> {
                 if (block.headerLine.contains("ignore")) continue
 
+                val explicitCd = block.getOption("cd")
+                val cd = when {
+                    explicitCd == null -> "\${SCRIPT_HOME}"
+                    explicitCd.startsWith("/") || explicitCd.startsWith("\${") -> explicitCd
+                    else -> "\${SCRIPT_HOME}/$explicitCd"
+                }
+
                 val data = ShellCommand(
                     command = block.getContent(),
                     showOutput = block.getOption("show_output")?.toBoolean() ?: true,
                     showCommand = block.getOption("show_command")?.toBoolean() ?: false,
-                    cd = block.getOption("cd")
+                    cd = cd
                 )
                 commands.add(
                     Command(Shell.name, data.toJsonNode())

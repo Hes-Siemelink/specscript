@@ -17,7 +17,7 @@ to specify a different file.
 
 Given the following file `my_credentials.yaml` in the `SCRIPT_TEMP_DIR` directory:
 
-```yaml file=my_credentials.yaml
+```yaml temp-file=my_credentials.yaml
 My Sample Server:
   credentials:
     - name: My account

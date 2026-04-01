@@ -91,7 +91,7 @@ definition. SpecScript will automatically derive it from the script's `Input sch
 
 Given a script file `greet-tool.spec.yaml` that defines its input using `Input schema`:
 
-```yaml file=greet-tool.spec.yaml
+```yaml temp-file=greet-tool.spec.yaml
 Input schema:
   type: object
   properties:

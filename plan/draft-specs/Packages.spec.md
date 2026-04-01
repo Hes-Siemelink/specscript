@@ -10,7 +10,7 @@ distinguishes it from a regular directory config that uses `Script info`.
 
 For example, the package root `packages/greeter/specscript-config.yaml`:
 
-```yaml file=packages/greeter/specscript-config.yaml
+```yaml temp-file=packages/greeter/specscript-config.yaml
 Package info:
   name: greeter
 ```
@@ -18,13 +18,13 @@ Package info:
 Subdirectories containing `.spec.yaml` files provide commands namespaced under the directory path. The `greetings`
 directory has two commands — file `packages/greeter/greetings/hello.spec.yaml`:
 
-```yaml file=packages/greeter/greetings/hello.spec.yaml
+```yaml temp-file=packages/greeter/greetings/hello.spec.yaml
 Output: Hello ${input.name}!
 ```
 
 And `packages/greeter/greetings/goodbye.spec.yaml`:
 
-```yaml file=packages/greeter/greetings/goodbye.spec.yaml
+```yaml temp-file=packages/greeter/greetings/goodbye.spec.yaml
 Output: Goodbye ${input.name}!
 ```
 
@@ -68,19 +68,19 @@ excluded.
 The `greeter` package has a `tests/` directory and a hidden `internal/` directory. File
 `packages/greeter/tests/greeting-tests.spec.yaml`:
 
-```yaml file=packages/greeter/tests/greeting-tests.spec.yaml
+```yaml temp-file=packages/greeter/tests/greeting-tests.spec.yaml
 Output: test
 ```
 
 File `packages/greeter/internal/specscript-config.yaml`:
 
-```yaml file=packages/greeter/internal/specscript-config.yaml
+```yaml temp-file=packages/greeter/internal/specscript-config.yaml
 hidden: true
 ```
 
 File `packages/greeter/internal/helper.spec.yaml`:
 
-```yaml file=packages/greeter/internal/helper.spec.yaml
+```yaml temp-file=packages/greeter/internal/helper.spec.yaml
 Output: internal
 ```
 
@@ -158,14 +158,14 @@ Use `as` to import under a prefix. This resolves collisions when two packages ex
 
 A second package `alt-greeter` also has a `Hello` command. File `packages/alt-greeter/specscript-config.yaml`:
 
-```yaml file=packages/alt-greeter/specscript-config.yaml
+```yaml temp-file=packages/alt-greeter/specscript-config.yaml
 Package info:
   name: alt-greeter
 ```
 
 File `packages/alt-greeter/greetings/hello.spec.yaml`:
 
-```yaml file=packages/alt-greeter/greetings/hello.spec.yaml
+```yaml temp-file=packages/alt-greeter/greetings/hello.spec.yaml
 Output: Howdy ${input.name}!
 ```
 

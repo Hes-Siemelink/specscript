@@ -299,7 +299,7 @@ references:
 
 - ````yaml specscript` - **EXECUTABLE**: Runs as actual tests during the gradle specificationTest
 - ````yaml` - **ILLUSTRATIVE**: Shows syntax without execution (for invalid/example code)
-- ````yaml file=filename.spec.yaml` - **FILE CREATION**: Creates temporary files during test execution
+- ````yaml temp-file=filename.spec.yaml` - **FILE CREATION**: Creates temporary files during test execution
 
 ### Code Block Caption Rule:
 
@@ -483,12 +483,12 @@ SpecScript enables true **specification-driven development** where the specifica
 
 - **`.spec.md`**: Executable SpecScript documentation with ````yaml specscript` blocks
 - **`.spec.yaml`**: Pure SpecScript YAML files
-- **NEVER use**: ````yaml file=filename.spec.yaml` in executable documentation - this creates temp files, not executable
+- **NEVER use**: ````yaml temp-file=filename.spec.yaml` in executable documentation - this creates temp files, not executable
   code
 
 ### Common Mistakes to Avoid
 
-1. **Wrong Block Type**: Using ````yaml file=` instead of ````yaml specscript` in `.spec.md` files
+1. **Wrong Block Type**: Using ````yaml temp-file=` instead of ````yaml specscript` in `.spec.md` files
 2. **Eager Commits**: Always run `./gradlew specificationTest` before committing - we are spec-driven!
 3. **Wrong Commit Messages**:
     - Use "Bug fix" for actual bugs

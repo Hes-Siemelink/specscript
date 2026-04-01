@@ -131,7 +131,7 @@ automatically derives it from the script file.
 
 Given a script file `say-hello.spec.yaml`:
 
-```yaml file=say-hello.spec.yaml
+```yaml temp-file=say-hello.spec.yaml
 Input schema:
   type: object
   properties:

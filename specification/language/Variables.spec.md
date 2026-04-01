@@ -11,6 +11,7 @@ SpecScript provides several built-in variables:
 | `${env.VAR_NAME}`    | OS environment variable (read-only)                             |
 | `${SCRIPT_HOME}`     | Absolute path to the directory containing the current script    |
 | `${SCRIPT_TEMP_DIR}` | Absolute path to a temporary directory, created on first access |
+| `${PWD}`             | Absolute path to the working directory from where `spec` was launched |
 
 ## Basic usage
 
@@ -170,7 +171,7 @@ The **Output** command is often used at the end of a script to explicitly set th
 
 Suppose you have a file `simple-greeting.spec.yaml`
 
-```yaml file=simple-greeting.spec.yaml
+```yaml temp-file=simple-greeting.spec.yaml
 Script info: A simple greeting
 
 Output: Hello World!
@@ -212,7 +213,7 @@ Assert equals:
 
 Take a look at the example file `greet.spec.yaml` to see how you can define input and output of a script.
 
-```yaml file=greet.spec.yaml
+```yaml temp-file=greet.spec.yaml
 Code example: Input and output when defining a script
 
 Script info: Creates a greeting
@@ -252,6 +253,18 @@ Code example: Read a file relative to the script
 Read file: ${SCRIPT_HOME}/tests/example.txt
 
 Expected output: Hello
+```
+
+## PWD
+
+The `${PWD}` variable contains the absolute path to the working directory from where `spec` was launched.
+
+```yaml specscript
+Code example: PWD is available
+
+Assert that:
+  not:
+    empty: ${PWD}
 ```
 
 ## Environment variables

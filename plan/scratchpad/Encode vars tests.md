@@ -8,7 +8,7 @@ on input.
 
 Suppose we have this file `input.yaml`:
 
-```yaml file=input.yaml
+```yaml temp-file=input.yaml
 key: value with ${not a variable}
 ```
 

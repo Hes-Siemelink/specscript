@@ -23,7 +23,7 @@ Http request defaults:
   url: http://localhost:2525
 -->
 
-```yaml file=get-items.spec.yaml
+```yaml temp-file=get-items.spec.yaml
 Code example: Use a connection
 
 Connect to: SpecScript Samples
@@ -39,7 +39,7 @@ Expected output:
 In order for this to work, you need to configure a _connection script_ for the **SpecScript Samples** endpoint. You do
 this in the `specscript-config.yaml` file in the same directory:
 
-```yaml file=specscript-config.yaml
+```yaml temp-file=specscript-config.yaml
 connections:
   SpecScript Samples: connect.spec.yaml
 ```
@@ -49,7 +49,7 @@ need to know the user credentials and other connection logic.
 
 Here's an example connection script:
 
-```yaml file=connect.spec.yaml
+```yaml temp-file=connect.spec.yaml
 # Set up endpoint for subsequent HTTP calls
 Http request defaults:
   url: http://localhost:2525
@@ -57,7 +57,7 @@ Http request defaults:
 
 Now we can run it
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec get-items
 ```
 
@@ -91,7 +91,7 @@ the same connection name, the first one wins — the outer script's definition t
 
 Given a script `inner-script.spec.yaml` that connects to an endpoint:
 
-```yaml file=inner-script.spec.yaml
+```yaml temp-file=inner-script.spec.yaml
 Connect to: SpecScript Samples
 
 GET: /items

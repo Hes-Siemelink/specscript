@@ -6,7 +6,7 @@
 
 This is the simplest SpecScript file, `hello-world.spec.yaml`:
 
-```yaml file=hello-world.spec.yaml
+```yaml temp-file=hello-world.spec.yaml
 Print: Hello world
 ```
 
@@ -15,7 +15,7 @@ commands start with a capital letter.
 
 If we store it in a file `hello-world.spec.yaml`, we can run it with the following command:
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec hello-world.spec.yaml
 ```
 
@@ -68,7 +68,7 @@ SpecScript does add some additional formatting on top of Yaml, for example the v
 
 You can have multiple commands in a file, and they will be executed in order. Here's `prompt.spec.yaml`:
 
-```yaml file=prompt.spec.yaml
+```yaml temp-file=prompt.spec.yaml
 Prompt: What is your name?
 
 Output: Hello ${output}!
@@ -80,7 +80,7 @@ When running it with the following command,
 What is your name?: Hes
 -->
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec prompt.spec.yaml
 ```
 
@@ -150,7 +150,7 @@ You can specify the description of your script with the
 
 Take this file `simple-greeting.spec.yaml`:
 
-```yaml file=simple-greeting.spec.yaml
+```yaml temp-file=simple-greeting.spec.yaml
 Script info: Prints a simple greeting
 
 Print: Hi there!
@@ -158,7 +158,7 @@ Print: Hi there!
 
 When running it with the `--help` flag, the description is printed:
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec --help simple-greeting.spec.yaml
 ```
 
@@ -170,7 +170,7 @@ Prints a simple greeting
 
 **Input schema** is used to specify the script's input. Here's `greeting.spec.yaml`:
 
-```yaml file=greeting.spec.yaml
+```yaml temp-file=greeting.spec.yaml
 Script info: Prints a personalized greeting
 
 Input schema:
@@ -184,7 +184,7 @@ Output: Hello ${name}!
 
 It has input parameter `name`:
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec --help greeting.spec.yaml
 ```
 
@@ -197,7 +197,7 @@ Options:
 
 And you can invoke it as follows.
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec greeting.spec.yaml --name Bob
 ```
 
@@ -213,7 +213,7 @@ You can set the output of the script with the **[Output](../commands/core/variab
 
 For example, with script `hello.spec.yaml`
 
-```yaml file=hello.spec.yaml
+```yaml temp-file=hello.spec.yaml
 Output:
   a: one
   b: two
@@ -222,7 +222,7 @@ Output:
 
 The output is stored in the `${output}` variable. When invoking SpecScript from the command line, it will be printed:
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec hello.spec.yaml
 ```
 

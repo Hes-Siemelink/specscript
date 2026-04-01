@@ -59,7 +59,7 @@ object Shell : CommandHandler("Shell", "core/shell"), ObjectHandler, ValueHandle
         }
 
         // Expose dir where script is located
-        info.env["SCRIPT_HOME"] = context.scriptDir.toAbsolutePath().toString()
+        info.env["SCRIPT_HOME"] = context.scriptHome.toAbsolutePath().toString()
 
         return info
     }

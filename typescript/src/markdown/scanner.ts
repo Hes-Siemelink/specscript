@@ -17,8 +17,8 @@ export const Text: BlockType = { name: 'Text', firstLinePrefix: '', lastLinePref
 export const Header: BlockType = { name: 'Header', firstLinePrefix: '#', lastLinePrefix: '' }
 export const HiddenSpecScriptYaml: BlockType = { name: 'HiddenSpecScriptYaml', firstLinePrefix: '<!-- yaml specscript', lastLinePrefix: '-->' }
 export const SpecScriptYaml: BlockType = { name: 'SpecScriptYaml', firstLinePrefix: '```yaml specscript', lastLinePrefix: '```' }
-export const YamlFile: BlockType = { name: 'YamlFile', firstLinePrefix: '```yaml file', lastLinePrefix: '```' }
-export const ShellCli: BlockType = { name: 'ShellCli', firstLinePrefix: '```shell cli', lastLinePrefix: '```' }
+export const YamlFile: BlockType = { name: 'YamlFile', firstLinePrefix: '```yaml temp-file', lastLinePrefix: '```' }
+export const ShellCli: BlockType = { name: 'ShellCli', firstLinePrefix: '```cli', lastLinePrefix: '```' }
 export const ShellBlock: BlockType = { name: 'ShellBlock', firstLinePrefix: '```shell', lastLinePrefix: '```' }
 export const Answers: BlockType = { name: 'Answers', firstLinePrefix: '<!-- answers', lastLinePrefix: '-->' }
 export const Output: BlockType = { name: 'Output', firstLinePrefix: '```output', lastLinePrefix: '```' }
@@ -26,7 +26,7 @@ export const Quote: BlockType = { name: 'Quote', firstLinePrefix: '> ', lastLine
 
 /**
  * Priority order for block detection. YamlFile must come before SpecScriptYaml
- * (both start with ```yaml), ShellCli must come before ShellBlock (both start with ```shell).
+ * (both start with ```yaml), ShellCli (```cli) must come before other blocks.
  */
 const BLOCK_TYPES: BlockType[] = [
   YamlFile,

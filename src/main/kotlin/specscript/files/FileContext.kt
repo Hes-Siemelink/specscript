@@ -63,6 +63,7 @@ class FileContext(
 
     init {
         variables[SCRIPT_DIR_VARIABLE] = StringNode(scriptHome.toAbsolutePath().toString())
+        variables[PWD_VARIABLE] = StringNode(System.getProperty("user.dir"))
         variables[ENV_VARIABLE] = Json.newObject(System.getenv())
 
         PackageRegistry.autoPackagePath = PackageRegistry.findEnclosingPackageLibrary(scriptDir)

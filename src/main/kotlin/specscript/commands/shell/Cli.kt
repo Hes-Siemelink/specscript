@@ -18,16 +18,16 @@ object Cli : CommandHandler("Cli", "core/shell"), ValueHandler, ObjectHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
 
-        return runCli(context, data.asString())
+        return runCli(context, data.asString(), workingDir = context.scriptHome)
     }
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val info = data.toDomainObject(CliData::class)
 
-        return runCli(context, info.command, info.cd?.let { Path.of(it) } ?: context.tempDir)
+        return runCli(context, info.command, info.cd?.let { context.scriptHome.resolve(it) } ?: context.scriptHome)
     }
 
-    private fun runCli(context: ScriptContext, command: String, workingDir: Path = context.tempDir): StringNode {
+    private fun runCli(context: ScriptContext, command: String, workingDir: Path = context.scriptHome): StringNode {
         val line = command.split("\\s+".toRegex())
         val args = line.drop(1).toTypedArray()
 

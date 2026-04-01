@@ -38,16 +38,17 @@ Expected console output: |
 
 ## Specifying the working dir
 
-Use the long format to specify the working directory. This is useful when you want to run a command in a different
-directory than the one where the script is located. The [cli-example](cli-example) directory next to this spec contains
-two small scripts.
+The default working directory is `SCRIPT_HOME` — the directory containing the script being executed.
+
+Use the long format to specify a different working directory. The [cli-example](cli-example) directory next to this spec
+contains two small scripts.
 
 ```yaml specscript
 Code example: Cli in a different directory
 
 Cli:
   command: spec .
-  cd: ${SCRIPT_HOME}/cli-example
+  cd: cli-example
 
 Expected console output: |
   Example commands

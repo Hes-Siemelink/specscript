@@ -13,13 +13,13 @@ a package library — a directory that contains one or more packages.
 
 The `greetings` package's `specscript-config.yaml` looks like this:
 
-```yaml file=lib/greetings/specscript-config.yaml
+```yaml temp-file=lib/greetings/specscript-config.yaml
 Package info: Different ways to greet people
 ```
 
 The package contains a command `lib/greetings/hello.spec.yaml` that prints a simple greeting:
 
-```yaml file=lib/greetings/hello.spec.yaml
+```yaml temp-file=lib/greetings/hello.spec.yaml
 Input schema:
   type: object
   properties:
@@ -32,7 +32,7 @@ Output: Hello ${name}!
 
 We can run it directly to see what it does:
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec lib/greetings/hello.spec.yaml
 ```
 
@@ -51,7 +51,7 @@ To use commands from a package, we need to import them. This is done by adding a
 
 For example:
 
-```yaml file=simple-import/specscript-config.yaml
+```yaml temp-file=simple-import/specscript-config.yaml
 imports:
   greetings:
     - hello
@@ -62,7 +62,7 @@ list of items specifies which commands to import from that package.
 
 We can now use the Hello command directly in a script. Here's `run.spec.yaml`:
 
-```yaml file=simple-import/run.spec.yaml
+```yaml temp-file=simple-import/run.spec.yaml
 Hello:
   name: Alice
 ```
@@ -71,7 +71,7 @@ One last thing to do before running it is to tell SpecScript where the package c
 to find packages. The simplest is to pass it via the `--package-path` flag (shorthand: `-p`). In this case we point it
 to the `lib` directory where the `greetings` package is installed:
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec --package-path lib simple-import/run
 ```
 
@@ -87,7 +87,7 @@ The greetings package also has a subdirectory with two scripts.
 
 `lib/greetings/sub/hi.spec.yaml`:
 
-```yaml file=lib/greetings/sub/hi.spec.yaml
+```yaml temp-file=lib/greetings/sub/hi.spec.yaml
 Input schema:
   type: object
   properties:
@@ -99,7 +99,7 @@ Output: Hi ${name}!
 
 `lib/greetings/sub/bye.spec.yaml`:
 
-```yaml file=lib/greetings/sub/bye.spec.yaml
+```yaml temp-file=lib/greetings/sub/bye.spec.yaml
 Input schema:
   type: object
   properties:
@@ -115,7 +115,7 @@ Point to a single command from a package subdirectory to import it.
 
 The config `subdir-import-single/specscript-config.yaml`:
 
-```yaml file=subdir-import-single/specscript-config.yaml
+```yaml temp-file=subdir-import-single/specscript-config.yaml
 imports:
   greetings:
     - sub/hi
@@ -123,14 +123,14 @@ imports:
 
 Now we create a script `subdir-import-single/hi-bob.spec.yaml`:
 
-```yaml file=subdir-import-single/hi-bob.spec.yaml
+```yaml temp-file=subdir-import-single/hi-bob.spec.yaml
 Hi:
   name: Bob
 ```
 
 And run it. The shorthand `-p` is equivalent to `--package-path`.
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec -p lib subdir-import-single/hi-bob
 ```
 
@@ -145,7 +145,7 @@ children are included.
 
 The config `subdir-import-all/specscript-config.yaml`:
 
-```yaml file=subdir-import-all/specscript-config.yaml
+```yaml temp-file=subdir-import-all/specscript-config.yaml
 imports:
   greetings:
     - sub
@@ -153,7 +153,7 @@ imports:
 
 The script `subdir-import-all/hi-and-bye.spec.yaml`:
 
-```yaml file=subdir-import-all/hi-and-bye.spec.yaml
+```yaml temp-file=subdir-import-all/hi-and-bye.spec.yaml
 Hi:
   name: Alice
 As: greeting
@@ -167,7 +167,7 @@ Output: "${greeting} ${farewell}"
 
 Run it:
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec -p lib subdir-import-all/hi-and-bye
 ```
 
@@ -182,7 +182,7 @@ alias name instead of its original name.
 
 The config `test-alias/specscript-config.yaml`:
 
-```yaml file=test-alias/specscript-config.yaml
+```yaml temp-file=test-alias/specscript-config.yaml
 imports:
   greetings:
     - sub/hi:
@@ -191,12 +191,12 @@ imports:
 
 The script `test-alias/run.spec.yaml`:
 
-```yaml file=test-alias/run.spec.yaml
+```yaml temp-file=test-alias/run.spec.yaml
 Greet:
   name: Carol
 ```
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec -p lib test-alias/run
 ```
 
@@ -218,20 +218,20 @@ A bare reference without items (`greetings:` with no value) is equivalent to `gr
 
 The following `specscript-config.yaml` imports root-level commands using the shorthand:
 
-```yaml file=import-root-star/specscript-config.yaml
+```yaml temp-file=import-root-star/specscript-config.yaml
 imports:
   greetings: "*"
 ```
 
 The script `hello-again.spec.yaml`:
 
-```yaml file=import-root-star/run.spec.yaml
+```yaml temp-file=import-root-star/run.spec.yaml
 Hello: { }
 ```
 
 Run it:
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec -p lib import-root-star/run
 ```
 
@@ -245,18 +245,18 @@ Hello World!
 
 A bare source reference with no value imports all root-level commands. The config `import-bare/specscript-config.yaml`:
 
-```yaml file=import-bare/specscript-config.yaml
+```yaml temp-file=import-bare/specscript-config.yaml
 imports:
   greetings:
 ```
 
 The script `import-bare/run.spec.yaml`:
 
-```yaml file=import-bare/run.spec.yaml
+```yaml temp-file=import-bare/run.spec.yaml
 Hello: { }
 ```
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec -p lib import-bare/run
 ```
 
@@ -266,7 +266,7 @@ Hello World!
 
 The config `specscript-config.yaml` imports all commands from `sub/`:
 
-```yaml file=import-subdir-star/specscript-config.yaml
+```yaml temp-file=import-subdir-star/specscript-config.yaml
 imports:
   greetings:
     - "sub/*"
@@ -274,14 +274,14 @@ imports:
 
 The script `hi-dave.spec.yaml`:
 
-```yaml file=import-subdir-star/hi-dave.spec.yaml
+```yaml temp-file=import-subdir-star/hi-dave.spec.yaml
 Hi:
   name: Dave
 ```
 
 Run it:
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec -p lib import-subdir-star/hi-dave
 ```
 
@@ -295,21 +295,21 @@ Hi Dave!
 
 This config `specscript-config.yaml` imports everything recursively using the shorthand:
 
-```yaml file=import-root-globstar/specscript-config.yaml
+```yaml temp-file=import-root-globstar/specscript-config.yaml
 imports:
   greetings: "**"
 ```
 
 The script `hi-eve.spec.yaml` can use commands from any level:
 
-```yaml file=import-root-globstar/run.spec.yaml
+```yaml temp-file=import-root-globstar/run.spec.yaml
 Hi:
   name: Eve
 ```
 
 Run it:
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec -p lib import-root-globstar/run
 ```
 
@@ -328,7 +328,7 @@ For importing from sibling or parent directories, use package imports with self-
 
 Given a helper script `import-local/helper/say-something.spec.yaml`:
 
-```yaml file=import-local/helper/say-something.spec.yaml
+```yaml temp-file=import-local/helper/say-something.spec.yaml
 Input schema:
   type: object
   properties:
@@ -340,7 +340,7 @@ Output: Something ${what}
 
 The config `import-local/specscript-config.yaml` imports from the local `helper` directory:
 
-```yaml file=import-local/specscript-config.yaml
+```yaml temp-file=import-local/specscript-config.yaml
 imports:
   ./helper:
     - say-something
@@ -348,14 +348,14 @@ imports:
 
 The script `something-funny.spec.yaml`:
 
-```yaml file=import-local/something-funny.spec.yaml
+```yaml temp-file=import-local/something-funny.spec.yaml
 Say something:
   what: funny
 ```
 
 Local imports don't need `-p` — the path is relative to the config directory:
 
-```shell cli cd=${SCRIPT_TEMP_DIR}/import-local
+```cli cd=${SCRIPT_TEMP_DIR}/import-local
 spec something-funny
 ```
 
@@ -371,19 +371,19 @@ A local import with `*` imports every `.spec.yaml` file from that directory.
 
 Given `import-local-all/utils/greet.spec.yaml`:
 
-```yaml file=import-local-all/utils/greet.spec.yaml
+```yaml temp-file=import-local-all/utils/greet.spec.yaml
 Output: Hello!
 ```
 
 And `import-local-all/utils/farewell.spec.yaml`:
 
-```yaml file=import-local-all/utils/farewell.spec.yaml
+```yaml temp-file=import-local-all/utils/farewell.spec.yaml
 Output: Goodbye!
 ```
 
 The config `import-local-all/specscript-config.yaml`:
 
-```yaml file=import-local-all/specscript-config.yaml
+```yaml temp-file=import-local-all/specscript-config.yaml
 imports:
   ./utils:
     - "*"
@@ -391,11 +391,11 @@ imports:
 
 The script `import-local-all/run.spec.yaml`:
 
-```yaml file=import-local-all/run.spec.yaml
+```yaml temp-file=import-local-all/run.spec.yaml
 Greet: { }
 ```
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec import-local-all/run
 ```
 
@@ -410,7 +410,7 @@ Imported commands retain access to their own local imports, but those imports do
 The `greetings` package's `sub/` directory has its own config importing a local helper. The helper
 `lib/greetings/sub/internal/format-name.spec.yaml`:
 
-```yaml file=lib/greetings/sub/internal/format-name.spec.yaml
+```yaml temp-file=lib/greetings/sub/internal/format-name.spec.yaml
 Input schema:
   type: object
   properties:
@@ -424,7 +424,7 @@ Output: ${formatted}
 
 The config `lib/greetings/sub/specscript-config.yaml` imports the helper locally:
 
-```yaml file=lib/greetings/sub/specscript-config.yaml
+```yaml temp-file=lib/greetings/sub/specscript-config.yaml
 imports:
   ./internal:
     - format-name
@@ -432,7 +432,7 @@ imports:
 
 The command `lib/greetings/sub/fancy-hi.spec.yaml` uses the local import:
 
-```yaml file=lib/greetings/sub/fancy-hi.spec.yaml
+```yaml temp-file=lib/greetings/sub/fancy-hi.spec.yaml
 Input schema:
   type: object
   properties:
@@ -448,7 +448,7 @@ Output: Fancy hi ${formatted}!
 
 A project imports only `fancy-hi` from the package. The config `test-scope/specscript-config.yaml`:
 
-```yaml file=test-scope/specscript-config.yaml
+```yaml temp-file=test-scope/specscript-config.yaml
 imports:
   greetings:
     - sub/fancy-hi
@@ -456,12 +456,12 @@ imports:
 
 The script `test-scope/run.spec.yaml` can use `Fancy hi` — the command resolves its own local import internally:
 
-```yaml file=test-scope/run.spec.yaml
+```yaml temp-file=test-scope/run.spec.yaml
 Fancy hi:
   name: Frank
 ```
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec -p lib test-scope/run
 ```
 
@@ -471,12 +471,12 @@ Fancy hi <<Frank>>!
 
 The caller does NOT have access to `Format name` — it is scoped to the `sub/` directory:
 
-```yaml file=test-scope/leak.spec.yaml
+```yaml temp-file=test-scope/leak.spec.yaml
 Format name:
   name: Frank
 ```
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec -p lib test-scope/leak
 ```
 
@@ -527,7 +527,7 @@ The `greetings` package has a `tests/` directory with a test script. The test im
 
 The test config `lib/greetings/tests/specscript-config.yaml`:
 
-```yaml file=lib/greetings/tests/specscript-config.yaml
+```yaml temp-file=lib/greetings/tests/specscript-config.yaml
 imports:
   greetings:
     - hello
@@ -535,12 +535,12 @@ imports:
 
 The test script `lib/greetings/tests/test-hello.spec.yaml`:
 
-```yaml file=lib/greetings/tests/test-hello.spec.yaml
+```yaml temp-file=lib/greetings/tests/test-hello.spec.yaml
 Hello:
   name: Self
 ```
 
-```shell cli cd=${SCRIPT_TEMP_DIR}/lib/greetings/tests
+```cli cd=${SCRIPT_TEMP_DIR}/lib/greetings/tests
 spec test-hello
 ```
 

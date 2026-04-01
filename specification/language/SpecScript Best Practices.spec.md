@@ -58,7 +58,7 @@ Print:
 **For markdown temp files**: Use `resource:` parameter
 
 ```yaml
-# After creating: ```yaml file=config.json
+# After creating: ```yaml temp-file=config.json
 Read file:
   resource: config.json  # ✅ Correct for temp files
 ---

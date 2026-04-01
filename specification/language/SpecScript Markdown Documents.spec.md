@@ -68,9 +68,9 @@ Here is an overview of the constructs you can use to embed SpecScript code in Ma
 | [Hidden code](#hidden-code)                               | ` <!-- yaml specscript` | 
 | [Predefined answers](#predefined-answers)                 | ` <!-- answers`         | 
 | [Checking output](#checking-output)                       | ` ```output`            | 
-| [Helper files](#helper-files)                             | ` ```yaml file`         | 
+| [Helper files](#helper-files)                             | ` ```yaml temp-file`    | 
 | [Shell commands](#shell-commands)                         | ` ```shell`             | 
-| [Invoking SpecScript itself](#invoking-specscript-itself) | ` ```shell cli`         | 
+| [Invoking SpecScript itself](#invoking-specscript-itself) | ` ```cli`               | 
 
 ## SpecScript code
 
@@ -287,7 +287,7 @@ Script is running
 ## Helper files
 
 If you need to have a helper file for the example to work, you can define one with ` ```yaml
-file=[filename]`. This is a shortcut for the [**Temp file**](../commands/core/files/Temp%20file.spec.md)
+temp-file=[filename]`. This is a shortcut for the [**Temp file**](../commands/core/files/Temp%20file.spec.md)
 command.
 
 The file will be created in the temporary directory of the script. You can use the `${SCRIPT_TEMP_DIR}` variable to
@@ -298,7 +298,7 @@ refer to this directory
 ~~~markdown
 You can define the data in an external file `data.yaml`:
 
-```yaml file=data.yaml
+```yaml temp-file=data.yaml
 key: value
 ```
 
@@ -318,7 +318,7 @@ Expected output:
 
 You can define the data in an external file `data.yaml`:
 
-```yaml file=data.yaml
+```yaml temp-file=data.yaml
 key: value
 ```
 
@@ -335,13 +335,13 @@ Expected output:
 
 ### Variables inside temp files
 
-When using the ` ```yaml file` directive, the contents are stored as-is and variables inside the file are not resolved.
+When using the ` ```yaml temp-file` directive, the contents are stored as-is and variables inside the file are not resolved.
 
 If you need dynamic content with variables and eval blocks, use the `resolve=[boolean]` option.
 
 This is equivalent to using the
 [**Temp file**](../commands/core/files/Temp%20file.spec.md) command with the `resolve` option. Note that for the
-` ```yaml file` directive, the default is `false`, where is for **Temp file** the default is `true`.
+` ```yaml temp-file` directive, the default is `false`, where is for **Temp file** the default is `true`.
 
 #### Markdown format
 
@@ -354,7 +354,7 @@ ${value}: large
 
 You can use the variable value by when creating a file `config.yaml` by specifying `resolve=true`:
 
-```yaml file=config.yaml resolve=true
+```yaml temp-file=config.yaml resolve=true
 size: ${value}
 ```
 
@@ -378,7 +378,7 @@ ${value}: large
 
 You can use the variable value by when creating a file `config.yaml` by specifying `resolve=true`:
 
-```yaml file=config.yaml resolve=true
+```yaml temp-file=config.yaml resolve=true
 size: ${value}
 ```
 
@@ -395,7 +395,8 @@ Expected output:
 
 To execute a command in the shell, use the ` ```shell` directive.
 
-SpecScript will execute this command using the [**Shell**](../commands/core/shell/Shell.spec.md) command.
+SpecScript will execute this command using the [**Shell**](../commands/core/shell/Shell.spec.md) command. The default
+working directory is `SCRIPT_HOME` — the directory containing the current markdown file.
 
 The output of the shell command can be checked with the ` ```ouput` directive.
 
@@ -449,7 +450,7 @@ Set the current directory with the `cd` option. This is equivalent to using the
 [**Shell**](../commands/core/shell/Shell.spec.md) command with the `cd` option.
 
 The following example shows how to set the current directory to the temporary directory created by SpecScript for the
-execution of the current script. This is where temporary files are stored that are created with ` ```yaml file` or
+execution of the current script. This is where temporary files are stored that are created with ` ```yaml temp-file` or
 `Temp file`.
 
 #### Markdown format
@@ -552,8 +553,9 @@ kill 1
 
 ## Invoking SpecScript itself
 
-You can also use the ` ```shell cli` directive to show how to invoke SpecScript itself. This is equivalent to using the
-[**Cli**](../commands/core/shell/Cli.spec.md) command.
+You can also use the ` ```cli` directive to show how to invoke SpecScript itself. This is equivalent to using the
+[**Cli**](../commands/core/shell/Cli.spec.md) command. The default working directory is `SCRIPT_HOME` — the directory
+containing the current markdown file.
 
 This is useful for showing how to use the `cli` command and its command line options.
 
@@ -565,7 +567,7 @@ See [Calling another script](Organizing%20SpecScript%20files%20in%20directories.
 ~~~markdown
 Show `cli` usage with the `--help` option:
 
-```shell cli
+```cli
 spec --help
 ```
 
@@ -592,7 +594,7 @@ Global options:
 
 Show `cli` usage with the `--help` option:
 
-```shell cli
+```cli
 spec --help
 ```
 
@@ -620,20 +622,20 @@ Like ` ```shell`, you can set the current directory with the `cd` option. This i
 [**Cli**](../commands/core/shell/Cli.spec.md) command with the `cd` option.
 
 The following example shows how to set the current directory to the temporary directory created by SpecScript for the
-execution of the current script. This is where temporary files are stored that are created with ` ```yaml file`.
+execution of the current script. This is where temporary files are stored that are created with ` ```yaml temp-file`.
 
 #### Markdown format
 
 ~~~markdown
 Create a file `hello.spec.yaml`:
 
-```yaml file=hello.spec.yaml
+```yaml temp-file=hello.spec.yaml
 Print: Hello world!
 ```
 
 And then run it:
 
-```shell cli cd=${SCRIPT_TEMP_DIR}
+```cli cd=${SCRIPT_TEMP_DIR}
 spec hello
 ```
 
@@ -648,13 +650,13 @@ Hello world!
 
 Create a file `hello.spec.yaml`:
 
-```yaml file=hello.spec.yaml
+```yaml temp-file=hello.spec.yaml
 Print: Hello world!
 ```
 
 And then run it:
 
-```shell cli cd=${SCRIPT_TEMP_DIR}
+```cli cd=${SCRIPT_TEMP_DIR}
 spec hello
 ```
 
@@ -666,7 +668,7 @@ Hello world!
 
 ### Ignore option
 
-You can also use `ignore` on `shell cli`. This willl not trigger execution.
+You can also use `ignore` on `cli`. This willl not trigger execution.
 
 In the following example, `cli unknown-command` would raise an error, but this command is never executed by SpecScript
 so we can continue safely.
@@ -680,7 +682,7 @@ Code example: Ignore shell command
 ~~~markdown
 SpecScript will not execute this command:
 
-```shell cli ignore
+```cli ignore
 spec unknown-command
 ```
 
@@ -694,7 +696,7 @@ So there should be no output:
 
 SpecScript will not execute this command:
 
-```shell cli ignore
+```cli ignore
 spec unknown-command
 ```
 

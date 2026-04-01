@@ -52,7 +52,7 @@ Use `cli --help` to see the description of the parameters
 
 Let's put the above example in a file called `input.spec.yaml`:
 
-```yaml file=input.spec.yaml
+```yaml temp-file=input.spec.yaml
 Script info: A script with input parameters
 
 Input parameters:
@@ -63,7 +63,7 @@ Print: Hello, ${name}!
 
 Then running
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec --help input.spec.yaml
 ```
 
@@ -191,7 +191,7 @@ You can define the input parameters of a Script as types.
 
 Types are defined in the file `types.yaml`, in the same directory as the script.
 
-```yaml file=types.yaml
+```yaml temp-file=types.yaml
 FullName:
   properties:
     first_name:

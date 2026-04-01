@@ -58,7 +58,7 @@ info**.
 
 For example, consider the file `helper.spec.yaml`:
 
-```yaml file=helper.spec.yaml
+```yaml temp-file=helper.spec.yaml
 Script info:
   description: Helper script
   hidden: true
@@ -68,7 +68,7 @@ Output: Something useful
 
 It is not included in the directory listing:
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec --help .
 ```
 

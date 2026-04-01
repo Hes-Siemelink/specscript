@@ -10,7 +10,7 @@ As-code, but without the complexity of actual code.
 
 Get a flavor of SpecScript with this example file `greetings.spec.yaml`:
 
-```yaml file=greetings.spec.yaml
+```yaml temp-file=greetings.spec.yaml
 Script info: Multi-language greeting
 
 Input schema:
@@ -39,7 +39,7 @@ Your name: Hes
 Select a language: English
 -->
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 ./spec greetings.spec.yaml --name Hes --language English
 ```
 
@@ -52,7 +52,7 @@ Hi Hes!
 
 You can specify the parameters as arguments. Find out what to pass with the `--help` option:
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 ./spec --help greetings.spec.yaml
 ```
 
@@ -68,7 +68,7 @@ Options:
 
 We can call the example again with the parameters filled in:
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 ./spec greetings.spec.yaml --name Hes --language Spanish
 ```
 
@@ -156,13 +156,13 @@ SpecScript has two main ideas:
 
 This is the simplest SpecScript program, **[hello.spec.yaml](specification/hello-world.spec.yaml)**:
 
-```yaml file=hello.spec.yaml
+```yaml temp-file=hello.spec.yaml
 Print: Hello from SpecScript!
 ```
 
 Invoke it with
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 ./spec hello.spec.yaml
 ```
 
@@ -197,7 +197,7 @@ POST:
 
 Define all command-line options in Yaml. Take this file `simple-options.spec.yaml`
 
-```yaml file=simple-options.spec.yaml
+```yaml temp-file=simple-options.spec.yaml
 Script info:
   description: Call Acme
 
@@ -212,7 +212,7 @@ Input schema:
 
 This will automatically generate a command description and command line options:
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 ./spec --help simple-options.spec.yaml
 ```
 
@@ -230,7 +230,7 @@ SpecScript allows you to specify the type and format of input parameters by way 
 an [Input schema](specification/commands/core/script-info/Input%20schema.spec.md). Here's an example file
 `input-parameters.spec.yaml`
 
-```yaml file=input-parameters.spec.yaml
+```yaml temp-file=input-parameters.spec.yaml
 Script info:
   description: Different input options
 
@@ -246,7 +246,7 @@ Input schema:
       short option: p
 ```
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 ./spec --help input-parameters.spec.yaml
 ```
 
@@ -265,7 +265,7 @@ Easily provide subcommand support by organizing your cli files in directories.
 For example, to run the greeting example from the **[specification/code-examples](specification/code-examples)**
 directory, you can write
 
-```shell cli cd=${SCRIPT_HOME}/specification/code-examples
+```cli cd=specification/code-examples
 ./spec basic greet
 ```
 
@@ -277,7 +277,7 @@ Hello, World!
 
 SpecScript will show the commands if you pass a directory.
 
-```shell cli cd=${SCRIPT_HOME}
+```cli
 ./spec specification/code-examples
 ```
 
@@ -297,7 +297,7 @@ Easily construct [user prompts](specification/commands/core/user-interaction/Pro
 
 Here's an example of how to ask the user to pick something from a list, in a file called `prompt.spec.yaml`:
 
-```yaml file=prompt.spec.yaml 
+```yaml temp-file=prompt.spec.yaml 
 Prompt:
   description: Select a language
   enum:
@@ -311,7 +311,7 @@ Output:
 
 You will be presented with an interactive selector when running it:
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 ./spec prompt.spec.yaml
 ```
 

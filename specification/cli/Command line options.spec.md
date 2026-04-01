@@ -7,7 +7,7 @@ in [specscript-command-line-options.yaml](specscript-command-line-options.yaml) 
 
 When running `spec` or `spec --help`, the global options will be printed
 
-```shell cli
+```cli
 spec
 ```
 
@@ -35,7 +35,7 @@ For this example we run from the **[specification/code-examples](../code-example
 `basic`. Let's use the
 `--help` option to see what SpecScript commands it contains
 
-```shell cli cd=${SCRIPT_HOME}/../code-examples
+```cli cd=../code-examples
 spec --help basic
 ```
 
@@ -53,7 +53,7 @@ Available commands:
 Using `--help` on the **[greet](../code-examples/basic/greet.spec.yaml)** command will give us a description and show
 which command line options it supports
 
-```shell cli cd=${SCRIPT_HOME}/../code-examples
+```cli cd=../code-examples
 spec --help basic greet
 ```
 
@@ -66,7 +66,7 @@ Options:
 
 With that information we can call it with a parameter that is specific to that command:
 
-```shell cli cd=${SCRIPT_HOME}/../code-examples
+```cli cd=../code-examples
 spec basic greet --name Alice
 ```
 
@@ -86,7 +86,7 @@ By default, the script result is printed in Yaml format after execution. Use `--
 
 To show the output in Json format instead of Yaml, use `--output-json` or the shortcut `-j`:
 
-```shell cli cd=${SCRIPT_HOME}/../code-examples
+```cli cd=../code-examples
 spec --output-json basic create-greeting --name Bob
 ```
 
@@ -101,13 +101,13 @@ troubleshooting the SpecScript runtime.
 
 For example, the file `script-with-error.spec.yaml` has an error in it that is not handled by SpecScript.
 
-```yaml file=script-with-error.spec.yaml
+```yaml temp-file=script-with-error.spec.yaml
 GET: http:\\localhost  # Malformed URL - not caught by SpecScript runtime
 ```
 
 Without debug mode you get the following error message
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec script-with-error.spec.yaml
 ```
 
@@ -124,7 +124,7 @@ In script-with-error.spec.yaml:
 With the `--debug` option you will see more of the internals. For example, the Kotlin stacktrace. This can be useful for
 debugging the implementation.
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec --debug script-with-error.spec.yaml
 ```
 

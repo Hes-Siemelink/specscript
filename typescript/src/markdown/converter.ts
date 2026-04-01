@@ -89,7 +89,13 @@ export function blocksToScript(blocks: MarkdownBlock[]): Script {
         'show output': showOutput !== undefined ? showOutput === 'true' : true,
         'show command': showCommand === 'true',
       }
-      if (cd) data.cd = cd
+      if (!cd) {
+        data.cd = '${SCRIPT_HOME}'
+      } else if (cd.startsWith('/') || cd.startsWith('${')) {
+        data.cd = cd
+      } else {
+        data.cd = '${SCRIPT_HOME}/' + cd
+      }
       commands.push({ name: 'Shell', data })
       continue
     }
@@ -110,7 +116,7 @@ export function blocksToScript(blocks: MarkdownBlock[]): Script {
 
     if (block.type === YamlFile) {
       // YamlFile → Temp file command with filename from file= option
-      const filename = block.getOption('file')
+      const filename = block.getOption('temp-file')
       const resolveOpt = block.getOption('resolve')
       const content = block.getContent()
       // Markdown yaml file blocks default resolve to false (unlike the YAML command default of true)

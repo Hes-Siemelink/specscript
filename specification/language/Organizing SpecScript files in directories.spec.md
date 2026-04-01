@@ -14,7 +14,7 @@ my-scripts/
 
 Now let's pass `my-scripts` as a cli parameter. The `--help` option lists the available subcommands:
 
-```shell cli cd=${SCRIPT_HOME}
+```cli
 spec --help my-scripts
 ```
 
@@ -30,7 +30,7 @@ Available commands:
 
 Invoke the **greet** script as a subcommand:
 
-```shell cli cd=${SCRIPT_HOME}
+```cli
 spec my-scripts greet
 ```
 
@@ -42,15 +42,15 @@ Hello, World!
 
 Note that it's optional to specify the `.spec.yaml` extension. The following three commands are equivalent:
 
-```shell cli cd=${SCRIPT_HOME}
+```cli
 spec my-scripts greet
 ```
 
-```shell cli cd=${SCRIPT_HOME}
+```cli
 spec my-scripts greet.spec.yaml
 ```
 
-```shell cli cd=${SCRIPT_HOME}
+```cli
 spec my-scripts/greet.spec.yaml
 ```
 
@@ -84,7 +84,7 @@ style".
 
 For example, suppose we have a file `create-greeting.spec.yaml`, that creates a greeting and puts it in the output:
 
-```yaml file=create-greeting.spec.yaml
+```yaml temp-file=create-greeting.spec.yaml
 Script info: Creates a greeting
 
 Input schema:
@@ -134,13 +134,13 @@ data.
 
 Add a `specscript-config.yaml` file to the directory to give a description to the current directory.
 
-```yaml file=specscript-config.yaml
+```yaml temp-file=specscript-config.yaml
 Script info: This is an example directory
 ```
 
 The information is printed when displaying help for the directory:
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec --help .
 ```
 
@@ -161,7 +161,7 @@ You can hide the directory from the interactive command chooser by setting the `
 
 For example take the following `specscript-config.yaml` file in the `subcommand` directory:
 
-```yaml file=subcommand/specscript-config.yaml
+```yaml temp-file=subcommand/specscript-config.yaml
 Script info:
   hidden: true
 ```
@@ -187,13 +187,13 @@ import system including packages, wildcards, aliased imports and import scope.
 Here is a simple example of importing from a local subdirectory. Given the file
 `helper/say-something.spec.yaml`:
 
-```yaml file=helper/say-something.spec.yaml
+```yaml temp-file=helper/say-something.spec.yaml
 Output: Something ${input.what}
 ```
 
 Import from the local `helper` subdirectory in `specscript-config.yaml`:
 
-```yaml file=specscript-config.yaml
+```yaml temp-file=specscript-config.yaml
 Script info: This is an example directory
 
 imports:
@@ -203,7 +203,7 @@ imports:
 
 Now call it from `call-helper.spec.yaml`:
 
-```yaml file=call-helper.spec.yaml
+```yaml temp-file=call-helper.spec.yaml
 Code example: Calling a script that was imported from another directory
 
 Say something:
@@ -214,7 +214,7 @@ Expected output: Something funny
 
 Run it:
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec call-helper
 ```
 

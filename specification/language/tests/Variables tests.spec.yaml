@@ -52,6 +52,12 @@ Tests:
       not:
         empty: ${SCRIPT_HOME}
 
+  PWD is available:
+
+    Assert that:
+      not:
+        empty: ${PWD}
+
 
 
   Unset environment variable is empty:

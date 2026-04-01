@@ -16,7 +16,7 @@ With **Get credentials** you get the default connection details for a certain en
 
 Given the following list of credentials in `~/.specscript/credentials.yaml`:
 
-```yaml file=credentials.yaml
+```yaml temp-file=credentials.yaml
 SpecScript Sample Server:
   credentials:
     - name: Test account

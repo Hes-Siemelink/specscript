@@ -13,13 +13,13 @@ style and you're in business.
 
 This is how you do a GET request in SpecScript:
 
-```yaml file=greet.spec.yaml
+```yaml temp-file=greet.spec.yaml
 GET: http://localhost:2525/hello
 ```
 
 It's that simple. Save it as `greet.spec.yaml`, run it like this:
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec greet.spec.yaml
 ```
 
@@ -33,7 +33,7 @@ Now let's make something more interesting — a script that takes input and call
 
 Here's a file called `greetings.spec.yaml`:
 
-```yaml file=greetings.spec.yaml
+```yaml temp-file=greetings.spec.yaml
 Script info: Multi-language greeting
 
 Input schema:
@@ -62,7 +62,7 @@ Your name: Hes
 Select a language: English
 -->
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec greetings.spec.yaml --name Hes --language English
 ```
 
@@ -74,7 +74,7 @@ That's it. `Input schema` defines your CLI options. `POST` makes the HTTP reques
 
 You get `--help` for free:
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec --help greetings.spec.yaml
 ```
 
@@ -93,11 +93,11 @@ Options:
 No special syntax — it's Yaml all the way down. Here's the obligatory hello world,
 **[hello.spec.yaml](specification/hello-world.spec.yaml)**:
 
-```yaml file=hello.spec.yaml
+```yaml temp-file=hello.spec.yaml
 Print: Hello from SpecScript!
 ```
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec hello.spec.yaml
 ```
 
@@ -216,7 +216,7 @@ Http server:
 Every SpecScript file is already a command-line tool. Add an `Input schema` and you get options, help text, and
 interactive prompts automatically.
 
-```yaml file=simple-options.spec.yaml
+```yaml temp-file=simple-options.spec.yaml
 Script info:
   description: Call Acme
 
@@ -229,7 +229,7 @@ Input schema:
       description: Preferred language
 ```
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec --help simple-options.spec.yaml
 ```
 
@@ -245,7 +245,7 @@ Options:
 
 SpecScript will show the commands if you pass a directory.
 
-```shell cli cd=${SCRIPT_HOME}
+```cli
 spec specification/code-examples
 ```
 
@@ -264,7 +264,7 @@ By organizing script files in directories you get subcommands.
 For example, to run `greet.spec.yaml` in the **[basic](specification/code-examples/basic)**
 directory, you can write
 
-```shell cli cd=${SCRIPT_HOME}/specification/code-examples
+```cli cd=specification/code-examples
 spec basic greet
 ```
 
@@ -278,7 +278,7 @@ Hello, World!
 
 Build [interactive prompts](specification/commands/core/user-interaction/Prompt.spec.md) with a few lines of Yaml:
 
-```yaml file=prompt.spec.yaml 
+```yaml temp-file=prompt.spec.yaml 
 Prompt:
   description: Select a language
   enum:
@@ -294,7 +294,7 @@ Output:
 Select a language: English
 -->
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec prompt.spec.yaml
 ```
 

@@ -161,7 +161,7 @@ you can also reference to a SpecScript file, as an alternative to an inline scri
 
 Suppose you have a file `greet.spec.yaml`
 
-```yaml file=greet.spec.yaml
+```yaml temp-file=greet.spec.yaml
 Script info: Creates a greeting
 
 Input schema:

@@ -105,6 +105,9 @@ export class DefaultContext implements ScriptContext {
     if (!this.variables.has('SCRIPT_HOME') && this.scriptFile !== '<inline>') {
       this.variables.set('SCRIPT_HOME', this.scriptHome)
     }
+    if (!this.variables.has('PWD')) {
+      this.variables.set('PWD', process.cwd())
+    }
 
     // Auto-discover enclosing package library for search path
     if (this.scriptFile !== '<inline>') {

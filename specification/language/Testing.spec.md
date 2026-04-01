@@ -2,7 +2,7 @@
 
 You can run all the tests in a directory using the `spec --test` command.
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec --test .
 ```
 

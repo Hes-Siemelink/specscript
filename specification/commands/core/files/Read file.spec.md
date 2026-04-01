@@ -16,7 +16,7 @@ Use **Read file** to load a Yaml / Json file
 
 For example, we have a file `greeting.yaml` in the `specification/commands/core/files` directory:
 
-```yaml file=greeting.yaml
+```yaml temp-file=greeting.yaml
 greeting: Hello
 language: en
 ```
@@ -62,10 +62,10 @@ Expected output:
 
 ## Reading temp files created in Markdown
 
-For files created with ````yaml file=filename.ext` in the same markdown document, use the `resource` parameter.
+For files created with ````yaml temp-file=filename.ext` in the same markdown document, use the `resource` parameter.
 Suppose we have a file `config.yaml`:
 
-```yaml file=config.yaml
+```yaml temp-file=config.yaml
 database:
   host: localhost
   port: 5432

@@ -66,7 +66,7 @@ function buildEnv(context: ScriptContext): Record<string, string> {
   }
 
   // Expose SCRIPT_HOME
-  env['SCRIPT_HOME'] = context.scriptDir
+  env['SCRIPT_HOME'] = context.scriptHome
 
   return env
 }

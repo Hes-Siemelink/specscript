@@ -22,7 +22,7 @@ The files in `specification/language/` are the authoritative reference for SpecS
 
 - `` ```yaml specscript `` — **EXECUTABLE**: runs as tests during `specificationTest`
 - `` ```yaml `` — **ILLUSTRATIVE**: shows syntax without execution
-- `` ```yaml file=filename.spec.yaml `` — **FILE CREATION**: creates temporary files during test execution
+- `` ```yaml temp-file=filename.spec.yaml `` — **FILE CREATION**: creates temporary files during test execution
 - `<!-- yaml specscript -->` — **HIDDEN EXECUTABLE**: runs but not rendered in docs (setup/cleanup)
 
 ## Rules for specification documents
@@ -68,7 +68,7 @@ More elaborate tutorial-style guides are a separate concern (see TODO.md).
 
 - **`.spec.md`**: Executable documentation with `yaml specscript` blocks
 - **`.spec.yaml`**: Pure SpecScript YAML scripts
-- Never use `yaml file=filename.spec.yaml` as a substitute for executable code in `.spec.md` files
+- Never use `yaml temp-file=filename.spec.yaml` as a substitute for executable code in `.spec.md` files
 
 ## Spec document hygiene
 
@@ -79,6 +79,6 @@ Lessons from implementing a second (TypeScript) implementation against the spec:
   is forced to replicate bugs.
 - **YAML output format varies between libraries** (indentation, quoting style, flow vs. block). Prefer comparing parsed
   structures (semantic equality) over formatted YAML strings where possible.
-- **Watch for cross-level contamination** in spec files. If a Level 0–1 spec file uses `file=` blocks or `shell cli`
+- **Watch for cross-level contamination** in spec files. If a Level 0–1 spec file uses `temp-file=` blocks or `cli`
   blocks (Level 3+ features), it forces test runners to handle partial failures. Keep spec sections within their level,
   or move cross-level sections to separate files.

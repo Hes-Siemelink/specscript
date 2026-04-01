@@ -7,7 +7,7 @@ instructions.
 
 When running `spec` or `spec --help`, the global options will be printed
 
-```shell cli
+```cli
 spec
 ```
 
@@ -40,7 +40,7 @@ Print: Hello World!
 
 Run it with the following command
 
-```shell cli cd=${SCRIPT_HOME}/..
+```cli cd=..
 spec hello-world.spec.yaml
 ```
 
@@ -52,7 +52,7 @@ Hello World!
 
 You can omit the `.spec.yaml` extension to make it look more like a "cli command":
 
-```shell cli cd=${SCRIPT_HOME}/..
+```cli cd=..
 spec hello-world
 ```
 
@@ -66,7 +66,7 @@ In the samples directory, there is a subdirectory **[basic](../code-examples/bas
 
 Running SpecScript on a directory shows the commands that are available in that directory.
 
-```shell cli cd=${SCRIPT_HOME}/../code-examples
+```cli cd=../code-examples
 spec basic
 ```
 
@@ -84,7 +84,7 @@ Available commands:
 Once you know which script you want to execute, simply chain them as commands on the command line. For example, to
 execute the `greet.spec.yaml` script in the `basic` directory, do:
 
-```shell cli cd=${SCRIPT_HOME}/../code-examples
+```cli cd=../code-examples
 spec basic greet
 ```
 
@@ -101,7 +101,7 @@ Hello, World!
 Some scripts take input. Use the [--help](Command%20line%20options.spec.md#--help) option to list the supported
 parameters
 
-```shell cli cd=${SCRIPT_HOME}/../code-examples
+```cli cd=../code-examples
 spec --help basic greet
 ```
 
@@ -114,7 +114,7 @@ Options:
 
 With that information we can give the script some custom input:
 
-```shell cli cd=${SCRIPT_HOME}/../code-examples
+```cli cd=../code-examples
 spec basic greet --name Alice
 ```
 

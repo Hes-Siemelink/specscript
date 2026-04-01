@@ -172,7 +172,7 @@ have a helper script next to your SpecScript file. Then you would use the `resou
 
 Suppose you have a shell script `hello.sh`
 
-```yaml file=hello.sh
+```yaml temp-file=hello.sh
 echo "Hello World"
 ```
 
@@ -189,7 +189,8 @@ Expected output: Hello World
 
 ## Using SCRIPT_HOME
 
-You can achieve the same by using the `SCRIPT_HOME` variable.
+You can achieve the same by using the `SCRIPT_HOME` variable. The [hello.sh](hello.sh) script next to this spec file
+prints "Hello World":
 
 ```yaml specscript
 Code example: Use SCRIPT_HOME

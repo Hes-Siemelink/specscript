@@ -47,7 +47,7 @@ Use `cli --help` to see the description of the parameters.
 
 Let's put the above example in a file called `schema-input.spec.yaml`:
 
-```yaml file=schema-input.spec.yaml
+```yaml temp-file=schema-input.spec.yaml
 Script info: A script with input schema
 
 Input schema:
@@ -61,7 +61,7 @@ Print: Hello, ${name}!
 
 Then running
 
-```shell cli
+```cli cd=${SCRIPT_TEMP_DIR}
 spec --help schema-input.spec.yaml
 ```
 

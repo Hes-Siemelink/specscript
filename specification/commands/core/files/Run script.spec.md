@@ -15,7 +15,7 @@ also [SpecScript files as commands](SpecScript%20files%20as%20commands.spec.md)
 
 Suppose you have a cli file `do-something.spec.yaml`
 
-```yaml file=do-something.spec.yaml
+```yaml temp-file=do-something.spec.yaml
 Output: Something done!
 ```
 
@@ -35,7 +35,7 @@ Expected output: Something done!
 
 Suppose you have a cli file `create-greeting.spec.yaml`
 
-```yaml file=create-greeting.spec.yaml
+```yaml temp-file=create-greeting.spec.yaml
 Output: Hello ${input.name}!
 ```
 
@@ -74,7 +74,7 @@ Expected output:
 In the example above, we used the property `resource` to indicate that the script to be called was in the same directory
 as the current script. It also works with subdirectories. Given a script `subdir/say-hello.spec.yaml`:
 
-```yaml file=subdir/say-hello.spec.yaml
+```yaml temp-file=subdir/say-hello.spec.yaml
 Output: Hello ${input.name}!
 ```
 
