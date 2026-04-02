@@ -10,13 +10,10 @@
     * `spec agent prime` to give a how-to for agents like 'beans prime'
     * `spec agent skills` lists agent skills
 * Replace specscript-config.yaml with README and put stuff in Markdown front matter.
-*
 
 ## In general
 
-* Split into core yaml script, minimal spec + testing; cli; library functions in order to make implementations in other
-  languages.
-* AI to generate scripts: notebook type interaction to write scripts
+* Notebook type interaction to write scripts
 * Tutorial / guide documents: "Spec documents are written spec-first — they define behavior before implementation
   exists. This drives a minimalist style: precise, executable, and cheap to change." Create a separate set of
   friendlier, tutorial-style "getting started" and "how-to" guides.
