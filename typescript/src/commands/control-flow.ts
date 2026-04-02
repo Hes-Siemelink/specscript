@@ -5,6 +5,7 @@ import {
   isObject, isArray, isString,
 } from '../language/types.js'
 import type { ScriptContext } from '../language/context.js'
+import { withScopedVariable } from '../language/context.js'
 import { Script } from '../language/script.js'
 import { resolve } from '../language/command-execution.js'
 import { toCondition } from '../language/conditions.js'
@@ -174,34 +175,40 @@ export const ForEach: CommandHandler = {
 
     // Resolve the items (but not the body)
     const items = await resolve(itemData, context)
-    const enumerated = enumerateForEach(items)
 
-    // Determine output shape based on input shape
-    const isObjectIteration = isObject(items)
-    const results: JsonValue[] = []
-    const objectResults: JsonObject = {}
+    return withScopedVariable(context, loopVar, () =>
+      iterateOver(items, body, loopVar, context),
+    )
+  },
+}
 
-    for (const item of enumerated) {
-      // Set loop variable (leaks — matches Kotlin behavior)
-      context.variables.set(loopVar, item)
+async function iterateOver(
+  items: JsonValue, body: JsonObject, loopVar: string, context: ScriptContext,
+): Promise<JsonValue> {
+  const enumerated = enumerateForEach(items)
+  const isObjectIteration = isObject(items)
+  const results: JsonValue[] = []
+  const objectResults: JsonObject = {}
 
-      // Deep copy the body for each iteration (resolve is destructive)
-      const bodyCopy = JSON.parse(JSON.stringify(body)) as JsonObject
-      const script = Script.fromData(bodyCopy)
-      const result = await script.runCommands(context)
+  for (const item of enumerated) {
+    context.variables.set(loopVar, item)
 
-      if (result !== undefined) {
-        if (isObjectIteration && isObject(item)) {
-          const key = isString(item['key']) ? item['key'] : String(item['key'])
-          objectResults[key] = result
-        } else {
-          results.push(result)
-        }
+    // Deep copy the body for each iteration (resolve is destructive)
+    const bodyCopy = JSON.parse(JSON.stringify(body)) as JsonObject
+    const script = Script.fromData(bodyCopy)
+    const result = await script.runCommands(context)
+
+    if (result !== undefined) {
+      if (isObjectIteration && isObject(item)) {
+        const key = isString(item['key']) ? item['key'] : String(item['key'])
+        objectResults[key] = result
+      } else {
+        results.push(result)
       }
     }
+  }
 
-    return isObjectIteration ? objectResults : results
-  },
+  return isObjectIteration ? objectResults : results
 }
 
 // --- Repeat ---

@@ -34,6 +34,19 @@ fun ScriptContext.getInputVariables(): ObjectNode {
     return variables.getOrPut(INPUT_VARIABLE) { Json.newObject() } as ObjectNode
 }
 
+inline fun <T> ScriptContext.withScopedVariable(name: String, block: () -> T): T {
+    val previousValue = variables[name]
+    try {
+        return block()
+    } finally {
+        if (previousValue != null) {
+            variables[name] = previousValue
+        } else {
+            variables.remove(name)
+        }
+    }
+}
+
 const val INPUT_VARIABLE = "input"
 const val OUTPUT_VARIABLE = "output"
 const val ENV_VARIABLE = "env"

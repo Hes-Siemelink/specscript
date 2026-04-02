@@ -322,6 +322,24 @@ export class DefaultContext implements ScriptContext {
 }
 
 /**
+ * Execute a block with a scoped variable that is restored (or removed) afterward.
+ */
+export async function withScopedVariable<T>(
+  context: ScriptContext, name: string, block: () => Promise<T>,
+): Promise<T> {
+  const previousValue = context.variables.get(name)
+  try {
+    return await block()
+  } finally {
+    if (previousValue !== undefined) {
+      context.variables.set(name, previousValue)
+    } else {
+      context.variables.delete(name)
+    }
+  }
+}
+
+/**
  * Convert a filename to a command name.
  * Strips .spec.yaml/.spec.md extension, replaces dashes with spaces, capitalizes first letter.
  */

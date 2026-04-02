@@ -131,3 +131,17 @@ Tests:
         value: 123
 
   # "For each with variable syntax in sample data" tests moved to For each tests - L3.spec.yaml (uses Read file)
+
+  Loop variable does not leak after the loop:
+
+    ${name}: original
+
+    For each:
+      ${name} in:
+        - Alice
+        - Bob
+      Output: Hello ${name}
+
+    Assert equals:
+      actual: ${name}
+      expected: original

@@ -24,19 +24,28 @@ object ForEach : CommandHandler("For each", "core/control-flow"), ObjectHandler,
 
 
         val items = itemData.resolve(context)
+
+        return context.withScopedVariable(loopVar) {
+            iterateOver(items, body, loopVar, context)
+        }
+    }
+
+    private fun removeLoopVariable(data: ObjectNode): Pair<String, JsonNode>? {
+        val first = data.propertyNames().first()
+        val match = FOR_EACH_VARIABLE.matchEntire(first) ?: return null
+        val items = data.remove(first)
+
+        return Pair(match.groupValues[1], items)
+    }
+
+    private fun iterateOver(items: JsonNode, body: ObjectNode, loopVar: String, context: ScriptContext): JsonNode {
         val output: JsonNode = if (items is ArrayNode) body.arrayNode() else body.objectNode()
 
         for (item in items.enumerateForEach()) {
-
-            // Set variable
-            // XXX The loop variable is NOT removed after use.
-            // TODO Add a proper stack to hold the temporary variable.
             context.variables[loopVar] = item
 
             // Copy the body statement because variable resolution is in-place and modifies the data
             val copy = body.deepCopy()
-
-            // Execute
             val result = copy.run(context)
 
             result?.let {
@@ -49,14 +58,6 @@ object ForEach : CommandHandler("For each", "core/control-flow"), ObjectHandler,
         }
 
         return output
-    }
-
-    private fun removeLoopVariable(data: ObjectNode): Pair<String, JsonNode>? {
-        val first = data.propertyNames().first()
-        val match = FOR_EACH_VARIABLE.matchEntire(first) ?: return null
-        val items = data.remove(first)
-
-        return Pair(match.groupValues[1], items)
     }
 }
 

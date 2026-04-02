@@ -85,3 +85,7 @@ This will print:
     one
     two
     three
+
+## Loop variable scoping
+
+The loop variable is scoped to the loop body. It is not visible after the loop completes.

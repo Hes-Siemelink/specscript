@@ -66,12 +66,7 @@ Add a table of error types and when they're thrown.
 
 These are behaviors that work in Kotlin but surprised the second implementer, suggesting they may also surprise users.
 
-### 1. ForEach Loop Variable Leakage
-
-The loop variable from `For each` leaks into the parent scope after the loop completes. This is likely a bug, but
-changing it would break scripts that depend on it (e.g., accessing the last iteration's value after the loop).
-
-**Recommendation**: Document as intentional or fix with a deprecation period.
+### ~~1. ForEach Loop Variable Leakage~~ Fixed.
 
 ### 2. Shell Command Default Differences
 
@@ -128,7 +123,7 @@ Prioritized list of improvements that would reduce surprise for both users and i
 
 ### Medium Priority (improve language design)
 
-5. **ForEach scoping** — Decide: is loop variable leakage intentional? If not, fix it. If yes, document it.
+5. ~~**ForEach scoping**~~ Fixed.
 
 6. **Repeat termination guard** — Add a max iterations property or a built-in safety limit.
 
