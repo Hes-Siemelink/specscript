@@ -1,0 +1,35 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+
+type: object
+properties:
+  server:
+    type: object
+    properties:
+      transport:
+        type: string
+        enum: [ STDIO, HTTP ]
+      server:
+        type: string
+        description: Name of the MCP server to connect to
+      command:
+        type: string
+        description: Command to spawn MCP server process (STDIO transport)
+      url:
+        type: string
+        description: HTTP address of the MCP server
+      headers:
+        type: object
+        additionalProperties:
+          type: string
+        description: Additional HTTP headers to include in requests
+      token:
+        type: string
+        description: Authentication token for the MCP server
+    additionalProperties: false
+  uri:
+    type: string
+    description: URI of the resource to read
+required:
+  - server
+  - uri
+additionalProperties: false

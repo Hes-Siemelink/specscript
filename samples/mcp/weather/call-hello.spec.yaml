@@ -1,4 +1,4 @@
-Mcp tool call:
+Mcp call tool:
   tool: hello
   server:
     url: http://localhost:25096/mcp

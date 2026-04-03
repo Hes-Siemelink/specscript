@@ -37,7 +37,8 @@ import {
 import { ConnectToCommand } from './connect-to.js'
 import {
   McpServerCommand, McpToolCommand, McpResourceCommand,
-  McpPromptCommand, McpToolCallCommand, StopMcpServerCommand,
+  McpPromptCommand, McpCallToolCommand, McpReadResourceCommand,
+  McpGetPromptCommand, StopMcpServerCommand,
 } from './mcp-server.js'
 
 /**
@@ -171,7 +172,9 @@ export function registerAllCommands(): void {
   registerCommand(McpToolCommand)
   registerCommand(McpResourceCommand)
   registerCommand(McpPromptCommand)
-  registerCommand(McpToolCallCommand)
+  registerCommand(McpCallToolCommand)
+  registerCommand(McpReadResourceCommand)
+  registerCommand(McpGetPromptCommand)
   registerCommand(StopMcpServerCommand)
 }
 

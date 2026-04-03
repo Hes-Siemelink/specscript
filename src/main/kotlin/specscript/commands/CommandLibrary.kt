@@ -142,7 +142,9 @@ object CommandLibrary {
         Store,
 
         // AI
-        McpToolCall,
+        McpCallTool,
+        McpGetPrompt,
+        McpReadResource,
         McpPrompt,
         McpResource,
         McpServer,

@@ -5,7 +5,7 @@ Input schema:
       type: string
       description: Two-letter US state code (e.g. CA, NY)
 
-Mcp tool call:
+Mcp call tool:
   tool: get_alerts
   server:
     url: http://localhost:25096/mcp

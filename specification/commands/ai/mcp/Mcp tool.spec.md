@@ -128,7 +128,7 @@ Calling the tool works as expected:
 ```yaml specscript
 Code example: Calling a tool with derived metadata
 
-Mcp tool call:
+Mcp call tool:
   tool: greet
   input:
     name: Alice

@@ -238,7 +238,7 @@ Mcp server:
 ```yaml specscript
 Code example: Calling an MCP tool
 
-Mcp tool call:
+Mcp call tool:
   tool: greet
   input:
     name: Alice

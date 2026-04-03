@@ -27,7 +27,7 @@ Mcp server:
       script:
         Output: pong
 
-Mcp tool call:
+Mcp call tool:
   tool: ping
   server:
     url: "http://localhost:8096/mcp"

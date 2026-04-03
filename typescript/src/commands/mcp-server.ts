@@ -1,6 +1,6 @@
 /**
  * MCP server commands: Mcp server, Mcp tool, Mcp resource, Mcp prompt,
- * Mcp tool call, Stop mcp server.
+ * Mcp call tool, Mcp read resource, Mcp get prompt, Stop mcp server.
  *
  * Mirrors Kotlin's commands/mcp/ package. Uses the low-level Server class from
  * @modelcontextprotocol/sdk for protocol handling, because the high-level
@@ -18,11 +18,9 @@ import {
   ListPromptsRequestSchema, GetPromptRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js'
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js'
-import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js'
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { Client } from '@modelcontextprotocol/sdk/client/index.js'
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js'
-import { SSEClientTransport } from '@modelcontextprotocol/sdk/client/sse.js'
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js'
 import type { CommandHandler } from '../language/command-handler.js'
 import type { ScriptContext } from '../language/context.js'
@@ -73,7 +71,7 @@ interface PromptArgumentInfo {
   required?: boolean
 }
 
-type TransportType = 'STDIO' | 'HTTP' | 'SSE'
+type TransportType = 'STDIO' | 'HTTP'
 
 // --- Server registry ---
 
@@ -133,6 +131,19 @@ function resultToString(result: JsonValue | undefined): string {
   if (result === undefined || result === null) return ''
   if (typeof result === 'string') return result
   return toDisplayYaml(result)
+}
+
+/**
+ * Parse MCP text content back into a JsonValue. The server's resultToString
+ * returns plain strings for scalar values and multi-line YAML for structured
+ * data, so single-line text is returned as-is (avoids false positives where
+ * the JS yaml parser interprets colons as map entries).
+ */
+function parseMcpTextContent(text: string): JsonValue {
+  if (text.includes('\n')) {
+    return parseYamlIfPossible(text)
+  }
+  return text
 }
 
 function writeToContext(context: ScriptContext | undefined, text: string): void {
@@ -400,10 +411,6 @@ async function startServer(
       await startStdioServer(name, managed)
       break
 
-    case 'SSE':
-      await startSseServer(name, managed, port, context)
-      break
-
     case 'HTTP':
       await startStreamableHttpServer(name, managed, port, context)
       break
@@ -416,43 +423,6 @@ async function startStdioServer(
 ): Promise<void> {
   const transport = new StdioServerTransport()
   await managed.server.connect(transport)
-}
-
-async function startSseServer(
-  name: string,
-  managed: McpManagedServer,
-  port: number,
-  context: ScriptContext,
-): Promise<void> {
-  let sseTransport: SSEServerTransport | undefined
-
-  const httpServer = createServer(async (req: IncomingMessage, res: ServerResponse) => {
-    const url = new URL(req.url || '/', `http://localhost:${port}`)
-
-    if (req.method === 'GET' && (url.pathname === '/' || url.pathname === '/sse')) {
-      sseTransport = new SSEServerTransport('/messages', res)
-      await managed.server.connect(sseTransport)
-    } else if (url.pathname === '/messages' && req.method === 'POST') {
-      if (sseTransport) {
-        await sseTransport.handlePostMessage(req, res)
-      } else {
-        res.writeHead(503)
-        res.end('SSE connection not established')
-      }
-    } else {
-      res.writeHead(404)
-      res.end('Not found')
-    }
-  })
-
-  managed.httpServer = httpServer
-
-  await new Promise<void>((resolve, reject) => {
-    httpServer.on('error', reject)
-    httpServer.listen(port, () => resolve())
-  })
-
-  writeToContext(context, `Started MCP SSE server '${name}' on http://localhost:${port}`)
 }
 
 async function startStreamableHttpServer(
@@ -630,20 +600,20 @@ export const McpPromptCommand: CommandHandler = {
   },
 }
 
-// --- Mcp tool call command ---
+// --- Mcp call tool command ---
 
-export const McpToolCallCommand: CommandHandler = {
-  name: 'Mcp tool call',
+export const McpCallToolCommand: CommandHandler = {
+  name: 'Mcp call tool',
   async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     if (!isObject(data)) {
-      throw new CommandFormatError('Mcp tool call: expected an object')
+      throw new CommandFormatError('Mcp call tool: expected an object')
     }
 
     const toolName = data.tool as string
-    if (!toolName) throw new CommandFormatError('Mcp tool call: missing required "tool" property')
+    if (!toolName) throw new CommandFormatError('Mcp call tool: missing required "tool" property')
 
     const serverInfo = data.server as JsonObject
-    if (!isObject(serverInfo)) throw new CommandFormatError('Mcp tool call: missing required "server" property')
+    if (!isObject(serverInfo)) throw new CommandFormatError('Mcp call tool: missing required "server" property')
 
     const input = data.input as JsonObject | undefined
     const transport = createClientTransport(serverInfo)
@@ -672,7 +642,7 @@ export const McpToolCallCommand: CommandHandler = {
       if (result.content && Array.isArray(result.content) && result.content.length > 0) {
         const first = result.content[0] as { type: string; text?: string }
         if (first.type === 'text' && first.text !== undefined) {
-          return parseYamlIfPossible(first.text)
+          return parseMcpTextContent(first.text)
         }
         return `Tool executed successfully with result of type ${first.type}`
       }
@@ -682,6 +652,93 @@ export const McpToolCallCommand: CommandHandler = {
       if (e instanceof SpecScriptCommandError) throw e
       const msg = e instanceof Error ? e.message : String(e)
       throw new SpecScriptCommandError(`Tool '${toolName}' call failed: ${msg}`)
+    } finally {
+      await client.close()
+    }
+  },
+}
+
+// --- Mcp read resource command ---
+
+export const McpReadResourceCommand: CommandHandler = {
+  name: 'Mcp read resource',
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
+    if (!isObject(data)) {
+      throw new CommandFormatError('Mcp read resource: expected an object')
+    }
+
+    const uri = data.uri as string
+    if (!uri) throw new CommandFormatError('Mcp read resource: missing required "uri" property')
+
+    const serverInfo = data.server as JsonObject
+    if (!isObject(serverInfo)) throw new CommandFormatError('Mcp read resource: missing required "server" property')
+
+    const transport = createClientTransport(serverInfo)
+    const client = new Client({ name: 'specscript-client', version: '1.0.0' })
+
+    try {
+      await client.connect(transport)
+
+      const result = await client.readResource({ uri })
+
+      if (result.contents && result.contents.length > 0) {
+        const first = result.contents[0] as { text?: string }
+        if (first.text !== undefined) {
+          return parseMcpTextContent(first.text)
+        }
+      }
+
+      return undefined
+    } catch (e) {
+      if (e instanceof SpecScriptCommandError) throw e
+      const msg = e instanceof Error ? e.message : String(e)
+      throw new SpecScriptCommandError(`Resource '${uri}' read failed: ${msg}`)
+    } finally {
+      await client.close()
+    }
+  },
+}
+
+// --- Mcp get prompt command ---
+
+export const McpGetPromptCommand: CommandHandler = {
+  name: 'Mcp get prompt',
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
+    if (!isObject(data)) {
+      throw new CommandFormatError('Mcp get prompt: expected an object')
+    }
+
+    const promptName = data.prompt as string
+    if (!promptName) throw new CommandFormatError('Mcp get prompt: missing required "prompt" property')
+
+    const serverInfo = data.server as JsonObject
+    if (!isObject(serverInfo)) throw new CommandFormatError('Mcp get prompt: missing required "server" property')
+
+    const input = data.input as Record<string, string> | undefined
+    const transport = createClientTransport(serverInfo)
+    const client = new Client({ name: 'specscript-client', version: '1.0.0' })
+
+    try {
+      await client.connect(transport)
+
+      const result = await client.getPrompt({
+        name: promptName,
+        arguments: input,
+      })
+
+      if (result.messages && result.messages.length > 0) {
+        const first = result.messages[0]
+        const content = first.content as { type: string; text?: string }
+        if (content.type === 'text' && content.text !== undefined) {
+          return parseMcpTextContent(content.text)
+        }
+      }
+
+      return undefined
+    } catch (e) {
+      if (e instanceof SpecScriptCommandError) throw e
+      const msg = e instanceof Error ? e.message : String(e)
+      throw new SpecScriptCommandError(`Prompt '${promptName}' get failed: ${msg}`)
     } finally {
       await client.close()
     }
@@ -705,7 +762,7 @@ function createClientTransport(serverInfo: JsonObject) {
   }
 
   if (!url) {
-    throw new SpecScriptError('Mcp tool call: server must specify either "url" or "command"')
+    throw new SpecScriptError('Mcp call tool: server must specify either "url" or "command"')
   }
 
   const requestInit: RequestInit = {}
@@ -713,12 +770,6 @@ function createClientTransport(serverInfo: JsonObject) {
   if (token) allHeaders['Authorization'] = `Bearer ${token}`
   if (headers) Object.assign(allHeaders, headers)
   if (Object.keys(allHeaders).length > 0) requestInit.headers = allHeaders
-
-  if (transport === 'SSE') {
-    return new SSEClientTransport(new URL(url), {
-      requestInit: Object.keys(requestInit).length > 0 ? requestInit : undefined,
-    })
-  }
 
   // Default: Streamable HTTP
   return new StreamableHTTPClientTransport(new URL(url), {

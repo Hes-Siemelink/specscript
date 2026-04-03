@@ -5,8 +5,6 @@ import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
-import io.ktor.server.routing.*
-import io.ktor.server.sse.*
 import io.modelcontextprotocol.kotlin.sdk.server.*
 import io.modelcontextprotocol.kotlin.sdk.types.*
 import kotlinx.coroutines.Job
@@ -83,7 +81,6 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
     private fun startServer(info: McpServerInfo, server: Server) {
         when (info.transport) {
             TransportType.STDIO -> startStdioServer(info.name, server)
-            TransportType.SSE -> startSseServer(info, server)
             TransportType.HTTP -> startStreamableHttpServer(info, server)
         }
     }
@@ -109,21 +106,6 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
                 }
             }
         }
-    }
-
-    private fun startSseServer(info: McpServerInfo, server: Server) {
-
-        val ktorServer = embeddedServer(Netty, port = info.port) {
-            install(SSE)
-            routing {
-                mcp("mcp") { server }  // Hardcoded to 'mcp' because mcpStreamableHttp() does so
-            }
-        }
-
-        httpServers[info.name] = ktorServer
-        startAndKeepAlive(ktorServer, info.name)
-
-        println("Started MCP ${info.transport} server '${info.name}' on http://localhost:${info.port}/mcp")
     }
 
     private fun startStreamableHttpServer(info: McpServerInfo, server: Server) {
@@ -320,8 +302,7 @@ data class McpServerInfo(
 
 enum class TransportType {
     STDIO,
-    HTTP,
-    SSE
+    HTTP
 }
 
 data class ToolInfo(

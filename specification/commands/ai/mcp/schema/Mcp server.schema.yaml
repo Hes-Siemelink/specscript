@@ -8,7 +8,7 @@ properties:
     type: string
   transport:
     type: string
-    enum: [ STDIO, HTTP, SSE ]
+    enum: [ STDIO, HTTP ]
   port:
     type: integer
   tools:

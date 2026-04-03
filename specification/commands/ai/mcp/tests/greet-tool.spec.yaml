@@ -1,0 +1,10 @@
+Script info: Greet someone by name
+
+Input schema:
+  type: object
+  properties:
+    name:
+      description: Who to greet
+      default: World
+
+Output: Hello, ${input.name}!

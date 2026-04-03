@@ -7,7 +7,7 @@ properties:
     properties:
       transport:
         type: string
-        enum: [ STDIO, HTTP, SSE ]
+        enum: [ STDIO, HTTP ]
       server:
         type: string
         description: Name of the MCP server to connect to
@@ -26,13 +26,13 @@ properties:
         type: string
         description: Authentication token for the MCP server
     additionalProperties: false
-  tool:
+  prompt:
     type: string
-    description: Name of the tool to execute
+    description: Name of the prompt to get
   input:
     type: object
-    description: Arguments to pass to the tool
+    description: Arguments to pass to the prompt
 required:
   - server
-  - tool
+  - prompt
 additionalProperties: false

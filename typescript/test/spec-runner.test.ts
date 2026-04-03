@@ -570,11 +570,18 @@ describe('Level 5 Spec Tests', () => {
 
 // --- Level 6: MCP ---
 
+/** Level 6 spec.yaml test files (relative to specification/) */
+const LEVEL_6_MCP_TEST_FILES = [
+    'commands/ai/mcp/tests/Mcp client tests.spec.yaml',
+]
+
 /** Level 6 spec.md test files (relative to specification/) */
 const LEVEL_6_MCP_MD_FILES = [
     'commands/ai/mcp/Mcp server.spec.md',
     'commands/ai/mcp/Mcp tool.spec.md',
-    'commands/ai/mcp/Mcp tool call.spec.md',
+    'commands/ai/mcp/Mcp call tool.spec.md',
+    'commands/ai/mcp/Mcp read resource.spec.md',
+    'commands/ai/mcp/Mcp get prompt.spec.md',
     'commands/ai/mcp/Mcp prompt.spec.md',
     'commands/ai/mcp/Mcp resource.spec.md',
     'commands/ai/mcp/Stop mcp server.spec.md',
@@ -584,6 +591,12 @@ describe('Level 6 MCP Spec Tests', () => {
     afterAll(async () => {
         await stopAllMcpServers()
     })
+
+    for (const file of LEVEL_6_MCP_TEST_FILES) {
+        describe(file, () => {
+            runSpecFile(file)
+        })
+    }
 
     for (const file of LEVEL_6_MCP_MD_FILES) {
         describe(file, () => {

@@ -61,7 +61,7 @@ Mcp server:
         status: ok
         uptime: 99.9
 
-Mcp tool call:
+Mcp call tool:
   tool: get_status
   server:
     url: "http://localhost:8096/mcp"
@@ -76,12 +76,12 @@ Stop mcp server: mock-server
 The `output` property works on tools, resources, and prompts. When both `output` and `script` are present, `output`
 takes precedence.
 
-Call a tool using the `Mcp tool call` command:
+Call a tool using the `Mcp call tool` command:
 
 ```yaml specscript
 Code example: Call MCP server tool
 
-Mcp tool call:
+Mcp call tool:
   tool: hello
   server:
     url: "http://localhost:8080/mcp"
@@ -157,7 +157,7 @@ Mcp server:
     say_hello:
       script: say-hello.spec.yaml
 
-Mcp tool call:
+Mcp call tool:
   tool: say_hello
   input:
     name: Bob
@@ -199,7 +199,7 @@ Mcp server:
       script:
         Output: Hello ${input.name} via HTTP!
 
-Mcp tool call:
+Mcp call tool:
   tool: greet
   input:
     name: Bob
@@ -209,52 +209,6 @@ Mcp tool call:
 Expected output: Hello Bob via HTTP!
 
 Stop mcp server: http-server
-```
-
-The streaming HTTP transport supports:
-
-- **transport**: Set to `HTTP` to enable streaming HTTP transport
-- **port**: Port number for the HTTP server (default: `8080`)
-- Bidirectional communication via POST (requests) and GET (server-initiated SSE notifications)
-- Session management via `Mcp-Session-Id` header
-- Both JSON and SSE response formats
-
-HTTP clients connect to `http://localhost:<port>/mcp` using the `HTTP` server type.
-
-### SSE transport
-
-The legacy SSE protocol for MCP communication is supported by setting `transport: SSE` in the server definition.
-
-```yaml specscript
-Code example: SSE MCP server
-
-Mcp server:
-  name: sse-server
-  version: "1.0.0"
-  transport: SSE
-  port: 8090
-  tools:
-    greet:
-      description: Generate a greeting over SSE
-      inputSchema:
-        properties:
-          name:
-            type: string
-            description: Name to greet
-      script:
-        Output: Hello ${input.name} via SSE!
-
-Mcp tool call:
-  tool: greet
-  input:
-    name: Alice
-  server:
-    transport: SSE
-    url: http://localhost:8090
-
-Expected output: Hello Alice via SSE!
-
-Stop mcp server: sse-server
 ```
 
 ### STDIO transport

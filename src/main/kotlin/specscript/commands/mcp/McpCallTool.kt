@@ -7,7 +7,6 @@ import io.modelcontextprotocol.kotlin.sdk.types.TextContent
 import kotlinx.coroutines.runBlocking
 import specscript.commands.mcp.transport.HttpClient
 import specscript.commands.mcp.transport.McpClientWrapper
-import specscript.commands.mcp.transport.SseClient
 import specscript.commands.mcp.transport.StdioClient
 import specscript.language.*
 import specscript.util.Json
@@ -18,7 +17,7 @@ import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.StringNode
 
-object McpToolCall : CommandHandler("Mcp tool call", "ai/mcp"), ObjectHandler {
+object McpCallTool : CommandHandler("Mcp call tool", "ai/mcp"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val info = data.toDomainObject(CallMcpToolInfo::class)
@@ -89,10 +88,6 @@ fun createMcpClient(
 
         TransportType.HTTP -> {
             HttpClient(server.url!!, server.headers, server.token)
-        }
-
-        TransportType.SSE -> {
-            SseClient(server.url!!, server.headers, server.token)
         }
     }
 }

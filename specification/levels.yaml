@@ -388,15 +388,23 @@ levels:
     commands:
       - Mcp server
       - Mcp tool
-      - Mcp tool call
+      - Mcp call tool
+      - Mcp read resource
+      - Mcp get prompt
       - Mcp prompt
       - Mcp resource
       - Stop mcp server
     spec-files:
       - commands/ai/mcp/Mcp server.spec.md
       - commands/ai/mcp/Mcp tool.spec.md
-      - commands/ai/mcp/Mcp tool call.spec.md
+      - commands/ai/mcp/Mcp call tool.spec.md
+      - commands/ai/mcp/Mcp read resource.spec.md
+      - commands/ai/mcp/Mcp get prompt.spec.md
       - commands/ai/mcp/Mcp prompt.spec.md
       - commands/ai/mcp/Mcp resource.spec.md
       - commands/ai/mcp/Stop mcp server.spec.md
       - commands/ai/mcp/backup-info.spec.yaml
+      - commands/ai/mcp/tests/Mcp client tests.spec.yaml
+      - commands/ai/mcp/tests/greet-tool.spec.yaml
+      - commands/ai/mcp/tests/config-resource.spec.yaml
+      - commands/ai/mcp/tests/review-prompt.spec.yaml

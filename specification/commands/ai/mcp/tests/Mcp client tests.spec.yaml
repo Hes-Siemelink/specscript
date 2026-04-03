@@ -1,0 +1,228 @@
+Before all tests:
+
+  Mcp server:
+    name: client-test-server
+    port: 8098
+    tools:
+      ping:
+        description: A simple ping
+        output: pong
+      greet:
+        description: Greet someone
+        inputSchema:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Name to greet
+        script:
+          Output: Hello ${input.name}!
+      greet-from-file:
+        script: greet-tool.spec.yaml
+    resources:
+      config://app:
+        name: App Config
+        description: Application configuration
+        output:
+          theme: dark
+          version: "2.0"
+      status://system:
+        name: System Status
+        description: Current system status
+        mimeType: application/json
+        script:
+          Output:
+            status: ok
+            uptime: 99.9
+      config://from-file:
+        name: Config from file
+        description: Configuration from external file
+        script: config-resource.spec.yaml
+    prompts:
+      summarize:
+        description: Summarize text
+        script:
+          Output: Please summarize the following text.
+      review:
+        description: Review code
+        arguments:
+          - name: code
+            description: The code to review
+            required: true
+          - name: language
+            description: Programming language
+            required: false
+        script:
+          Output: Please review this ${input.language} code - ${input.code}
+      review-from-file:
+        description: Review from external file
+        script: review-prompt.spec.yaml
+
+
+After all tests:
+
+  Stop mcp server: client-test-server
+
+
+Tests:
+
+  # ── Mcp call tool ──
+
+  Call tool with no arguments:
+
+    Mcp call tool:
+      tool: ping
+      server:
+        url: "http://localhost:8098/mcp"
+
+    Expected output: pong
+
+
+  Call tool with input arguments:
+
+    Mcp call tool:
+      tool: greet
+      input:
+        name: Alice
+      server:
+        url: "http://localhost:8098/mcp"
+
+    Expected output: Hello Alice!
+
+
+  Call tool with variable resolution in input:
+
+    ${person}: Charlie
+
+    Mcp call tool:
+      tool: greet
+      input:
+        name: ${person}
+      server:
+        url: "http://localhost:8098/mcp"
+
+    Expected output: Hello Charlie!
+
+
+  Call tool backed by inline script:
+
+    Mcp call tool:
+      tool: greet
+      input:
+        name: Dave
+      server:
+        url: "http://localhost:8098/mcp"
+
+    Expected output: Hello Dave!
+
+
+  Call tool backed by external script file:
+
+    Mcp call tool:
+      tool: greet-from-file
+      input:
+        name: Eve
+      server:
+        url: "http://localhost:8098/mcp"
+
+    Expected output: Hello, Eve!
+
+
+  Call tool with derived inputSchema:
+
+    Mcp call tool:
+      tool: greet-from-file
+      input:
+        name: Frank
+      server:
+        url: "http://localhost:8098/mcp"
+
+    Expected output: Hello, Frank!
+
+
+  # ── Mcp read resource ──
+
+  Read resource with static output:
+
+    Mcp read resource:
+      uri: "config://app"
+      server:
+        url: "http://localhost:8098/mcp"
+
+    Expected output:
+      theme: dark
+      version: "2.0"
+
+
+  Read resource backed by inline script:
+
+    Mcp read resource:
+      uri: "status://system"
+      server:
+        url: "http://localhost:8098/mcp"
+
+    Expected output:
+      status: ok
+      uptime: 99.9
+
+
+  Read resource backed by external script file:
+
+    Mcp read resource:
+      uri: "config://from-file"
+      server:
+        url: "http://localhost:8098/mcp"
+
+    Expected output:
+      app: test-app
+      version: "1.0"
+
+
+  # ── Mcp get prompt ──
+
+  Get prompt with no input:
+
+    Mcp get prompt:
+      prompt: summarize
+      server:
+        url: "http://localhost:8098/mcp"
+
+    Expected output: Please summarize the following text.
+
+
+  Get prompt with input arguments:
+
+    Mcp get prompt:
+      prompt: review
+      input:
+        code: "def foo(): pass"
+        language: Python
+      server:
+        url: "http://localhost:8098/mcp"
+
+    Expected output: "Please review this Python code - def foo(): pass"
+
+
+  Get prompt with variable resolution in input:
+
+    ${lang}: Kotlin
+
+    Mcp get prompt:
+      prompt: review
+      input:
+        code: "fun bar() {}"
+        language: ${lang}
+      server:
+        url: "http://localhost:8098/mcp"
+
+    Expected output: "Please review this Kotlin code - fun bar() {}"
+
+
+  Get prompt backed by external script file:
+
+    Mcp get prompt:
+      prompt: review-from-file
+      server:
+        url: "http://localhost:8098/mcp"
+
+    Expected output: Please review the following code and suggest improvements.
