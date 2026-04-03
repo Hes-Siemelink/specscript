@@ -492,7 +492,15 @@ export const McpServerCommand: CommandHandler = {
       servers.set(name, managed)
     }
 
-    // Register tools
+    // Register tools (normalize list of filenames to object form)
+    if (Array.isArray(data.tools)) {
+      const toolsMap: JsonObject = {}
+      for (const filename of data.tools as string[]) {
+        const toolName = String(filename).replace(/\.spec\.yaml$/, '')
+        toolsMap[toolName] = { script: filename }
+      }
+      data.tools = toolsMap
+    }
     const tools = data.tools as JsonObject | undefined
     if (isObject(tools)) {
       for (const [toolName, toolData] of Object.entries(tools)) {

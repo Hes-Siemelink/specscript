@@ -16,6 +16,7 @@ import specscript.commands.scriptinfo.InputParameters as InputParametersCommand
 import specscript.commands.scriptinfo.InputSchema as InputSchemaCommand
 import specscript.commands.server.HandlerInfo
 import specscript.commands.server.run
+import specscript.files.removeSpecScriptExtension
 import specscript.files.SpecScriptFile
 import specscript.language.*
 import specscript.util.*
@@ -37,6 +38,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
     private val httpServers = mutableMapOf<String, HttpMcpServer>()
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
+        normalizeToolsList(data)
         val info = data.toDomainObject(McpServerInfo::class)
 
         // TODO Resolve top level properties but not the scripts
@@ -76,6 +78,25 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
         startServer(info, server)
 
         return null
+    }
+
+    /**
+     * When tools is a list of script filenames, convert to a map: tool name → {script: filename}.
+     * Tool name is the filename without .spec.yaml extension.
+     */
+    private fun normalizeToolsList(data: ObjectNode) {
+        val toolsNode = data["tools"] ?: return
+        if (!toolsNode.isArray) return
+
+        val toolsMap = data.objectNode()
+        for (element in toolsNode) {
+            val filename = element.stringValue()
+            val toolName = filename.removeSpecScriptExtension()
+            val toolEntry = data.objectNode()
+            toolEntry.put("script", filename)
+            toolsMap.set(toolName, toolEntry)
+        }
+        data.set("tools", toolsMap)
     }
 
     private fun startServer(info: McpServerInfo, server: Server) {

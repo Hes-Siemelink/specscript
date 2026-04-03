@@ -12,9 +12,13 @@ properties:
   port:
     type: integer
   tools:
-    type: object
-    additionalProperties:
-      $ref: "#/definitions/ToolInfo"
+    oneOf:
+      - type: object
+        additionalProperties:
+          $ref: "#/definitions/ToolInfo"
+      - type: array
+        items:
+          type: string
   resources:
     type: object
     additionalProperties:

@@ -235,24 +235,16 @@ private fun Path.hasCliCommands(): Boolean {
  * Creates command name from file name by stripping extension and converting dashes to spaces.
  */
 fun asScriptCommand(commandName: String): String {
-    return commandName.stripExtension().replace('-', ' ')
+    return commandName.removeSpecScriptExtension().replace('-', ' ')
 }
 
 /**
  * Creates cli command name stripping extension, converting spaces to dashes and making it all lowercase
  */
 fun asCliCommand(commandName: String): String {
-    return commandName.stripExtension().replace(' ', '-').lowercase(Locale.getDefault())
+    return commandName.removeSpecScriptExtension().replace(' ', '-').lowercase(Locale.getDefault())
 }
 
-private fun String.stripExtension(): String {
-    if (endsWith(YAML_SPEC_EXTENSION)) {
-        return take(length - YAML_SPEC_EXTENSION.length)
-    }
-
-    if (endsWith(MARKDOWN_SPEC_EXTENSION)) {
-        return take(length - MARKDOWN_SPEC_EXTENSION.length)
-    }
-
-    return this
+fun String.removeSpecScriptExtension(): String {
+    return removeSuffix(YAML_SPEC_EXTENSION).removeSuffix(MARKDOWN_SPEC_EXTENSION)
 }

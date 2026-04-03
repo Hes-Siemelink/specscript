@@ -2,12 +2,12 @@
 
 `Mcp server` starts an MCP server.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | no            |
-| List       | no            |
-| Object     | yes           |
-| Raw input  | yes           |
+| Input     | Supported |
+|-----------|-----------|
+| Scalar    | no        |
+| List      | no        |
+| Object    | yes       |
+| Raw input | yes       |
 
 [Mcp server.schema.yaml](schema/Mcp%20server.schema.yaml)
 
@@ -53,7 +53,7 @@ Code example: MCP server tool with output
 Mcp server:
   name: mock-server
   version: "1.0.0"
-  port: 8096
+  port: 8081
   tools:
     get_status:
       description: Returns the system status
@@ -64,7 +64,7 @@ Mcp server:
 Mcp call tool:
   tool: get_status
   server:
-    url: "http://localhost:8096/mcp"
+    url: "http://localhost:8081/mcp"
 
 Expected output:
   status: ok
@@ -126,8 +126,8 @@ Stop mcp server: file-server
 
 ### Deriving metadata from script
 
-When a tool references an external script, both `description` and `inputSchema` can be omitted. SpecScript derives
-them from the script's `Script info` and `Input schema` commands.
+When a tool references an external script, both `description` and `inputSchema` can be omitted. SpecScript derives them
+from the script's `Script info` and `Input schema` commands.
 
 Given a script file `say-hello.spec.yaml`:
 
@@ -152,7 +152,7 @@ Code example: MCP server with derived metadata
 Mcp server:
   name: derive-demo
   version: "1.0.0"
-  port: 8095
+  port: 8082
   tools:
     say_hello:
       script: say-hello.spec.yaml
@@ -162,7 +162,7 @@ Mcp call tool:
   input:
     name: Bob
   server:
-    url: "http://localhost:8095/mcp"
+    url: "http://localhost:8082/mcp"
 
 Expected output: Hello, Bob!
 
@@ -171,6 +171,49 @@ Stop mcp server: derive-demo
 
 Explicit `description` or `inputSchema` on the tool definition takes precedence over what the script provides.
 
+### Tools as a list of scripts
+
+When `tools` is a list of filenames, each file becomes a tool. The tool name is the filename without extensions.
+Description and input schema are derived from the script's `Script info` and `Input schema` commands.
+
+Given these three script files:
+
+```yaml temp-file=tool1.spec.yaml
+Output: Hello from tool1
+```
+
+```yaml temp-file=tool2.spec.yaml
+Output: Hello from tool2
+```
+
+```yaml temp-file=tool3.spec.yaml
+Output: Hello from tool3
+```
+
+The server exposes each as a tool:
+
+```yaml specscript
+Code example: MCP server with tools as script list
+
+Mcp server:
+  name: multi-script-server
+  version: "1.0.0"
+  port: 8083
+  tools:
+    - tool1.spec.yaml
+    - tool2.spec.yaml
+    - tool3.spec.yaml
+
+Mcp call tool:
+  tool: tool1
+  server:
+    url: "http://localhost:8083/mcp"
+
+Expected output: Hello from tool1
+
+Stop mcp server: multi-script-server
+```
+
 ## Transports
 
 ### Streaming HTTP transport
@@ -178,7 +221,7 @@ Explicit `description` or `inputSchema` on the tool definition takes precedence 
 The default transport for MCP servers is the Streamable HTTP transport, which is the recommended transport for MCP
 communication.
 
-You can set it explicity by using `transport: HTTP` in the server definition.
+You can set it explicitly by using `transport: HTTP` in the server definition.
 
 ```yaml specscript
 Code example: Streaming HTTP MCP server
@@ -187,7 +230,7 @@ Mcp server:
   name: http-server
   version: "1.0.0"
   transport: HTTP
-  port: 8092
+  port: 8084
   tools:
     greet:
       description: Generate a greeting over HTTP
@@ -204,7 +247,7 @@ Mcp call tool:
   input:
     name: Bob
   server:
-    url: "http://localhost:8092/mcp"
+    url: "http://localhost:8084/mcp"
 
 Expected output: Hello Bob via HTTP!
 
