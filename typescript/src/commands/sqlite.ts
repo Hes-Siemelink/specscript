@@ -181,13 +181,13 @@ function doJsonQuery(db: Database.Database, query: string): JsonValue {
       const parsed = JSON.parse(row.json as string)
       results.push(parsed)
     } else {
-      // Multiple columns from json_extract: build an object per column
+      // Multiple columns from json_extract: build one object per row
+      const obj: JsonObject = {}
       for (const col of columns) {
-        const obj: JsonObject = {}
         const value = row[col]
         obj[col] = parseYamlIfPossible(value === null || value === undefined ? '' : String(value))
-        results.push(obj)
       }
+      results.push(obj)
     }
   }
 

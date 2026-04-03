@@ -87,13 +87,13 @@ fun Connection.doJsonQuery(query: String): JsonNode {
                     val row = Json.readJson(resultSet.getObject(1).toString())
                     results.add(row)
                 } else {
+                    val row = newObject()
                     for (i in 1..resultSet.metaData.columnCount) {
-                        val row = newObject()
                         val value = resultSet.getObject(i)?.toString() ?: ""
                         val node = Yaml.parseIfPossible(value)
                         row.set(resultSet.metaData.getColumnName(i), node)
-                        results.add(row)
                     }
+                    results.add(row)
                 }
             }
         }

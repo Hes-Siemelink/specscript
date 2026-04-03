@@ -41,3 +41,27 @@ Tests:
     Expected output:
       - name: Alice
       - name: Bob
+
+  Multiple selected fields:
+
+    Shell: rm -f out/multi_select.db
+
+    Store:
+      file: out/multi_select.db
+      table: users
+      insert:
+        - name: Alice
+          age: 16
+        - name: Bob
+          age: 17
+      query:
+        select:
+          - name
+          - age
+        where: $.age < 18
+
+    Expected output:
+      - name: Alice
+        age: 16
+      - name: Bob
+        age: 17
