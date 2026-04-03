@@ -84,6 +84,12 @@ Overview of standard commands in SpecScript.
 * [Cli](core/shell/Cli.spec.md) - Executes the SpecScript cli command
 * [Shell](core/shell/Shell.spec.md) - Executes a shell command
 
+### Database
+
+* [SQLite](core/db/SQLite.spec.md) - Executes SQL statements against a SQLite database file
+* [SQLite defaults](core/db/SQLite%20defaults.spec.md) - Sets default parameters for subsequent SQLite commands
+* [Store](core/db/Store.spec.md) - Stores and queries JSON documents in SQLite
+
 ## REST API interaction
 
 ### Http client
