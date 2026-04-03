@@ -98,8 +98,8 @@ Key rules:
 
 ## Phase 4: Report
 
-After implementation is complete and tests pass, write a brief report. This can go in the bean body
-(`--body-append`) or as a separate file in `plan/proposals/` for larger efforts.
+After implementation is complete and tests pass, write a brief report. This can go in the conversaton (with a copy in the bean body
+(`--body-append`)), or as a separate file in `plan/reports/` for larger efforts.
 
 Report contents:
 - Test results (passing, skipped, failing)
