@@ -1,0 +1,38 @@
+[
+  {
+    "id": "Applications/folder-engineering",
+    "type": "xlrelease.Folder",
+    "title": "Engineering",
+    "children": [
+      {
+        "id": "Applications/folder-engineering/folder-backend",
+        "type": "xlrelease.Folder",
+        "title": "Backend",
+        "children": [],
+        "$metadata": { "security": { "permissions": ["folder#view", "folder#edit"], "teams": [] } }
+      },
+      {
+        "id": "Applications/folder-engineering/folder-frontend",
+        "type": "xlrelease.Folder",
+        "title": "Frontend",
+        "children": [],
+        "$metadata": { "security": { "permissions": ["folder#view", "folder#edit"], "teams": [] } }
+      }
+    ],
+    "$metadata": { "security": { "permissions": ["folder#view", "folder#edit"], "teams": [] } }
+  },
+  {
+    "id": "Applications/folder-operations",
+    "type": "xlrelease.Folder",
+    "title": "Operations",
+    "children": [],
+    "$metadata": { "security": { "permissions": ["folder#view", "folder#edit"], "teams": [] } }
+  },
+  {
+    "id": "Applications/folder-archive",
+    "type": "xlrelease.Folder",
+    "title": "Archive",
+    "children": [],
+    "$metadata": { "security": { "permissions": ["folder#view", "folder#edit"], "teams": [] } }
+  }
+]

@@ -1,0 +1,13 @@
+imports:
+  ./:
+    - mock-server
+  digitalai:
+    - release/folders/list
+    - release/folders/move
+    - release/folders/move-by-id
+    - release/folders/flat-folder-list
+
+connections:
+  Digital.ai Release:
+    Http request defaults:
+      url: http://localhost:25102

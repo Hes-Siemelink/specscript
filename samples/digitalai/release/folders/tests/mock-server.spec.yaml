@@ -1,0 +1,16 @@
+Script info:
+  description: Mock Release server for testing folder commands
+  hidden: true
+
+Http server:
+  name: release-mock
+  port: 25102
+  endpoints:
+    "{...}":
+      get:
+        script:
+          Read file:
+            resource: recorded-data/${request.path}/${request.query}/GET
+      post:
+        script:
+          Output: {}

@@ -1,0 +1,25 @@
+Script info:
+  description: Tests for folder commands
+  hidden: true
+
+Before all tests:
+  Mock server: {}
+
+Tests:
+
+  List folders shows all folder paths:
+    List: {}
+    Expected output:
+      - Engineering
+      - Engineering/Backend
+      - Engineering/Frontend
+      - Operations
+      - Archive
+
+  Move folder by ID:
+    Move by id:
+      source: Applications/folder-engineering/folder-frontend
+      target: Applications/folder-operations
+
+After all tests:
+  Stop http server: release-mock

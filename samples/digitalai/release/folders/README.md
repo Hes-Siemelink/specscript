@@ -1,65 +1,78 @@
-# Digital.ai Releaser Folder commands
+# Digital.ai Release — Folder Management
 
-Moving folders within Digital.ai Release
+Manage folders in Digital.ai Release: list, move interactively, or move by ID.
 
-## Connecting
+## Setup
 
-These commands require a connection to the Release server. Use the commands in the [**credentials
-**](../credentials/README.md) folder to login and set default credentials.
+These commands require a connection to the Release server. Use the [credentials](../credentials/README.md) commands
+to log in and set default credentials.
 
-## List folders
+## List Folders
 
-List all folders in with the following command
+Show all folders with full paths:
 
-```spec cli 
+```shell ignore
 spec list
 ```
 
-This will show the list of all folders with full paths.
+Output:
 
 ```
-- Digital.ai - Official
-- Digital.ai - Official/Workflows
+Digital.ai - Official
+Digital.ai - Official/Workflows
+Digital.ai - Official/Templates
 ...
-- Samples & Tutorials
+Samples & Tutorials
 ```
 
-## Move folder
+## Move a Folder (Interactive)
 
-This is an interactive command that allows you to move a folder to a new location. It will get the list of folders and
-ask you to select the folder you want to move ("source") and the new parent folder ("target")
+Interactively select a source folder and a new parent:
 
 ```shell ignore
 spec -i move
 ```
 
-Will show something like this:
+SpecScript will prompt you to pick the folder to move and the target parent:
 
 ```
-? Select the folder you want to move Digital.ai - Official/Workflows
-? Select the new parent folder Samples & Tutorials
-New folder structure:
-
-- Digital.ai - Official
-- Digital.ai - Official/Templates
-- Digital.ai - Official/Templates/Governance Pipeline
-- Digital.ai - Official/Workflow Executions
-- Samples & Tutorials
-- Samples & Tutorials/Workflows
+? Select the folder you want to move Engineering/Frontend
+? Select the new parent folder Operations
 ```
 
-If you want to move several folder, use 'move-forever', which will call 'move' in a loop until you exit.
+After the move, the updated folder listing is printed.
+
+To move multiple folders in a row, use `move-forever` which loops until you exit:
 
 ```shell ignore
 spec -i move-forever
 ```
 
-## Move folder by ID
+## Move by ID (Non-interactive)
 
-Use this if you know the folder IDs and don't want an interactive prompt.
-
-Example:
+For scripting, use `move-by-id` with explicit folder IDs:
 
 ```shell ignore
-spec move-by-id --source-id Applications/Folderfa48c0bf5a6c4aeda74d73b50db3bbf7 --target-id Applications/Folder46601b6f698447d380fc7541a6e14b59
+spec move-by-id --source Applications/Folder123 --target Applications/Folder456
 ```
+
+## Testing
+
+The `tests/` directory contains a mock Release server and automated tests. Run them with:
+
+```shell ignore
+spec -t -p samples tests
+```
+
+The mock server replays recorded API responses from `tests/recorded-data/`, so no live Release server is needed.
+
+## Files
+
+| File                | Description                                           |
+|---------------------|-------------------------------------------------------|
+| `list.spec.yaml`    | Lists all folders with flattened paths                 |
+| `move.spec.yaml`    | Interactive folder move using prompts                  |
+| `move-by-id.spec.yaml` | Non-interactive move with explicit source/target IDs |
+| `move-forever.spec.yaml` | Loops `move` until you exit                        |
+| `flat-folder-list.spec.yaml` | Utility: recursively flattens nested folder tree |
+| `raw-list.spec.yaml` | Gets the raw folder data from the API                 |
