@@ -6,7 +6,7 @@ Http server:
   name: release-mock
   port: 25102
   endpoints:
-    "{...}":
+    "*":
       get:
         script:
           Read file:

@@ -112,10 +112,13 @@ export const StopHttpServerCommand: CommandHandler = {
 // --- Path matching ---
 
 function normalizePath(p: string): string {
-  return p.replace(/:(\w+)/g, '{$1}')
+  return p.replace(/\*/g, '{...}').replace(/:(\w+)/g, '{$1}')
 }
 
 function matchRoute(pattern: string, requestPath: string): { params: Record<string, string> } | null {
+  // Wildcard catch-all
+  if (pattern === '{...}') return { params: {} }
+
   const paramNames: string[] = []
   const regexStr = '^' + pattern.replace(/\{(\w+)}/g, (_, name) => {
     paramNames.push(name)

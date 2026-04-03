@@ -95,6 +95,52 @@ The following variables can be used in `output` and `script`
 * `${request.body}`: - Request body
 * `${request.cookies}`: - Cookies sent by the client
 
+## Path patterns
+
+### Path parameters
+
+Paths can contain parameters using `{name}` syntax. The parameter values are available via `${request.pathParameters}`.
+
+```yaml specscript
+Code example: Path parameters
+
+Http server:
+  name: param-server
+  port: 25005
+  endpoints:
+    /users/{id}:
+      get:
+        output: User ${request.pathParameters.id}
+
+GET: http://localhost:25005/users/42
+
+Expected output: User 42
+
+Stop http server: param-server
+```
+
+### Wildcard paths
+
+Use `"*"` to match any path. This is useful for proxy servers or mock servers that handle all incoming requests.
+
+```yaml specscript
+Code example: Wildcard path
+
+Http server:
+  name: wildcard-server
+  port: 25006
+  endpoints:
+    "*":
+      get:
+        output: You requested ${request.path}
+
+GET: http://localhost:25006/any/path/here
+
+Expected output: You requested /any/path/here
+
+Stop http server: wildcard-server
+```
+
 ### Using variables with `output`
 
 Variables are resolved in the `output` handler, making it easy to echo certain parts of the request without processing

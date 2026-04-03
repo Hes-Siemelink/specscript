@@ -109,7 +109,8 @@ object HttpServer : CommandHandler("Http server", "core/http"), ObjectHandler, D
 }
 
 private fun normalizePath(path: String): String =
-    path.replace(Regex(":(\\w+)")) { "{" + it.groupValues[1] + "}" }
+    path.replace("*", "{...}")
+        .replace(Regex(":(\\w+)")) { "{" + it.groupValues[1] + "}" }
 
 private fun extractPathParamNames(path: String): List<String> =
     Regex("\\{(\\w+)}").findAll(path).map { it.groupValues[1] }.toList()
