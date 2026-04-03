@@ -10,20 +10,16 @@ better-sqlite3's synchronous API is a natural match for the Kotlin JDBC-style co
 
 Trade-off: adds a native addon dependency that requires compilation on install. This could be a problem in environments without a C toolchain (e.g., some CI containers, Vercel edge). If that becomes an issue, sql.js is the fallback.
 
-## Path resolution divergence from Kotlin
+## Bugs found and fixed
 
-The Kotlin implementation passes `sql.file` directly to JDBC (`jdbc:sqlite:${sql.file}`), which resolves relative paths against the JVM's working directory (process CWD). The TypeScript port explicitly resolves against `context.workingDir` using `resolve(context.workingDir, file)`.
+### Path resolution (both SQLite and Store)
 
-This is necessary because vitest's CWD is `typescript/` while `context.workingDir` is the repo root. Without this, the Shell command's `rm -f out/sample.db` and the SQLite command's `new Database('out/sample.db')` would operate on different directories, causing "table already exists" errors. The Kotlin test runner presumably sets CWD = workingDir so the difference doesn't surface there.
+Both Kotlin commands passed `file:` directly to JDBC, resolving against process CWD rather than `context.workingDir`. The TypeScript port exposed this because vitest's CWD differs from the script's working directory. Fixed in both implementations to resolve against `context.workingDir`.
 
-This is arguably more correct than the Kotlin behavior — a command should use its context's working directory, not the process CWD. But it's a behavioral difference worth noting for the implementer guide.
+### Store multi-column select (both implementations)
 
-## Store command: multi-column select produces flat array
+The `doJsonQuery` function had the object-creation inside the column loop, producing one single-key object per column per row (e.g., `[{name: 'Alice'}, {age: 16}]`). Fixed to produce one object per row (e.g., `[{name: 'Alice', age: 16}]`). Added a spec test for multi-column select that was previously missing.
 
-The Store command's `doJsonQuery` mirrors the Kotlin behavior where multi-column selects produce a flat array of single-key objects rather than one object per row. For example, `select: [name, age]` on a row with name=Alice, age=30 produces `[{name: 'Alice'}, {age: 30}]` rather than `[{name: 'Alice', age: 30}]`. This matches the Kotlin implementation and the spec tests pass, but it's a surprising API shape. Not changing it — spec defines the behavior — but worth noting.
+## Open issues
 
-## What the reviewer should look at
-
-1. The `update` parameter handling at sqlite.ts:72 — uses `?? []` to default. The Kotlin version gets this from the domain object's default. Same effect but different mechanism.
-2. SQL injection: both Kotlin and TypeScript have the same FIXME — no prepared statements for user-provided SQL. The Store command's insert does use a prepared statement for the JSON value, but table names and where clauses are interpolated directly.
-3. The lockfile: `typescript/package-lock.json` appeared as untracked. Previous lockfile was `bun.lock` — verify which package manager is canonical.
+SQL injection: both Kotlin and TypeScript have the same FIXME — no prepared statements for user-provided SQL. The Store command's insert does use a prepared statement for the JSON value, but table names and where clauses are interpolated directly.

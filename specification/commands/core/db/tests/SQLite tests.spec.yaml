@@ -106,3 +106,70 @@ Tests:
       - json:
           hello: world
       - json: "one: two: three"
+
+  Prepared statement in update:
+
+    Shell: rm -f out/sample.db
+
+    ${name}: O'Brien
+
+    SQLite:
+      file: out/sample.db
+      update:
+        - create table users (id integer primary key, name text)
+        - insert into users (name) values ('${name}')
+      query: select name from users
+
+    Expected output:
+      - name: O'Brien
+
+  Prepared statement in query:
+
+    Shell: rm -f out/sample.db
+
+    ${name}: O'Brien
+
+    SQLite:
+      file: out/sample.db
+      update:
+        - create table users (id integer primary key, name text)
+        - insert into users (name) values ('${name}')
+      query: select name from users where name = '${name}'
+
+    Expected output:
+      - name: O'Brien
+
+  Prepared statement with multiple parameters:
+
+    Shell: rm -f out/sample.db
+
+    ${first}: Alice
+    ${last}: O'Malley
+
+    SQLite:
+      file: out/sample.db
+      update:
+        - create table users (id integer primary key, first text, last text)
+        - insert into users (first, last) values ('${first}', '${last}')
+      query: select * from users where first = '${first}' and last = '${last}'
+
+    Expected output:
+      - id: 1
+        first: Alice
+        last: O'Malley
+
+  Unquoted variable is resolved inline:
+
+    Shell: rm -f out/sample.db
+
+    ${table}: users
+
+    SQLite:
+      file: out/sample.db
+      update:
+        - create table ${table} (id integer primary key, name text)
+        - insert into ${table} (name) values ('Alice')
+      query: select name from ${table}
+
+    Expected output:
+      - name: Alice

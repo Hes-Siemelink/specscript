@@ -19,13 +19,6 @@ Input schema:
       description: New assignee (optional)
       default: NULL
 
-# Sanitize input by escaping single quotes
-Replace:
-  text: "'"
-  in: ${input}
-  with: "''"
-As: ${input}
-
 Connect to: Ticket DB
 
 SQLite:

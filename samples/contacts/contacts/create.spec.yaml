@@ -17,12 +17,6 @@ Input schema:
       default: ""
   required: [ name ]
 
-Replace:
-  text: "'"
-  in: ${input}
-  with: "''"
-As: ${input}
-
 Connect to: Contact DB
 
 SQLite:

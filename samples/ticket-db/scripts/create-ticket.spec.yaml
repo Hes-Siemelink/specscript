@@ -13,14 +13,6 @@ Input schema:
       description: Assigned to
       default: unassigned
 
-
-# Sanitize input by escaping single quotes
-Replace:
-  text: "'"
-  in: ${input}
-  with: "''"
-As: ${input}
-
 Connect to: Ticket DB
 
 SQLite:

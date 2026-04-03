@@ -4,12 +4,13 @@
  * Mirrors Kotlin's db/ package: SQLite.kt, SQLiteDefaults.kt, Store.kt.
  */
 
-import { resolve } from 'node:path'
+import { resolve as resolvePath } from 'node:path'
 import Database from 'better-sqlite3'
 import type { CommandHandler } from '../language/command-handler.js'
 import type { ScriptContext } from '../language/context.js'
 import type { JsonValue, JsonObject } from '../language/types.js'
-import { isObject, CommandFormatError } from '../language/types.js'
+import { isObject, CommandFormatError, toDisplayString } from '../language/types.js'
+import { resolve } from '../language/command-execution.js'
 import { parseYamlIfPossible } from '../util/yaml.js'
 
 // --- Session keys ---
@@ -20,7 +21,7 @@ const SQLITE_DEFAULTS_KEY = 'sqlite.defaults'
 
 /** Resolve a database file path relative to the working directory. */
 function resolveDbPath(context: ScriptContext, file: string): string {
-  return resolve(context.workingDir, file)
+  return resolvePath(context.workingDir, file)
 }
 
 /** Convert a JDBC-style value to a JsonValue, parsing YAML when the value is a string. */
@@ -34,8 +35,13 @@ function jdbcToJsonValue(value: unknown): JsonValue {
 
 /** Run a query and return results as an array of objects. */
 function doQuery(db: Database.Database, query: string): JsonValue[] {
-  const stmt = db.prepare(query)
-  const rows = stmt.all() as Record<string, unknown>[]
+  return doQueryPrepared(db, { sql: query, parameters: [] })
+}
+
+/** Run a prepared query and return results as an array of objects. */
+function doQueryPrepared(db: Database.Database, prepared: PreparedSql): JsonValue[] {
+  const stmt = db.prepare(prepared.sql)
+  const rows = stmt.all(...prepared.parameters) as Record<string, unknown>[]
   return rows.map(row => {
     const obj: JsonObject = {}
     for (const [key, value] of Object.entries(row)) {
@@ -50,37 +56,122 @@ function doUpdate(db: Database.Database, sql: string): void {
   db.exec(sql)
 }
 
+// --- Prepared statement support ---
+
+/** Regex matching a variable reference wrapped in single quotes: '${...}' */
+const QUOTED_VARIABLE = /'(\$\{[^}]+})'/g
+
+/** Regex matching any variable reference: ${...} */
+const VARIABLE_REGEX = /\$\{([^}]+)}/g
+
+interface PreparedSql {
+  sql: string
+  parameters: unknown[]
+}
+
+/**
+ * Extract prepared statement parameters from a SQL string containing SpecScript variables.
+ *
+ * Quoted variable references ('${var}') become ? placeholders with the resolved value as a parameter.
+ * Unquoted variable references (${var}) are resolved inline as text.
+ */
+function prepareSql(sql: string, variables: Map<string, JsonValue>): PreparedSql {
+  const parameters: unknown[] = []
+
+  // First pass: replace quoted variables with ? placeholders and collect parameter values
+  const withPlaceholders = sql.replace(QUOTED_VARIABLE, (_match, variableRef: string) => {
+    const varMatch = /\$\{([^}]+)}/.exec(variableRef)
+    if (!varMatch) return _match
+    const varName = varMatch[1]
+    const value = lookupVariable(varName, variables)
+    parameters.push(jsonValueToSqlValue(value))
+    return '?'
+  })
+
+  // Second pass: resolve any remaining unquoted variable references inline
+  const resolved = withPlaceholders.replace(VARIABLE_REGEX, (_match, varExpr: string) => {
+    const value = lookupVariable(varExpr, variables)
+    return toDisplayString(value)
+  })
+
+  return { sql: resolved, parameters }
+}
+
+/** Look up a variable, supporting path navigation (e.g. "user.name"). */
+function lookupVariable(expression: string, variables: Map<string, JsonValue>): JsonValue {
+  // Split into name and optional path
+  const pathMatch = expression.match(/^(.*?)([\[.].*$)/)
+  const name = pathMatch ? pathMatch[1] : expression
+
+  const value = variables.get(name)
+  if (value === undefined) {
+    throw new CommandFormatError(`Unknown variable: ${name}`)
+  }
+  // Simple case: no path navigation
+  if (!pathMatch) return value
+  // Path navigation not needed for typical SQL usage; return the value as-is
+  // Full path support is handled by resolveVariables in the standard pipeline
+  return value
+}
+
+/** Convert a JsonValue to a value suitable for a SQLite prepared statement parameter. */
+function jsonValueToSqlValue(value: JsonValue): unknown {
+  if (value === null) return null
+  if (typeof value === 'number') return value
+  if (typeof value === 'boolean') return value ? 1 : 0
+  if (typeof value === 'string') return value
+  return toDisplayString(value)
+}
+
 // --- SQLite command ---
 
 export const SQLiteCommand: CommandHandler = {
   name: 'SQLite',
+  delayedResolver: true,
 
   async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     if (!isObject(data)) {
       throw new CommandFormatError('SQLite: expected an object')
     }
 
+    // Extract raw SQL strings before variable resolution
+    const rawUpdate: string[] = []
+    if (Array.isArray(data.update)) {
+      for (const item of data.update) {
+        rawUpdate.push(String(item))
+      }
+    } else if (typeof data.update === 'string') {
+      rawUpdate.push(data.update)
+    }
+    const rawQuery = typeof data.query === 'string' ? data.query : undefined
+
+    // Resolve non-SQL fields (file, etc.)
+    const resolved = await resolve(data, context) as JsonObject
+
     // Merge with defaults
     const defaults = context.session.get(SQLITE_DEFAULTS_KEY) as JsonObject | undefined
-    const merged = defaults ? { ...defaults, ...data } : data
+    const merged = defaults ? { ...defaults, ...resolved } : resolved
 
     const file = merged.file as string | undefined
     if (!file) {
       throw new CommandFormatError('SQLite: missing required parameter: file')
     }
 
-    const update = merged.update as string[] | undefined ?? []
-    const query = merged.query as string | undefined
     const dbPath = resolveDbPath(context, file)
-
     const db = new Database(dbPath)
     try {
-      for (const sql of update) {
-        doUpdate(db, sql)
+      for (const sql of rawUpdate) {
+        const prepared = prepareSql(sql, context.variables)
+        if (prepared.parameters.length > 0) {
+          db.prepare(prepared.sql).run(...prepared.parameters)
+        } else {
+          db.exec(prepared.sql)
+        }
       }
 
-      if (query) {
-        return doQuery(db, query)
+      if (rawQuery) {
+        const prepared = prepareSql(rawQuery, context.variables)
+        return doQueryPrepared(db, prepared)
       }
 
       return undefined

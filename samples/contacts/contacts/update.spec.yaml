@@ -20,12 +20,6 @@ Input schema:
       default: ""
   required: [ id ]
 
-Replace:
-  text: "'"
-  in: ${input}
-  with: "''"
-As: ${input}
-
 Connect to: Contact DB
 
 SQLite:

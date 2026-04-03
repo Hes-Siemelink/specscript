@@ -23,13 +23,6 @@ Input schema:
       default: ""
   required: [ id ]
 
-# Sanitize input by escaping single quotes
-Replace:
-  text: "'"
-  in: ${input}
-  with: "''"
-As: ${input}
-
 Connect to: Goal DB
 
 SQLite:

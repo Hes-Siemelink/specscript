@@ -1,39 +1,56 @@
 package specscript.commands.db
 
 import specscript.language.CommandHandler
+import specscript.language.DelayedResolver
 import specscript.language.ObjectHandler
 import specscript.language.ScriptContext
+import specscript.language.resolve
 import specscript.util.Json.newArray
 import specscript.util.Json.newObject
-import specscript.util.Yaml
-import specscript.util.toDomainObject
-import specscript.util.toJsonNode
 import tools.jackson.databind.JsonNode
-import tools.jackson.databind.node.BooleanNode
+import tools.jackson.databind.node.ArrayNode
 import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.StringNode
 import java.sql.Connection
 import java.sql.DriverManager
 
-object SQLite : CommandHandler("SQLite", "core/db"), ObjectHandler {
+object SQLite : CommandHandler("SQLite", "core/db"), ObjectHandler, DelayedResolver {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
-        val dataWithDefaults = (SQLiteDefaults.getFrom(context) as ObjectNode?)?.deepCopy()?.setAll(data) ?: data
-        val sql = dataWithDefaults.toDomainObject(SQLiteData::class)
-
-        // FIXME Use prepared statements to avoid SQL injection
-        val dbPath = context.workingDir.resolve(sql.file)
-        DriverManager.getConnection("jdbc:sqlite:$dbPath").use { connection ->
-            sql.update.forEach {
-                connection.doUpdate(it)
-            }
-
-            val result = sql.query?.let {
-                connection.doQuery(it).toNode()
-            }
-
-            return result
+        // Extract raw SQL strings before variable resolution
+        val updateNode = data.get("update")
+        val rawUpdate = when (updateNode) {
+            is ArrayNode -> updateNode.elements().asSequence().map { it.stringValue() }.toList()
+            is StringNode -> listOf(updateNode.stringValue())
+            else -> emptyList()
         }
+        val rawQuery = data.get("query")?.stringValue()
+
+        // Merge with defaults and resolve non-SQL fields
+        val resolvedData = data.resolve(context) as ObjectNode
+        val defaults = SQLiteDefaults.getFrom(context) as ObjectNode?
+        val dataWithDefaults = defaults?.deepCopy()?.setAll(resolvedData) ?: resolvedData
+        val file = dataWithDefaults.get("file")?.stringValue() ?: ""
+
+        val dbPath = context.workingDir.resolve(file)
+        DriverManager.getConnection("jdbc:sqlite:$dbPath").use { connection ->
+            rawUpdate.forEach { sql ->
+                connection.executePrepared(prepareSql(sql, context.variables))
+            }
+
+            return rawQuery?.let { sql ->
+                connection.queryPrepared(prepareSql(sql, context.variables)).toNode()
+            }
+        }
+    }
+}
+
+fun Connection.executePrepared(prepared: PreparedSql) {
+    this.prepareStatement(prepared.sql).use { statement ->
+        prepared.parameters.forEachIndexed { index, value ->
+            statement.setObject(index + 1, value)
+        }
+        statement.executeUpdate()
     }
 }
 
@@ -43,10 +60,13 @@ fun Connection.doUpdate(update: String) {
     }
 }
 
-fun Connection.doQuery(query: String): List<Map<String, Any>> {
+fun Connection.queryPrepared(prepared: PreparedSql): List<Map<String, Any>> {
     val results = mutableListOf<Map<String, Any>>()
-    this.createStatement().use { statement ->
-        statement.executeQuery(query).use { resultSet ->
+    this.prepareStatement(prepared.sql).use { statement ->
+        prepared.parameters.forEachIndexed { index, value ->
+            statement.setObject(index + 1, value)
+        }
+        statement.executeQuery().use { resultSet ->
             while (resultSet.next()) {
                 val row = mutableMapOf<String, Any>()
                 for (i in 1..resultSet.metaData.columnCount) {
@@ -64,18 +84,10 @@ fun List<Map<String, Any>>.toNode(): JsonNode {
     this.forEach { row ->
         val rowNode = newObject()
         row.forEach { (key, value) ->
-            rowNode.set(key, jdbcToJsonNode(value))
+            rowNode.set(key, jdbcToJson(value))
         }
         node.add(rowNode)
     }
     return node
 }
 
-/** Convert a JDBC value to a Jackson JsonNode without YAML parsing. */
-private fun jdbcToJsonNode(value: Any?): JsonNode = when (value) {
-    null -> StringNode("")
-    is Number -> value.toJsonNode()
-    is Boolean -> BooleanNode.valueOf(value)
-    is String -> Yaml.parseIfPossible(value)
-    else -> StringNode(value.toString())
-}
