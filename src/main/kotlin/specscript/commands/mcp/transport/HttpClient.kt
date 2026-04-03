@@ -31,8 +31,6 @@ class HttpClient(
     override val client: Client = Client(clientInfo = Implementation("specscript-client", "1.0.0"))
 
     override suspend fun connect() {
-        println("Connecting to HTTP MCP server at: $url")
-
         val transport = StreamableHttpClientTransport(
             client = httpClient,
             url = url,

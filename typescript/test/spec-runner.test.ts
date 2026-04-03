@@ -13,6 +13,7 @@ import {scanMarkdown} from '../src/markdown/scanner.js'
 import {getTestTitle, splitMarkdownSections} from '../src/markdown/converter.js'
 import {getCommandHandler} from '../src/language/command-handler.js'
 import {stopAllServers} from '../src/commands/http-server.js'
+import {stopAllMcpServers} from '../src/commands/mcp-server.js'
 
 // Register commands once
 registerAllCommands()
@@ -383,7 +384,7 @@ function runSpecMdFile(relativePath: string): void {
         // Skip sections that use commands not available at this level.
         // Only skip for known higher-level commands (e.g., Prompt). Unknown commands
         // might be local file commands created at runtime by Temp file or yaml file= blocks.
-        const HIGHER_LEVEL_COMMANDS = new Set(['Validate schema', 'Mcp server', 'Mcp tool', 'SQLite'])
+        const HIGHER_LEVEL_COMMANDS = new Set(['Validate schema', 'SQLite'])
         const unavailable = script.commands.find(
             c => !isAssignment(c.name) && !getCommandHandler(c.name) && HIGHER_LEVEL_COMMANDS.has(c.name)
         )
@@ -561,6 +562,30 @@ describe('Level 5 Spec Tests', () => {
     }
 
     for (const file of LEVEL_5_MD_FILES) {
+        describe(file, () => {
+            runSpecMdFile(file)
+        })
+    }
+})
+
+// --- Level 6: MCP ---
+
+/** Level 6 spec.md test files (relative to specification/) */
+const LEVEL_6_MCP_MD_FILES = [
+    'commands/ai/mcp/Mcp server.spec.md',
+    'commands/ai/mcp/Mcp tool.spec.md',
+    'commands/ai/mcp/Mcp tool call.spec.md',
+    'commands/ai/mcp/Mcp prompt.spec.md',
+    'commands/ai/mcp/Mcp resource.spec.md',
+    'commands/ai/mcp/Stop mcp server.spec.md',
+]
+
+describe('Level 6 MCP Spec Tests', () => {
+    afterAll(async () => {
+        await stopAllMcpServers()
+    })
+
+    for (const file of LEVEL_6_MCP_MD_FILES) {
         describe(file, () => {
             runSpecMdFile(file)
         })

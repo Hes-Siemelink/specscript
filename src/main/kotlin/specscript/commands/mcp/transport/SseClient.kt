@@ -32,8 +32,6 @@ class SseClient(
     }
 
     override suspend fun connect() {
-        println("Connecting to SSE MCP server at: $url")
-
         val transport = SseClientTransport(
             client = httpClient,
             urlString = url,

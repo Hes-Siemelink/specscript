@@ -1,0 +1,25 @@
+Mcp server:
+  name: weather
+  version: "1.0.0"
+  port: 25096
+
+  tools:
+
+    hello:
+      description: Get a greeting
+      inputSchema:
+        properties:
+          name:
+            type: string
+            description: Your name
+      script:
+        Output: Hello ${input.name}!
+
+    get_alerts:
+      description: Get weather alerts for a US state
+      inputSchema:
+        properties:
+          state:
+            type: string
+            description: Two-letter US state code (e.g. CA, NY)
+      script: get-alert.spec.yaml

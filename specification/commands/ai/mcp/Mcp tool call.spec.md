@@ -45,7 +45,7 @@ Expected output: Hello there!
 
 ## Passing arguments
 
-You can pass arguments to the tool via the `arguments` property:
+You can pass arguments to the tool via the `input` property:
 
 ```yaml specscript
 Code example: Mcp tool with arguments
@@ -71,6 +71,23 @@ Mcp tool call:
     url: "http://localhost:8091/mcp"
 
 Expected output: Hello Alice!
+```
+
+Variables are resolved in the `input` block before sending to the server:
+
+```yaml specscript
+Code example: Mcp tool call with variable input
+
+${greeting_name}: Bob
+
+Mcp tool call:
+  tool: greet
+  input:
+    name: ${greeting_name}
+  server:
+    url: "http://localhost:8091/mcp"
+
+Expected output: Hello Bob!
 ```
 
 ## Transport types

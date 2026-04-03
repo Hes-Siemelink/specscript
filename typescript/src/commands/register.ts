@@ -35,6 +35,10 @@ import {
   SetDefaultCredentialsCommand, CreateCredentialsCommand, DeleteCredentialsCommand,
 } from './credentials.js'
 import { ConnectToCommand } from './connect-to.js'
+import {
+  McpServerCommand, McpToolCommand, McpResourceCommand,
+  McpPromptCommand, McpToolCallCommand, StopMcpServerCommand,
+} from './mcp-server.js'
 
 /**
  * Register all commands (Level 0 + Level 1 + Level 3 + Level 4).
@@ -159,6 +163,16 @@ export function registerAllCommands(): void {
   registerCommand(SetDefaultCredentialsCommand)
   registerCommand(CreateCredentialsCommand)
   registerCommand(DeleteCredentialsCommand)
+
+  // --- Level 6 ---
+
+  // MCP server
+  registerCommand(McpServerCommand)
+  registerCommand(McpToolCommand)
+  registerCommand(McpResourceCommand)
+  registerCommand(McpPromptCommand)
+  registerCommand(McpToolCallCommand)
+  registerCommand(StopMcpServerCommand)
 }
 
 /**
