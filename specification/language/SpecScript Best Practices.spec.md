@@ -4,53 +4,96 @@ This document outlines best practices for writing effective SpecScript specifica
 
 ## Common Pitfalls
 
-### YAML Duplicate Key Constraints
+### Use `---` separators liberally
 
-**Problem**: Repeating command names is invalid YAML
-
-```yaml
-# ❌ This won't work - duplicate keys
-Assert that:
-  item: value1
-  equals: expected1
-Assert that: # Invalid YAML!
-  item: value2
-  equals: expected2
-```
-
-**Solutions**:
+SpecScript commands are YAML dictionary keys. Repeating a key is invalid YAML — a silent data-loss bug in most parsers.
+The `---` document separator avoids this and doubles as a visual section divider.
 
 ```yaml
-# ✅ Use list syntax
-Assert that:
-  - item: value1
-    equals: expected1
-  - item: value2
-    equals: expected2
-
-# ✅ OR use document separators
-Assert that:
-  item: value1
-  equals: expected1
----
-Assert that:
-  item: value2
-  equals: expected2
-```
-
-### Understanding Content Type Support
-
-When command specs show "List | implicit", it means the command can handle list syntax automatically:
-
-```yaml
-# Single execution
+# ❌ Invalid YAML — duplicate key
 Print: Hello
+Print: Hello again!
+```
+
+```yaml
+# ✅ Separate documents
+Print: Hello
+---
+Print: Hello again!
+```
+
+This applies to **any** key that appears more than once at the same level, including `As`, `Add to`, `If`, `For each`,
+and `Size`. A common mistake is two commands that each use `As` in the same document:
+
+```yaml
+# ❌ Invalid — duplicate As key
+GET: /api/users
+As: ${users}
+
+For each:
+  ${u} in: ${users}
+  Output: ${u.name}
+As: ${names}
+```
+
+```yaml
+# ✅ Split into separate documents
+GET: /api/users
+As: ${users}
+---
+For each:
+  ${u} in: ${users}
+  Output: ${u.name}
+As: ${names}
+```
+
+As a rule of thumb: when in doubt, add a `---`. It never hurts and prevents subtle bugs.
+
+### Prefer `---` over list syntax
+
+Top-level list syntax (`- Print: Hello`) avoids duplicate keys but adds visual noise. The `---` separator is easier
+to scan and acts as a natural section break:
+
+```yaml
+# Noisy
+- Print: Hello
+- Print: Hello again!
+- Print: Goodbye
+```
+
+```yaml
+# Cleaner
+Print: Hello
+---
+Print: Hello again!
+---
+Print: Goodbye
+```
+
+### Use `---` instead of comments for section breaks
+
+Comments like `# --- Section ---` are redundant when `---` separators are already present. Let the separators do
+double duty — they enforce valid YAML and visually divide the script:
+
+```yaml
+# ❌ Redundant comment separators
+# --- Set up connection ---
+Http request defaults:
+  url: https://api.example.com
+
+# --- Fetch data ---
+GET: /items
+As: ${items}
+```
+
+```yaml
+# ✅ Let --- do the work
+Http request defaults:
+  url: https://api.example.com
 
 ---
-# Multiple executions (list syntax)
-Print:
-  - Hello
-  - World
+GET: /items
+As: ${items}
 ```
 
 ### Temp File Referencing
@@ -72,6 +115,3 @@ Read file: ${SCRIPT_TEMP_DIR}/config.json  # Also correct, but unnecessary
 Read file: path/to/external/file.yaml  # ✅ For real files
 ```
 
----
-
-*More best practices will be added to this document as they are identified.*

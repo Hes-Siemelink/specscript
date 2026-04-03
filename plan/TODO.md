@@ -3,7 +3,6 @@
 * Convert python scripts form Agility demo with Zach to SpecScript
 * SpecScript as the cli wrapper for Python
 * Use Cursor 3
-* Move plans to archive
 
 # Spotlight
 
