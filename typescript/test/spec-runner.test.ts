@@ -135,6 +135,9 @@ const LEVEL_3_TEST_FILES = [
     'commands/core/files/tests/Locate files in the same way.spec.yaml',
     'commands/core/shell/tests/Shell tests.spec.yaml',
     'commands/core/files/tests/Run script tests.spec.yaml',
+    'commands/core/db/tests/SQLite tests.spec.yaml',
+    'commands/core/db/tests/SQLite defaults tests.spec.yaml',
+    'commands/core/db/tests/Store tests.spec.yaml',
 ]
 
 /** Level 3 spec.md test files (relative to specification/) */
@@ -384,7 +387,7 @@ function runSpecMdFile(relativePath: string): void {
         // Skip sections that use commands not available at this level.
         // Only skip for known higher-level commands (e.g., Prompt). Unknown commands
         // might be local file commands created at runtime by Temp file or yaml file= blocks.
-        const HIGHER_LEVEL_COMMANDS = new Set(['Validate schema', 'SQLite'])
+        const HIGHER_LEVEL_COMMANDS = new Set(['Validate schema'])
         const unavailable = script.commands.find(
             c => !isAssignment(c.name) && !getCommandHandler(c.name) && HIGHER_LEVEL_COMMANDS.has(c.name)
         )

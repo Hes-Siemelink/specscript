@@ -40,6 +40,7 @@ import {
   McpPromptCommand, McpCallToolCommand, McpReadResourceCommand,
   McpGetPromptCommand, StopMcpServerCommand,
 } from './mcp-server.js'
+import { SQLiteCommand, SQLiteDefaultsCommand, StoreCommand } from './sqlite.js'
 
 /**
  * Register all commands (Level 0 + Level 1 + Level 3 + Level 4).
@@ -130,6 +131,11 @@ export function registerAllCommands(): void {
 
   // CLI
   registerCommand(CliCommand)
+
+  // Database
+  registerCommand(SQLiteCommand)
+  registerCommand(SQLiteDefaultsCommand)
+  registerCommand(StoreCommand)
 
   // --- Level 4 ---
 

@@ -20,9 +20,11 @@
   "dependencies": {
     "@inquirer/prompts": "^8.3.2",
     "@modelcontextprotocol/sdk": "^1.29.0",
+    "better-sqlite3": "^12.8.0",
     "yaml": "^2.7.1"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^20.17.50",
     "tsup": "^8.5.1",
     "tsx": "^4.19.4",
