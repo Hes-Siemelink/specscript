@@ -139,11 +139,4 @@ After human sign-off:
 5. Move completed plans to `plan/completed/` if applicable
 6. Offer to create follow-up beans for deferred work
 
-## Rules
 
-- **Never proceed past a checkpoint without human confirmation.** Checkpoints: proposal, spec, commit.
-- **Spec before code.** Always. Change the spec first, then update the implementation.
-- **Beans for everything.** If it takes more than 10 minutes, it gets a bean.
-- **One in-progress bean at a time.** Finish current work before starting new work.
-- **Reports tell the story.** The human shouldn't have to ask "what happened?" — the report should answer proactively.
-- **Plans before code.** Write what you'll do, get confirmation, then do it. This prevents rework.

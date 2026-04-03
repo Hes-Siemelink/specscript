@@ -28,6 +28,10 @@ code examples in the documentation, ensuring that the documentation is always ac
 SpecScript is developed using a spec-first approach, a bit like TDD. Write the specification BEFORE implementing code.
 The spec defines the behavior and serves as documentation and tests; implementation follows.
 
+For non-trivial work, load the `specscript-development-process` skill before starting. It has the full workflow
+including bean tracking, reporting, and review phases. Agents that skip this tend to jump straight to code and miss
+the proposal/spec checkpoints.
+
 Full steps are:
 
 1. User gives a problem statement or feature request.
@@ -35,16 +39,19 @@ Full steps are:
    directory. The Markdown is not specscript yet, just a regular Markdown document describing the problem, the proposed
    solution, and any relevant details. Depending on the problem statement, this could be high level (new language
    feature), mid-level (new command), or low level (bug fix or refactoring).
-3. User reviews and confirms the proposal. Do not proceed without explicit confirmation.
+3. **CHECKPOINT:** User reviews and confirms the proposal. Do not proceed without explicit confirmation.
 4. Write the spec. This is the most critical step. The spec defines the behavior and serves as documentation and tests.
    Write it in the `specification/` directory. For invasive changes, put the new or heavily revised spec in
    `plan/draft-specs`.
-5. User reviews and confirms the spec. Do not proceed without explicit confirmation.
+5. **CHECKPOINT:** User reviews and confirms the spec. Do not proceed without explicit confirmation.
 6. Implement the code in Kotlin. IMPORTANT: follow existing patterns and architecture. Do not introduce new patterns or
    architectural styles without explicit confirmation. Put any suggestions for improvements in `plan/agent-ideas.md` as
    concise one-liners to be reviewed later.
-7. User reviews and confirms the implementation. Do not proceed without explicit confirmation.
+7. **CHECKPOINT:** User reviews and confirms the implementation. Do not proceed without explicit confirmation.
 8. Prepare commit according to Git commit rules below. User will review and push.
+
+Not every task needs all steps. Bug fixes skip the proposal (step 2). Trivial tasks (typos, one-line changes) can go
+straight to implementation. Use judgment — but when in doubt, write the proposal.
 
 Tips for spec-first iteration:
 
@@ -195,6 +202,8 @@ Lessons from implementing a second (TypeScript) implementation against the spec:
 When committing changes to the project, follow these rules:
 
 - **Always ask for confirmation before committing.** Do not commit autonomously.
+- Use `--author` to identify yourself: `git commit --author="<model-name> <model-name>@specscript.dev"`, using
+  your model name (e.g., `claude-opus-4.6`). Never modify git config (`user.name`/`user.email`).
 - Use: `git commit -m "Summary" -m "content"`
 - Summary:
     - Must not exceed 70 characters.
