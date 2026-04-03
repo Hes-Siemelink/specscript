@@ -44,7 +44,7 @@ everything first. Run `git status` to verify.
 3. Check for breaking changes since last tag (see above)
 4. Decide new version number. Confirm with user before proceeding.
 
-### Step 2: Generate changelog
+### Step 2: Generate changelog and release headline
 
 Extract feature/change list from git history:
 
@@ -54,6 +54,13 @@ git log --format="%s" --grep="💫" <last-tag>..HEAD
 
 Present this to the user as the changelog for the release. No formal CHANGELOG file is maintained — the git history
 with 💫 entries serves as the changelog.
+
+Draft a `releaseHeadline` — a concise one-liner summarizing the release themes. Base it on the changelog entries.
+Present the proposed headline to the user and confirm before proceeding. Examples of good headlines:
+
+- "Shell/CLI overhaul with breaking changes to defaults and flags"
+- "MCP streaming HTTP, test framework, environment variables, and more"
+- "Package system, TypeScript engine, and new commands"
 
 ### Step 3: Bump version for release
 
