@@ -1,0 +1,33 @@
+Script info: Remove a git worktree and optionally its branch
+
+Input schema:
+  type: object
+  properties:
+    branch:
+      description: Branch name of the worktree to remove
+    delete-branch:
+      description: Also delete the branch after removing the worktree
+      default: false
+  required: [ branch ]
+
+---
+Shell: git worktree list --porcelain
+As: ${worktrees}
+
+---
+Shell: git worktree remove ../specscript-${input.branch} 2>&1 || echo "Worktree not found or already removed"
+As: ${result}
+
+---
+If:
+  item: ${input.delete-branch}
+  equals: true
+  then:
+    Shell: git branch -d ${input.branch} 2>&1 || echo "Branch not found or not fully merged"
+
+---
+Print: "Removed worktree for branch '${input.branch}'"
+
+Output:
+  status: removed
+  branch: ${input.branch}

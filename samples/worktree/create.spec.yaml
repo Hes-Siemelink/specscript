@@ -1,0 +1,31 @@
+Script info: Create a git worktree with a new branch
+
+Input schema:
+  type: object
+  properties:
+    branch:
+      description: Branch name to create
+    path:
+      description: Worktree directory path (relative to repo root or absolute)
+      default: ""
+  required: [ branch ]
+
+---
+If:
+  item: ${input.path}
+  equals: ""
+  then:
+    ${path}: "../specscript-${input.branch}"
+  else:
+    ${path}: ${input.path}
+
+---
+Shell: git branch ${input.branch} 2>/dev/null; git worktree add ${path} ${input.branch} 2>&1
+
+---
+Print: "Created worktree at ${path} on branch '${input.branch}'"
+
+Output:
+  status: created
+  branch: ${input.branch}
+  path: ${path}
