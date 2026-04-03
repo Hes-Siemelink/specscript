@@ -41,8 +41,6 @@ definitions:
         type:
           - object
           - string
-    required:
-      - description
     additionalProperties: false
 
   InputSchema:

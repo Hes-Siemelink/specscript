@@ -189,11 +189,14 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
 
         println(" - Tool: $toolName")
 
-        val resolvedSchema = tool.inputSchema ?: deriveInputSchema(tool, localContext)
+        val needsDerivation = tool.description == null || tool.inputSchema == null
+        val derived = if (needsDerivation) deriveFromScript(tool, localContext) else null
+        val resolvedSchema = tool.inputSchema ?: derived?.inputSchema
+        val resolvedDescription = tool.description ?: derived?.description ?: toolName
 
         addTool(
             toolName,
-            tool.description,
+            resolvedDescription,
             inputSchema = ToolSchema(
                 properties = resolvedSchema?.properties?.toKotlinx() ?: EmptyJsonObject,
                 required = resolvedSchema?.required ?: emptyList()
@@ -215,11 +218,19 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
         }
     }
 
-    private fun deriveInputSchema(tool: ToolInfo, context: ScriptContext): InputSchema? {
+    private fun deriveFromScript(tool: ToolInfo, context: ScriptContext): DerivedToolMetadata? {
         if (tool.script !is StringNode) return null
 
         val file = context.scriptDir.resolve(tool.script.stringValue())
         val scriptFile = SpecScriptFile(file)
+
+        return DerivedToolMetadata(
+            description = scriptFile.script.info.description,
+            inputSchema = deriveInputSchema(scriptFile)
+        )
+    }
+
+    private fun deriveInputSchema(scriptFile: SpecScriptFile): InputSchema? {
         val inputSchemaCommand = scriptFile.script.commands.find { it.equalsCommand(InputSchemaCommand) }
 
         if (inputSchemaCommand != null) {
@@ -314,11 +325,16 @@ enum class TransportType {
 }
 
 data class ToolInfo(
-    val description: String,
+    val description: String? = null,
     val inputSchema: InputSchema?,
     override val output: JsonNode? = null,
     override val script: JsonNode? = null
 ) : HandlerInfo
+
+private data class DerivedToolMetadata(
+    val description: String?,
+    val inputSchema: InputSchema?
+)
 
 data class InputSchema(
     val type: String = "object",

@@ -84,14 +84,16 @@ When both `output` and `script` are present, `output` takes precedence.
 Stop mcp server: test-server
 -->
 
-## Deriving input schema from script
+## Deriving metadata from script
 
-When a tool references an external script file that uses `Input schema`, the `inputSchema` can be omitted from the tool
-definition. SpecScript will automatically derive it from the script's `Input schema` command.
+When a tool references an external script file, both `description` and `inputSchema` can be omitted. SpecScript derives
+them from the script's `Script info` and `Input schema` commands.
 
-Given a script file `greet-tool.spec.yaml` that defines its input using `Input schema`:
+Given a script file `greet-tool.spec.yaml`:
 
 ```yaml temp-file=greet-tool.spec.yaml
+Script info: Generate a personalized greeting
+
 Input schema:
   type: object
   properties:
@@ -102,10 +104,10 @@ Input schema:
 Output: Hello, ${input.name}!
 ```
 
-You can define the MCP tool without repeating the schema:
+The tool definition only needs to reference the script file:
 
 ```yaml specscript
-Code example: MCP tool with derived input schema
+Code example: MCP tool with derived metadata
 
 Mcp server:
   name: derive-server
@@ -114,18 +116,17 @@ Mcp server:
 ```
 
 ```yaml specscript
-Code example: Tool with schema derived from script
+Code example: Tool with metadata derived from script
 
 Mcp tool:
   greet:
-    description: Generate a personalized greeting
     script: greet-tool.spec.yaml
 ```
 
-Calling the tool works as expected, with the input schema derived from the script:
+Calling the tool works as expected:
 
 ```yaml specscript
-Code example: Calling a tool with derived schema
+Code example: Calling a tool with derived metadata
 
 Mcp tool call:
   tool: greet
@@ -141,4 +142,4 @@ Expected output: Hello, Alice!
 Stop mcp server: derive-server
 -->
 
-If `inputSchema` is provided explicitly on the tool definition, it takes precedence over the script's `Input schema`.
+Explicit `description` or `inputSchema` on the tool definition takes precedence over what the script provides.

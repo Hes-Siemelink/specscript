@@ -151,15 +151,17 @@ function addTool(
 ): void {
   writeToContext(localContext, ` - Tool: ${toolName}`)
 
-  const description = toolData.description as string ?? ''
   const inputSchemaRaw = toolData.inputSchema as JsonObject | undefined
+  const needsDerivation = toolData.description === undefined || inputSchemaRaw === undefined
+  const derived = needsDerivation ? deriveFromScript(toolData, localContext) : undefined
   const resolvedSchema = inputSchemaRaw
     ? toRawJsonSchema(inputSchemaRaw)
-    : deriveInputSchema(toolData, localContext)
+    : derived?.inputSchema
+  const resolvedDescription = (toolData.description as string | undefined) ?? derived?.description ?? toolName
 
   managed.tools.push({
     name: toolName,
-    description,
+    description: resolvedDescription,
     inputSchema: resolvedSchema ?? { type: 'object' },
     handler: { output: toolData.output, script: toolData.script },
     context: localContext,
@@ -174,10 +176,15 @@ function toRawJsonSchema(schema: JsonObject): RawJsonSchema {
   }
 }
 
-function deriveInputSchema(
+interface DerivedToolMetadata {
+  description?: string
+  inputSchema?: RawJsonSchema
+}
+
+function deriveFromScript(
   tool: JsonObject,
   context: ScriptContext,
-): RawJsonSchema | undefined {
+): DerivedToolMetadata | undefined {
   if (!isString(tool.script)) return undefined
 
   try {
@@ -185,29 +192,38 @@ function deriveInputSchema(
     const content = readFileSync(filePath, 'utf-8')
     const commands = parseYamlCommands(content)
 
-    // Look for Input schema command
+    // Derive description from Script info
+    const scriptInfoCmd = commands.find(c => c.name.toLowerCase() === 'script info')
+    const description = scriptInfoCmd && typeof scriptInfoCmd.data === 'string'
+      ? scriptInfoCmd.data
+      : undefined
+
+    // Derive inputSchema from Input schema or Input parameters
+    let inputSchema: RawJsonSchema | undefined
+
     const inputSchemaCmd = commands.find(c => c.name.toLowerCase() === 'input schema')
     if (inputSchemaCmd && isObject(inputSchemaCmd.data)) {
-      return toRawJsonSchema(inputSchemaCmd.data)
+      inputSchema = toRawJsonSchema(inputSchemaCmd.data)
+    } else {
+      const inputParamsCmd = commands.find(c => c.name.toLowerCase() === 'input parameters')
+      if (inputParamsCmd && isObject(inputParamsCmd.data)) {
+        const properties: JsonObject = {}
+        for (const [key, value] of Object.entries(inputParamsCmd.data)) {
+          if (isObject(value) && value.type) {
+            properties[key] = { type: value.type as string }
+          } else if (isString(value)) {
+            properties[key] = { type: value }
+          } else {
+            properties[key] = { type: 'string' }
+          }
+        }
+        inputSchema = { type: 'object', properties }
+      }
     }
 
-    // Fall back to Input parameters
-    const inputParamsCmd = commands.find(c => c.name.toLowerCase() === 'input parameters')
-    if (inputParamsCmd && isObject(inputParamsCmd.data)) {
-      const properties: JsonObject = {}
-      for (const [key, value] of Object.entries(inputParamsCmd.data)) {
-        if (isObject(value) && value.type) {
-          properties[key] = { type: value.type as string }
-        } else if (isString(value)) {
-          properties[key] = { type: value }
-        } else {
-          properties[key] = { type: 'string' }
-        }
-      }
-      return { type: 'object', properties }
-    }
+    return { description, inputSchema }
   } catch {
-    // File not found or parse error — no schema derivation
+    // File not found or parse error — no derivation
   }
 
   return undefined
