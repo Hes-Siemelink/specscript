@@ -22,7 +22,8 @@ object SQLite : CommandHandler("SQLite", "core/db"), ObjectHandler {
         val sql = dataWithDefaults.toDomainObject(SQLiteData::class)
 
         // FIXME Use prepared statements to avoid SQL injection
-        DriverManager.getConnection("jdbc:sqlite:${sql.file}").use { connection ->
+        val dbPath = context.workingDir.resolve(sql.file)
+        DriverManager.getConnection("jdbc:sqlite:$dbPath").use { connection ->
             sql.update.forEach {
                 connection.doUpdate(it)
             }

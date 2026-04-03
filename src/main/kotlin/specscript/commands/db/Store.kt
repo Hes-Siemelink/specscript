@@ -19,7 +19,8 @@ object Store : CommandHandler("Store", "core/db"), ObjectHandler {
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val command = data.toDomainObject(StoreData::class)
 
-        DriverManager.getConnection("jdbc:sqlite:${command.file}").use { connection ->
+        val dbPath = context.workingDir.resolve(command.file)
+        DriverManager.getConnection("jdbc:sqlite:$dbPath").use { connection ->
 
             // Create table
             val createTable = "create table if not exists ${command.table} (id integer primary key, json text)"
