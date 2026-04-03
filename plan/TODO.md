@@ -1,3 +1,9 @@
+# On my mind
+
+* Stop running tests in the temp directory
+* Rename 'Scalar' to 'Value'.
+* Move some commands out of core (db, http)
+
 # Spotlight
 
 * Introduce tutorials
