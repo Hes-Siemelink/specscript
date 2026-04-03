@@ -1,0 +1,11 @@
+Input schema:
+  type: object
+  properties:
+    id:
+      description: Contact identifier
+  required: [ id ]
+
+Connect to: Contact DB
+
+SQLite:
+  query: SELECT * FROM contact WHERE id = '${input.id}'

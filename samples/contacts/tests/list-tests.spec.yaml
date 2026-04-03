@@ -1,0 +1,56 @@
+# List contacts tests
+
+Script info: List contacts tests
+
+Before all tests:
+  Shell: rm -f db/test-contacts.db
+  Create test db: {}
+  Do:
+    - Create:
+        name: Alice Smith
+        email: alice@example.com
+        company: Acme Corp
+    - Create:
+        name: Bob Jones
+        email: bob@example.com
+        company: Widgets Inc
+
+Tests:
+
+  List all contacts:
+    List:
+      company: all
+      search: all
+    As: ${contacts}
+    Size: ${contacts}
+    Expected output: 2
+
+  List contacts filtered by company:
+    List:
+      company: Acme Corp
+    As: ${contacts}
+    Assert that:
+      - item:
+          /Size: ${contacts}
+        equals: 1
+      - item: ${contacts[0].name}
+        equals: Alice Smith
+
+  Search contacts by name:
+    List:
+      search: Bob
+    As: ${contacts}
+    Assert that:
+      - item:
+          /Size: ${contacts}
+        equals: 1
+      - item: ${contacts[0].name}
+        equals: Bob Jones
+
+  Empty result for non-existent company:
+    List:
+      company: Nobody Corp
+    Expected output: []
+
+After all tests:
+  Shell: rm -f db/test-contacts.db

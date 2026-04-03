@@ -1,0 +1,52 @@
+# Update contact tests
+
+Script info: Update contact tests
+
+Before all tests:
+  Shell: rm -f db/test-contacts.db
+  Create test db: {}
+  Create:
+    name: Alice Smith
+    email: alice@example.com
+    company: Acme Corp
+
+Tests:
+
+  Update contact email:
+    Update:
+      id: 1
+      email: newalice@example.com
+    Assert that:
+      - item: ${output[0].email}
+        equals: newalice@example.com
+      - item: ${output[0].name}
+        equals: Alice Smith
+      - item: ${output[0].message}
+        equals: Contact updated
+
+  Update non-existent contact:
+    Update:
+      id: 9999
+      name: Ghost
+    Expected output: []
+
+  Update with special characters:
+    Update:
+      id: 1
+      name: "O'Connor"
+    Assert that:
+      item: ${output[0].name}
+      equals: "O'Connor"
+
+  Unchanged fields are preserved:
+    Update:
+      id: 1
+      name: New Name
+    Assert that:
+      - item: ${output[0].name}
+        equals: New Name
+      - item: ${output[0].company}
+        equals: Acme Corp
+
+After all tests:
+  Shell: rm -f db/test-contacts.db

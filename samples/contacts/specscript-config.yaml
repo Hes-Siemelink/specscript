@@ -1,0 +1,6 @@
+Package info: Simple CRUD contacts application
+
+connections:
+  Contact DB:
+    SQLite defaults:
+      file: db/contacts.db

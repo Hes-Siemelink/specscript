@@ -1,0 +1,42 @@
+# Create contact tests
+
+Script info: Create contact tests
+
+Before all tests:
+  Shell: rm -f db/test-contacts.db
+  Create test db: {}
+
+Tests:
+
+  Create a contact with name only:
+    Create:
+      name: Alice Smith
+    Assert that:
+      - item: ${output[0].name}
+        equals: Alice Smith
+
+  Create a contact with all fields:
+    Create:
+      name: Bob Jones
+      email: bob@example.com
+      phone: "+1-555-0123"
+      company: Acme Corp
+      notes: Met at conference
+    Assert that:
+      - item: ${output[0].name}
+        equals: Bob Jones
+      - item: ${output[0].email}
+        equals: bob@example.com
+      - item: ${output[0].company}
+        equals: Acme Corp
+
+  Create a contact with special characters:
+    Create:
+      name: "O'Brien"
+      email: obrien@example.com
+    Assert that:
+      - item: ${output[0].name}
+        equals: "O'Brien"
+
+After all tests:
+  Shell: rm -f db/test-contacts.db

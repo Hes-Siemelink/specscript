@@ -1,0 +1,14 @@
+connections:
+  Contact DB:
+    SQLite defaults:
+      file: db/test-contacts.db
+
+imports:
+  ./:
+    - create-test-db
+  contacts:
+    - contacts/create
+    - contacts/list
+    - contacts/get
+    - contacts/update
+    - contacts/delete

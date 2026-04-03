@@ -1,0 +1,39 @@
+Input schema:
+  type: object
+  properties:
+    name:
+      description: Contact name
+    email:
+      description: Email address
+      default: ""
+    phone:
+      description: Phone number
+      default: ""
+    company:
+      description: Company name
+      default: ""
+    notes:
+      description: Additional notes
+      default: ""
+  required: [ name ]
+
+Replace:
+  text: "'"
+  in: ${input}
+  with: "''"
+As: ${input}
+
+Connect to: Contact DB
+
+SQLite:
+  update:
+    - |
+      INSERT INTO contact (name, email, phone, company, notes)
+      VALUES (
+        '${input.name}',
+        CASE WHEN '${input.email}' = '' THEN NULL ELSE '${input.email}' END,
+        CASE WHEN '${input.phone}' = '' THEN NULL ELSE '${input.phone}' END,
+        CASE WHEN '${input.company}' = '' THEN NULL ELSE '${input.company}' END,
+        CASE WHEN '${input.notes}' = '' THEN NULL ELSE '${input.notes}' END
+      );
+  query: SELECT * FROM contact WHERE id = last_insert_rowid();

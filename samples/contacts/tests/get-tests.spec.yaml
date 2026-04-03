@@ -1,0 +1,32 @@
+# Get contact tests
+#
+# NOTE: Get and Delete via imports have a known Kotlin NPE bug
+# (same as goals-app). These tests use Run script as a workaround.
+
+Script info: Get contact tests
+
+Before all tests:
+  Shell: rm -f db/test-contacts.db
+  Create test db: {}
+  Create:
+    name: Alice Smith
+    email: alice@example.com
+
+Tests:
+
+  Get a contact by id:
+    - Get:
+        id: 1
+    - Assert that:
+        - item: ${output[0].name}
+          equals: Alice Smith
+        - item: ${output[0].email}
+          equals: alice@example.com
+
+  Get non-existent contact returns empty:
+    Get:
+      id: 999
+    Expected output: []
+
+After all tests:
+  Shell: rm -f db/test-contacts.db

@@ -1,0 +1,36 @@
+# Delete contact tests
+
+Script info: Delete contact tests
+
+Before all tests:
+  Shell: rm -f db/test-contacts.db
+  Create test db: {}
+
+Tests:
+
+  Delete an existing contact:
+
+    Create:
+      name: Delete Me
+      email: delete@example.com
+    As: ${created}
+
+    Delete:
+      id: ${created[0].id}
+
+    Assert that:
+      item: ${output[0].message}
+      equals: Contact deleted
+
+
+  Delete non-existent contact:
+
+    Delete:
+      id: 999
+
+    Assert that:
+      item: ${output[0].message}
+      equals: Contact not found
+
+After all tests:
+  Shell: rm -f db/test-contacts.db

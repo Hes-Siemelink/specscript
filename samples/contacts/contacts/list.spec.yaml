@@ -1,0 +1,20 @@
+Input schema:
+  type: object
+  properties:
+    company:
+      description: Filter by company ('all' for no filtering)
+      default: all
+    search:
+      description: Search name or email ('all' for no filtering)
+      default: all
+
+Connect to: Contact DB
+
+SQLite:
+  query: |
+    SELECT * FROM contact
+    WHERE ('${input.company}' IN ('', 'all') OR company = '${input.company}')
+      AND ('${input.search}' IN ('', 'all')
+        OR name LIKE '%${input.search}%'
+        OR email LIKE '%${input.search}%')
+    ORDER BY name ASC;

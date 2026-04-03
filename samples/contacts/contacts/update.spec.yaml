@@ -1,0 +1,53 @@
+Input schema:
+  type: object
+  properties:
+    id:
+      description: Contact identifier
+    name:
+      description: New name (optional)
+      default: ""
+    email:
+      description: New email (optional)
+      default: ""
+    phone:
+      description: New phone (optional)
+      default: ""
+    company:
+      description: New company (optional)
+      default: ""
+    notes:
+      description: New notes (optional)
+      default: ""
+  required: [ id ]
+
+Replace:
+  text: "'"
+  in: ${input}
+  with: "''"
+As: ${input}
+
+Connect to: Contact DB
+
+SQLite:
+  update:
+    - |
+      UPDATE contact
+      SET
+        name = CASE WHEN '${input.name}' = '' THEN name ELSE '${input.name}' END,
+        email = CASE WHEN '${input.email}' = '' THEN email ELSE '${input.email}' END,
+        phone = CASE WHEN '${input.phone}' = '' THEN phone ELSE '${input.phone}' END,
+        company = CASE WHEN '${input.company}' = '' THEN company ELSE '${input.company}' END,
+        notes = CASE WHEN '${input.notes}' = '' THEN notes ELSE '${input.notes}' END,
+        updated_at = CASE
+          WHEN '${input.name}' = '' AND '${input.email}' = '' AND '${input.phone}' = ''
+           AND '${input.company}' = '' AND '${input.notes}' = '' THEN updated_at
+          ELSE strftime('%Y-%m-%dT%H:%M:%fZ','now')
+        END
+      WHERE id = '${input.id}';
+  query: |
+    SELECT *, changes() > 0 AS updated,
+      CASE
+        WHEN changes() = 0 THEN 'Contact not found'
+        ELSE 'Contact updated'
+      END AS message
+    FROM contact WHERE id = '${input.id}';
