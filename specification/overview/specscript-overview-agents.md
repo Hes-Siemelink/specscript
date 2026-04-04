@@ -255,6 +255,9 @@ Stop mcp server: agent-overview-server
 Transports: `HTTP` (default, streaming), `SSE` (legacy), `STDIO`. See
 [Mcp server](../commands/ai/mcp/Mcp%20server.spec.md) for full details.
 
+For simpler cases, agents can skip MCP entirely and call `spec` as a CLI tool. `Input schema` gives structured
+`--help` output and predictable `--option` flags, which is often all an agent needs to discover and invoke a tool.
+
 ## Other capabilities
 
 - **Error handling**: [Error](../commands/core/errors/Error.spec.md),
