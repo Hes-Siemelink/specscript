@@ -12,7 +12,7 @@ metadata:
 This skill describes the full development loop for SpecScript features. It extends the 8-step process in AGENTS.md with
 operational detail on how to organize work, report progress, and collaborate with the human reviewer.
 
-The loop: **Propose → Plan → Implement → Report → Review → Commit**.
+The loop: **Propose → Plan → Implement → Report & Review → Commit**.
 
 ## When to Use
 
@@ -40,7 +40,11 @@ For bug fixes: skip the proposal. Create a bean directly and describe the bug th
 
 ## Phase 2: Plan
 
-### Create beans
+The Plan phase happens AFTER the proposal is confirmed. Its purpose is to create beans that track the remaining work
+through to completion. The proposal itself is out of scope of beans — we may decide not to proceed, or it may be a
+quick fix that doesn't need the full process.
+
+### Create the feature bean with sub-beans
 
 Use the bean type hierarchy:
 
@@ -52,14 +56,28 @@ milestone    → target release or checkpoint
       bug    → something broken
 ```
 
-For a single feature: create one `feature` bean with todo items in the body. For a larger effort: create an `epic` with
-child `task`/`feature` beans.
+For a single feature: create one `feature` bean as the parent, then create `task` sub-beans for each remaining phase.
+This prevents agents from losing track of the process across long conversations.
 
 ```bash
-beans create "Feature title" -t feature -d "Description" -s todo
+# Create the parent feature bean
+beans create "Feature title" -t feature -d "Description" -s in-progress
+
+# Create sub-beans for each phase
+beans create "Write spec" -t task --parent <feature-id> -s todo \
+  -d "Write specification in specification/ (or plan/draft-specs for invasive changes)"
+beans create "Implement" -t task --parent <feature-id> -s todo \
+  -d "Implement in Kotlin following existing patterns"
+beans create "Report, review & commit" -t task --parent <feature-id> -s todo \
+  -d "Write report in plan/reports/, present for review, commit after sign-off"
 ```
 
-Always create beans BEFORE starting work. Update todo items as work progresses:
+Adjust the sub-beans to fit the work. A TypeScript port gets its own task. A multi-phase refactor gets a task per phase.
+The point is: each phase is a bean you can check off, so progress is visible and nothing gets skipped.
+
+For a larger effort: create an `epic` with child `feature`/`task` beans instead.
+
+Update todo items within beans as work progresses:
 
 ```bash
 beans update <id> --body-replace-old "- [ ] Step 1" --body-replace-new "- [x] Step 1"
@@ -100,11 +118,10 @@ Key rules:
 - Always follow git commit rules in AGENTS.md
 - Always ask for confirmation before committing
 
-## Phase 4: Report
+## Phase 4: Report, Review & Retro
 
-After implementation is complete and tests pass, write a brief report. This can go in the conversaton (with a copy in
-the bean body
-(`--body-append`)), or as a separate file in `plan/reports/` for larger efforts.
+After implementation is complete and tests pass, write a brief report. Save it in `plan/reports/` (or in the bean body
+via `--body-append` for smaller efforts).
 
 Report contents:
 
@@ -121,8 +138,6 @@ The report is HIGH-LEVEL. The human reads git diffs for code detail. Focus on:
 
 Do NOT pad the report with code statistics, file counts, or line-by-line change descriptions.
 
-## Phase 5: Review & Retro
-
 Present the report to the human. They will:
 
 - Read the report
@@ -137,7 +152,7 @@ Handle review feedback:
 
 This phase may have multiple rounds. Stay focused on the current feedback — do not revisit resolved topics.
 
-## Phase 6: Commit and Close
+## Phase 5: Commit and Close
 
 After human sign-off:
 
