@@ -1,0 +1,15 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+
+oneOf:
+  - type: string
+
+  - type: object
+    properties:
+      script:
+        type: [object, string]
+      file:
+        type: string
+      cd:
+        type: string
+      input: { }
+    additionalProperties: false

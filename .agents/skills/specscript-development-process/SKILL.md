@@ -73,6 +73,8 @@ This is the most critical step. Write or update the specification BEFORE impleme
 - For invasive changes, put draft specs in `plan/draft-specs`
 - Follow the specification writing style in AGENTS.md
 - One executable example per concept, edge cases go in `tests/` files
+- Include test cases in a `tests/` subdirectory alongside the draft spec for edge cases and combinations beyond what
+  the main spec covers
 - Mock with `Output:` commands for early iteration before implementing
 
 Run `./gradlew specificationTest` — tests SHOULD fail at this point (spec written, implementation not yet done).

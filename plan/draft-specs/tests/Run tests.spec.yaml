@@ -1,0 +1,150 @@
+Tests:
+
+  Run with script property is equivalent to value form:
+
+    Temp file:
+      filename: echo.spec.yaml
+      content:
+        Output: echo!
+
+    Run:
+      script: echo.spec.yaml
+
+    Expected output: echo!
+
+  Run with file and absolute path:
+
+    Temp file:
+      filename: abs.spec.yaml
+      content:
+        Output: absolute!
+
+    Run:
+      file: ${output}
+
+    Expected output: absolute!
+
+  Run with cd and script resolves relative to cd:
+
+    Temp file:
+      filename: in-temp.spec.yaml
+      content:
+        Output: from temp dir
+
+    Run:
+      cd: ${SCRIPT_TEMP_DIR}
+      script: in-temp.spec.yaml
+
+    Expected output: from temp dir
+
+  Run with cd and file resolves relative to cd:
+
+    Temp file:
+      filename: in-temp2.spec.yaml
+      content:
+        Output: also from temp
+
+    Run:
+      cd: ${SCRIPT_TEMP_DIR}
+      file: in-temp2.spec.yaml
+
+    Expected output: also from temp
+
+  Inline script has clean variable scope:
+
+    $parent-var: should not be visible
+
+    Run:
+      script:
+        $parent-var: ${parent-var:default}
+        Output: ${parent-var}
+
+    Expected output: default
+
+  Inline script output is returned:
+
+    Run:
+      script:
+        Output: inline result
+
+    Expected output: inline result
+
+  Run with input passes input to script:
+
+    Temp file:
+      filename: with-input.spec.yaml
+      content:
+        Output: Hello ${input.name}!
+
+    Run:
+      script: with-input.spec.yaml
+      input:
+        name: TestUser
+
+    Expected output: Hello TestUser!
+
+  Run with list input iterates:
+
+    Temp file:
+      filename: list-input.spec.yaml
+      content:
+        Output: Hi ${input.n}
+
+    Run:
+      script: list-input.spec.yaml
+      input:
+        - n: A
+        - n: B
+
+    Expected output:
+      - Hi A
+      - Hi B
+
+  Inline script with cd can read files from cd directory:
+
+    Temp file:
+      filename: readable.txt
+      content: file content here
+
+    Run:
+      cd: ${SCRIPT_TEMP_DIR}
+      script:
+        Read file: readable.txt
+
+    Expected output: file content here
+
+  Run with subdirectory path:
+
+    Temp file:
+      filename: sub/nested.spec.yaml
+      content:
+        Output: nested!
+
+    Run:
+      cd: ${SCRIPT_TEMP_DIR}
+      script: sub/nested.spec.yaml
+
+    Expected output: nested!
+
+  Inline script sees host script commands:
+
+    # The host script's directory has local commands (e.g. greet.spec.yaml).
+    # Inline script should be able to call them.
+
+    Run:
+      script:
+        Greet:
+          name: FromInline
+
+    Expected output: Hello FromInline!
+
+  Run script alias still works:
+
+    Temp file:
+      filename: alias-test.spec.yaml
+      content:
+        Output: alias works
+
+    Run script: alias-test.spec.yaml
+
+    Expected output: alias works
