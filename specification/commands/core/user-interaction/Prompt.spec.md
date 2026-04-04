@@ -2,11 +2,11 @@
 
 `Prompt` asks the user for input with an interactive prompt.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | no            |
-| List       | no            |
-| Object     | yes           |
+| Input  | Supported |
+|--------|-----------|
+| Value  | no        |
+| List   | no        |
+| Object | yes       |
 
 [Prompt.schema.yaml](schema/Prompt.schema.yaml)
 

@@ -2,13 +2,13 @@
 
 Error handling in CLI scripts
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | no            |
-| List       | auto-iterate  |
-| Object     | yes           |
-| Raw input  | yes           |
-| Error trap | yes           |
+| Input      | Supported    |
+|------------|--------------|
+| Value      | no           |
+| List       | auto-iterate |
+| Object     | yes          |
+| Raw input  | yes          |
+| Error trap | yes          |
 
 [On error.schema.yaml](schema/On%20error.schema.yaml)
 

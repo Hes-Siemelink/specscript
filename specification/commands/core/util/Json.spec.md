@@ -2,11 +2,11 @@
 
 Use `Json` to convert structured data into a JSON string.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | yes           |
-| List       | yes           |
-| Object     | yes           |
+| Input  | Supported |
+|--------|-----------|
+| Value  | yes       |
+| List   | yes       |
+| Object | yes       |
 
 ## Basic usage
 

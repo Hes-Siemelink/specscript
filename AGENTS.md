@@ -7,18 +7,24 @@ specification to know what SpecScript is. Starting points: Main README.md, `spec
 **IMPORTANT**: before you do anything else, run the `beans prime` command and heed its output. `beans prime` configures
 the issue tracker for the session.
 
-Use `.tmp` in this repo as a temp directory so you don't need to ask for permission to write files somewhere else.
-
 ## Project Overview
 
 SpecScript is a tool for creating human and AI-friendly specifications using Markdown and YAML. It provides a CLI tool
 called `spec` that can execute `.spec.yaml` script files containing YAML specifications for HTTP requests, user
 interaction, testing, and more.
 
-The `specification/` directory contains the complete language specification written in SpecScript Markdown itself. This
-includes tests written in SpecScript yaml. The `samples` directory contains SpecScript example code. The `src/`
-directory contains the Kotlin implementation (reference implementation). The `typescript/` directory contains a
-TypeScript implementation. Both implementations pass the same specification tests.
+The `specification/` directory is the complete language specification written in executable Markdown:
+
+- `specification/language/` — Language syntax and features
+- `specification/commands/` — Command reference
+- `specification/cli/` — CLI tool usage
+
+The `samples` directory contains SpecScript example code.
+
+The `src/` directory contains the Kotlin implementation (reference implementation). The `typescript/` directory contains
+a TypeScript implementation. Both implementations pass the same specification tests.
+
+All documentation includes runnable code examples executed as part of the test suite.
 
 When doing a full build, both the specification tests and the unit tests run. The specification tests execute all the
 code examples in the documentation, ensuring that the documentation is always accurate and up-to-date.
@@ -29,8 +35,8 @@ SpecScript is developed using a spec-first approach, a bit like TDD. Write the s
 The spec defines the behavior and serves as documentation and tests; implementation follows.
 
 For non-trivial work, load the `specscript-development-process` skill before starting. It has the full workflow
-including bean tracking, reporting, and review phases. Agents that skip this tend to jump straight to code and miss
-the proposal/spec checkpoints.
+including bean tracking, reporting, and review phases. Agents that skip this tend to jump straight to code and miss the
+proposal/spec checkpoints.
 
 Full steps are:
 
@@ -81,6 +87,10 @@ spec specification/hello-world.spec.yaml   # Run a script
 spec samples                                 # Interactive selection
 ```
 
+### Temp files
+
+Use `.tmp` in this repo as a temp directory so you don't need to ask for permission to write files somewhere else.
+
 ## Architecture
 
 ### Core Components
@@ -95,18 +105,6 @@ spec samples                                 # Interactive selection
 - **Utilities**: `src/main/kotlin/specscript/util/` — JSON/YAML processing, I/O utilities
 - **Unit Tests**: `src/tests/unit/`
 - **Specification Tests**: `src/tests/specification/` — runs all executable documentation (440+ tests)
-
-### Specification Directory
-
-The `specification/` directory is the complete language specification written in executable Markdown:
-
-- `specification/language/` — language syntax and features
-- `specification/commands/core/` — core command reference with examples
-- `specification/commands/ai/` — AI-related commands (MCP server, etc.)
-- `specification/cli/` — CLI tool usage
-
-All documentation includes runnable code examples executed as part of the test suite. The `specification/` directory is
-included as a resource directory for runtime access.
 
 ### Architectural Principles
 
@@ -202,17 +200,17 @@ Lessons from implementing a second (TypeScript) implementation against the spec:
 When committing changes to the project, follow these rules:
 
 - **Always ask for confirmation before committing.** Do not commit autonomously.
-- Use `--author` to identify yourself: `git commit --author="<model-name> <model-name>@specscript.dev"`, using
-  your model name (e.g., `claude-opus-4.6`). Never modify git config (`user.name`/`user.email`).
+- Use `--author` to identify yourself: `git commit --author="<model-name> <model-name>@specscript.dev"`, using your
+  model name (e.g., `claude-opus-4.6`). Never modify git config (`user.name`/`user.email`).
 - Use: `git commit -m "Summary" -m "content"`
 - Summary:
     - Must not exceed 70 characters.
     - Write the summary as a user-focused release note item, describing the functional change or improvement from the
       perspective of a non-developer stakeholder.
     - Avoid technical or code-centric language in the summary; save those details for the content/body.
-    - If a new feature is added, start the summary with the 💫 emoji. The 💫 entries tell the story at a glance.
-      This applies only to spec-level new features, NOT to implementations catching up (e.g., TypeScript porting
-      existing commands). Port/catch-up commits use a plain summary like "TypeScript: Feature name".
+    - If a new feature is added, start the summary with the 💫 emoji. The 💫 entries tell the story at a glance. This
+      applies only to spec-level new features, NOT to implementations catching up (e.g., TypeScript porting existing
+      commands). Port/catch-up commits use a plain summary like "TypeScript: Feature name".
     - For new commands specifically, use `💫 New command: Command name` or `💫 New commands: Name1, Name2` as the summary.
     - If the change is a breaking change, use `💫 ⚠️` (both emojis) at the start of the summary. This signals a MINOR
       version bump is needed at release time. For breaking new commands: `💫 ⚠️ New commands: Name1, Name2`.

@@ -2,11 +2,11 @@
 
 Deletes credentials for an endpoint.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | no            |
-| List       | auto-iterate  |
-| Object     | yes           |
+| Input  | Supported    |
+|--------|--------------|
+| Value  | no           |
+| List   | auto-iterate |
+| Object | yes          |
 
 [Delete credentials.schema.yaml](schema/Delete%20credentials.schema.yaml)
 

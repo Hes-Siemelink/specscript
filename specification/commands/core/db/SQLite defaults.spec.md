@@ -3,11 +3,11 @@
 `SQLite defaults` sets default parameters for subsequent `SQLite` commands. This avoids repeating the `file` parameter
 in every command.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | no            |
-| List       | no            |
-| Object     | yes           |
+| Input  | Supported |
+|--------|-----------|
+| Value  | no        |
+| List   | no        |
+| Object | yes       |
 
 ## Basic usage
 

@@ -2,11 +2,11 @@
 
 Gets the default credentials for an endpoint.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | yes           |
-| List       | auto-iterate  |
-| Object     | no            |
+| Input  | Supported    |
+|--------|--------------|
+| Value  | yes          |
+| List   | auto-iterate |
+| Object | no           |
 
 [Get credentials.schema.yaml](schema/Get%20credentials.schema.yaml)
 

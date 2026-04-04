@@ -2,11 +2,11 @@
 
 Configures credentials for an endpoint and saves it in the user's preferences.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | no            |
-| List       | auto-iterate  |
-| Object     | yes           |
+| Input  | Supported    |
+|--------|--------------|
+| Value  | no           |
+| List   | auto-iterate |
+| Object | yes          |
 
 [Create credentials.schema.yaml](schema/Create%20credentials.schema.yaml)
 

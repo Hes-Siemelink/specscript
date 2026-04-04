@@ -2,12 +2,12 @@
 
 `Mcp resource` defines resources for an MCP server.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | no            |
-| List       | auto-iterate  |
-| Object     | yes           |
-| Raw input  | yes           |
+| Input     | Supported    |
+|-----------|--------------|
+| Value     | no           |
+| List      | auto-iterate |
+| Object    | yes          |
+| Raw input | yes          |
 
 [Mcp resource.schema.yaml](schema/Mcp%20resource.schema.yaml)
 

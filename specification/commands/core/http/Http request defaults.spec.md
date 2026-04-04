@@ -3,11 +3,11 @@
 `Http request defaults` sets the default parameters for all subsequent HTTP commands
 like [GET](GET.spec.md), [POST](POST.spec.md), etc.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | no            |
-| List       | auto-iterate  |
-| Object     | yes           |
+| Input  | Supported    |
+|--------|--------------|
+| Value  | no           |
+| List   | auto-iterate |
+| Object | yes          |
 
 [Http request defaults.schema.yaml](schema/Http%20request%20defaults.schema.yaml)
 

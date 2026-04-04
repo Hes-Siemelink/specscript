@@ -4,7 +4,7 @@
 
 | Input  | Supported    |
 |--------|--------------|
-| Scalar | no           |
+| Value  | no           |
 | List   | auto-iterate |
 | Object | yes          |
 

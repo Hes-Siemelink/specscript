@@ -2,11 +2,11 @@
 
 `Confirm` asks the user for confirmation on a single topic
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | yes           |
-| List       | no            |
-| Object     | no            |
+| Input  | Supported |
+|--------|-----------|
+| Value  | yes       |
+| List   | no        |
+| Object | no        |
 
 [Confirm.schema.yaml](schema/Confirm.schema.yaml)
 

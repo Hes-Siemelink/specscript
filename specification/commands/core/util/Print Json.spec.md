@@ -2,11 +2,11 @@
 
 `Print Json` prints contents in JSON representation to the console.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | yes           |
-| List       | yes           |
-| Object     | yes           |
+| Input  | Supported |
+|--------|-----------|
+| Value  | yes       |
+| List   | yes       |
+| Object | yes       |
 
 [Print.schema.yaml](schema/Print.schema.yaml)
 

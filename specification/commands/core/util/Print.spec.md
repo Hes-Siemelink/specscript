@@ -2,11 +2,11 @@
 
 `Print` just prints stuff
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | yes           |
-| List       | yes           |
-| Object     | yes           |
+| Input  | Supported |
+|--------|-----------|
+| Value  | yes       |
+| List   | yes       |
+| Object | yes       |
 
 [Print.schema.yaml](schema/Print.schema.yaml)
 

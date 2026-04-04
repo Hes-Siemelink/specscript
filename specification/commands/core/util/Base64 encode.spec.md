@@ -2,11 +2,11 @@
 
 Use `Base64 encode` to encode stuff. See [Base64 decode](Base64%20decode.spec.md).
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | yes           |
-| List       | no            |
-| Object     | no            |
+| Input  | Supported |
+|--------|-----------|
+| Value  | yes       |
+| List   | no        |
+| Object | no        |
 
 [Base64 encode.schema.yaml](schema/Base64%20encode.schema.yaml)
 

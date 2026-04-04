@@ -2,11 +2,11 @@
 
 `DELETE` sends a DELETE request to an HTTP endpoint.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | no            |
-| List       | auto-iterate  |
-| Object     | yes           |
+| Input  | Supported    |
+|--------|--------------|
+| Value  | no           |
+| List   | auto-iterate |
+| Object | yes          |
 
 [DELETE.schema.yaml](schema/DELETE.schema.yaml)
 

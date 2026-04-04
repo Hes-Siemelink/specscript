@@ -2,11 +2,11 @@
 
 `PATCH` sends a PATCH request to an HTTP endpoint.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | no            |
-| List       | auto-iterate  |
-| Object     | yes           |
+| Input  | Supported    |
+|--------|--------------|
+| Value  | no           |
+| List   | auto-iterate |
+| Object | yes          |
 
 [PATCH.schema.yaml](schema/PATCH.schema.yaml)
 

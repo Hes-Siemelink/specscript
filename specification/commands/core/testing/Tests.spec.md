@@ -1,17 +1,17 @@
 # Command: Tests
 
-`Tests` defines named tests with nested commands. Each key is a test name and its value contains the commands
-to execute.
+`Tests` defines named tests with nested commands. Each key is a test name and its value contains the commands to
+execute.
 
-`Tests`, like `Before all tests` and `After all tests`, is only executed in test mode (`spec --test`). In normal execution
-it is ignored.
+`Tests`, like `Before all tests` and `After all tests`, is only executed in test mode (`spec --test`). In normal
+execution it is ignored.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | no            |
-| List       | no            |
-| Object     | yes           |
-| Raw input  | yes           |
+| Input     | Supported |
+|-----------|-----------|
+| Value     | no        |
+| List      | no        |
+| Object    | yes       |
+| Raw input | yes       |
 
 [Tests.schema.yaml](schema/Tests.schema.yaml)
 

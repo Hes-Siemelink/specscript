@@ -2,12 +2,12 @@
 
 `Mcp read resource` reads a resource from an MCP server.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | no            |
-| List       | auto-iterate  |
-| Object     | yes           |
-| Raw input  | yes           |
+| Input     | Supported    |
+|-----------|--------------|
+| Value     | no           |
+| List      | auto-iterate |
+| Object    | yes          |
+| Raw input | yes          |
 
 [Mcp read resource.schema.yaml](schema/Mcp%20read%20resource.schema.yaml)
 

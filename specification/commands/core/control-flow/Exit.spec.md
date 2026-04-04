@@ -2,11 +2,11 @@
 
 `Exit` stops running the current script.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | yes           |
-| List       | yes           |
-| Object     | yes           |
+| Input  | Supported |
+|--------|-----------|
+| Value  | yes       |
+| List   | yes       |
+| Object | yes       |
 
 [Exit.schema.yaml](schema/Exit.schema.yaml)
 

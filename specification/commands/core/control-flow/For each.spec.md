@@ -2,12 +2,12 @@
 
 Use `For each` to loop over a list and do stuff.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | no            |
-| List       | auto-iterate  |
-| Object     | yes           |
-| Raw input  | yes           |
+| Input     | Supported    |
+|-----------|--------------|
+| Value     | no           |
+| List      | auto-iterate |
+| Object    | yes          |
+| Raw input | yes          |
 
 [For each.schema.yaml](schema/For%20each.schema.yaml)
 

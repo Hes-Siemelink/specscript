@@ -2,11 +2,11 @@
 
 `Sort` sorts an array.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | no            |
-| List       | auto-iterate  |
-| Object     | yes           |
+| Input  | Supported    |
+|--------|--------------|
+| Value  | no           |
+| List   | auto-iterate |
+| Object | yes          |
 
 [Sort.schema.yaml](schema/Sort.schema.yaml)
 

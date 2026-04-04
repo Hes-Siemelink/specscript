@@ -2,12 +2,12 @@
 
 `Prompt object` is like [Prompt](Prompt.spec.md), but asks multiple questions
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | no            |
-| List       | no            |
-| Object     | yes           |
-| Raw input  | yes           |
+| Input     | Supported |
+|-----------|-----------|
+| Value     | no        |
+| List      | no        |
+| Object    | yes       |
+| Raw input | yes       |
 
 [Prompt object.schema.yaml](schema/Prompt%20object.schema.yaml)
 

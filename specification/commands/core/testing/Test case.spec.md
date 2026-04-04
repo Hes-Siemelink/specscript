@@ -6,11 +6,11 @@ ignored.
 > **Note**: `Test case` is the legacy test command. For new test files, prefer using `Tests` with `Before all tests` and
 > `After all tests`.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | yes           |
-| List       | no            |
-| Object     | no            |
+| Input  | Supported |
+|--------|-----------|
+| Value  | yes       |
+| List   | no        |
+| Object | no        |
 
 [Test case.schema.yaml](schema/Test%20case.schema.yaml)
 

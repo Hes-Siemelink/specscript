@@ -2,11 +2,11 @@
 
 `Fields` returns the list of fields in an object
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | no            |
-| List       | auto-iterate  |
-| Object     | yes           |
+| Input  | Supported    |
+|--------|--------------|
+| Value  | no           |
+| List   | auto-iterate |
+| Object | yes          |
 
 [Fields.schema.yaml](schema/Fields.schema.yaml)
 

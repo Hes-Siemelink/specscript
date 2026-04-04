@@ -2,12 +2,12 @@
 
 `Mcp call tool` executes a tool on an MCP server.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | no            |
-| List       | auto-iterate  |
-| Object     | yes           |
-| Raw input  | yes           |
+| Input     | Supported    |
+|-----------|--------------|
+| Value     | no           |
+| List      | auto-iterate |
+| Object    | yes          |
+| Raw input | yes          |
 
 [Mcp call tool.schema.yaml](schema/Mcp%20call%20tool.schema.yaml)
 

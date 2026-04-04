@@ -2,11 +2,11 @@
 
 Use a different credentials file than the default `~/.specscript/credentials.yaml`.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | yes           |
-| List       | auto-iterate  |
-| Object     | no            |
+| Input  | Supported    |
+|--------|--------------|
+| Value  | yes          |
+| List   | auto-iterate |
+| Object | no           |
 
 [Credentials.schema.yaml](schema/Credentials.schema.yaml)
 

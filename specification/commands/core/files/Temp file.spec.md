@@ -2,12 +2,12 @@
 
 `Temp file` creates a temporary file.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | yes           |
-| List       | no            |
-| Object     | yes           |
-| Raw input  | yes           |
+| Input     | Supported |
+|-----------|-----------|
+| Value     | yes       |
+| List      | no        |
+| Object    | yes       |
+| Raw input | yes       |
 
 [Temp file.schema.yaml](schema/Temp%20file.schema.yaml)
 

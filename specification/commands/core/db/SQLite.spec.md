@@ -2,11 +2,11 @@
 
 `SQLite` executes SQL statements against a SQLite database file.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | no            |
-| List       | no            |
-| Object     | yes           |
+| Input  | Supported |
+|--------|-----------|
+| Value  | no        |
+| List   | no        |
+| Object | yes       |
 
 ## Basic usage
 
@@ -58,8 +58,8 @@ Expected output:
 
 ## Prepared statement parameters
 
-Variable references wrapped in single quotes are automatically converted to prepared statement parameters. This
-prevents SQL injection without manual escaping.
+Variable references wrapped in single quotes are automatically converted to prepared statement parameters. This prevents
+SQL injection without manual escaping.
 
 ```yaml specscript
 Code example: Prepared statement parameters

@@ -5,7 +5,7 @@ test the behavior of the `cli` command line interface.
 
 | Input  | Supported    |
 |--------|--------------|
-| Scalar | yes          |
+| Value  | yes          |
 | List   | auto-iterate |
 | Object | no           |
 

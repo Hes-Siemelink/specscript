@@ -4,7 +4,7 @@
 
 | Input     | Supported |
 |-----------|-----------|
-| Scalar    | no        |
+| Value     | no        |
 | List      | no        |
 | Object    | yes       |
 | Raw input | yes       |

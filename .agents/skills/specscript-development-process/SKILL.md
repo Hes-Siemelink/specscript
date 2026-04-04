@@ -28,6 +28,7 @@ Do NOT use for trivial fixes (typos, one-line changes, single-file edits). Just 
 Write a proposal in `plan/proposals/`. Plain Markdown, not SpecScript.
 
 Contents:
+
 - Problem statement (what and why)
 - Proposed solution (how, at a high level)
 - Scope boundaries (what's in, what's explicitly out)
@@ -51,8 +52,8 @@ milestone    → target release or checkpoint
       bug    → something broken
 ```
 
-For a single feature: create one `feature` bean with todo items in the body.
-For a larger effort: create an `epic` with child `task`/`feature` beans.
+For a single feature: create one `feature` bean with todo items in the body. For a larger effort: create an `epic` with
+child `task`/`feature` beans.
 
 ```bash
 beans create "Feature title" -t feature -d "Description" -s todo
@@ -83,6 +84,7 @@ Run `./gradlew specificationTest` — tests SHOULD fail at this point (spec writ
 Follow existing patterns. Do not introduce new architectural styles without confirmation.
 
 Key rules:
+
 - Start with the simplest part, build up to complex
 - Run tests frequently: `./gradlew specificationTest`
 - When a spec test reveals undocumented behavior, note it for the report
@@ -98,30 +100,35 @@ Key rules:
 
 ## Phase 4: Report
 
-After implementation is complete and tests pass, write a brief report. This can go in the conversaton (with a copy in the bean body
+After implementation is complete and tests pass, write a brief report. This can go in the conversaton (with a copy in
+the bean body
 (`--body-append`)), or as a separate file in `plan/reports/` for larger efforts.
 
 Report contents:
+
 - Test results (passing, skipped, failing)
 - Observations about SpecScript itself (spec gaps, surprising behaviors)
 - Architecture decisions made and why
 - Anything the reviewer should look for in the diff
 
 The report is HIGH-LEVEL. The human reads git diffs for code detail. Focus on:
+
 - What might surprise them
 - What you'd do differently next time
 - What this work revealed about the language
 
 Do NOT pad the report with code statistics, file counts, or line-by-line change descriptions.
 
-## Phase 5: Review
+## Phase 5: Review & Retro
 
 Present the report to the human. They will:
+
 - Read the report
 - Check git diffs
 - Possibly request changes, different implementation choices, or bug fixes
 
 Handle review feedback:
+
 - Fix issues raised
 - Update the bean and/or report
 - Re-run tests after changes

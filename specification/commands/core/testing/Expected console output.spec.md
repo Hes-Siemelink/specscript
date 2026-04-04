@@ -2,11 +2,11 @@
 
 `Expected console output` checks the console output of previous commands.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | yes           |
-| List       | no            |
-| Object     | no            |
+| Input  | Supported |
+|--------|-----------|
+| Value  | yes       |
+| List   | no        |
+| Object | no        |
 
 [Expected console output.schema.yaml](schema/Expected%20console%20output.schema.yaml)
 

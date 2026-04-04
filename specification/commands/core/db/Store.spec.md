@@ -3,11 +3,11 @@
 `Store` provides a higher-level interface for storing and querying JSON documents in SQLite. Each row stores a JSON
 object in a `json` column, and queries use `json_extract()` for field access.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | no            |
-| List       | no            |
-| Object     | yes           |
+| Input  | Supported |
+|--------|-----------|
+| Value  | no        |
+| List   | no        |
+| Object | yes       |
 
 ## Basic usage
 

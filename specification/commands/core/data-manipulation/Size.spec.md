@@ -2,11 +2,11 @@
 
 `Size` gives you the size of things
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | yes           |
-| List       | yes           |
-| Object     | yes           |
+| Input  | Supported |
+|--------|-----------|
+| Value  | yes       |
+| List   | yes       |
+| Object | yes       |
 
 [Size.schema.yaml](schema/Size.schema.yaml)
 

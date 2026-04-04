@@ -2,11 +2,11 @@
 
 `Stop http server` stops a running HTTP server by name.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | yes           |
-| List       | no            |
-| Object     | no            |
+| Input  | Supported |
+|--------|-----------|
+| Value  | yes       |
+| List   | no        |
+| Object | no        |
 
 [Stop http server.schema.yaml](schema/Stop%20http%20server.schema.yaml)
 

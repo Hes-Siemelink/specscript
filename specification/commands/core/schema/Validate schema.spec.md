@@ -2,11 +2,11 @@
 
 Validates data with JSON schema
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | no            |
-| List       | auto-iterate  |
-| Object     | yes           |
+| Input  | Supported    |
+|--------|--------------|
+| Value  | no           |
+| List   | auto-iterate |
+| Object | yes          |
 
 [Validate.schema.yaml](schema/ValidateSchema.schema.yaml)
 

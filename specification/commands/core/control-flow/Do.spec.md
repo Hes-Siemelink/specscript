@@ -2,12 +2,12 @@
 
 Use `Do` to execute one or more other commands.
 
-| Input      | Supported     |
-|------------|---------------|
-| Scalar     | no            |
-| List       | yes           |
-| Object     | yes           |
-| Raw input  | yes           |
+| Input     | Supported |
+|-----------|-----------|
+| Value     | no        |
+| List      | yes       |
+| Object    | yes       |
+| Raw input | yes       |
 
 [Do.schema.yaml](schema/Do.schema.yaml)
 
