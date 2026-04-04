@@ -235,7 +235,7 @@ c: three
 You also get it when calling a script from another script:
 
 ```yaml specscript
-Run script: hello.spec.yaml
+Run: hello.spec.yaml
 
 Expected output:
   a: one

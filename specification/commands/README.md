@@ -75,7 +75,7 @@ Overview of standard commands in SpecScript.
 * [Read file](core/files/Read%20file.spec.md) - Loads Yaml or Json from a file
 * [Write file](core/files/Write%20file.spec.md) - Saves content to a file as Yaml
 * [Temp file](core/files/Temp%20file.spec.md) - Saves content to a temporary file
-* [Run script](core/files/Run%20script.spec.md) - Runs another SpecScript file
+* [Run](core/files/Run.spec.md) - Runs another SpecScript file or inline script
 * [SpecScript files as commands](core/files/SpecScript%20files%20as%20commands.spec.md) - To run any SpecScript file in
   the same directory as a regular command
 

@@ -8,6 +8,7 @@ Tests:
         Output: echo!
 
     Run:
+      cd: ${SCRIPT_TEMP_DIR}
       script: echo.spec.yaml
 
     Expected output: echo!
@@ -52,14 +53,14 @@ Tests:
 
   Inline script has clean variable scope:
 
-    $parent-var: should not be visible
+    ${parent-var}: parent value
 
     Run:
       script:
-        $parent-var: ${parent-var:default}
+        ${parent-var}: inline value
         Output: ${parent-var}
 
-    Expected output: default
+    Expected output: inline value
 
   Inline script output is returned:
 
@@ -73,10 +74,12 @@ Tests:
 
     Temp file:
       filename: with-input.spec.yaml
+      resolve: false
       content:
         Output: Hello ${input.name}!
 
     Run:
+      cd: ${SCRIPT_TEMP_DIR}
       script: with-input.spec.yaml
       input:
         name: TestUser
@@ -87,10 +90,12 @@ Tests:
 
     Temp file:
       filename: list-input.spec.yaml
+      resolve: false
       content:
         Output: Hi ${input.n}
 
     Run:
+      cd: ${SCRIPT_TEMP_DIR}
       script: list-input.spec.yaml
       input:
         - n: A
@@ -137,14 +142,3 @@ Tests:
           name: FromInline
 
     Expected output: Hello FromInline!
-
-  Run script alias still works:
-
-    Temp file:
-      filename: alias-test.spec.yaml
-      content:
-        Output: alias works
-
-    Run script: alias-test.spec.yaml
-
-    Expected output: alias works

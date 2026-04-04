@@ -44,8 +44,8 @@ Tests:
       title: Parent goal
       description: Top-level goal
     As: ${parent}
-    Run script:
-      resource: ../goals/create.spec.yaml
+    Run:
+      script: ../goals/create.spec.yaml
       input:
         title: Child goal
         description: Sub-goal under parent

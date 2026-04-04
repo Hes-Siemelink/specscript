@@ -1,7 +1,7 @@
 # Get contact tests
 #
 # NOTE: Get and Delete via imports have a known Kotlin NPE bug
-# (same as goals-app). These tests use Run script as a workaround.
+# (same as goals-app). These tests use Run as a workaround.
 
 Script info: Get contact tests
 

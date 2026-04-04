@@ -83,6 +83,12 @@ export class DefaultContext implements ScriptContext {
   private _importedCommands?: Map<string, CommandHandler>
   private _scriptHome?: string
 
+  /**
+   * When set, command lookup falls back to this context for local file commands and imports.
+   * Used by Run's inline script form so the inline block sees the host script's commands.
+   */
+  parentCommandLookup?: DefaultContext
+
   constructor(options?: {
     scriptFile?: string
     interactive?: boolean
@@ -220,6 +226,15 @@ export class DefaultContext implements ScriptContext {
     const importedHandler = this.findImportedCommand(name)
     if (importedHandler) {
       return importedHandler
+    }
+
+    // 6. Delegate to parent context (for inline scripts that need host commands)
+    if (this.parentCommandLookup) {
+      try {
+        return this.parentCommandLookup.getCommandHandler(name)
+      } catch {
+        // Parent didn't have it either, fall through to error
+      }
     }
 
     throw new SpecScriptError(`Unknown command: ${name}`)
@@ -362,12 +377,12 @@ export function fileToCommandName(filename: string): string | undefined {
 
 /**
  * Registry for the runScriptFile function.
- * Set by run-script.ts at registration time to break the circular dependency.
+ * Set by run.ts at registration time to break the circular dependency.
  */
-let _runScriptFileFn: ((filePath: string, input: JsonValue, parentContext: ScriptContext) => Promise<JsonValue | undefined>) | undefined
+let _runFileFn: ((filePath: string, input: JsonValue, parentContext: ScriptContext) => Promise<JsonValue | undefined>) | undefined
 
-export function setRunScriptFileFn(fn: (filePath: string, input: JsonValue, parentContext: ScriptContext) => Promise<JsonValue | undefined>): void {
-  _runScriptFileFn = fn
+export function setRunFileFn(fn: (filePath: string, input: JsonValue, parentContext: ScriptContext) => Promise<JsonValue | undefined>): void {
+  _runFileFn = fn
 }
 
 /**
@@ -378,10 +393,10 @@ export function createFileCommandHandler(name: string, filePath: string): Comman
   return {
     name,
     async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
-      if (!_runScriptFileFn) {
-        throw new SpecScriptError('Run script command not registered. Register Level 3 commands before using local file commands.')
+      if (!_runFileFn) {
+        throw new SpecScriptError('Run command not registered. Register Level 3 commands before using local file commands.')
       }
-      return _runScriptFileFn(filePath, data, context)
+      return _runFileFn(filePath, data, context)
     },
   }
 }

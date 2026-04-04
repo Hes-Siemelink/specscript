@@ -22,7 +22,7 @@ import {
 import { JsonPatchCommand } from './json-patch.js'
 import { TempFileCommand, ReadFileCommand, WriteFileCommand } from './files.js'
 import { ShellCommand } from './shell.js'
-import { RunScriptCommand } from './run-script.js'
+import { RunCommand } from './run.js'
 import { CliCommand } from './cli-command.js'
 import { HttpServerCommand, HttpEndpointCommand, StopHttpServerCommand } from './http-server.js'
 import { GetCommand, PostCommand, PutCommand, PatchCommand, DeleteCommand, HttpRequestDefaultsCommand } from './http.js'
@@ -127,7 +127,7 @@ export function registerAllCommands(): void {
   registerCommand(ShellCommand)
 
   // Script composition
-  registerCommand(RunScriptCommand)
+  registerCommand(RunCommand)
 
   // CLI
   registerCommand(CliCommand)

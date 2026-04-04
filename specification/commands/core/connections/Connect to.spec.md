@@ -104,7 +104,7 @@ Code example: Connection inheritance when calling a script
 
 Connect to: SpecScript Samples
 
-Run script: inner-script.spec.yaml
+Run: inner-script.spec.yaml
 
 Expected output:
   - 1

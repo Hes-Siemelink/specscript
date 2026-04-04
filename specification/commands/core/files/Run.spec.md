@@ -12,9 +12,9 @@ Use **Run** to execute a SpecScript script file or inline script block with vari
 
 ## Basic usage
 
-Given a script file [`do-something.spec.yaml`](do-something.spec.yaml):
+Given a script file `do-something.spec.yaml`:
 
-```yaml file=do-something.spec.yaml
+```yaml temp-file=do-something.spec.yaml
 Output: Something done!
 ```
 
@@ -32,9 +32,9 @@ Expected output: Something done!
 
 Use the object form with `script` and `input` to pass input parameters.
 
-Given a script file [`create-greeting.spec.yaml`](create-greeting.spec.yaml):
+Given a script file `create-greeting.spec.yaml`:
 
-```yaml file=create-greeting.spec.yaml
+```yaml temp-file=create-greeting.spec.yaml
 Output: Hello ${input.name}!
 ```
 
@@ -112,7 +112,7 @@ Use `script` with an object value to run inline commands with variable isolation
 ```yaml specscript
 Code example: Run inline script
 
-$name: World
+${name}: World
 
 Run:
   script:
@@ -164,7 +164,3 @@ The `script` and `file` properties differ in how they resolve paths:
 | Value form (`Run: foo.yaml`) | Script's directory                  |
 | `script: foo.yaml`           | Script's directory (or `cd` if set) |
 | `file: /path/to/foo.yaml`    | Working directory (or `cd` if set)  |
-
-## Backward compatibility
-
-`Run script` is an alias for `Run`.

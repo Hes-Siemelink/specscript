@@ -182,7 +182,7 @@ If we call this script from another script, we get the result in the`${output}` 
 ```yaml specscript
 Code example: Get the output of another script
 
-Run script: simple-greeting.spec.yaml
+Run: simple-greeting.spec.yaml
 
 Expected output: Hello World!
 ```

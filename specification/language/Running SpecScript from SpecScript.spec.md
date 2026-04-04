@@ -18,7 +18,7 @@ for control flow — repeating a command, conditional blocks, grouping.
 ```yaml specscript
 Code example: Do shares variables
 
-$greeting: Hello
+${greeting}: Hello
 
 Do:
   - Print: ${greeting}
@@ -36,11 +36,11 @@ only `input` is passed explicitly. The host script's commands, imports, and conn
 ```yaml specscript
 Code example: Run creates a clean scope
 
-$greeting: Hello
+${greeting}: Hello
 
 Run:
   script:
-    $greeting: Goodbye
+    ${greeting}: Goodbye
     Output: ${greeting}
 
 Expected output: Goodbye
@@ -60,10 +60,22 @@ projects, or verifying that a script works standalone.
 ```yaml specscript
 Code example: Cli runs with full isolation
 
-Cli: spec --help
+Cli: --help
 
 Expected console output: |
   SpecScript -- Create instantly runnable specs using Yaml and Markdown!
+
+  Usage:
+     spec [global options] file | directory [command options]
+
+  Global options:
+    --help, -h           Print help on a script or directory and does not run anything
+    --no-output, -n      Suppress the output at the end of the script
+    --output-json, -j    Print the output at the end of the script in Json format
+    --interactive, -i    SpecScript may prompt for user input if it needs more information
+    --debug, -d          Run in debug mode. Prints stacktraces when an error occurs.
+    --test, -t           Run in test mode. Only tests will be executed.
+    --package-path, -p   Directory containing packages
 ```
 
 See **[Cli](../commands/core/shell/Cli.spec.md)** for the full reference.

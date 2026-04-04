@@ -262,7 +262,7 @@ Transports: `HTTP` (default, streaming), `SSE` (legacy), `STDIO`. See
 - **Shell**: [Shell](../commands/core/shell/Shell.spec.md) — run shell commands with `cd`, `env`, `capture output`
 - **Files**: [Read file](../commands/core/files/Read%20file.spec.md),
   [Write file](../commands/core/files/Write%20file.spec.md),
-  [Run script](../commands/core/files/Run%20script.spec.md) (`resource:` = relative to script, `file:` = relative to
+  [Run](../commands/core/files/Run.spec.md) (`script:` = relative to script, `file:` = relative to
   working directory)
 - **Scripts as commands**:
   [SpecScript files as commands](../commands/core/files/SpecScript%20files%20as%20commands.spec.md) — organize scripts

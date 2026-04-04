@@ -58,8 +58,8 @@ Tests:
           title: Parent
           description: Will be deleted
       - As: ${parent}
-      - Run script:
-          resource: ../goals/create.spec.yaml
+      - Run:
+          script: ../goals/create.spec.yaml
           input:
             title: Child
             description: Should be cascade deleted

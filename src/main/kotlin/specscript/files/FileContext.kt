@@ -98,6 +98,12 @@ class FileContext(
         return session.getOrPut("connect-to.overrides") { mutableMapOf<String, JsonNode>() } as MutableMap<String, JsonNode>
     }
 
+    /**
+     * When set, command lookup falls back to this context for local file commands and imports.
+     * Used by Run's inline script form so the inline block sees the host script's commands.
+     */
+    var parentCommandLookup: FileContext? = null
+
     private val localFileCommands: Map<String, SpecScriptFile> by lazy { findLocalFileCommands() }
     private val importedFileCommands: Map<String, SpecScriptFile> by lazy { findImportedCommands() }
     private val subdirectoryCommands: Map<String, DirectoryInfo> by lazy { findSubcommands() }
@@ -131,6 +137,15 @@ class FileContext(
         // Imported commands
         importedFileCommands[canonical]?.let { handler ->
             return handler
+        }
+
+        // Delegate to parent context (for inline scripts that need host commands)
+        parentCommandLookup?.let { parent ->
+            try {
+                return parent.getCommandHandler(command)
+            } catch (_: SpecScriptException) {
+                // Parent didn't have it either, fall through to error
+            }
         }
 
         // No handler found for command

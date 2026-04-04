@@ -30,34 +30,34 @@ Tests:
     Expected output:
       loaded: true
 
-  Run script from same directory (short way):
+  Run from same directory (short way):
 
-    Run script: greet.spec.yaml
+    Run: greet.spec.yaml
 
     Expected output: Hello world!
 
-  Run script from working directory (file property):
+  Run from working directory (file property):
 
-    Run script:
+    Run:
       file: specification/commands/core/files/tests/greet.spec.yaml
       input:
         name: Fay
 
     Expected output: Hello Fay!
 
-  Run script relative to script:
+  Run relative to script:
 
-    Run script:
+    Run:
       file: ${SCRIPT_HOME}/greet.spec.yaml
       input:
         name: Ray
 
     Expected output: Hello Ray!
 
-  Run script relative to script (resource property):
+  Run relative to script (script property):
 
-    Run script:
-      resource: greet.spec.yaml
+    Run:
+      script: greet.spec.yaml
       input:
         name: Ray
 

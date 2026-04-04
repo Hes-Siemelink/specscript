@@ -76,7 +76,7 @@ A collection of simple scripts
 ### Calling another script
 
 We showed above that you can call another SpecScript file with the
-**[Run script](../commands/core/files/Run%20script.spec.md)** command.
+**[Run](../commands/core/files/Run.spec.md)** command.
 
 Another way is to use it as a regular command. SpecScript reads all cli files in the same directory and makes them
 available as commands in the current script. While doing so, it transforms file names in "kebab-style" to "Sentence

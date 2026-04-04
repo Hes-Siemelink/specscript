@@ -10,7 +10,7 @@ import specscript.commands.errors.ErrorCommand
 import specscript.commands.errors.OnError
 import specscript.commands.errors.OnErrorType
 import specscript.commands.files.ReadFile
-import specscript.commands.files.RunScript
+import specscript.commands.files.Run
 import specscript.commands.files.TempFile
 import specscript.commands.files.WriteFile
 import specscript.commands.http.*
@@ -105,7 +105,7 @@ object CommandLibrary {
 
         // Call other scripts
         Cli,
-        RunScript,
+        Run,
         Shell,
 
         // HTTP client
