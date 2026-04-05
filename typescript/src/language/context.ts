@@ -40,7 +40,7 @@ export interface ScriptContext {
   readonly scriptHome: string
 
   /** Working directory for file resolution */
-  readonly workingDir: string
+  workingDir: string
 
   /** Temp directory for the script session (lazy-created) */
   readonly tempDir: string
@@ -148,6 +148,10 @@ export class DefaultContext implements ScriptContext {
 
   get workingDir(): string {
     return this._workingDir ?? process.cwd()
+  }
+
+  set workingDir(value: string) {
+    this._workingDir = value
   }
 
   get tempDir(): string {

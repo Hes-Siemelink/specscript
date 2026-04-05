@@ -41,6 +41,19 @@ export function resolvePath(
   throw new CommandFormatError('Expected a filename string or object with file/resource.')
 }
 
+// --- Cd ---
+
+export const CdCommand: CommandHandler = {
+  name: 'Cd',
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
+    if (!isString(data)) {
+      throw new CommandFormatError('Cd expects a string value')
+    }
+    context.workingDir = data
+    return undefined
+  },
+}
+
 // --- Temp file ---
 
 let tempFileCounter = 0

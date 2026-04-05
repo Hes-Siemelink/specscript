@@ -28,7 +28,7 @@ class FileContext(
     override val variables: MutableMap<String, JsonNode> = mutableMapOf(),
     override val session: MutableMap<String, Any?> = mutableMapOf(),
     override val interactive: Boolean = false,
-    override val workingDir: Path = Path.of("."),
+    override var workingDir: Path = Path.of("."),
     override val scriptHome: Path = scriptFile.let {
         if (it.isDirectory()) it else it.toAbsolutePath().normalize().parent
     }

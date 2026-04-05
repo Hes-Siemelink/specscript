@@ -72,6 +72,7 @@ Overview of standard commands in SpecScript.
 
 ### Files
 
+* [Cd](core/files/Cd.spec.md) - Changes the working directory
 * [Read file](core/files/Read%20file.spec.md) - Loads Yaml or Json from a file
 * [Write file](core/files/Write%20file.spec.md) - Saves content to a file as Yaml
 * [Temp file](core/files/Temp%20file.spec.md) - Saves content to a temporary file

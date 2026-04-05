@@ -1,11 +1,11 @@
 ---
 # specscript-frr8
 title: Stop running spec tests in temp directory
-status: todo
+status: in-progress
 type: task
 priority: normal
 created_at: 2026-04-04T05:33:37Z
-updated_at: 2026-04-04T06:51:32Z
+updated_at: 2026-04-05T05:49:17Z
 ---
 
 Disable the temp directory for markdown spec tests. Instead of creating a temp directory and setting it as both scriptDir and tempDir, run tests in the spec file's own directory. The user will fix failing docs/tests case-by-case.
@@ -35,7 +35,15 @@ These fail because temp-file writes to tempDir but scriptDir is now the real dir
 - [ ] `Mcp server.spec.md` > Tools as a list of scripts
 - [ ] `Mcp tool.spec.md` > Deriving metadata from script
 
-## Implementation
+## Implementation Plan
+
+- [ ] Create Cd command (changes context.workingDir)\n- [ ] Create schema file\n- [ ] Make workingDir mutable (var) in ScriptContext and FileContext
+- [ ] Make workingDir mutable (var) in ScriptContext and FileContext  
+- [ ] Register Cd in CommandLibrary
+- [ ] Inject Cd command in Script.kt for yaml specscript cd=dir blocks
+- [ ] Revert TestUtil temp directory removal (keep running in temp dir for now)
+
+## Previous Implementation
 
 cd= attribute approach was attempted and reverted — it introduced hacks into the core execution loop. See plan/proposals/spec-tests-without-temp-directory.md for findings and alternative approaches.
 
@@ -54,3 +62,9 @@ See plan/reports/intellij-test-integration.md for full findings. The issue remai
 ## Proposal
 
 The cd= attribute approach was reverted. A proposal for an official Run in command has been written at plan/proposals/run-in-command.md. This makes the directory-scoping a first-class language feature instead of a test infrastructure hack.
+
+## Progress
+
+Cd command implemented. Schema, command class, CommandLibrary registration, ScriptContext var change — all done. All tests pass (specification + unit).
+
+Remaining: inject Cd in Script.kt for yaml specscript cd=dir blocks, revert TestUtil.

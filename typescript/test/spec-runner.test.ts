@@ -142,6 +142,7 @@ const LEVEL_3_TEST_FILES = [
 
 /** Level 3 spec.md test files (relative to specification/) */
 const LEVEL_3_MD_FILES = [
+    'commands/core/files/Cd.spec.md',
     'commands/core/files/Read file.spec.md',
     'commands/core/files/Write file.spec.md',
     'commands/core/files/Temp file.spec.md',

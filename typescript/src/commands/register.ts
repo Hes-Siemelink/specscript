@@ -20,7 +20,7 @@ import {
   Add, AddTo, Append, Fields, Values, Size, Sort, Find, Replace,
 } from './data-manipulation.js'
 import { JsonPatchCommand } from './json-patch.js'
-import { TempFileCommand, ReadFileCommand, WriteFileCommand } from './files.js'
+import { CdCommand, TempFileCommand, ReadFileCommand, WriteFileCommand } from './files.js'
 import { ShellCommand } from './shell.js'
 import { RunCommand } from './run.js'
 import { CliCommand } from './cli-command.js'
@@ -119,6 +119,7 @@ export function registerAllCommands(): void {
   // --- Level 3 ---
 
   // File commands
+  registerCommand(CdCommand)
   registerCommand(TempFileCommand)
   registerCommand(ReadFileCommand)
   registerCommand(WriteFileCommand)

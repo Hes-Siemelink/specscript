@@ -12,7 +12,7 @@ interface ScriptContext {
     val session: MutableMap<String, Any?>
     val scriptFile: Path
     val scriptDir: Path
-    val workingDir: Path
+    var workingDir: Path
     val tempDir: Path
     val output: JsonNode?
     var error: SpecScriptCommandError?
