@@ -128,7 +128,8 @@ fun SpecScriptFile.getTestCases(): List<DynamicTest> {
         return emptyList()
     }
 
-    val context = FileContext(file)
+    val scriptDir = file.toAbsolutePath().normalize().parent
+    val context = FileContext(file, workingDir = scriptDir)
 
     if (hasNewTests) {
         return getTests(context)
@@ -169,7 +170,7 @@ private fun SpecScriptFile.getTests(context: ScriptContext): List<DynamicTest> {
 fun SpecScriptFile.getCodeExamplesAsTests(): List<DynamicTest> {
 
     val testDir = Files.createTempDirectory("specscript-")
-    testDir.toFile().deleteOnExit()
+    testDir.deleteOnShutdown()
     val scriptHome = file.toAbsolutePath().normalize().parent
     val context = FileContext(testDir, scriptHome = scriptHome)
     context.setTempDir(testDir)

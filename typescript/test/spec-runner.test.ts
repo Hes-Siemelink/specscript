@@ -280,7 +280,7 @@ function runStructuredTests(script: Script, fullPath: string): void {
 
     if (setupCommands !== undefined) {
         beforeAll(async () => {
-            sharedContext = new DefaultContext({scriptFile: fullPath, workingDir: SPECSCRIPT_HOME})
+            sharedContext = new DefaultContext({scriptFile: fullPath, workingDir: dirname(fullPath)})
             setupSilentCapture(sharedContext)
             const setupScript = Script.fromData(setupCommands!)
             await setupScript.run(sharedContext)
@@ -307,7 +307,7 @@ function runStructuredTests(script: Script, fullPath: string): void {
             it(testName, async () => {
                 const context = sharedContext ? sharedContext.clone() as DefaultContext : new DefaultContext({
                     scriptFile: fullPath,
-                    workingDir: SPECSCRIPT_HOME
+                    workingDir: dirname(fullPath)
                 })
                 setupSilentCapture(context)
                 const testScript = Script.fromData(testBody)
@@ -325,14 +325,14 @@ function runFlatTests(script: Script, relativePath: string, fullPath: string): v
 
     if (testCases.length === 1 && testCases[0].name === 'default') {
         it(relativePath, async () => {
-            const context = new DefaultContext({scriptFile: fullPath, workingDir: SPECSCRIPT_HOME})
+            const context = new DefaultContext({scriptFile: fullPath, workingDir: dirname(fullPath)})
             setupSilentCapture(context)
             await script.run(context)
         }, TEST_TIMEOUT)
     } else {
         for (const testCase of testCases) {
             it(testCase.name, async () => {
-                const context = new DefaultContext({scriptFile: fullPath, workingDir: SPECSCRIPT_HOME})
+                const context = new DefaultContext({scriptFile: fullPath, workingDir: dirname(fullPath)})
                 setupSilentCapture(context)
                 await testCase.script.run(context)
             }, TEST_TIMEOUT)

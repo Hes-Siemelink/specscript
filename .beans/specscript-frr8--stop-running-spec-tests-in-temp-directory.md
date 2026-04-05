@@ -1,11 +1,11 @@
 ---
 # specscript-frr8
 title: Stop running spec tests in temp directory
-status: in-progress
+status: completed
 type: task
 priority: normal
 created_at: 2026-04-04T05:33:37Z
-updated_at: 2026-04-05T05:49:17Z
+updated_at: 2026-04-05T11:17:53Z
 ---
 
 Disable the temp directory for markdown spec tests. Instead of creating a temp directory and setting it as both scriptDir and tempDir, run tests in the spec file's own directory. The user will fix failing docs/tests case-by-case.
@@ -68,3 +68,85 @@ The cd= attribute approach was reverted. A proposal for an official Run in comma
 Cd command implemented. Schema, command class, CommandLibrary registration, ScriptContext var change — all done. All tests pass (specification + unit).
 
 Remaining: inject Cd in Script.kt for yaml specscript cd=dir blocks, revert TestUtil.
+
+## Parked\n\nTestUtil no-temp-dir change parked on branch no-temp-dir-in-tests. Main keeps temp dir for now.
+
+
+## Analysis: spec --test from non-project-root (2026-04-05)
+
+### Empirical results
+
+From project root: 37 failures (all HTTP/sample-server-related)
+From /tmp: 45 failures (37 HTTP + 8 CWD-dependent)
+
+### The 8 CWD-dependent failures
+
+All come from .spec.yaml test files (NOT .spec.md Code Examples):
+
+**File: specification/commands/core/files/tests/Locate files in the same way.spec.yaml** (5 tests)
+- Read file from working directory (short way) - uses relative path from CWD
+- Read file from working directory (file property) - uses relative path from CWD  
+- Run from working directory (file property) - uses relative path from CWD
+- Shell command from current directory (short way) - uses relative path from CWD
+- Basic usage (Read file.spec.md) - hardcodes specification/commands/core/files/greeting.yaml
+
+**File: specification/commands/core/files/tests/Read file tests.spec.yaml** (2 tests)
+- Read file from disk - uses specification/commands/... relative path
+- Read file with variable syntax and multiple documents - same
+
+**File: specification/commands/core/shell/tests/Shell tests.spec.yaml** (1 test)
+- Run shell script - uses specification/commands/... relative path
+
+### Root cause
+
+These tests deliberately test workingDir-relative resolution (Read file: file property, Shell without cd). The workingDir defaults to Path.of(".") in FileContext.kt:31, which is the JVM's CWD. This works when CWD is the project root but fails from anywhere else.
+
+The .spec.md Code Example tests do NOT have this problem because the temp-dir hack makes scriptDir/tempDir self-contained, and all cli/shell blocks default to SCRIPT_HOME.
+
+### Architecture insight
+
+There are two separate concerns:
+1. Code Examples in .spec.md files use the temp-dir hack (scriptDir == tempDir). These work from any CWD.
+2. .spec.yaml test files use FileContext(file) directly, inheriting workingDir=Path.of("."). These 8 tests explicitly exercise CWD-relative resolution and REQUIRE CWD to be the project root.
+
+### Fix options
+
+Option A: Set workingDir to the project root in spec --test mode. Detect project root by walking up from the spec dir until finding a marker (build.gradle.kts, .git, etc). Fragile — ties tests to repo structure.
+
+Option B: Set workingDir to the spec file's parent dir in getTestCases(). Then change the 8 tests to use relative paths from their own directory instead of from project root. This is more correct — tests should be self-contained.
+
+Option C: Accept the status quo. These 8 tests intentionally test CWD-relative behavior. Running from project root is the expected contract, same as Gradle.
+
+
+
+## Fix Plan: Make spec --test CWD-independent
+
+- [x] Set workingDir to scriptDir in getTestCases() (TestUtil.kt)
+- [x] Fix Locate files in the same way.spec.yaml (5 tests)
+- [x] Fix Read file tests.spec.yaml (2 tests)
+- [x] Fix Shell tests.spec.yaml (1 test)
+- [x] Fix Read file.spec.md Basic usage example (uses CWD-relative path)
+- [x] Verify: spec --test from /tmp matches spec --test from project root
+
+## Verification Results
+
+spec --test produces identical results regardless of CWD:
+- From project root: 475 passed, 50 failed
+- From /tmp: 475 passed, 50 failed
+- diff of failure lists: empty (identical)
+
+The 50 pre-existing failures are:
+- 37 HTTP ConnectException (mock server not started in spec --test mode)
+- 13 SQLite native lib failures (platform issue)
+
+None of these are CWD-related.
+
+## TypeScript Implementation Complete (2026-04-05)
+
+All 3 TypeScript fixes applied and verified:
+
+1. **WriteFile (files.ts)**: Resolves filename against context.workingDir
+2. **Eager SCRIPT_TEMP_DIR (context.ts)**: Created in constructor; tempDir getter reads from variables map (allowing test runner override); single cleanup listener pattern avoids MaxListenersExceeded warning
+3. **Test runner (spec-runner.test.ts)**: Set workingDir to dirname(fullPath) for .spec.yaml tests (matching Kotlin's scriptDir approach)
+
+Results: 485 passed, 0 failed (was 21 failures before). The fixes also resolved 14 pre-existing SQLite/Store/Save test failures.

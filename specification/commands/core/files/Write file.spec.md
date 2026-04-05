@@ -18,10 +18,10 @@ Use **Write file** to store content in a file
 Code example: Write content to a file
 
 Write file:
-  file: out/greeting.txt
+  file: ${SCRIPT_TEMP_DIR}/greeting.txt
   content: Hello, World!
 
-Read file: out/greeting.txt
+Read file: ${SCRIPT_TEMP_DIR}/greeting.txt
 
 Expected output: Hello, World!
 ```
@@ -35,6 +35,6 @@ Code example: Save output
 
 Output: Hello, World!
 
-Write file: out/greeting.txt
+Write file: ${SCRIPT_TEMP_DIR}/greeting.txt
 ```
 

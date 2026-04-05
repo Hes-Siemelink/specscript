@@ -65,21 +65,15 @@ class FileContext(
         variables[SCRIPT_DIR_VARIABLE] = StringNode(scriptHome.toAbsolutePath().toString())
         variables[PWD_VARIABLE] = StringNode(System.getProperty("user.dir"))
         variables[ENV_VARIABLE] = Json.newObject(System.getenv())
+        variables[SCRIPT_TEMP_DIR_VARIABLE] = StringNode(
+            Files.createTempDirectory("specscript-").apply { deleteOnShutdown() }.toAbsolutePath().toString()
+        )
 
         PackageRegistry.autoPackagePath = PackageRegistry.findEnclosingPackageLibrary(scriptDir)
     }
 
     override val tempDir: Path
-        get() {
-            return if (variables.containsKey(SCRIPT_TEMP_DIR_VARIABLE)) {
-                Path.of(variables[SCRIPT_TEMP_DIR_VARIABLE]!!.stringValue())
-            } else {
-                Files.createTempDirectory("specscript-").apply {
-                    toFile().deleteOnExit()
-                    variables[SCRIPT_TEMP_DIR_VARIABLE] = StringNode(toAbsolutePath().toString())
-                }
-            }
-        }
+        get() = Path.of(variables[SCRIPT_TEMP_DIR_VARIABLE]!!.stringValue())
 
     fun setTempDir(dir: Path) {
         variables[SCRIPT_TEMP_DIR_VARIABLE] = StringNode(dir.toAbsolutePath().toString())
@@ -262,4 +256,10 @@ fun asCliCommand(commandName: String): String {
 
 fun String.removeSpecScriptExtension(): String {
     return removeSuffix(YAML_SPEC_EXTENSION).removeSuffix(MARKDOWN_SPEC_EXTENSION)
+}
+
+fun Path.deleteOnShutdown() {
+    Runtime.getRuntime().addShutdownHook(Thread {
+        toFile().deleteRecursively()
+    })
 }

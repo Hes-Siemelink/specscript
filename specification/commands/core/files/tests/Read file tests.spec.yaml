@@ -2,7 +2,7 @@ Tests:
 
   Read file from disk:
 
-    Read file: specification/commands/core/files/tests/content/plain.yaml
+    Read file: content/plain.yaml
 
     Expected output:
       loaded: true
@@ -16,7 +16,7 @@ Tests:
 
   Read file with variable syntax and multiple documents:
 
-    Read file: specification/commands/core/files/tests/content/multiple documents.yaml
+    Read file: content/multiple documents.yaml
     ${raw}: ${output}
 
     Assert that:

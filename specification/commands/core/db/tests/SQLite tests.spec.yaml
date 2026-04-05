@@ -2,10 +2,10 @@ Tests:
 
   Simple DB:
 
-    Shell: rm -f out/sample.db
+    Shell: rm -f ${SCRIPT_TEMP_DIR}/sample.db
 
     SQLite:
-      file: out/sample.db
+      file: ${SCRIPT_TEMP_DIR}/sample.db
       update:
         - create table users (id integer primary key, name text)
         - insert into users (name) values ('Alice')
@@ -17,10 +17,10 @@ Tests:
 
   Simple DB with query:
 
-    Shell: rm -f out/sample.db
+    Shell: rm -f ${SCRIPT_TEMP_DIR}/sample.db
 
     SQLite:
-      file: out/sample.db
+      file: ${SCRIPT_TEMP_DIR}/sample.db
       update:
         - create table users (id integer primary key, name text, age integer)
         - insert into users (name, age) values ('Alice', 16)
@@ -36,7 +36,7 @@ Tests:
 
   Create JSON DB:
 
-    Shell: rm -f out/json_sample.db
+    Shell: rm -f ${SCRIPT_TEMP_DIR}/json_sample.db
 
     Json:
       - greeting: Hello
@@ -46,7 +46,7 @@ Tests:
     As: ${data}
 
     SQLite:
-      file: out/json_sample.db
+      file: ${SCRIPT_TEMP_DIR}/json_sample.db
       update:
         - create table json_data (id integer primary key, data TEXT)
         - insert into json_data (data) values (json('${data}'))
@@ -61,7 +61,7 @@ Tests:
 
   Query multiple JSON entries:
 
-    Shell: rm -f out/json_sample.db
+    Shell: rm -f ${SCRIPT_TEMP_DIR}/json_sample.db
 
     Json:
       - greeting: Hello
@@ -71,7 +71,7 @@ Tests:
     As: ${data}
 
     SQLite:
-      file: out/json_sample.db
+      file: ${SCRIPT_TEMP_DIR}/json_sample.db
       update:
         - create table json_data (id integer primary key, data TEXT)
         - insert into json_data (data) values (json('${data}'))
@@ -92,10 +92,10 @@ Tests:
 
   JSON / YAML conversion:
 
-    Shell: rm -f out/sample.db
+    Shell: rm -f ${SCRIPT_TEMP_DIR}/sample.db
 
     SQLite:
-      file: out/sample.db
+      file: ${SCRIPT_TEMP_DIR}/sample.db
       update:
         - create table data (id integer primary key, json text)
         - "insert into data (json) values ('{\"hello\": \"world\"}')"
@@ -109,12 +109,12 @@ Tests:
 
   Prepared statement in update:
 
-    Shell: rm -f out/sample.db
+    Shell: rm -f ${SCRIPT_TEMP_DIR}/sample.db
 
     ${name}: O'Brien
 
     SQLite:
-      file: out/sample.db
+      file: ${SCRIPT_TEMP_DIR}/sample.db
       update:
         - create table users (id integer primary key, name text)
         - insert into users (name) values ('${name}')
@@ -125,12 +125,12 @@ Tests:
 
   Prepared statement in query:
 
-    Shell: rm -f out/sample.db
+    Shell: rm -f ${SCRIPT_TEMP_DIR}/sample.db
 
     ${name}: O'Brien
 
     SQLite:
-      file: out/sample.db
+      file: ${SCRIPT_TEMP_DIR}/sample.db
       update:
         - create table users (id integer primary key, name text)
         - insert into users (name) values ('${name}')
@@ -141,13 +141,13 @@ Tests:
 
   Prepared statement with multiple parameters:
 
-    Shell: rm -f out/sample.db
+    Shell: rm -f ${SCRIPT_TEMP_DIR}/sample.db
 
     ${first}: Alice
     ${last}: O'Malley
 
     SQLite:
-      file: out/sample.db
+      file: ${SCRIPT_TEMP_DIR}/sample.db
       update:
         - create table users (id integer primary key, first text, last text)
         - insert into users (first, last) values ('${first}', '${last}')
@@ -160,12 +160,12 @@ Tests:
 
   Unquoted variable is resolved inline:
 
-    Shell: rm -f out/sample.db
+    Shell: rm -f ${SCRIPT_TEMP_DIR}/sample.db
 
     ${table}: users
 
     SQLite:
-      file: out/sample.db
+      file: ${SCRIPT_TEMP_DIR}/sample.db
       update:
         - create table ${table} (id integer primary key, name text)
         - insert into ${table} (name) values ('Alice')

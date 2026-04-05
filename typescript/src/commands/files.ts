@@ -152,13 +152,16 @@ export const WriteFileCommand: CommandHandler = {
       throw new CommandFormatError('Write file: expected filename string or object with file/content')
     }
 
+    // Resolve against workingDir
+    const resolvedPath = resolve(context.workingDir, filename)
+
     // Create parent directories
-    const parentDir = dirname(filename)
+    const parentDir = dirname(resolvedPath)
     if (parentDir && parentDir !== '.' && !existsSync(parentDir)) {
       mkdirSync(parentDir, { recursive: true })
     }
 
-    writeFileSync(filename, toDisplayYaml(content))
+    writeFileSync(resolvedPath, toDisplayYaml(content))
     return undefined
   },
 }

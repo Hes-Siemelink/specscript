@@ -2,10 +2,10 @@ Tests:
 
   Select with where clause:
 
-    Shell: rm -f out/json_sample.db
+    Shell: rm -f ${SCRIPT_TEMP_DIR}/json_sample.db
 
     Store:
-      file: out/json_sample.db
+      file: ${SCRIPT_TEMP_DIR}/json_sample.db
       table: json_data
       insert:
         - greeting: Hello
@@ -21,10 +21,10 @@ Tests:
 
   Selected fields:
 
-    Shell: rm -f out/sample.db
+    Shell: rm -f ${SCRIPT_TEMP_DIR}/sample.db
 
     Store:
-      file: out/sample.db
+      file: ${SCRIPT_TEMP_DIR}/sample.db
       table: users
       insert:
         - name: Alice
@@ -44,10 +44,10 @@ Tests:
 
   Multiple selected fields:
 
-    Shell: rm -f out/multi_select.db
+    Shell: rm -f ${SCRIPT_TEMP_DIR}/multi_select.db
 
     Store:
-      file: out/multi_select.db
+      file: ${SCRIPT_TEMP_DIR}/multi_select.db
       table: users
       insert:
         - name: Alice

@@ -17,7 +17,7 @@ object WriteFile : CommandHandler("Write file", "core/files"), ValueHandler, Obj
         val content = context.output ?: throw SpecScriptCommandError(
             "Write file requires 'content' parameter or non-null output variable."
         )
-        writeFile(filename, content)
+        writeFile(filename, content, context)
 
         return null
     }
@@ -28,13 +28,13 @@ object WriteFile : CommandHandler("Write file", "core/files"), ValueHandler, Obj
             "Write file requires 'content' parameter or non-null output variable."
         )
 
-        writeFile(filename, content)
+        writeFile(filename, content, context)
 
         return null
     }
 
-    private fun writeFile(filename: String, content: JsonNode) {
-        val destinationFile = Path.of(filename)
+    private fun writeFile(filename: String, content: JsonNode, context: ScriptContext) {
+        val destinationFile = context.workingDir.resolve(filename)
         destinationFile.createParentDirectories()
         Files.writeString(destinationFile, content.toDisplayYaml())
     }

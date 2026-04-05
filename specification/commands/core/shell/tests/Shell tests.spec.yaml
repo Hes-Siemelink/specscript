@@ -7,7 +7,7 @@ Tests:
 
   Run shell script:
 
-    Shell: specification/commands/core/shell/tests/helloworld.sh
+    Shell: sh helloworld.sh
     Expected output: Hello World
 
   Run shell in same directory as script:

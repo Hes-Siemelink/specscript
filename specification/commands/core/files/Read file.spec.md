@@ -12,48 +12,31 @@
 
 ## Basic usage
 
-Use **Read file** to load a Yaml / Json file
-
-For example, we have a file `greeting.yaml` in the `specification/commands/core/files` directory:
+Use **Read file** to load a Yaml / Json file. The `resource` parameter resolves the file relative to the script's
+directory:
 
 ```yaml temp-file=greeting.yaml
 greeting: Hello
 language: en
 ```
 
-Then you can read it like this:
-
 ```yaml specscript
 Code example: Read Yaml from a file
 
-Read file: specification/commands/core/files/greeting.yaml
+Read file:
+  resource: greeting.yaml
 
 Expected output:
   greeting: Hello
   language: en
 ```
 
-## Reading a file in the same directory as your script
-
-Use `${SCRIPT_HOME}` to read a file next to your script:
+You can also use `${SCRIPT_HOME}` to build an explicit path:
 
 ```yaml specscript
 Code example: Read a local file
 
 Read file: ${SCRIPT_HOME}/greeting.yaml
-
-Expected output:
-  greeting: Hello
-  language: en    
-```
-
-Alternatively, you can use the `resource` parameter:
-
-```yaml specscript
-Code example: Read a local file with resource
-
-Read file:
-  resource: greeting.yaml
 
 Expected output:
   greeting: Hello

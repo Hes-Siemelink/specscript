@@ -2,10 +2,10 @@ Tests:
 
   SQLite defaults:
 
-    Shell: rm -f out/sample.db
+    Shell: rm -f ${SCRIPT_TEMP_DIR}/sample.db
 
     SQLite defaults:
-      file: out/sample.db
+      file: ${SCRIPT_TEMP_DIR}/sample.db
 
     SQLite:
       update:

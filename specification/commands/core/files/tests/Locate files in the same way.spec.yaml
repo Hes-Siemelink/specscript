@@ -2,7 +2,7 @@ Tests:
 
   Read file from working directory (short way):
 
-    Read file: specification/commands/core/files/tests/content/plain.yaml
+    Read file: content/plain.yaml
 
     Expected output:
       loaded: true
@@ -10,7 +10,7 @@ Tests:
   Read file from working directory (file property):
 
     Read file:
-      file: specification/commands/core/files/tests/content/plain.yaml
+      file: content/plain.yaml
 
     Expected output:
       loaded: true
@@ -39,7 +39,7 @@ Tests:
   Run from working directory (file property):
 
     Run:
-      file: specification/commands/core/files/tests/greet.spec.yaml
+      file: greet.spec.yaml
       input:
         name: Fay
 
@@ -71,7 +71,7 @@ Tests:
 
   Shell command from current directory (short way):
 
-    Shell: specification/commands/core/files/tests/hello.sh
+    Shell: sh hello.sh
 
     Expected output: Hello World
 

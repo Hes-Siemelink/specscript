@@ -1,5 +1,5 @@
 import { dirname, resolve } from 'node:path'
-import { mkdtempSync, readdirSync, statSync, readFileSync, existsSync } from 'node:fs'
+import { mkdtempSync, readdirSync, statSync, readFileSync, existsSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import type { JsonValue, JsonObject } from './types.js'
@@ -77,7 +77,6 @@ export class DefaultContext implements ScriptContext {
 
   private _scriptDir?: string
   private _workingDir?: string
-  private _tempDir?: string
   private _commandResolver?: (name: string) => CommandHandler
   private _types?: TypeRegistry
   private _importedCommands?: Map<string, CommandHandler>
@@ -113,6 +112,13 @@ export class DefaultContext implements ScriptContext {
     }
     if (!this.variables.has('PWD')) {
       this.variables.set('PWD', process.cwd())
+    }
+
+    // Create temp directory eagerly so ${SCRIPT_TEMP_DIR} is always available
+    if (!this.variables.has('SCRIPT_TEMP_DIR')) {
+      const tempDir = mkdtempSync(join(tmpdir(), 'specscript-'))
+      this.variables.set('SCRIPT_TEMP_DIR', tempDir)
+      deleteOnShutdown(tempDir)
     }
 
     // Auto-discover enclosing package library for search path
@@ -155,17 +161,7 @@ export class DefaultContext implements ScriptContext {
   }
 
   get tempDir(): string {
-    if (!this._tempDir) {
-      // Check if already set in variables (shared via parent)
-      const existing = this.variables.get('SCRIPT_TEMP_DIR')
-      if (typeof existing === 'string') {
-        this._tempDir = existing
-      } else {
-        this._tempDir = mkdtempSync(join(tmpdir(), 'specscript-'))
-        this.variables.set('SCRIPT_TEMP_DIR', this._tempDir)
-      }
-    }
-    return this._tempDir
+    return this.variables.get('SCRIPT_TEMP_DIR') as string
   }
 
   get types(): TypeRegistry {
@@ -319,7 +315,6 @@ export class DefaultContext implements ScriptContext {
       scriptHome: this._scriptHome,
     })
     ctx._scriptDir = this._scriptDir
-    ctx._tempDir = this._tempDir
     ctx._types = this._types
     ctx.error = this.error
     return ctx
@@ -402,5 +397,24 @@ export function createFileCommandHandler(name: string, filePath: string): Comman
       }
       return _runFileFn(filePath, data, context)
     },
+  }
+}
+
+const pendingCleanupDirs: Set<string> = new Set()
+let cleanupRegistered = false
+
+function deleteOnShutdown(dir: string): void {
+  pendingCleanupDirs.add(dir)
+  if (!cleanupRegistered) {
+    cleanupRegistered = true
+    process.on('exit', () => {
+      for (const d of pendingCleanupDirs) {
+        try {
+          rmSync(d, { recursive: true, force: true })
+        } catch {
+          // Best effort
+        }
+      }
+    })
   }
 }
