@@ -1,5 +1,6 @@
 package specscript.language
 
+import specscript.commands.files.Cd
 import specscript.commands.files.TempFile
 import specscript.commands.files.TempFileData
 import specscript.commands.scriptinfo.*
@@ -134,6 +135,9 @@ fun List<MarkdownBlock>.toScript(): Script {
             }
 
             SpecScriptYaml, HiddenSpecScriptYaml -> {
+                block.getOption("cd")?.let {
+                    commands.add(Command(Cd.name, StringNode(it)))
+                }
                 commands.addAll(toCommandList(block.getContent()))
             }
 

@@ -46,6 +46,10 @@ export function blocksToScript(blocks: MarkdownBlock[]): Script {
     }
 
     if (block.type === SpecScriptYaml || block.type === HiddenSpecScriptYaml) {
+      const cd = block.getOption('cd')
+      if (cd) {
+        commands.push({ name: 'Cd', data: cd })
+      }
       const content = block.getContent()
       if (content.trim()) {
         // getContent() never ends with \n, so block scalars need trailing \n stripped

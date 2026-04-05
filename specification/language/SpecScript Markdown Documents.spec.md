@@ -284,6 +284,44 @@ So that should be in the output:
 Script is running
 ```
 
+## Setting the working directory
+
+Set the working directory for commands in the block with the `cd` option. This prepends a
+[**Cd**](../commands/core/files/Cd.spec.md) command to the block. The `cd` option is invisible in rendered Markdown.
+
+Suppose we have a file `greeting.yaml` in the temp directory:
+
+```yaml temp-file=greeting.yaml
+message: Hello!
+```
+
+We can set the current directory on the ` ```yaml specscript` block with the `cd=` parameter. This makes the example
+easier to read because it hides the distracting `${SCRIPT_TEMP_DIR}` from view.
+
+#### Markdown format
+
+~~~markdown
+Read the file we just created
+
+```yaml specscript cd=${SCRIPT_TEMP_DIR}
+Read file: greeting.yaml
+
+Expected output:
+  message: Hello!
+```
+~~~
+
+#### Display example
+
+Read the file we just created
+
+```yaml specscript cd=${SCRIPT_TEMP_DIR}
+Read file: greeting.yaml
+
+Expected output:
+  message: Hello!
+```
+
 ## Helper files
 
 If you need to have a helper file for the example to work, you can define one with ` ```yaml
@@ -335,7 +373,8 @@ Expected output:
 
 ### Variables inside temp files
 
-When using the ` ```yaml temp-file` directive, the contents are stored as-is and variables inside the file are not resolved.
+When using the ` ```yaml temp-file` directive, the contents are stored as-is and variables inside the file are not
+resolved.
 
 If you need dynamic content with variables and eval blocks, use the `resolve=[boolean]` option.
 
