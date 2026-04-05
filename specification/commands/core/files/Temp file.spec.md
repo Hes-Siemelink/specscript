@@ -40,7 +40,7 @@ You can also specify a name for the temporary file. The file will be created in 
 Code example: Temporary file with specified name
 
 Temp file:
-  filename: myfile.txt
+  name: myfile.txt
   content: |
     My content
 
@@ -76,7 +76,7 @@ property to control this.
 Code example: Temporary file with variables not resolved
 
 Temp file:
-  filename: goodbye.spec.yaml
+  name: goodbye.spec.yaml
   resolve: false
   content:
     Output: Adios ${input.name}

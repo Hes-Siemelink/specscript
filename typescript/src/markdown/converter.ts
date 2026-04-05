@@ -119,14 +119,14 @@ export function blocksToScript(blocks: MarkdownBlock[]): Script {
     }
 
     if (block.type === YamlFile) {
-      // YamlFile → Temp file command with filename from file= option
-      const filename = block.getOption('temp-file')
+      // YamlFile → Temp file command with name from temp-file= option
+      const name = block.getOption('temp-file')
       const resolveOpt = block.getOption('resolve')
       const content = block.getContent()
       // Markdown yaml file blocks default resolve to false (unlike the YAML command default of true)
       const resolveFlag = resolveOpt !== undefined ? resolveOpt === 'true' : false
-      if (filename) {
-        commands.push({ name: 'Temp file', data: { filename, content, resolve: resolveFlag } })
+      if (name) {
+        commands.push({ name: 'Temp file', data: { name, content, resolve: resolveFlag } })
       } else {
         commands.push({ name: 'Temp file', data: { content, resolve: resolveFlag } })
       }

@@ -76,7 +76,7 @@ script's directory.
 Code example: Run with cd
 
 Temp file:
-  filename: hello.spec.yaml
+  name: hello.spec.yaml
   content:
     Output: Hello from temp!
 
@@ -95,7 +95,7 @@ Expected output: Hello from temp!
 Code example: Run a temp file
 
 Temp file:
-  filename: greetings.spec.yaml
+  name: greetings.spec.yaml
   content:
     Output: Greetings!
 
@@ -129,7 +129,7 @@ Combine with `cd` to run inline commands that operate on files in a different di
 Code example: Run inline script with cd
 
 Temp file:
-  filename: data.txt
+  name: data.txt
   content: some data
 
 Run:

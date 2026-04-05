@@ -17,7 +17,7 @@ Given a file `data.yaml` in the temp directory:
 
 ```yaml specscript
 Temp file:
-  filename: data.yaml
+  name: data.yaml
   content:
     greeting: Hello
 ```

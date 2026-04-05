@@ -57,7 +57,7 @@ script. this is where temp files are stored.
 Code example: Shell command with SCRIPT_TEMP_DIR
 
 Temp file:
-  filename: temp.txt
+  name: temp.txt
   content: Hello
 
 Shell:

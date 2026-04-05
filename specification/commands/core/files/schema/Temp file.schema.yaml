@@ -5,7 +5,7 @@ oneOf:
 
   - type: object
     properties:
-      filename:
+      name:
         type: string
       resolve:
         type: boolean

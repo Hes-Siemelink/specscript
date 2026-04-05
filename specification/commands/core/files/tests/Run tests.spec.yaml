@@ -3,7 +3,7 @@ Tests:
   Run with script property is equivalent to value form:
 
     Temp file:
-      filename: echo.spec.yaml
+      name: echo.spec.yaml
       content:
         Output: echo!
 
@@ -16,7 +16,7 @@ Tests:
   Run with file and absolute path:
 
     Temp file:
-      filename: abs.spec.yaml
+      name: abs.spec.yaml
       content:
         Output: absolute!
 
@@ -28,7 +28,7 @@ Tests:
   Run with cd and script resolves relative to cd:
 
     Temp file:
-      filename: in-temp.spec.yaml
+      name: in-temp.spec.yaml
       content:
         Output: from temp dir
 
@@ -41,7 +41,7 @@ Tests:
   Run with cd and file resolves relative to cd:
 
     Temp file:
-      filename: in-temp2.spec.yaml
+      name: in-temp2.spec.yaml
       content:
         Output: also from temp
 
@@ -73,7 +73,7 @@ Tests:
   Run with input passes input to script:
 
     Temp file:
-      filename: with-input.spec.yaml
+      name: with-input.spec.yaml
       resolve: false
       content:
         Output: Hello ${input.name}!
@@ -89,7 +89,7 @@ Tests:
   Run with list input iterates:
 
     Temp file:
-      filename: list-input.spec.yaml
+      name: list-input.spec.yaml
       resolve: false
       content:
         Output: Hi ${input.n}
@@ -108,7 +108,7 @@ Tests:
   Inline script with cd can read files from cd directory:
 
     Temp file:
-      filename: readable.txt
+      name: readable.txt
       content: file content here
 
     Run:
@@ -121,7 +121,7 @@ Tests:
   Run with subdirectory path:
 
     Temp file:
-      filename: sub/nested.spec.yaml
+      name: sub/nested.spec.yaml
       content:
         Output: nested!
 

@@ -71,19 +71,19 @@ export const TempFileCommand: CommandHandler = {
     }
 
     if (isObject(data)) {
-      const filename = isString(data.filename) ? data.filename : undefined
+      const name = isString(data.name) ? data.name : undefined
       const shouldResolve = data.resolve !== false
       const contentRaw = 'content' in data ? data.content : null
 
       const content = shouldResolve ? await resolveData(contentRaw ?? null, context) : (contentRaw ?? null)
-      const filePath = filename
-        ? createNamedTempFile(context, filename)
+      const filePath = name
+        ? createNamedTempFile(context, name)
         : createTempFile(context)
       writeFileSync(filePath, toDisplayYaml(content))
       return filePath
     }
 
-    throw new CommandFormatError('Temp file: expected string content or object with content/filename')
+    throw new CommandFormatError('Temp file: expected string content or object with content/name')
   },
 }
 

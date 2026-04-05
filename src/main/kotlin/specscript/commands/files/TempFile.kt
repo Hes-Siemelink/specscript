@@ -36,7 +36,7 @@ object TempFile : CommandHandler("Temp file", "core/files"), ObjectHandler, Valu
         } else {
             content
         }
-        val destinationFile = tempFile(context.tempDir, options.filename)
+        val destinationFile = tempFile(context.tempDir, options.name)
 
         Files.writeString(destinationFile, copy.toDisplayYaml())
 
@@ -62,7 +62,7 @@ object TempFile : CommandHandler("Temp file", "core/files"), ObjectHandler, Valu
 }
 
 data class TempFileData(
-    val filename: String? = null,
+    val name: String? = null,
     val resolve: Boolean = true,
     val content: JsonNode
 )

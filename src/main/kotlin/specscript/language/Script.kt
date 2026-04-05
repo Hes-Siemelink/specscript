@@ -143,7 +143,7 @@ fun List<MarkdownBlock>.toScript(): Script {
 
             YamlFile -> {
                 val data = TempFileData(
-                    filename = block.getOption("temp-file"),
+                    name = block.getOption("temp-file"),
                     content = StringNode(block.getContent()),
                     resolve = block.getOption("resolve")?.toBoolean() ?: false,
                 )
