@@ -19,9 +19,14 @@ object Confirm : CommandHandler("Confirm", "core/user-interaction"), ValueHandle
     val yes = StringNode("Yes")
     val no = StringNode("No")
 
-    override fun execute(data: ValueNode, context: ScriptContext): JsonNode {
+    override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
 
         val question = data.toDisplayYaml()
+
+        // Skip confirmation if running in non-interactive mode
+        if (!context.interactive) {
+            return null
+        }
 
         val confirmationDialog = ParameterData(
             description = question,
@@ -34,6 +39,6 @@ object Confirm : CommandHandler("Confirm", "core/user-interaction"), ValueHandle
             throw SpecScriptCommandError("No confirmation -- action canceled.")
         }
 
-        return answer
+        return null
     }
 }

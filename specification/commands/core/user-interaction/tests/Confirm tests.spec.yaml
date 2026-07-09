@@ -1,0 +1,10 @@
+Tests:
+
+  Confirm has no output:
+
+    Output: Unchanged
+
+    Confirm: Are you sure?
+
+    Expected output: Unchanged
+

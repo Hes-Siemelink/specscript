@@ -547,6 +547,7 @@ const LEVEL_5_TEST_FILES = [
     'commands/core/types/tests/Type tests.spec.yaml',
     'commands/core/user-interaction/tests/Prompt tests.spec.yaml',
     'commands/core/user-interaction/tests/Prompt object tests.spec.yaml',
+    'commands/core/user-interaction/tests/Confirm tests.spec.yaml',
 ]
 
 /** Level 5 spec.md test files (relative to specification/) */

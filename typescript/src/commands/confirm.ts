@@ -18,6 +18,9 @@ export const ConfirmCommand: CommandHandler = {
   async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     if (!isString(data)) return undefined
 
+    // Skip confirmation in non-interactive mode
+    if (!context.interactive) return undefined
+
     const message = data
     const choices: Choice[] = [
       { displayName: 'Yes', value: 'Yes' },
@@ -36,6 +39,6 @@ export const ConfirmCommand: CommandHandler = {
       )
     }
 
-    return answer
+    return undefined
   },
 }

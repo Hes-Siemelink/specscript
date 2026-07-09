@@ -1,7 +1,11 @@
 # On my mind
 
-* Stop running tests in the temp directory
-* Move some commands out of core (db, http)
+* Confirm should only run in interactive mode
+    * Clean up semantics of test runs
+    * Also test typescript
+* Plugin system with MCP
+    * Move out of core: DB, LLM query
+* Error reporting during tests and execution
 
 # Spotlight
 
