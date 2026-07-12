@@ -108,10 +108,16 @@ class TestCaseRunner(
             }
         }
 
+        // XXX Review error reporting and check if this is the best place to print it
+        val f = failure
+        if (f is SpecScriptCommandError) {
+            System.err.println(f.data.toDisplayYaml().replace("\\n", "\n"))
+        }
+
         if (failure != null) {
             if (stdout.isNotBlank()) System.out.print(stdout)
             if (stderr.isNotBlank()) System.err.print(stderr)
-            throw failure!!
+            throw failure
         }
     }
 }

@@ -28,32 +28,57 @@ const val ANSWERS_SESSION_KEY = "answers"
  */
 object UserPrompt {
 
-    fun prompt(message: String, default: String = "", password: Boolean = false, answers: AnswersMap = emptyMap(), interactive: Boolean = false): JsonNode {
-        val recorded = answers[message]
-        if (recorded != null) {
-            return testPrompt(message, password, recorded)
+    fun prompt(
+        message: String,
+        default: String = "",
+        password: Boolean = false,
+        answers: AnswersMap = emptyMap(),
+        interactive: Boolean = false
+    ): JsonNode {
+
+        // Use prerecorded answer
+        val answer = answers[message]
+        if (answer != null) {
+            println(PromptDisplayReference.input(message, answer.toDisplayYaml(), password))
+            return answer
         }
 
+        // Supply default
         if (default.isNotEmpty()) {
-            println(KInquirer.renderInput(message, default))
+            println(PromptDisplayReference.input(message, default, password))
             return StringNode(default)
         }
 
+        // Interactive prompt, if allowed
         if (interactive) {
-            return realPrompt(message, default, password)
+            return interactivePrompt(message, default, password)
         }
 
+        // XXX Should we raise an error here? There is no answer and we are in non-interactive mode
+        // Or just return null... and let client deal with it (just shifting the problem)
+        // Where this fails:
+        // - code-examples/basic/prompt.spec.md is supposed to run interactively without any prerecorded answer or defaults
+        // Solution: detect that we run in 'test mode' and then return something like '"placeholder interactive answer for tests". (The thing we invented 'Answers' for...)
         return StringNode("")
     }
 
-    fun select(message: String, choices: List<Choice<JsonNode>>, multiple: Boolean = false, answers: AnswersMap = emptyMap(), interactive: Boolean = false): JsonNode {
-        val recorded = answers[message]
-        if (recorded != null) {
-            return testSelect(message, choices, multiple, recorded)
+    fun select(
+        message: String,
+        choices: List<Choice<JsonNode>>,
+        multiple: Boolean = false,
+        answers: AnswersMap = emptyMap(),
+        interactive: Boolean = false
+    ): JsonNode {
+
+        // Use prerecorded answer
+        val answer = answers[message]
+        if (answer != null) {
+            return simulatedSelect(message, choices, multiple, answer)
         }
 
+        // Interactive prompt, if allowed
         if (interactive) {
-            return realSelect(message, choices, multiple)
+            return interactiveSelect(message, choices, multiple)
         }
 
         throw SpecScriptException("No prerecorded answer for '$message' and not in interactive mode")
@@ -61,7 +86,7 @@ object UserPrompt {
 
     // -- Real prompts (KInquirer) --
 
-    private fun realPrompt(message: String, default: String, password: Boolean): JsonNode {
+    private fun interactivePrompt(message: String, default: String, password: Boolean): JsonNode {
         val answer = if (password) {
             KInquirer.promptInputPassword(message, default)
         } else {
@@ -70,7 +95,7 @@ object UserPrompt {
         return StringNode(answer)
     }
 
-    private fun realSelect(message: String, choices: List<Choice<JsonNode>>, multiple: Boolean): JsonNode =
+    private fun interactiveSelect(message: String, choices: List<Choice<JsonNode>>, multiple: Boolean): JsonNode =
         if (multiple) {
             val answers = KInquirer.promptCheckboxObject(message, choices, minNumOfSelection = 1)
             answers.toJsonNode()
@@ -80,80 +105,76 @@ object UserPrompt {
 
     // -- Test prompts (simulated output from recorded answers) --
 
-    private fun testPrompt(message: String, password: Boolean, answer: JsonNode): JsonNode {
-        if (password) {
-            println(KInquirer.renderInput(message, "********"))
+    private fun simulatedSelect(
+        message: String,
+        choices: List<Choice<JsonNode>>,
+        multiple: Boolean,
+        selectedAnswer: JsonNode
+    ): JsonNode {
+
+        val set = if (multiple) {
+            selectedAnswer.toList().map { it.stringValue() }
         } else {
-            println(KInquirer.renderInput(message, answer.toDisplayYaml()))
+            setOf(selectedAnswer.stringValue())
         }
-        return answer
-    }
 
-    private fun testSelect(message: String, choices: List<Choice<JsonNode>>, multiple: Boolean, selectedAnswer: JsonNode): JsonNode {
-
-        if (multiple) {
-            val set = selectedAnswer.toList().map { it.stringValue() }
-            val selection = choices.filter {
-                set.contains(it.displayName)
-            }
-            val result = Json.newArray()
-            selection.forEach { result.add(it.data) }
-
-            println(KInquirer.renderInput(message, choices, selection))
-
-            return result
-
-        } else {
-            val selection = choices.find {
-                selectedAnswer.stringValue() == it.displayName
-            } ?: throw SpecScriptException("Prerecorded choice '$selectedAnswer' not found in provided list.")
-
-            println(KInquirer.renderInput(message, choices, listOf(selection)))
-
-            return selection.data
+        val selection = choices.filter {
+            set.contains(it.displayName)
         }
+        val result = Json.newArray()
+        selection.forEach { result.add(it.data) }
+
+        println(PromptDisplayReference.choice(message, choices, selection))
+
+        return if (multiple) result else result.first()
     }
 }
 
+object PromptDisplayReference {
 
-private fun KInquirer.renderInput(message: String, answer: String = ""): String = buildString {
+    fun input(message: String, answer: String = "", password: Boolean): String = buildString {
 
-    append("? ")
-    append(message)
-    append(" ")
+        val displayAnswer = if (password) "********" else answer
 
-    if (answer.isNotEmpty()) {
-        append(answer)
-    }
-}
-
-// ? Select ingredients
-//  ❯ ◉ Apple
-//    ◯ Banana
-//    ◯ Cake
-//    ◯ Drizzle
-private fun KInquirer.renderInput(
-    message: String,
-    choices: List<Choice<JsonNode>>,
-    answer: List<Choice<JsonNode>>
-): String =
-    buildString {
         append("? ")
         append(message)
-        append(" \n")
-        var first = true
-        choices.forEach { choice ->
-            if (answer.contains(choice)) {
-                if (first) {
-                    append(" ❯ ◉ ")
-                    first = false
-                } else {
-                    append("   ◉ ")
-                }
-            } else {
-                append("   ◯ ")
-            }
-            append(choice.displayName)
-            append("\n")
+        append(" ")
+
+        if (displayAnswer.isNotEmpty()) {
+            append(displayAnswer)
         }
     }
+
+    // ? Select ingredients
+    //  ❯ ◉ Apple
+    //    ◯ Banana
+    //    ◯ Cake
+    //    ◯ Drizzle
+    fun choice(
+        message: String,
+        choices: List<Choice<JsonNode>>,
+        answer: List<Choice<JsonNode>>
+    ): String =
+        buildString {
+            append("? ")
+            append(message)
+            append(" \n")
+            var first = true
+            choices.forEach { choice ->
+                if (answer.contains(choice)) {
+                    if (first) {
+                        append(" ❯ ◉ ")
+                        first = false
+                    } else {
+                        append("   ◉ ")
+                    }
+                } else {
+                    append("   ◯ ")
+                }
+                append(choice.displayName)
+                append("\n")
+            }
+        }
+
+}
+
