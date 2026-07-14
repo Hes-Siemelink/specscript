@@ -54,12 +54,7 @@ object UserPrompt {
             return interactivePrompt(message, default, password)
         }
 
-        // XXX Should we raise an error here? There is no answer and we are in non-interactive mode
-        // Or just return null... and let client deal with it (just shifting the problem)
-        // Where this fails:
-        // - code-examples/basic/prompt.spec.md is supposed to run interactively without any prerecorded answer or defaults
-        // Solution: detect that we run in 'test mode' and then return something like '"placeholder interactive answer for tests". (The thing we invented 'Answers' for...)
-        return StringNode("")
+        return StringNode("[default answer in non-interactive mode]")
     }
 
     fun select(
