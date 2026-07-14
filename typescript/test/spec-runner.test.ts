@@ -10,8 +10,7 @@ import {setupSilentCapture} from '../src/language/stdout-capture.js'
 import type {JsonValue} from '../src/language/types.js'
 import {isObject} from '../src/language/types.js'
 import {parseYamlCommands} from '../src/util/yaml.js'
-import {scanMarkdown} from '../src/markdown/scanner.js'
-import {getTestTitle, splitMarkdownSections} from '../src/markdown/converter.js'
+import {getTestTitle, parseMarkdownScripts} from '../src/markdown/converter.js'
 import {stopAllServers} from '../src/commands/http-server.js'
 import {stopAllMcpServers} from '../src/commands/mcp-server.js'
 
@@ -77,7 +76,7 @@ function discoverSpecFiles(): string[] {
     const files: string[] = []
     for (const e of entries) {
         if (!e.isFile()) continue
-        const abs = join(e.parentPath ?? (e as unknown as {path: string}).path, e.name)
+        const abs = join(e.parentPath, e.name)
         const rel = relative(SPEC_DIR, abs).split(sep).join('/')
         if (!rel.endsWith('.spec.yaml') && !rel.endsWith('.spec.md')) continue
         if (EXCLUDED_PATHS.has(rel)) continue
@@ -112,6 +111,22 @@ function runSpecYaml(relativePath: string, commands: Command[]): void {
     }
 }
 
+/**
+ * Register a single spec test with vitest, honoring SKIP_TESTS and applying silent capture.
+ * Shared by the Tests: and legacy Test case: formats.
+ */
+function registerScriptTest(name: string, script: Script, createContext: () => DefaultContext): void {
+    if (SKIP_TESTS.has(name)) {
+        it.skip(name, () => {})
+        return
+    }
+    it(name, async () => {
+        const context = createContext()
+        setupSilentCapture(context)
+        await script.run(context)
+    }, TEST_TIMEOUT)
+}
+
 function runStructuredTests(script: Script, fullPath: string): void {
     let setupCommands: JsonValue | undefined
     let testsData: JsonValue | undefined
@@ -144,44 +159,31 @@ function runStructuredTests(script: Script, fullPath: string): void {
 
     if (testsData && isObject(testsData)) {
         for (const [testName, testBody] of Object.entries(testsData)) {
-            if (SKIP_TESTS.has(testName)) {
-                it.skip(testName, () => {})
-                continue
-            }
-            it(testName, async () => {
-                const context = sharedContext
-                    ? (sharedContext.clone() as DefaultContext)
+            registerScriptTest(testName, Script.fromData(testBody as JsonValue), () =>
+                sharedContext
+                    ? (sharedContext!.clone() as DefaultContext)
                     : new DefaultContext({scriptFile: fullPath, workingDir: dirname(fullPath)})
-                setupSilentCapture(context)
-                await Script.fromData(testBody as JsonValue).run(context)
-            }, TEST_TIMEOUT)
+            )
         }
     }
 }
 
 function runFlatTests(script: Script, relativePath: string, fullPath: string): void {
     const testCases = script.splitTestCases()
+    const createContext = () => new DefaultContext({scriptFile: fullPath, workingDir: dirname(fullPath)})
+
     if (testCases.length === 1 && testCases[0].name === 'default') {
-        it(relativePath, async () => {
-            const context = new DefaultContext({scriptFile: fullPath, workingDir: dirname(fullPath)})
-            setupSilentCapture(context)
-            await script.run(context)
-        }, TEST_TIMEOUT)
+        registerScriptTest(relativePath, script, createContext)
     } else {
         for (const testCase of testCases) {
-            it(testCase.name, async () => {
-                const context = new DefaultContext({scriptFile: fullPath, workingDir: dirname(fullPath)})
-                setupSilentCapture(context)
-                await testCase.script.run(context)
-            }, TEST_TIMEOUT)
+            registerScriptTest(testCase.name, testCase.script, createContext)
         }
     }
 }
 
 function runMarkdownFile(fullPath: string, displayPath: string, scriptHome: string): void {
     const content = readFileSync(fullPath, 'utf-8')
-    const blocks = scanMarkdown(content)
-    const scripts = splitMarkdownSections(blocks)
+    const scripts = parseMarkdownScripts(content)
 
     const testDir = mkdtempSync(join(tmpdir(), 'specscript-'))
     const sharedContext = new DefaultContext({
@@ -195,20 +197,11 @@ function runMarkdownFile(fullPath: string, displayPath: string, scriptHome: stri
     let hasTests = false
 
     for (const script of scripts) {
-        if (script.commands.length === 0) continue
-
         const title = getTestTitle(script)
         const qualifiedTitle = `${displayPath} > ${title}`
 
         if (SKIP_TESTS.has(title) || SKIP_TESTS.has(qualifiedTitle)) {
             it.skip(title, () => {})
-            hasTests = true
-            continue
-        }
-
-        // Skip sections with blocks the scanner flagged as unsupported (e.g. shell cli, yaml file=)
-        if (script.skippedBlocks.length > 0) {
-            it.skip(`${title} (needs ${script.skippedBlocks[0]})`, () => {})
             hasTests = true
             continue
         }

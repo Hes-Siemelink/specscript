@@ -6,8 +6,7 @@ import { DefaultContext } from './language/context.js'
 import type { ScriptContext } from './language/context.js'
 import { registerAllCommands } from './commands/register.js'
 import { setupStdoutCapture, setupSilentCapture } from './language/stdout-capture.js'
-import { scanMarkdown } from './markdown/scanner.js'
-import { splitMarkdownSections } from './markdown/converter.js'
+import { parseMarkdownScripts } from './markdown/converter.js'
 import { toDisplayYaml } from './util/yaml.js'
 import { parseYamlCommands } from './util/yaml.js'
 import type { JsonValue, JsonObject, Command } from './language/types.js'
@@ -716,11 +715,7 @@ export async function executeFile(
   }
 
   if (filePath.endsWith('.spec.md')) {
-    const blocks = scanMarkdown(content)
-    const scripts = splitMarkdownSections(blocks)
-
-    for (const script of scripts) {
-      if (script.commands.length === 0) continue
+    for (const script of parseMarkdownScripts(content)) {
       const captured = context.session.get('capturedOutput') as string[] | undefined
       if (captured) captured.length = 0
       await script.run(context)
@@ -857,9 +852,6 @@ async function runMarkdownTests(
   report: TestReport,
   log: (...args: unknown[]) => void,
 ): Promise<void> {
-  const blocks = scanMarkdown(content)
-  const scripts = splitMarkdownSections(blocks)
-
   const testDir = mkdtempSync(join(tmpdir(), 'specscript-'))
   const context = new DefaultContext({
     scriptFile: join(testDir, 'test.spec.md'),
@@ -870,9 +862,7 @@ async function runMarkdownTests(
   context.variables.set('SCRIPT_TEMP_DIR', testDir)
   setupSilentCapture(context)
 
-  for (const script of scripts) {
-    if (script.commands.length === 0) continue
-
+  for (const script of parseMarkdownScripts(content)) {
     const name = script.title ?? getTestNameFromScript(script) ?? 'Untitled'
     await runSingleTest(name, script, context, report)
   }

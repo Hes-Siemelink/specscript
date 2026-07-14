@@ -1,4 +1,4 @@
-import type { JsonValue, JsonObject } from './types.js'
+import type { JsonValue } from './types.js'
 import type { ScriptContext } from './context.js'
 
 /**

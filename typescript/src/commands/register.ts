@@ -43,13 +43,11 @@ import {
 import { SQLiteCommand, SQLiteDefaultsCommand, StoreCommand } from './sqlite.js'
 
 /**
- * Register all commands (Level 0 + Level 1 + Level 3 + Level 4).
+ * Register all commands.
  */
 export function registerAllCommands(): void {
   // Register YAML display formatter for variable interpolation
   setDisplayFormatter(toDisplayYaml)
-
-  // --- Level 0 ---
 
   // Util
   registerCommand(Print)
@@ -83,8 +81,6 @@ export function registerAllCommands(): void {
   registerCommand(BeforeAllTests)
   registerCommand(AfterAllTests)
 
-  // --- Level 1 ---
-
   // Control flow
   registerCommand(If)
   registerCommand(When)
@@ -116,8 +112,6 @@ export function registerAllCommands(): void {
   registerCommand(Base64Decode)
   registerCommand(WaitCommand)
 
-  // --- Level 3 ---
-
   // File commands
   registerCommand(CdCommand)
   registerCommand(TempFileCommand)
@@ -138,8 +132,6 @@ export function registerAllCommands(): void {
   registerCommand(SQLiteDefaultsCommand)
   registerCommand(StoreCommand)
 
-  // --- Level 4 ---
-
   // HTTP server
   registerCommand(HttpServerCommand)
   registerCommand(HttpEndpointCommand)
@@ -152,8 +144,6 @@ export function registerAllCommands(): void {
   registerCommand(PatchCommand)
   registerCommand(DeleteCommand)
   registerCommand(HttpRequestDefaultsCommand)
-
-  // --- Level 5 ---
 
   // Schema / Types
   registerCommand(CheckTypeCommand)
@@ -172,8 +162,6 @@ export function registerAllCommands(): void {
   registerCommand(CreateCredentialsCommand)
   registerCommand(DeleteCredentialsCommand)
 
-  // --- Level 6 ---
-
   // MCP server
   registerCommand(McpServerCommand)
   registerCommand(McpToolCommand)
@@ -183,12 +171,4 @@ export function registerAllCommands(): void {
   registerCommand(McpReadResourceCommand)
   registerCommand(McpGetPromptCommand)
   registerCommand(StopMcpServerCommand)
-}
-
-/**
- * Register Level 0 commands only (backward compatibility).
- * @deprecated Use registerAllCommands() instead.
- */
-export function registerLevel0Commands(): void {
-  registerAllCommands()
 }

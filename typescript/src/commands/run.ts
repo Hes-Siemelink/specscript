@@ -10,8 +10,7 @@ import { DefaultContext, setRunFileFn } from '../language/context.js'
 import type { JsonValue } from '../language/types.js'
 import { isObject, isString, isArray, CommandFormatError } from '../language/types.js'
 import { Script } from '../language/script.js'
-import { scanMarkdown } from '../markdown/scanner.js'
-import { splitMarkdownSections } from '../markdown/converter.js'
+import { parseMarkdownScripts } from '../markdown/converter.js'
 import { propagateConnectionOverrides } from './connect-to.js'
 import { resolve as resolveData } from '../language/command-execution.js'
 
@@ -117,11 +116,7 @@ async function runYamlScript(content: string, context: ScriptContext): Promise<J
 }
 
 async function runMarkdownScript(content: string, context: ScriptContext): Promise<JsonValue | undefined> {
-  const blocks = scanMarkdown(content)
-  const scripts = splitMarkdownSections(blocks)
-
-  for (const script of scripts) {
-    if (script.commands.length === 0) continue
+  for (const script of parseMarkdownScripts(content)) {
     await script.run(context)
   }
 
@@ -132,32 +127,7 @@ async function runMarkdownScript(content: string, context: ScriptContext): Promi
  * Run an inline script in a child context with variable isolation.
  */
 async function runInlineScript(scriptNode: JsonValue, cdPath: string | undefined, context: ScriptContext): Promise<JsonValue | undefined> {
-  const scriptDir = cdPath ?? context.scriptDir
-  const workingDir = cdPath ?? context.workingDir
-
-  const childContext = new DefaultContext({
-    scriptFile: scriptDir,
-    interactive: context.interactive,
-    session: context.session as Map<string, unknown>,
-    workingDir,
-  })
-  // Fresh variables — no parent variables leak in
-  childContext.variables = new Map()
-  childContext.variables.set('SCRIPT_HOME', scriptDir)
-  childContext.variables.set('PWD', process.cwd())
-  const envObj: Record<string, JsonValue> = {}
-  for (const [key, value] of Object.entries(process.env)) {
-    if (value !== undefined) envObj[key] = value
-  }
-  childContext.variables.set('env', envObj)
-  childContext.variables.set('input', {})
-
-  // Delegate command lookup to the parent context so inline scripts
-  // can use the host script's local commands, imports, and connections
-  if (context instanceof DefaultContext) {
-    childContext.parentCommandLookup = context
-  }
-
+  const childContext = (context as DefaultContext).createInlineChildContext(cdPath)
   const script = Script.fromData(scriptNode)
   return script.run(childContext)
 }

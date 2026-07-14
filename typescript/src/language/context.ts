@@ -1,6 +1,5 @@
 import { dirname, resolve } from 'node:path'
-import { mkdtempSync, readdirSync, statSync, readFileSync, existsSync, rmSync } from 'node:fs'
-import { tmpdir } from 'node:os'
+import { readdirSync, statSync, readFileSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
 import type { JsonValue, JsonObject } from './types.js'
 import { SpecScriptCommandError, SpecScriptError } from './types.js'
@@ -8,6 +7,7 @@ import type { CommandHandler } from './command-handler.js'
 import { getCommandHandler, canonicalName } from './command-handler.js'
 import { createAssignment } from '../commands/variables.js'
 import { parseYaml } from '../util/yaml.js'
+import { createTempDir } from '../util/temp-dir.js'
 import { TypeRegistry, loadTypes } from './type-system.js'
 import { parseImports } from './package-import.js'
 import * as PackageRegistry from './package-registry.js'
@@ -116,9 +116,7 @@ export class DefaultContext implements ScriptContext {
 
     // Create temp directory eagerly so ${SCRIPT_TEMP_DIR} is always available
     if (!this.variables.has('SCRIPT_TEMP_DIR')) {
-      const tempDir = mkdtempSync(join(tmpdir(), 'specscript-'))
-      this.variables.set('SCRIPT_TEMP_DIR', tempDir)
-      deleteOnShutdown(tempDir)
+      this.variables.set('SCRIPT_TEMP_DIR', createTempDir())
     }
 
     // Auto-discover enclosing package library for search path
@@ -333,6 +331,36 @@ export class DefaultContext implements ScriptContext {
     child.variables.set('input', input)
     return child
   }
+
+  /**
+   * Create a child context for Run's inline script form.
+   * Gets fresh variables (no parent variable leakage) scoped to cdPath (or this context's
+   * directories), but delegates command lookup back to this context so the inline block can
+   * use the host script's local file commands, imports, and connections.
+   */
+  createInlineChildContext(cdPath?: string): DefaultContext {
+    const scriptDir = cdPath ?? this.scriptDir
+    const workingDir = cdPath ?? this.workingDir
+
+    const child = new DefaultContext({
+      scriptFile: scriptDir,
+      interactive: this.interactive,
+      session: this.session,
+      workingDir,
+    })
+    child.variables = new Map()
+    child.variables.set('SCRIPT_HOME', scriptDir)
+    child.variables.set('PWD', process.cwd())
+    const envObj: Record<string, JsonValue> = {}
+    for (const [key, value] of Object.entries(process.env)) {
+      if (value !== undefined) envObj[key] = value
+    }
+    child.variables.set('env', envObj)
+    child.variables.set('input', {})
+    child.parentCommandLookup = this
+
+    return child
+  }
 }
 
 /**
@@ -376,7 +404,8 @@ export function fileToCommandName(filename: string): string | undefined {
 
 /**
  * Registry for the runScriptFile function.
- * Set by run.ts at registration time to break the circular dependency.
+ * run.ts calls setRunFileFn() at registration time so context.ts can call into it without
+ * importing run.ts directly, which would create a circular dependency (run.ts imports context.ts).
  */
 let _runFileFn: ((filePath: string, input: JsonValue, parentContext: ScriptContext) => Promise<JsonValue | undefined>) | undefined
 
@@ -393,28 +422,9 @@ export function createFileCommandHandler(name: string, filePath: string): Comman
     name,
     async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
       if (!_runFileFn) {
-        throw new SpecScriptError('Run command not registered. Register Level 3 commands before using local file commands.')
+        throw new SpecScriptError('Run command not registered.')
       }
       return _runFileFn(filePath, data, context)
     },
-  }
-}
-
-const pendingCleanupDirs: Set<string> = new Set()
-let cleanupRegistered = false
-
-function deleteOnShutdown(dir: string): void {
-  pendingCleanupDirs.add(dir)
-  if (!cleanupRegistered) {
-    cleanupRegistered = true
-    process.on('exit', () => {
-      for (const d of pendingCleanupDirs) {
-        try {
-          rmSync(d, { recursive: true, force: true })
-        } catch {
-          // Best effort
-        }
-      }
-    })
   }
 }

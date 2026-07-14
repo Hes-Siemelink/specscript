@@ -1,9 +1,9 @@
 import {
-  type JsonValue, type JsonObject,
-  isObject, isArray,
+  type JsonValue,
+  isArray,
   deepCopy,
   SpecScriptError, SpecScriptCommandError, SpecScriptInternalError,
-  CommandFormatError, Break,
+  Break,
 } from './types.js'
 import type { CommandHandler } from './command-handler.js'
 import type { ScriptContext } from './context.js'

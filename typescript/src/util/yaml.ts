@@ -8,14 +8,24 @@ import type { Command } from '../language/types.js'
  *
  * Unlike standard YAML-to-JSON conversion, this preserves duplicate keys
  * in mappings as separate commands (SpecScript's command model).
- *
- * When `stripBlockScalarNewlines` is true, trailing newlines are stripped from
- * YAML block scalar (| and >) string values. This matches Jackson's behavior
- * when parsing YAML from a string that doesn't end with a newline (e.g.,
- * content from Markdown getContent()). The JS yaml library always appends a
- * trailing newline to block scalar values regardless of source termination.
  */
-export function parseYamlCommands(content: string, stripBlockScalarNewlines: boolean = false): Command[] {
+export function parseYamlCommands(content: string): Command[] {
+  return parseYamlCommandsWithOptions(content, false)
+}
+
+/**
+ * Parse YAML commands from Markdown-sourced content (e.g. a block's getContent()).
+ *
+ * Strips trailing newlines from YAML block scalar (| and >) string values to match
+ * Jackson's behavior when parsing YAML that doesn't end with a newline. The JS yaml
+ * library always appends a trailing newline to block scalar values regardless of
+ * source termination, but getContent() never ends with one.
+ */
+export function parseMarkdownYamlCommands(content: string): Command[] {
+  return parseYamlCommandsWithOptions(content, true)
+}
+
+function parseYamlCommandsWithOptions(content: string, stripBlockScalarNewlines: boolean): Command[] {
   const docs = parseAllDocuments(content, { uniqueKeys: false })
   const commands: Command[] = []
 
