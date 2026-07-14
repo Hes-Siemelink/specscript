@@ -6,6 +6,8 @@ $ref: "/v1/commands/core/Conditions.schema.yaml#/definitions/ConditionBase"
 required:
   - then
 properties:
-  then: object
-  else: object
+  then:
+    type: object
+  else:
+    type: object
 unevaluatedProperties: false
