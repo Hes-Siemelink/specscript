@@ -323,7 +323,6 @@ levels:
     requires: [3]
     commands:
       - Prompt
-      - Prompt object
       - Confirm
       - Connect to
       - Credentials
@@ -337,10 +336,8 @@ levels:
     spec-files:
       # User interaction
       - commands/core/user-interaction/Prompt.spec.md
-      - commands/core/user-interaction/Prompt object.spec.md
       - commands/core/user-interaction/Confirm.spec.md
       - commands/core/user-interaction/tests/Prompt tests.spec.yaml
-      - commands/core/user-interaction/tests/Prompt object tests.spec.yaml
 
       # Connections
       - commands/core/connections/Connect to.spec.md

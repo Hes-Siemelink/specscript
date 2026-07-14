@@ -57,11 +57,6 @@ POST:
 
 Run it:
 
-<!-- answers
-Your name: Hes
-Select a language: English
--->
-
 ```cli cd=${SCRIPT_TEMP_DIR}
 spec greetings.spec.yaml --name Hes --language English
 ```

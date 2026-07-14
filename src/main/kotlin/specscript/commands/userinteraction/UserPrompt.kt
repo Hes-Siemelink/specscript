@@ -6,7 +6,6 @@ import com.github.kinquirer.components.promptInput
 import com.github.kinquirer.components.promptInputPassword
 import com.github.kinquirer.components.promptListObject
 import com.github.kinquirer.core.Choice
-import specscript.language.SpecScriptException
 import specscript.util.Json
 import specscript.util.toDisplayYaml
 import specscript.util.toJsonNode
@@ -17,24 +16,23 @@ typealias AnswersMap = Map<String, JsonNode>
 
 const val ANSWERS_SESSION_KEY = "answers"
 
+const val NON_INTERACTIVE_PLACEHOLDER = "[default answer in non-interactive mode]"
+
 /**
  * User prompt functions for interactive input.
  *
- * Resolution order for text prompts:
- * - Recorded answer → default value → interactive prompt (if allowed) → empty string
- *
- * Resolution order for select prompts:
- * - Recorded answer → interactive prompt (if allowed) → error
+ * Each function resolves a recorded answer or an interactive prompt, returning `null` when neither
+ * applies. The default value and missing-value policy are applied by the caller (the resolver).
  */
 object UserPrompt {
 
     fun prompt(
         message: String,
-        default: String = "",
+        defaultHint: String = "",
         password: Boolean = false,
         answers: AnswersMap = emptyMap(),
         interactive: Boolean = false
-    ): JsonNode {
+    ): JsonNode? {
 
         // Use prerecorded answer
         val answer = answers[message]
@@ -43,18 +41,12 @@ object UserPrompt {
             return answer
         }
 
-        // Supply default
-        if (default.isNotEmpty()) {
-            println(PromptDisplayReference.input(message, default, password))
-            return StringNode(default)
-        }
-
-        // Interactive prompt, if allowed
+        // Interactive prompt, if allowed (default value is a hint, pre-filled in the prompt)
         if (interactive) {
-            return interactivePrompt(message, default, password)
+            return interactivePrompt(message, defaultHint, password)
         }
 
-        return StringNode("[default answer in non-interactive mode]")
+        return null
     }
 
     fun select(
@@ -63,7 +55,7 @@ object UserPrompt {
         multiple: Boolean = false,
         answers: AnswersMap = emptyMap(),
         interactive: Boolean = false
-    ): JsonNode {
+    ): JsonNode? {
 
         // Use prerecorded answer
         val answer = answers[message]
@@ -76,7 +68,7 @@ object UserPrompt {
             return interactiveSelect(message, choices, multiple)
         }
 
-        throw SpecScriptException("No prerecorded answer for '$message' and not in interactive mode")
+        return null
     }
 
     // -- Real prompts (KInquirer) --
@@ -172,4 +164,3 @@ object PromptDisplayReference {
         }
 
 }
-

@@ -33,7 +33,7 @@ object Confirm : CommandHandler("Confirm", "core/user-interaction"), ValueHandle
             enum = listOf(yes, no)
         )
 
-        val answer = confirmationDialog.prompt(answers = context.getAnswers(), interactive = context.interactive)
+        val answer = confirmationDialog.ask(confirmationDialog.question(), context.getAnswers(), context.interactive)
 
         if (answer == no) {
             throw SpecScriptCommandError("No confirmation -- action canceled.")

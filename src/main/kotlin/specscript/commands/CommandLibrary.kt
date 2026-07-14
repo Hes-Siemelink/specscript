@@ -26,7 +26,6 @@ import specscript.commands.shell.Shell
 import specscript.commands.testing.*
 import specscript.commands.userinteraction.Confirm
 import specscript.commands.userinteraction.Prompt
-import specscript.commands.userinteraction.PromptObject
 import specscript.commands.util.*
 import specscript.commands.variables.As
 import specscript.commands.variables.Output
@@ -76,7 +75,6 @@ object CommandLibrary {
         // User interaction
         Confirm,
         Prompt,
-        PromptObject,
 
         // Data manipulation
         Add,

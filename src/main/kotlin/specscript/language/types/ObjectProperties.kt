@@ -26,7 +26,7 @@ fun ObjectDefinition.toDisplayString(): String {
     val width = keySummaries.maxOf { it.length }
     properties.entries.zip(keySummaries).forEach { (entry, keySummary) ->
         builder.append("  ")
-        builder.append(infoString(keySummary, entry.value.description ?: "", width))
+        builder.append(infoString(keySummary, entry.value.description ?: entry.value.title ?: "", width))
         builder.appendLine()
     }
 

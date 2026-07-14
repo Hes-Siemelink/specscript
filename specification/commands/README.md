@@ -54,8 +54,6 @@ Overview of standard commands in SpecScript.
 
 * [Confirm](core/user-interaction/Confirm.spec.md) - Asks the user for confirmation
 * [Prompt](core/user-interaction/Prompt.spec.md) - Asks the user for input with an interactive prompt
-* [Prompt object](core/user-interaction/Prompt%20object.spec.md) - Asks multiple questions and stores the answers into
-  one object
 
 ### Util
 

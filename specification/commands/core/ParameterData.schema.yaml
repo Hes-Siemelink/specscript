@@ -6,27 +6,35 @@ oneOf:
 
   - type: object
     properties:
+      "title":
+        type: string
       "description":
         type: string
       "default": { }
-      "type": string
-      "secret":
-        type: boolean
-      "select":
-        enum:
-          - single
-          - multiple
-        default: single
+      "type":
+        type: string
+      "format":
+        type: string
       "enum":
         type: array
-      "display property":
-        type: string
-      "value property":
-        type: string
-      "condition":
+      "items":
+        $ref: "/v1/commands/core/ParameterData.schema.yaml"
+      "properties":
+        type: object
+        additionalProperties:
+          $ref: "/v1/commands/core/ParameterData.schema.yaml"
+      "required":
+        type: array
+        items:
+          type: string
+      "x-condition":
         $ref: "/v1/commands/core/Conditions.schema.yaml"
-      "short option":
+      "x-env":
         type: string
-      "env":
+      "x-title-property":
+        type: string
+      "x-value-property":
+        type: string
+      "x-short-option":
         type: string
     additionalProperties: false

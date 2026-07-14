@@ -121,12 +121,14 @@ Print: ${input.greeting}, ${input.name}!
 
 You can specify various properties on the input parameters.
 
-* `description`: The question to ask the user.
-* `default`: The default value
-* `type`: The type of input: `select one`, `select multiple` or `password`
+* `title`: The question to ask the user (falls back to `description`, then the property name).
+* `description`: Help text, also shown in CLI help.
+* `default`: The default value.
+* `format`: `password` masks the input.
 * `enum`: a list of objects to choose from. This will render a dropdown list when presented to the user.
-* `display property`: the field to display when passing a list of objects to `enum`
-* `value property`: if passing an object to `enum`, the result will be the value of this field and not the entire object
+* `type: array` with `items.enum`: allow selecting multiple items.
+* `x-title-property`: the field to display when passing a list of objects to `enum`.
+* `x-value-property`: if passing an object to `enum`, the result will be the value of this field and not the entire object.
 
 For example:
 
@@ -167,14 +169,14 @@ Input parameters:
 
   property-A:
     description: What is the value for A?
-    condition:
+    x-condition:
       item: ${input.switch}
       equals: a
     default: Ananas
 
   property-B:
     description: What is the value for B?
-    condition:
+    x-condition:
       item: ${input.switch}
       equals: b
     default: Bologna

@@ -12,14 +12,14 @@ As: ${folders}
 Prompt:
   description: Select the folder you want to move
   enum: ${folders}
-  display property: title
+  x-title-property: title
 As: ${source}
 
 ---
 Prompt:
   description: Select the new parent folder
   enum: ${folders}
-  display property: title
+  x-title-property: title
 As: ${target}
 
 ---

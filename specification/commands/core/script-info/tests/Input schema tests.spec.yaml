@@ -115,13 +115,13 @@ Tests:
         fast-option:
           description: Fast mode setting
           default: turbo
-          condition:
+          x-condition:
             item: ${input.mode}
             equals: fast
         slow-option:
           description: Slow mode setting
           default: crawl
-          condition:
+          x-condition:
             item: ${input.mode}
             equals: slow
 
@@ -143,12 +143,12 @@ Tests:
           default: fast
         fast-option:
           default: turbo
-          condition:
+          x-condition:
             item: ${input.mode}
             equals: fast
         slow-option:
           default: crawl
-          condition:
+          x-condition:
             item: ${input.mode}
             equals: slow
 

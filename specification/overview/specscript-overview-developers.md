@@ -55,7 +55,7 @@ Input schema:
 - **HTTP server**: Spin up an embedded HTTP server backed by SpecScript handlers -- useful for mocking APIs.
 - **MCP server**: Define Model Context Protocol servers with tools, resources, and prompts, all backed by SpecScript.
 - **Testing**: `Tests` blocks, `Assert that`, `Assert equals`, `Expected output`. Tests run with `spec --test`.
-- **User interaction**: `Prompt` (text, enum, multi-select), `Confirm`, `Prompt object`.
+- **User interaction**: `Prompt` (text, enum, multi-select, multiple questions), `Confirm`.
 - **File I/O, shell commands, credentials management, data manipulation** (find, sort, add, JSON patch, etc.).
 
 ## The Executable Documentation Model

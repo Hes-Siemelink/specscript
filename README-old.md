@@ -34,11 +34,6 @@ POST:
 
 Run the script with this command:
 
-<!-- answers
-Your name: Hes
-Select a language: English
--->
-
 ```cli cd=${SCRIPT_TEMP_DIR}
 ./spec greetings.spec.yaml --name Hes --language English
 ```
@@ -239,11 +234,11 @@ Input schema:
   properties:
     user:
       description: Username
-      short option: u
+      x-short-option: u
     password:
       description: Password
-      secret: true
-      short option: p
+      format: password
+      x-short-option: p
 ```
 
 ```cli cd=${SCRIPT_TEMP_DIR}
@@ -311,13 +306,13 @@ Output:
 
 You will be presented with an interactive selector when running it:
 
-```cli cd=${SCRIPT_TEMP_DIR}
-./spec prompt.spec.yaml
-```
-
 <!-- answers
 Select a language: English
 -->
+
+```cli cd=${SCRIPT_TEMP_DIR}
+./spec prompt.spec.yaml
+```
 
 ```output
 ? Select a language 

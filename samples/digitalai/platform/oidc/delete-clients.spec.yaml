@@ -7,9 +7,10 @@ GET: /identity/clients/
 
 Prompt:
   description: Select clients to delete
-  enum: ${output.clients}
-  select: multiple
-  display property: name
+  type: array
+  items:
+    enum: ${output.clients}
+    x-title-property: name
 
 For each:
   Print: DELETE /identity/v1/clients/${item.id}

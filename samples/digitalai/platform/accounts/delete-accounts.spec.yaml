@@ -15,9 +15,10 @@ Search accounts:
 
 Prompt:
   description: Select account to delete
-  enum: ${output}
-  select: multiple
-  display property: name
+  type: array
+  items:
+    enum: ${output}
+    x-title-property: name
 
 For each:
   Print: DELETE /identity/v1/accounts/${item.id}

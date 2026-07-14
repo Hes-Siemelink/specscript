@@ -22,7 +22,7 @@ ${runtimes}: ${output.agent_runtimes}
 Prompt:
   description: Select runtime to add
   enum: ${runtimes}
-  display property: name
+  x-title-property: name
 As: ${runtime}
 
 ---

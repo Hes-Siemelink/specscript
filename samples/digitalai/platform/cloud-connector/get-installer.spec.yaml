@@ -17,7 +17,7 @@ If:
 Prompt:
   description: Select Cloud Connector
   enum: ${cloud_connectors}
-  display property: name
+  x-title-property: name
 As: ${cloud_connector}
 
 ---

@@ -210,13 +210,13 @@ Input schema:
     property-A:
       description: What is the value for A?
       default: Ananas
-      condition:
+      x-condition:
         item: ${input.switch}
         equals: a
     property-B:
       description: What is the value for B?
       default: Bologna
-      condition:
+      x-condition:
         item: ${input.switch}
         equals: b
 
@@ -229,7 +229,7 @@ Assert equals:
 
 ## Environment variables
 
-Use `env` to get the input value from an environment variable.
+Use `x-env` to get the input value from an environment variable.
 
 ```yaml specscript
 Code example: Input schema with environment variable
@@ -239,7 +239,7 @@ Input schema:
   properties:
     home:
       description: Home directory
-      env: HOME
+      x-env: HOME
 
 Assert that:
   not:
@@ -256,7 +256,7 @@ Input schema:
   properties:
     greeting:
       description: Greeting message
-      env: SPECSCRIPT_TEST_GREETING_NOT_SET
+      x-env: SPECSCRIPT_TEST_GREETING_NOT_SET
       default: Hello
 
 Assert equals:
@@ -272,12 +272,16 @@ precedence over environment variables.
 `Input schema` uses the JSON Schema structure (`type: object` with `properties`) but only supports a narrow subset of
 the full JSON Schema specification. The following keywords are recognized on each property:
 
-- `description` — description text, used for prompts and CLI help
+- `title` — the prompt question (falls back to `description`, then the property name)
+- `description` — description text, used for CLI help and as help text alongside `title`
 - `default` — default value when no input is provided
 - `enum` — list of allowed values, renders as a selection list in interactive mode
-- `type` — informational only, not used for validation (e.g. `string`, `integer`)
-- `env` — environment variable name to read the value from (SpecScript extension)
-- `condition` — SpecScript-specific extension for conditional properties (not part of JSON Schema)
+- `type` — `string` (default), `array` (multiple selection, with choices under `items`), or `object`
+- `items` — for `type: array`, holds the `enum` of choices
+- `format` — `password` masks the input (informational otherwise)
+- `x-env` — environment variable name to read the value from (SpecScript extension)
+- `x-condition` — SpecScript extension for conditional properties (not part of JSON Schema)
+- `x-title-property` / `x-value-property` — field to display / return when choosing from a list of objects
 
 At the top level, only these keywords are supported:
 

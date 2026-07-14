@@ -14,4 +14,4 @@ GET: /search?q=${input.name}&type=artist
 Prompt:
   description: Select artist
   enum: ${output.artists.items}
-  display property: name
+  x-title-property: name

@@ -7,19 +7,26 @@ import tools.jackson.databind.JsonNode
 
 abstract class PropertyDefinition {
 
+    abstract val title: String?
     abstract val description: String?
     abstract val optional: Boolean
     abstract val default: JsonNode?
     abstract val type: TypeSpecification?
-    abstract val secret: Boolean
+    abstract val format: String?
     abstract val enum: List<JsonNode>?
-    abstract val select: String
-    abstract val displayProperty: String?
+    abstract val items: PropertyDefinition?
+    abstract val titleProperty: String?
     abstract val valueProperty: String?
     abstract val condition: JsonNode?
     abstract val shortOption: String?
     abstract val env: String?
 
+    /** The question shown to the user. Falls back to the description, then the given name. */
+    fun question(name: String? = null): String = title ?: description ?: name ?: ""
+
+    val isPassword: Boolean get() = format == "password"
+
+    val isMultiple: Boolean get() = type?.name == "array"
 
     fun conditionValid(): Boolean {
         condition?.let { node ->
@@ -34,23 +41,28 @@ abstract class PropertyDefinition {
  */
 data class PropertySpecification(
 
+    override val title: String? = null,
     override val description: String? = null,
     override val optional: Boolean = false,
     override val default: JsonNode? = null,
     override val type: TypeSpecification? = null,
-    override val secret: Boolean = false,
+    override val format: String? = null,
     override val enum: List<JsonNode>? = null,
-    override val select: String = "single",
+    override val items: PropertySpecification? = null,
 
-    @JsonProperty("display property")
-    override val displayProperty: String? = null,
+    @JsonProperty("x-title-property")
+    override val titleProperty: String? = null,
 
-    @JsonProperty("value property")
+    @JsonProperty("x-value-property")
     override val valueProperty: String? = null,
+
+    @JsonProperty("x-condition")
     override val condition: JsonNode? = null,
 
-    @JsonProperty("short option")
+    @JsonProperty("x-short-option")
     override val shortOption: String? = null,
+
+    @JsonProperty("x-env")
     override val env: String? = null,
 ) : PropertyDefinition() {
 
@@ -58,20 +70,7 @@ data class PropertySpecification(
     constructor(textValue: String) : this(type = TypeSpecification(textValue)) // Defaults to type name reference
 
     fun withType(type: TypeSpecification?): PropertySpecification {
-        return PropertySpecification(
-            description = description,
-            optional = optional,
-            default = default,
-            type = type,
-            secret = secret,
-            enum = enum,
-            select = select,
-            displayProperty = displayProperty,
-            valueProperty = valueProperty,
-            condition = condition,
-            shortOption = shortOption,
-            env = env
-        )
+        return copy(type = type)
     }
 }
 
@@ -80,23 +79,28 @@ data class PropertySpecification(
  */
 data class ParameterData(
 
+    override val title: String? = null,
     override val description: String? = null,
     override val optional: Boolean = false,
     override val default: JsonNode? = null,
     override val type: TypeSpecification? = null,
-    override val secret: Boolean = false,
+    override val format: String? = null,
     override val enum: List<JsonNode>? = null,
-    override val select: String = "single",
+    override val items: ParameterData? = null,
 
-    @JsonProperty("display property")
-    override val displayProperty: String? = null,
+    @JsonProperty("x-title-property")
+    override val titleProperty: String? = null,
 
-    @JsonProperty("value property")
+    @JsonProperty("x-value-property")
     override val valueProperty: String? = null,
+
+    @JsonProperty("x-condition")
     override val condition: JsonNode? = null,
 
-    @JsonProperty("short option")
+    @JsonProperty("x-short-option")
     override val shortOption: String? = null,
+
+    @JsonProperty("x-env")
     override val env: String? = null,
 ) : PropertyDefinition() {
 

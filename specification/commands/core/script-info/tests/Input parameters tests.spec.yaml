@@ -23,14 +23,14 @@ Tests:
 
       property-A:
         description: What is the value for A?
-        condition:
+        x-condition:
           item: ${input.switch}
           equals: a
         default: Ananas
 
       property-B:
         description: What is the value for B?
-        condition:
+        x-condition:
           item: ${input.switch}
           equals: b
         default: Bologna

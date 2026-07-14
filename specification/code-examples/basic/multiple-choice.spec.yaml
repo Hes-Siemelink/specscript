@@ -1,13 +1,14 @@
 Script info: Interaction example
 
 Prompt:
-  description: Select ingredients
-  select: multiple
-  enum:
-    - Apple
-    - Banana
-    - Cake
-    - Drizzle
+  title: Select ingredients
+  type: array
+  items:
+    enum:
+      - Apple
+      - Banana
+      - Cake
+      - Drizzle
 
 Output:
   Your choices: ${output}

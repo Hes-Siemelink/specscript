@@ -12,25 +12,113 @@ Tests:
   Default answer:
 
     Prompt:
-      description: How much is 1 + 1?
+      title: How much is 1 + 1?
       default: 2
 
+    Expected output: 2
+
+  Recorded answer overrides default:
+
+    Answers:
+      How much is 1 + 1?: 3
+
+    Prompt:
+      title: How much is 1 + 1?
+      default: 2
+
+    Expected output: 3
+
+  Description used as question when there is no title:
+
+    Answers:
+      How much is 1 + 1?: "2"
+
+    Prompt:
+      description: How much is 1 + 1?
+
     Expected output: "2"
+
+  Text placeholder when no value in non-interactive mode:
+
+    Prompt: Anything?
+
+    Expected output: "[default answer in non-interactive mode]"
 
   Multiple questions:
 
     Answers:
       - "What is your name?": Mateo
 
-    Prompt object:
-      name: What is your name?
-      sum:
-        description: How much is 1 + 1?
-        default: 2
+    Prompt:
+      type: object
+      properties:
+        name:
+          title: What is your name?
+        sum:
+          title: How much is 1 + 1?
+          default: 2
 
     Expected output:
       name: Mateo
       sum: "2"
+
+  Property name used as question when there is no title or description:
+
+    Answers:
+      name: Alice
+
+    Prompt:
+      type: object
+      properties:
+        name:
+          type: string
+
+    Expected output:
+      name: Alice
+
+  Boolean choice:
+
+    Answers:
+      Enabled: "true"
+
+    Prompt:
+      type: object
+      properties:
+        enabled:
+          title: Enabled
+          enum:
+            - true
+            - false
+
+    Expected output:
+      enabled: true
+
+  Conditional and dependent questions:
+
+    Answers:
+      Choose which variable to set: a
+      Value for a: a is set
+      Value for b: b is set
+
+    Prompt:
+      type: object
+      properties:
+        switch:
+          title: Choose which variable to set
+        a:
+          title: Value for a
+          x-condition:
+            item: ${switch}
+            equals: a
+        b:
+          title: Value for b
+          x-condition:
+            item: ${switch}
+            equals: b
+
+    Expected output:
+      switch: a
+      a: a is set
 
   Select object from list:
 
@@ -38,7 +126,7 @@ Tests:
       Select account: dev
 
     Prompt:
-      description: Select account
+      title: Select account
       enum:
         - name: dev
           id: 123
@@ -49,12 +137,29 @@ Tests:
         - name: prod
           id: 789
           password: xxxx
-      display property: name
+      x-title-property: name
 
     Expected output:
       name: dev
       id: 123
       password: xxxx
+
+  Select value field only:
+
+    Answers:
+      Favorite channel: The News
+
+    Prompt:
+      title: Favorite channel
+      enum:
+        - name: The News
+          preset: 1
+        - name: Sports Unlimited
+          preset: 2
+      x-title-property: name
+      x-value-property: preset
+
+    Expected output: 1
 
   Select multiple items from list:
 
@@ -64,34 +169,18 @@ Tests:
         - Pineapple
 
     Prompt:
-      description: What flavors do you like?
-      select: multiple
-      enum:
-        - Vanilla
-        - Mango
-        - Coconut
-        - Pineapple
+      title: What flavors do you like?
+      type: array
+      items:
+        enum:
+          - Vanilla
+          - Mango
+          - Coconut
+          - Pineapple
 
     Expected output:
       - Coconut
       - Pineapple
-
-  Select value field only:
-
-    Answers:
-      Favorite channel: The News
-
-    Prompt:
-      description: Favorite channel
-      enum:
-        - name: The News
-          preset: 1
-        - name: Sports Unlimited
-          preset: 2
-      display property: name
-      value property: preset
-
-    Expected output: 1
 
   Select multiple value fields:
 
@@ -101,36 +190,19 @@ Tests:
         - Sports Unlimited
 
     Prompt:
-      description: Favorite channel
-      enum:
-        - name: The News
-          preset: 1
-        - name: Sports Unlimited
-          preset: 2
-        - name: Cartoon Channel
-          preset: 3
-      select: multiple
-      display property: name
-      value property: preset
+      title: Favorite channel
+      type: array
+      items:
+        enum:
+          - name: The News
+            preset: 1
+          - name: Sports Unlimited
+            preset: 2
+          - name: Cartoon Channel
+            preset: 3
+        x-title-property: name
+        x-value-property: preset
 
     Expected output:
       - 1
       - 2
-
-  Prompt with custom type:
-
-    Answers:
-      First name: Alice
-      Last name: Zoe
-
-    Prompt:
-      type:
-        properties:
-          first_name:
-            description: First name
-          last_name:
-            description: Last name
-
-    Expected output:
-      first_name: Alice
-      last_name: Zoe
