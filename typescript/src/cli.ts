@@ -301,11 +301,6 @@ function getScriptInfo(script: Script): ScriptInfoResult {
             }
         }
 
-        if (cmd.name === 'Input parameters') {
-            if (isObject(cmd.data)) {
-                result.properties = extractProperties(cmd.data as JsonObject)
-            }
-        }
     }
 
     return result

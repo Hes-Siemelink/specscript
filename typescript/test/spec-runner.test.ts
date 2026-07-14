@@ -45,9 +45,6 @@ const SAMPLE_SERVER = 'code-examples/sample-server/start.spec.yaml'
  *  (c) rely on Kotlin behavior not yet ported (local file command discovery in Script info).
  */
 const SKIP_TESTS = new Set([
-    // (a) Kotlin-specific output / behavior
-    'commands/core/script-info/Input parameters.spec.md > Using types',
-
     // (b) Validate schema not yet implemented in TypeScript
     'commands/core/schema/Validate schema.spec.md > Basic usage',
     'commands/core/schema/Validate schema.spec.md > Schema from file',

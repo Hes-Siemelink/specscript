@@ -17,23 +17,6 @@ export const ScriptInfo: CommandHandler = {
 }
 
 /**
- * Input parameters: declares named input parameters with defaults, conditions, etc.
- * Each key in the data object is a parameter name.
- * The value is a parameter definition with optional: default, description, condition, env.
- */
-export const InputParameters: CommandHandler = {
-    name: 'Input parameters',
-    delayedResolver: true,
-
-    async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
-        if (!isObject(data)) return getInput(context)
-
-        await populateInputVariables(context, data)
-        return getInput(context)
-    },
-}
-
-/**
  * Input schema: declares a JSON Schema for script input.
  * Extracts properties from the schema and delegates to the same population logic.
  */

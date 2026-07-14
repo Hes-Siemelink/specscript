@@ -1,7 +1,10 @@
 Script info: Echos the input
 
-Input parameters:
-  text: Input that becomes output
+Input schema:
+  type: object
+  properties:
+    text:
+      description: Input that becomes output
 
 ---
 Output: ${input.text}

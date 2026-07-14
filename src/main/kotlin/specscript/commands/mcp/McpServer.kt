@@ -12,7 +12,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.io.asSink
 import kotlinx.io.asSource
 import kotlinx.io.buffered
-import specscript.commands.scriptinfo.InputParameters as InputParametersCommand
 import specscript.commands.scriptinfo.InputSchema as InputSchemaCommand
 import specscript.commands.server.HandlerInfo
 import specscript.commands.server.run
@@ -238,14 +237,6 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
 
         if (inputSchemaCommand != null) {
             return inputSchemaCommand.data.toDomainObject(InputSchema::class)
-        }
-
-        // Fall back to Input parameters
-        val inputParamsCommand = scriptFile.script.commands.find { it.equalsCommand(InputParametersCommand) }
-        if (inputParamsCommand != null) {
-            val info = scriptFile.script.info
-            val propertiesNode = Json.toObject(info.input)
-            return InputSchema(properties = propertiesNode)
         }
 
         return null

@@ -209,27 +209,12 @@ function deriveFromScript(
       ? scriptInfoCmd.data
       : undefined
 
-    // Derive inputSchema from Input schema or Input parameters
+    // Derive inputSchema from Input schema
     let inputSchema: RawJsonSchema | undefined
 
     const inputSchemaCmd = commands.find(c => c.name.toLowerCase() === 'input schema')
     if (inputSchemaCmd && isObject(inputSchemaCmd.data)) {
       inputSchema = toRawJsonSchema(inputSchemaCmd.data)
-    } else {
-      const inputParamsCmd = commands.find(c => c.name.toLowerCase() === 'input parameters')
-      if (inputParamsCmd && isObject(inputParamsCmd.data)) {
-        const properties: JsonObject = {}
-        for (const [key, value] of Object.entries(inputParamsCmd.data)) {
-          if (isObject(value) && value.type) {
-            properties[key] = { type: value.type as string }
-          } else if (isString(value)) {
-            properties[key] = { type: value }
-          } else {
-            properties[key] = { type: 'string' }
-          }
-        }
-        inputSchema = { type: 'object', properties }
-      }
     }
 
     return { description, inputSchema }

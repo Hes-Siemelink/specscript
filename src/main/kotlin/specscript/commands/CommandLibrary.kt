@@ -18,7 +18,6 @@ import specscript.commands.http.*
 import specscript.commands.mcp.*
 import specscript.commands.schema.CheckType
 import specscript.commands.schema.ValidateSchema
-import specscript.commands.scriptinfo.InputParameters
 import specscript.commands.scriptinfo.InputSchema
 import specscript.commands.scriptinfo.ScriptInfo
 import specscript.commands.shell.Cli
@@ -37,7 +36,6 @@ object CommandLibrary {
     val commands = commandMap(
 
         // Script definition
-        InputParameters,
         InputSchema,
         ScriptInfo,
 

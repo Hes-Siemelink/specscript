@@ -5,7 +5,7 @@ import { Print } from './print.js'
 import { Output, As } from './variables.js'
 import { Do, Exit, If, When, ForEach, Repeat } from './control-flow.js'
 import { ErrorCommand, OnError, OnErrorType } from './error.js'
-import { ScriptInfo, InputParameters, InputSchema } from './script-info.js'
+import { ScriptInfo, InputSchema } from './script-info.js'
 import {
   AssertEquals, AssertThat,
   ExpectedOutput, ExpectedConsoleOutput, ExpectedError,
@@ -64,7 +64,6 @@ export function registerAllCommands(): void {
 
   // Script info
   registerCommand(ScriptInfo)
-  registerCommand(InputParameters)
   registerCommand(InputSchema)
 
   // Testing

@@ -69,16 +69,9 @@ class Script(val commands: List<Command>, val title: String? = null) {
         val scriptInfoCommand = commands.find { it.equalsCommand(ScriptInfo) }
         val scriptInfoData = scriptInfoCommand?.data?.toDomainObject(ScriptInfoData::class) ?: ScriptInfoData(title)
 
-        val inputParameterCommand = commands.find { it.equalsCommand(InputParameters) }
         val inputSchemaCommand = commands.find { it.equalsCommand(InputSchema) }
 
         return when {
-            inputParameterCommand != null -> {
-                val inputParams = inputParameterCommand.data.toDomainObject(InputParameterData::class)
-                val mergedInput = (scriptInfoData.input ?: emptyMap()) + (inputParams.properties)
-                scriptInfoData.copy(input = mergedInput)
-            }
-
             inputSchemaCommand != null -> {
                 val schemaData =
                     InputSchema.toInputData(inputSchemaCommand.data as tools.jackson.databind.node.ObjectNode)

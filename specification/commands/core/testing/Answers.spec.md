@@ -12,7 +12,7 @@
 
 ## Basic usage
 
-`Answers` provides values for `Input parameters` so scripts can run non-interactively in tests.
+`Answers` provides values for `Input schema` so scripts can run non-interactively in tests.
 
 ```yaml specscript
 Code example: Answers provides input parameter values
@@ -20,9 +20,11 @@ Code example: Answers provides input parameter values
 Answers:
   Your name: Alice
 
-Input parameters:
-  name:
-    description: Your name
+Input schema:
+  type: object
+  properties:
+    name:
+      description: Your name
 
 Assert equals:
   actual: ${name}

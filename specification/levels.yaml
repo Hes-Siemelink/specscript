@@ -40,7 +40,6 @@ levels:
       - On error
       - On error type
       - Script info
-      - Input parameters
       - Input schema
       - Assert equals
       - Assert that
@@ -110,15 +109,10 @@ levels:
       - commands/core/script-info/Script info.spec.md:
           skip-sections:
             - "Hidden commands"         # shell cli (L3)
-      - commands/core/script-info/Input parameters.spec.md:
-          skip-sections:
-            - "Cli help"                # shell cli (L3)
-            - "Using types"             # shell cli (L3)
       - commands/core/script-info/Input schema.spec.md:
           skip-sections:
             - "Cli help"                        # shell cli (L3)
             - "Compatibility with MCP tool definitions"  # Mcp tool (L6)
-      - commands/core/script-info/tests/Input parameters tests.spec.yaml
       - commands/core/script-info/tests/Input schema tests.spec.yaml
 
       # Core commands

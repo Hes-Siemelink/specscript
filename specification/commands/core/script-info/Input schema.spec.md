@@ -1,7 +1,6 @@
 # Command: Input schema
 
-`Input schema` defines the input parameters of a script using standard JSON Schema syntax. It is the recommended way to
-define input parameters for new scripts, replacing the older `Input parameters` command.
+`Input schema` defines the input parameters of a script using standard JSON Schema syntax.
 
 | Input     | Supported |
 |-----------|-----------|
@@ -100,7 +99,7 @@ Print: ${greeting}, ${name}!
 
 ## The input variable
 
-Input properties are also stored in the `${input}` variable, just like with `Input parameters`.
+Input properties are also stored in the `${input}` variable.
 
 <!-- yaml specscript
 ${input}:

@@ -7,7 +7,7 @@ SpecScript provides several built-in variables:
 | Variable             | Description                                                     |
 |----------------------|-----------------------------------------------------------------|
 | `${output}`          | Result of the last command                                      |
-| `${input}`           | Input parameters of the current script                          |
+| `${input}`           | Input of the current script                                     |
 | `${env.VAR_NAME}`    | OS environment variable (read-only)                             |
 | `${SCRIPT_HOME}`     | Absolute path to the directory containing the current script    |
 | `${SCRIPT_TEMP_DIR}` | Absolute path to a temporary directory, created on first access |

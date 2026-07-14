@@ -7,7 +7,18 @@
       "Bash(find:*)",
       "Bash(git commit:*)",
       "Read(//Users/hes/.m2/repository/hes/specscript/specscript/0.6.0-SNAPSHOT/**)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(python3 *)",
+      "Bash(grep -rn \"Hi \\\\${\\\\|Hi Bob\\\\|-p \\\\|short-option\\\\|x-short-option\\\\|shortOption\" specification/language/Packages.spec.md)",
+      "Bash(perl -0pi -e 's/  short option:/  x-short-option:/g' \"specification/cli/specscript-command-line-options.yaml\")",
+      "Bash(grep -rln \"code-examples/basic\\\\|prompt.spec\\\\|Hello \\\\${output}\\\\|What is your name\" specification/language specification/cli)",
+      "Bash(pkill -f \"sample-server/start.spec.yaml\")",
+      "Bash(git restore *)",
+      "Bash(npm run *)",
+      "Bash(typescript/node_modules/.bin/vitest run *)",
+      "Bash(git merge *)",
+      "Bash(git branch *)",
+      "Bash(git rm *)"
     ],
     "deny": [],
     "ask": []
