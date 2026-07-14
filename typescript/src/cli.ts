@@ -479,6 +479,7 @@ export async function runCli(
   workingDir: string,
   log: (...args: unknown[]) => void = console.log,
   logError: (...args: unknown[]) => void = console.error,
+  parent?: ScriptContext,
 ): Promise<number> {
 
   let options: CliOptions
@@ -519,10 +520,10 @@ export async function runCli(
 
     if (stat.isDirectory()) {
       // Directory invocation
-      await invokeDirectory(resolvedPath, options.commands.slice(1), options, log, logError)
+      await invokeDirectory(resolvedPath, options.commands.slice(1), options, log, logError, parent)
     } else {
       // File invocation
-      await invokeFile(resolvedPath, options, log, logError)
+      await invokeFile(resolvedPath, options, log, logError, parent)
     }
   } catch (e) {
     if (e instanceof CliInvocationError) {
@@ -553,6 +554,7 @@ async function invokeFile(
   options: CliOptions,
   log: (...args: unknown[]) => void,
   logError: (...args: unknown[]) => void,
+  parent?: ScriptContext,
 ): Promise<void> {
   // Help mode
   if (options.help) {
@@ -562,7 +564,7 @@ async function invokeFile(
 
   // Execute file with parameters
   const parameters = toParameterMap(options.commandArgs)
-  const result = await executeFile(filePath, undefined, parameters, log, options.interactive)
+  const result = await executeFile(filePath, parent, parameters, log, options.interactive)
 
   // Print output
   if (result !== undefined && result !== null) {
@@ -582,6 +584,7 @@ async function invokeDirectory(
   options: CliOptions,
   log: (...args: unknown[]) => void,
   logError: (...args: unknown[]) => void,
+  parent?: ScriptContext,
 ): Promise<void> {
   // No subcommand
   if (subcommands.length === 0) {
@@ -618,9 +621,9 @@ async function invokeDirectory(
       }
       const stat = statSync(resolvedPath)
       if (stat.isDirectory()) {
-        await invokeDirectory(resolvedPath, [], options, log, logError)
+        await invokeDirectory(resolvedPath, [], options, log, logError, parent)
       } else {
-        await invokeFile(resolvedPath, options, log, logError)
+        await invokeFile(resolvedPath, options, log, logError, parent)
       }
       return
     }
@@ -648,9 +651,9 @@ async function invokeDirectory(
 
   const stat = statSync(resolvedPath)
   if (stat.isDirectory()) {
-    await invokeDirectory(resolvedPath, subcommands.slice(1), options, log, logError)
+    await invokeDirectory(resolvedPath, subcommands.slice(1), options, log, logError, parent)
   } else {
-    await invokeFile(resolvedPath, options, log, logError)
+    await invokeFile(resolvedPath, options, log, logError, parent)
   }
 }
 

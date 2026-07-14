@@ -36,11 +36,9 @@ export const CliCommand: CommandHandler = {
 async function invokeCli(context: ScriptContext, command: string, workingDir?: string): Promise<JsonValue> {
   const dir = workingDir ?? context.scriptHome
 
-  // Parse command string into args, dropping leading "spec" token
-  const args = command.split(/\s+/)
-  if (args[0] === 'spec') {
-    args.shift()
-  }
+  // Parse command string into args, dropping the leading invocation token
+  // (e.g. "spec", "./spec"). Matches Kotlin Cli.kt which drops line[0] unconditionally.
+  const args = command.split(/\s+/).slice(1)
 
   // Capture stdout and stderr via log callbacks
   const stdoutLines: string[] = []
@@ -49,7 +47,7 @@ async function invokeCli(context: ScriptContext, command: string, workingDir?: s
   const log = (...logArgs: unknown[]) => { stdoutLines.push(logArgs.map(String).join(' ')) }
   const logError = (...logArgs: unknown[]) => { stderrLines.push(logArgs.map(String).join(' ')) }
 
-  await runCli(args, dir, log, logError)
+  await runCli(args, dir, log, logError, context)
 
   // Build combined output (stdout first, then stderr)
   const stdout = stdoutLines.length > 0 ? stdoutLines.join('\n') + '\n' : ''
