@@ -1,7 +1,7 @@
 ---
 name: specscript-development-process
-description: End-to-end workflow for developing SpecScript features, from proposal through implementation to review. Covers the planning-implementation-review loop, bean hierarchy, reporting, and commit flow. Use when starting a new feature, planning a multi-step change, or when the user asks how development should be organized.
-compatibility: Requires beans CLI for issue tracking and the specscript project structure.
+description: End-to-end workflow for developing SpecScript features, from proposal through implementation to review. Covers the planning-implementation-review loop, task tracking, reporting, and commit flow. Use when starting a new feature, planning a multi-step change, or when the user asks how development should be organized.
+compatibility: Requires the specscript project structure.
 metadata:
   author: specscript
   version: "1.0"
@@ -36,52 +36,25 @@ Contents:
 
 **Stop and wait for human confirmation.** Do not proceed without explicit go-ahead.
 
-For bug fixes: skip the proposal. Create a bean directly and describe the bug there.
+For bug fixes: skip the proposal. Track the bug directly with a task list and describe it there.
 
 ## Phase 2: Plan
 
-The Plan phase happens AFTER the proposal is confirmed. Its purpose is to create beans that track the remaining work
-through to completion. The proposal itself is out of scope of beans — we may decide not to proceed, or it may be a
-quick fix that doesn't need the full process.
+The Plan phase happens AFTER the proposal is confirmed. Its purpose is to break down the remaining work into tracked
+tasks through to completion. The proposal itself is out of scope of task tracking — we may decide not to proceed, or it
+may be a quick fix that doesn't need the full process.
 
-### Create the feature bean with sub-beans
+### Create a task list for the phases
 
-Use the bean type hierarchy:
+Break the work into a checklist covering the remaining phases, so progress is visible and nothing gets skipped across a
+long conversation:
 
-```
-milestone    → target release or checkpoint
-  epic       → thematic container (don't work on epics directly)
-    feature  → user-facing capability
-      task   → concrete piece of work
-      bug    → something broken
-```
+- Write spec — write specification in `specification/` (or `plan/draft-specs` for invasive changes)
+- Implement — implement in Kotlin following existing patterns
+- Report, review & commit — write report in `plan/reports/`, present for review, commit after sign-off
 
-For a single feature: create one `feature` bean as the parent, then create `task` sub-beans for each remaining phase.
-This prevents agents from losing track of the process across long conversations.
-
-```bash
-# Create the parent feature bean
-beans create "Feature title" -t feature -d "Description" -s in-progress
-
-# Create sub-beans for each phase
-beans create "Write spec" -t task --parent <feature-id> -s todo \
-  -d "Write specification in specification/ (or plan/draft-specs for invasive changes)"
-beans create "Implement" -t task --parent <feature-id> -s todo \
-  -d "Implement in Kotlin following existing patterns"
-beans create "Report, review & commit" -t task --parent <feature-id> -s todo \
-  -d "Write report in plan/reports/, present for review, commit after sign-off"
-```
-
-Adjust the sub-beans to fit the work. A TypeScript port gets its own task. A multi-phase refactor gets a task per phase.
-The point is: each phase is a bean you can check off, so progress is visible and nothing gets skipped.
-
-For a larger effort: create an `epic` with child `feature`/`task` beans instead.
-
-Update todo items within beans as work progresses:
-
-```bash
-beans update <id> --body-replace-old "- [ ] Step 1" --body-replace-new "- [x] Step 1"
-```
+Adjust the checklist to fit the work. A TypeScript port gets its own item. A multi-phase refactor gets an item per
+phase. Check items off as each phase completes.
 
 ### Write the spec (spec-first)
 
@@ -109,7 +82,7 @@ Key rules:
 - Run tests frequently: `./gradlew specificationTest`
 - When a spec test reveals undocumented behavior, note it for the report
 - Put improvement suggestions in `plan/agent-ideas.md` as one-liners
-- Check off bean todo items as work completes
+- Check off task list items as work completes
 
 ### Commit cadence
 
@@ -120,8 +93,8 @@ Key rules:
 
 ## Phase 4: Report, Review & Retro
 
-After implementation is complete and tests pass, write a brief report. Save it in `plan/reports/` (or in the bean body
-via `--body-append` for smaller efforts).
+After implementation is complete and tests pass, write a brief report. Save it in `plan/reports/` (or appended to the
+task list notes for smaller efforts).
 
 Report contents:
 
@@ -147,7 +120,7 @@ Present the report to the human. They will:
 Handle review feedback:
 
 - Fix issues raised
-- Update the bean and/or report
+- Update the task list and/or report
 - Re-run tests after changes
 
 This phase may have multiple rounds. Stay focused on the current feedback — do not revisit resolved topics.
@@ -159,8 +132,8 @@ After human sign-off:
 1. Prepare commit per git commit rules in AGENTS.md
 2. Present commit message for confirmation
 3. Commit (human pushes)
-4. Mark bean as completed with a `## Summary of Changes` section
+4. Mark the task list as completed with a `## Summary of Changes` note
 5. Move completed plans to `plan/completed/` if applicable
-6. Offer to create follow-up beans for deferred work
+6. Offer to create follow-up tasks for deferred work
 
 

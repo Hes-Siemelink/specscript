@@ -16,7 +16,7 @@
     * `spec serve http .`  to serve the current directory with SpecScript-defined endpoints
     * `spec serve mcp .`  to serve the current directory with MCP tools
     * `spec -i doc` browse the documentation in an interactive way.
-    * `spec agent prime` to give a how-to for agents like 'beans prime'
+    * `spec agent prime` to give a how-to for agents
     * `spec agent skills` lists agent skills
 * Replace specscript-config.yaml with README and put stuff in Markdown front matter.
 

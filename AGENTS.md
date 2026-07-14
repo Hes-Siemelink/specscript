@@ -4,9 +4,6 @@ We're in the SpecScript language repo and the entire language is defined in the 
 specification to know what SpecScript is. Starting points: Main README.md, `specification/overview` directory, and
 `specification/language/` directory.
 
-**IMPORTANT**: before you do anything else, run the `beans prime` command and heed its output. `beans prime` configures
-the issue tracker for the session.
-
 ## Project Overview
 
 SpecScript is a tool for creating human and AI-friendly specifications using Markdown and YAML. It provides a CLI tool
@@ -35,7 +32,7 @@ SpecScript is developed using a spec-first approach, a bit like TDD. Write the s
 The spec defines the behavior and serves as documentation and tests; implementation follows.
 
 For non-trivial work, load the `specscript-development-process` skill before starting. It has the full workflow
-including bean tracking, reporting, and review phases. Agents that skip this tend to jump straight to code and miss the
+including task tracking, reporting, and review phases. Agents that skip this tend to jump straight to code and miss the
 proposal/spec checkpoints.
 
 Full steps are:
@@ -222,8 +219,8 @@ When committing changes to the project, follow these rules:
       exactly: `Code Cleanup` as the summary.
     - For updates to AI agent context, conversation history, distilled rules, or project meta files (such as .specstory,
       .cursor, AGENTS.md or similar), use exactly: `AI Context` as the summary. Do not mix these with other changes.
-    - For (leftover) planning files in plan or .beans directory, commit them together with exactly: `Plan` as the
-      summary. No body content needed.
+    - For (leftover) planning files in the plan directory, commit them together with exactly: `Plan` as the summary. No
+      body content needed.
 - Content:
     - Each bullet or paragraph must be a separate `-m` argument.
     - Do not use `\n` to separate topics within a single `-m` argument.
