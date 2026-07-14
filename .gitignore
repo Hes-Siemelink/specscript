@@ -19,6 +19,7 @@ test.db
 .cursorindexingignore
 .specstory/.what-is-this.md
 .tmp
+.opencode/package-lock.json
 
 # Node / TypeScript
 node_modules
