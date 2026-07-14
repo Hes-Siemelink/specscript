@@ -1,6 +1,5 @@
-import { parseAllDocuments, parseDocument, isMap, isSeq, isScalar, isPair, Pair, stringify, type Document, type Node } from 'yaml'
-import type { JsonValue, JsonObject } from '../language/types.js'
-import type { Command } from '../language/types.js'
+import {isMap, isPair, isScalar, isSeq, parseAllDocuments, stringify} from 'yaml'
+import type {Command, JsonObject, JsonValue} from '../language/types.js'
 
 /**
  * Parse a YAML string as a multi-document SpecScript file.
@@ -10,7 +9,7 @@ import type { Command } from '../language/types.js'
  * in mappings as separate commands (SpecScript's command model).
  */
 export function parseYamlCommands(content: string): Command[] {
-  return parseYamlCommandsWithOptions(content, false)
+    return parseYamlCommandsWithOptions(content, false)
 }
 
 /**
@@ -22,45 +21,48 @@ export function parseYamlCommands(content: string): Command[] {
  * source termination, but getContent() never ends with one.
  */
 export function parseMarkdownYamlCommands(content: string): Command[] {
-  return parseYamlCommandsWithOptions(content, true)
+    return parseYamlCommandsWithOptions(content, true)
 }
 
 function parseYamlCommandsWithOptions(content: string, stripBlockScalarNewlines: boolean): Command[] {
-  const docs = parseAllDocuments(content, { uniqueKeys: false })
-  const commands: Command[] = []
+    const docs = parseAllDocuments(content, {uniqueKeys: false})
+    const commands: Command[] = []
 
-  for (const doc of docs) {
-    if (doc.errors.length > 0) {
-      throw new Error(`YAML parse error: ${doc.errors[0].message}`)
-    }
-    const node = doc.contents
-    if (node === null || node === undefined) continue
-
-    if (isMap(node)) {
-      // Each key-value pair in a mapping is a separate command
-      for (const pair of node.items) {
-        if (isPair(pair)) {
-          const name = scalarToString(pair.key)
-          const data = nodeToJson(pair.value, stripBlockScalarNewlines)
-          commands.push({ name, data })
+    for (const doc of docs) {
+        if (doc.errors.length > 0) {
+            throw new Error(`YAML parse error: ${doc.errors[0].message}`)
         }
-      }
-    } else if (isSeq(node)) {
-      // Array: each element is recursively converted
-      for (const item of node.items) {
-        if (isMap(item)) {
-          for (const pair of item.items) {
-            if (isPair(pair)) {
-              commands.push({ name: scalarToString(pair.key), data: nodeToJson(pair.value, stripBlockScalarNewlines) })
+        const node = doc.contents
+        if (node === null || node === undefined) continue
+
+        if (isMap(node)) {
+            // Each key-value pair in a mapping is a separate command
+            for (const pair of node.items) {
+                if (isPair(pair)) {
+                    const name = scalarToString(pair.key)
+                    const data = nodeToJson(pair.value, stripBlockScalarNewlines)
+                    commands.push({name, data})
+                }
             }
-          }
+        } else if (isSeq(node)) {
+            // Array: each element is recursively converted
+            for (const item of node.items) {
+                if (isMap(item)) {
+                    for (const pair of item.items) {
+                        if (isPair(pair)) {
+                            commands.push({
+                                name: scalarToString(pair.key),
+                                data: nodeToJson(pair.value, stripBlockScalarNewlines)
+                            })
+                        }
+                    }
+                }
+                // Skip non-map array items at top level
+            }
         }
-        // Skip non-map array items at top level
-      }
     }
-  }
 
-  return commands
+    return commands
 }
 
 /**
@@ -69,27 +71,27 @@ function parseYamlCommandsWithOptions(content: string, stripBlockScalarNewlines:
  * Used for non-command YAML (data values, config, etc.)
  */
 export function parseYamlFile(content: string): JsonValue[] {
-  const docs = parseAllDocuments(content, { uniqueKeys: false })
-  const results: JsonValue[] = []
-  for (const doc of docs) {
-    if (doc.errors.length > 0) {
-      throw new Error(`YAML parse error: ${doc.errors[0].message}`)
+    const docs = parseAllDocuments(content, {uniqueKeys: false})
+    const results: JsonValue[] = []
+    for (const doc of docs) {
+        if (doc.errors.length > 0) {
+            throw new Error(`YAML parse error: ${doc.errors[0].message}`)
+        }
+        const value = doc.toJSON()
+        if (value !== undefined && value !== null) {
+            results.push(value as JsonValue)
+        }
     }
-    const value = doc.toJSON()
-    if (value !== undefined && value !== null) {
-      results.push(value as JsonValue)
-    }
-  }
-  return results
+    return results
 }
 
 /**
  * Parse a single YAML document.
  */
 export function parseYaml(content: string): JsonValue {
-  const docs = parseYamlFile(content)
-  if (docs.length === 0) return null
-  return docs[0]
+    const docs = parseYamlFile(content)
+    if (docs.length === 0) return null
+    return docs[0]
 }
 
 /**
@@ -98,72 +100,72 @@ export function parseYaml(content: string): JsonValue {
  * For other types, uses YAML serialization.
  */
 export function toDisplayYaml(value: JsonValue): string {
-  if (value === null) return 'null'
-  if (typeof value === 'string') return value
-  if (typeof value === 'number' || typeof value === 'boolean') return String(value)
+    if (value === null) return 'null'
+    if (typeof value === 'string') return value
+    if (typeof value === 'number' || typeof value === 'boolean') return String(value)
 
-  // Use YAML stringify for objects and arrays
-  const result = stringify(value, {
-    lineWidth: 0,        // don't wrap lines
-    minContentWidth: 0,
-  })
-  // Remove trailing newline that yaml library adds
-  return result.replace(/\n$/, '')
+    // Use YAML stringify for objects and arrays
+    const result = stringify(value, {
+        lineWidth: 0,        // don't wrap lines
+        minContentWidth: 0,
+    })
+    // Remove trailing newline that yaml library adds
+    return result.replace(/\n$/, '')
 }
 
 /**
  * Try to parse a string as YAML, falling back to a plain string.
  */
 export function parseYamlIfPossible(source: string | null | undefined): JsonValue {
-  if (source === null || source === undefined) return null
-  try {
-    return parseYaml(source)
-  } catch {
-    return source
-  }
+    if (source === null || source === undefined) return null
+    try {
+        return parseYaml(source)
+    } catch {
+        return source
+    }
 }
 
 // --- Internal helpers ---
 
 function scalarToString(node: unknown): string {
-  if (isScalar(node)) return String(node.value)
-  return String(node)
+    if (isScalar(node)) return String(node.value)
+    return String(node)
 }
 
 /** Convert a yaml AST node to a plain JsonValue, preserving duplicate-key maps as last-wins. */
 function nodeToJson(node: unknown, stripBlockScalarNewlines: boolean = false): JsonValue {
-  if (node === null || node === undefined) return null
-  if (isScalar(node)) {
-    const v = node.value
-    if (v === null || v === undefined) return null
-    if (typeof v === 'string') {
-      // Strip trailing newline from block scalar values (| and >) when flag is set.
-      // The JS yaml library always appends \n to block scalars, but Jackson only does
-      // so when the source string ends with \n. Since getContent() never ends with \n,
-      // we strip to match Jackson's behavior for Markdown-sourced content.
-      if (stripBlockScalarNewlines && (node.type === 'BLOCK_LITERAL' || node.type === 'BLOCK_FOLDED')) {
-        return v.replace(/\n$/, '')
-      }
-      return v
+    if (node === null || node === undefined) return null
+    if (isScalar(node)) {
+        const v = node.value
+        if (v === null || v === undefined) return null
+        if (typeof v === 'string') {
+            // Strip trailing newline from block scalar values (| and >) when flag is set.
+            // The JS yaml library always appends \n to block scalars, but Jackson only does
+            // so when the source string ends with \n. Since getContent() never ends with \n,
+            // we strip to match Jackson's behavior for Markdown-sourced content.
+            if (stripBlockScalarNewlines && (node.type === 'BLOCK_LITERAL' || node.type === 'BLOCK_FOLDED')) {
+                return v.replace(/\n$/, '')
+            }
+            return v
+        }
+        if (typeof v === 'number' || typeof v === 'boolean') return v
+        return String(v)
     }
-    if (typeof v === 'number' || typeof v === 'boolean') return v
-    return String(v)
-  }
-  if (isMap(node)) {
-    const obj: JsonObject = {}
-    for (const pair of node.items) {
-      if (isPair(pair)) {
-        obj[scalarToString(pair.key)] = nodeToJson(pair.value, stripBlockScalarNewlines)
-      }
+    if (isMap(node)) {
+        const obj: JsonObject = {}
+        for (const pair of node.items) {
+            if (isPair(pair)) {
+                obj[scalarToString(pair.key)] = nodeToJson(pair.value, stripBlockScalarNewlines)
+            }
+        }
+        return obj
     }
-    return obj
-  }
-  if (isSeq(node)) {
-    return node.items.map((item: unknown) => nodeToJson(item, stripBlockScalarNewlines))
-  }
-  // Fallback
-  if (typeof node === 'object' && node !== null && 'toJSON' in node) {
-    return (node as { toJSON(): JsonValue }).toJSON()
-  }
-  return null
+    if (isSeq(node)) {
+        return node.items.map((item: unknown) => nodeToJson(item, stripBlockScalarNewlines))
+    }
+    // Fallback
+    if (typeof node === 'object' && 'toJSON' in node) {
+        return (node as { toJSON(): JsonValue }).toJSON()
+    }
+    return null
 }

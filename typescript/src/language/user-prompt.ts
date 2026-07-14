@@ -8,18 +8,17 @@
  * - Non-interactive with no answer/default: return empty string
  */
 
-import { input, password, select, checkbox } from '@inquirer/prompts'
-import type { JsonValue, JsonObject } from './types.js'
-import { isObject } from './types.js'
-import { toDisplayYaml } from '../util/yaml.js'
+import {checkbox, input, password, select} from '@inquirer/prompts'
+import type {JsonValue} from './types.js'
+import {toDisplayYaml} from '../util/yaml.js'
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
 export interface Choice {
-  displayName: string
-  value: JsonValue
+    displayName: string
+    value: JsonValue
 }
 
 type AnswersMap = Map<string, JsonValue>
@@ -33,40 +32,40 @@ type AnswersMap = Map<string, JsonValue>
  * Resolution: recorded answer → default value → interactive prompt (if allowed) → empty string.
  */
 export async function promptText(
-  answers: AnswersMap,
-  message: string,
-  defaultValue: string = '',
-  isPassword: boolean = false,
-  stdout?: (text: string) => void,
-  interactive: boolean = false,
+    answers: AnswersMap,
+    message: string,
+    defaultValue: string = '',
+    isPassword: boolean = false,
+    stdout?: (text: string) => void,
+    interactive: boolean = false,
 ): Promise<JsonValue> {
-  const recorded = answers.get(message)
-  if (recorded !== undefined) {
-    const displayValue = typeof recorded === 'string' ? recorded : toDisplayYaml(recorded)
-    if (isPassword) {
-      writeOutput(stdout, renderTextPrompt(message, '********'))
-    } else {
-      writeOutput(stdout, renderTextPrompt(message, displayValue))
+    const recorded = answers.get(message)
+    if (recorded !== undefined) {
+        const displayValue = typeof recorded === 'string' ? recorded : toDisplayYaml(recorded)
+        if (isPassword) {
+            writeOutput(stdout, renderTextPrompt(message, '********'))
+        } else {
+            writeOutput(stdout, renderTextPrompt(message, displayValue))
+        }
+        return recorded
     }
-    return recorded
-  }
 
-  // Fall back to default if available
-  if (defaultValue) {
-    writeOutput(stdout, renderTextPrompt(message, defaultValue))
-    return defaultValue
-  }
-
-  // Real interactive prompt (only when explicitly allowed)
-  if (interactive) {
-    if (isPassword) {
-      return await password({ message })
+    // Fall back to default if available
+    if (defaultValue) {
+        writeOutput(stdout, renderTextPrompt(message, defaultValue))
+        return defaultValue
     }
-    return await input({ message, default: defaultValue || undefined })
-  }
 
-  // Non-interactive with no answer and no default
-  return ''
+    // Real interactive prompt (only when explicitly allowed)
+    if (interactive) {
+        if (isPassword) {
+            return await password({message})
+        }
+        return await input({message, default: defaultValue || undefined})
+    }
+
+    // Non-interactive with no answer and no default
+    return ''
 }
 
 /**
@@ -74,52 +73,52 @@ export async function promptText(
  * Resolution: recorded answer → interactive prompt (if allowed) → error.
  */
 export async function promptSelect(
-  answers: AnswersMap,
-  message: string,
-  choices: Choice[],
-  multiple: boolean = false,
-  stdout?: (text: string) => void,
-  interactive: boolean = false,
+    answers: AnswersMap,
+    message: string,
+    choices: Choice[],
+    multiple: boolean = false,
+    stdout?: (text: string) => void,
+    interactive: boolean = false,
 ): Promise<JsonValue> {
-  const recorded = answers.get(message)
-  if (recorded !== undefined) {
-    if (multiple) {
-      const selectedNames = Array.isArray(recorded)
-        ? recorded.map(v => typeof v === 'string' ? v : toDisplayYaml(v))
-        : [typeof recorded === 'string' ? recorded : toDisplayYaml(recorded)]
-      const selection = choices.filter(c => selectedNames.includes(c.displayName))
-      writeOutput(stdout, renderSelectPrompt(message, choices, selection))
-      return selection.map(c => c.value)
-    } else {
-      const answerStr = typeof recorded === 'string' ? recorded : toDisplayYaml(recorded)
-      const selection = choices.find(c => c.displayName === answerStr)
-      if (!selection) {
-        throw new Error(`Prerecorded choice '${answerStr}' not found in provided list.`)
-      }
-      writeOutput(stdout, renderSelectPrompt(message, choices, [selection]))
-      return selection.value
+    const recorded = answers.get(message)
+    if (recorded !== undefined) {
+        if (multiple) {
+            const selectedNames = Array.isArray(recorded)
+                ? recorded.map(v => typeof v === 'string' ? v : toDisplayYaml(v))
+                : [typeof recorded === 'string' ? recorded : toDisplayYaml(recorded)]
+            const selection = choices.filter(c => selectedNames.includes(c.displayName))
+            writeOutput(stdout, renderSelectPrompt(message, choices, selection))
+            return selection.map(c => c.value)
+        } else {
+            const answerStr = typeof recorded === 'string' ? recorded : toDisplayYaml(recorded)
+            const selection = choices.find(c => c.displayName === answerStr)
+            if (!selection) {
+                throw new Error(`Prerecorded choice '${answerStr}' not found in provided list.`)
+            }
+            writeOutput(stdout, renderSelectPrompt(message, choices, [selection]))
+            return selection.value
+        }
     }
-  }
 
-  // Real interactive prompt (only when explicitly allowed)
-  if (interactive) {
-    if (multiple) {
-      const result = await checkbox({
-        message,
-        choices: choices.map(c => ({ name: c.displayName, value: c.value })),
-      })
-      return result
-    } else {
-      const result = await select({
-        message,
-        choices: choices.map(c => ({ name: c.displayName, value: c.value })),
-      })
-      return result
+    // Real interactive prompt (only when explicitly allowed)
+    if (interactive) {
+        if (multiple) {
+            const result = await checkbox({
+                message,
+                choices: choices.map(c => ({name: c.displayName, value: c.value})),
+            })
+            return result
+        } else {
+            const result = await select({
+                message,
+                choices: choices.map(c => ({name: c.displayName, value: c.value})),
+            })
+            return result
+        }
     }
-  }
 
-  // Non-interactive with no recorded answer — select prompts can't default
-  throw new Error(`No prerecorded answer for '${message}' and not in interactive mode`)
+    // Non-interactive with no recorded answer — select prompts can't default
+    throw new Error(`No prerecorded answer for '${message}' and not in interactive mode`)
 }
 
 // ---------------------------------------------------------------------------
@@ -130,11 +129,11 @@ export async function promptSelect(
  * Render text prompt output: `? message answer`
  */
 function renderTextPrompt(message: string, answer: string): string {
-  let result = `? ${message} `
-  if (answer) {
-    result += answer
-  }
-  return result
+    let result = `? ${message} `
+    if (answer) {
+        result += answer
+    }
+    return result
 }
 
 /**
@@ -146,23 +145,23 @@ function renderTextPrompt(message: string, answer: string): string {
  * ```
  */
 function renderSelectPrompt(message: string, choices: Choice[], selected: Choice[]): string {
-  let result = `? ${message} \n`
-  let first = true
-  for (const choice of choices) {
-    const isSelected = selected.some(s => s.displayName === choice.displayName)
-    if (isSelected) {
-      if (first) {
-        result += ` ❯ ◉ `
-        first = false
-      } else {
-        result += `   ◉ `
-      }
-    } else {
-      result += `   ◯ `
+    let result = `? ${message} \n`
+    let first = true
+    for (const choice of choices) {
+        const isSelected = selected.some(s => s.displayName === choice.displayName)
+        if (isSelected) {
+            if (first) {
+                result += ` ❯ ◉ `
+                first = false
+            } else {
+                result += `   ◉ `
+            }
+        } else {
+            result += `   ◯ `
+        }
+        result += choice.displayName + '\n'
     }
-    result += choice.displayName + '\n'
-  }
-  return result
+    return result
 }
 
 // ---------------------------------------------------------------------------
@@ -170,14 +169,14 @@ function renderSelectPrompt(message: string, choices: Choice[], selected: Choice
 // ---------------------------------------------------------------------------
 
 function writeOutput(stdout: ((text: string) => void) | undefined, text: string): void {
-  if (stdout) {
-    stdout(text)
-  }
+    if (stdout) {
+        stdout(text)
+    }
 }
 
 /**
  * Get the answers map from a script context session.
  */
 export function getAnswers(session: Map<string, unknown>): AnswersMap {
-  return (session.get('answers') as AnswersMap) ?? new Map<string, JsonValue>()
+    return (session.get('answers') as AnswersMap) ?? new Map<string, JsonValue>()
 }
