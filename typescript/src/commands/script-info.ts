@@ -1,11 +1,8 @@
 import type {CommandHandler} from '../language/command-handler.js'
 import type {JsonObject, JsonValue} from '../language/types.js'
-import {isObject, isString, MissingInputError} from '../language/types.js'
+import {isObject, MissingInputError} from '../language/types.js'
 import type {ScriptContext} from '../language/context.js'
-import {resolveVariables} from '../language/variables.js'
-import {toCondition} from '../language/conditions.js'
-import {getAnswers} from '../language/user-prompt.js'
-import {doPrompt} from './prompt.js'
+import {resolveValue, passesCondition} from './prompt.js'
 
 /**
  * Script info: declares metadata about a script. No-op during execution.
@@ -70,14 +67,8 @@ function getInput(context: ScriptContext): JsonObject {
 /**
  * Populate input variables from parameter definitions.
  *
- * Resolution order (matches Kotlin's InputParameters):
- * 1. Already exists in input → copy to top-level variable
- * 2. Check condition → skip if false
- * 3. Environment variable → use env value
- * 4. Default value → use default
- * 5. Recorded answers → use answer from Answers command
- * 6. Interactive mode → prompt user via doPrompt()
- * 7. Error → throw MissingInputError
+ * Uses the shared per-property resolver (see resolveValue): already-set input → x-env → recorded
+ * answer → interactive prompt (default as hint) → default → error.
  */
 async function populateInputVariables(context: ScriptContext, parameters: JsonObject): Promise<void> {
     const input = getInput(context)
@@ -85,60 +76,24 @@ async function populateInputVariables(context: ScriptContext, parameters: JsonOb
     for (const [name, paramDef] of Object.entries(parameters)) {
         const def = isObject(paramDef) ? paramDef : {description: paramDef}
 
-        // Already exists in input — just copy to top-level
+        // Already provided as input — just copy to top-level
         if (name in input) {
             context.variables.set(name, input[name])
             continue
         }
 
-        // Check condition
-        if ('condition' in def && def['condition'] !== null) {
-            const resolvedCondition = resolveVariables(def['condition'], context.variables)
-            if (isObject(resolvedCondition)) {
-                const condition = toCondition(resolvedCondition)
-                if (!condition.isTrue()) {
-                    continue
-                }
-            }
-        }
-
-        // Find value
-        let value: JsonValue | undefined
-
-        // Check environment variable
-        if ('env' in def && typeof def['env'] === 'string') {
-            const envValue = process.env[def['env']]
-            if (envValue !== undefined) {
-                setInputValue(context, input, name, envValue)
-                continue
-            }
-        }
-
-        // Use default
-        if ('default' in def) {
-            setInputValue(context, input, name, def['default'])
+        // Skip if condition is not valid
+        if (!passesCondition(def, context.variables)) {
             continue
         }
 
-        // Check recorded answers (matches Kotlin: Answers.hasRecordedAnswer before interactive)
-        const question = (isString(def['description']) ? def['description'] : undefined) ?? name
-        const answers = getAnswers(context.session)
-        if (answers.has(question)) {
-            setInputValue(context, input, name, answers.get(question)!)
-            continue
+        // Resolve from environment variable, recorded answer, interactive prompt or default
+        const value = await resolveValue(context, def, name, true)
+        if (value === undefined) {
+            throw new MissingInputError(`No value provided for: ${name}`, name)
         }
 
-        // Interactive mode — prompt user
-        if (context.interactive) {
-            const result = await doPrompt(context, def as JsonObject, name)
-            if (result !== null && result !== undefined) {
-                setInputValue(context, input, name, result)
-            }
-            continue
-        }
-
-        // No value available — throw
-        throw new MissingInputError(`No value provided for: ${name}`, name)
+        setInputValue(context, input, name, value)
     }
 }
 

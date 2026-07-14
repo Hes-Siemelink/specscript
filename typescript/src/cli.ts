@@ -316,9 +316,11 @@ function extractProperties(props: JsonObject): Record<string, { description?: st
     for (const [name, def] of Object.entries(props)) {
         if (isObject(def)) {
             const obj = def as JsonObject
+            const description = typeof obj['description'] === 'string' ? obj['description']
+                : typeof obj['title'] === 'string' ? obj['title'] : undefined
             result[name] = {
-                description: typeof obj['description'] === 'string' ? obj['description'] : undefined,
-                shortOption: typeof obj['short option'] === 'string' ? obj['short option'] : undefined,
+                description,
+                shortOption: typeof obj['x-short-option'] === 'string' ? obj['x-short-option'] : undefined,
             }
         } else {
             result[name] = {description: typeof def === 'string' ? def : undefined}

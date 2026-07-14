@@ -23,22 +23,27 @@ export interface Choice {
 
 type AnswersMap = Map<string, JsonValue>
 
+export const NON_INTERACTIVE_PLACEHOLDER = '[default answer in non-interactive mode]'
+
 // ---------------------------------------------------------------------------
 // Prompt functions (dispatch between test and real)
 // ---------------------------------------------------------------------------
 
 /**
  * Prompt for text input.
- * Resolution: recorded answer → default value → interactive prompt (if allowed) → empty string.
+ *
+ * Resolution: recorded answer → interactive prompt (with the default as a pre-filled hint).
+ * Returns undefined when non-interactive and no recorded answer; the caller applies the default
+ * and the missing-value policy.
  */
 export async function promptText(
     answers: AnswersMap,
     message: string,
-    defaultValue: string = '',
+    defaultHint: string = '',
     isPassword: boolean = false,
     stdout?: (text: string) => void,
     interactive: boolean = false,
-): Promise<JsonValue> {
+): Promise<JsonValue | undefined> {
     const recorded = answers.get(message)
     if (recorded !== undefined) {
         const displayValue = typeof recorded === 'string' ? recorded : toDisplayYaml(recorded)
@@ -50,27 +55,22 @@ export async function promptText(
         return recorded
     }
 
-    // Fall back to default if available
-    if (defaultValue) {
-        writeOutput(stdout, renderTextPrompt(message, defaultValue))
-        return defaultValue
-    }
-
-    // Real interactive prompt (only when explicitly allowed)
+    // Real interactive prompt (only when explicitly allowed); default is a pre-filled hint
     if (interactive) {
         if (isPassword) {
             return await password({message})
         }
-        return await input({message, default: defaultValue || undefined})
+        return await input({message, default: defaultHint || undefined})
     }
 
-    // Non-interactive with no answer and no default
-    return ''
+    return undefined
 }
 
 /**
  * Prompt for selection from a list of choices.
- * Resolution: recorded answer → interactive prompt (if allowed) → error.
+ *
+ * Resolution: recorded answer → interactive prompt (if allowed). Returns undefined when
+ * non-interactive with no recorded answer; the caller decides (a selection has no safe default).
  */
 export async function promptSelect(
     answers: AnswersMap,
@@ -79,7 +79,7 @@ export async function promptSelect(
     multiple: boolean = false,
     stdout?: (text: string) => void,
     interactive: boolean = false,
-): Promise<JsonValue> {
+): Promise<JsonValue | undefined> {
     const recorded = answers.get(message)
     if (recorded !== undefined) {
         if (multiple) {
@@ -117,8 +117,7 @@ export async function promptSelect(
         }
     }
 
-    // Non-interactive with no recorded answer — select prompts can't default
-    throw new Error(`No prerecorded answer for '${message}' and not in interactive mode`)
+    return undefined
 }
 
 // ---------------------------------------------------------------------------

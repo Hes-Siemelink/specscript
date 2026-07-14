@@ -1,132 +1,199 @@
 /**
- * Prompt command: asks the user for interactive input.
+ * Prompt command: asks the user for interactive input, described as a JSON Schema.
  *
- * Supports two forms:
- * - Value: `Prompt: What is your name?` — simple text prompt
- * - Object: `Prompt: {description, default, secret, enum, select, display property, value property, condition, type}`
+ * Forms:
+ * - String: `Prompt: What is your name?` — shorthand for a single text question
+ * - Object schema with `properties` — asks several questions, returns an object
+ * - Any other object — a single property definition
+ *
+ * The answer is returned as `${output}`. Prompt and Input schema share the same per-property
+ * resolution (see resolveValue).
  */
 
 import type { CommandHandler } from '../language/command-handler.js'
 import type { ScriptContext } from '../language/context.js'
 import type { JsonValue, JsonObject } from '../language/types.js'
-import { isObject, isString } from '../language/types.js'
+import { isObject, isString, SpecScriptError } from '../language/types.js'
 import { toCondition } from '../language/conditions.js'
-import { promptText, promptSelect, getAnswers } from '../language/user-prompt.js'
+import { resolveVariables } from '../language/variables.js'
+import {
+  promptText,
+  promptSelect,
+  getAnswers,
+  NON_INTERACTIVE_PLACEHOLDER,
+} from '../language/user-prompt.js'
 import type { Choice } from '../language/user-prompt.js'
 import { toDisplayYaml } from '../util/yaml.js'
 
 export const PromptCommand: CommandHandler = {
   name: 'Prompt',
+  delayedResolver: true,
 
   async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
     if (isString(data)) {
-      const result = await doPrompt(context, { description: data })
-      return result ?? undefined
+      const text = String(resolveVariables(data, context.variables))
+      return resolveOrPlaceholder(context, { description: text })
     }
 
     if (isObject(data)) {
-      const result = await doPrompt(context, data)
-      return result ?? undefined
+      // Object schema: ask each property, collect answers into an object
+      if (isObject(data['properties'])) {
+        return promptProperties(context, data['properties'] as JsonObject)
+      }
+
+      // Single property
+      const resolved = resolveVariables(data, context.variables)
+      if (!isObject(resolved)) return undefined
+      if (!passesCondition(resolved, context.variables)) return undefined
+      return resolveOrPlaceholder(context, resolved)
     }
 
     return undefined
   },
 }
 
-/**
- * Core prompt logic — resolves prompt definition and dispatches to the appropriate prompt type.
- * Matches Kotlin's ParameterDataPrompt resolution order.
- */
-export async function doPrompt(
-  context: ScriptContext,
-  def: JsonObject,
-  label?: string,
-): Promise<JsonValue | null> {
+/** Asks each property of an object schema, allowing later questions to depend on earlier answers. */
+async function promptProperties(context: ScriptContext, properties: JsonObject): Promise<JsonObject> {
+  const result: JsonObject = {}
+  const variables = new Map(context.variables)
 
-  const message = (isString(def['description']) ? def['description'] : label) ?? ''
-  const defaultValue = def['default'] !== undefined ? String(def['default']) : ''
-  const secret = def['secret'] === true
-  const enumValues = Array.isArray(def['enum']) ? def['enum'] as JsonValue[] : undefined
-  const selectMode = isString(def['select']) ? def['select'] : 'single'
-  const displayProperty = isString(def['display property']) ? def['display property'] : undefined
-  const valueProperty = isString(def['value property']) ? def['value property'] : undefined
-  const type = def['type']
+  for (const [name, propertyNode] of Object.entries(properties)) {
+    const resolved = resolveVariables(propertyNode, variables)
+    const def = isString(resolved) ? { description: resolved } : isObject(resolved) ? resolved : undefined
+    if (def === undefined) continue
+    if (!passesCondition(def, variables)) continue
 
-  // Check condition
-  if (def['condition'] !== undefined && def['condition'] !== null) {
-    const condition = toCondition(def['condition'])
-    if (!condition.isTrue()) {
-      return null
-    }
+    const answer = await resolveOrPlaceholder(context, def, name)
+    result[name] = answer
+    variables.set(name, answer)
   }
 
-  const answers = getAnswers(context.session)
-  const stdout = context.session.get('stdout') as ((text: string) => void) | undefined
-
-  // Resolution order (matches Kotlin's ParameterDataPrompt):
-  // 1. enum + single select → single-choice
-  // 2. enum + multiple select → multi-choice
-  // 3. secret → password prompt
-  // 4. type with properties → recursive property prompting
-  // 5. type = boolean → boolean prompt
-  // 6. type = string → text prompt
-  // 7. default → text prompt
-
-  if (enumValues !== undefined && selectMode === 'single') {
-    return promptChoice(answers, message, enumValues, displayProperty, valueProperty, false, stdout, context.interactive)
-  }
-
-  if (enumValues !== undefined && selectMode === 'multiple') {
-    return promptChoice(answers, message, enumValues, displayProperty, valueProperty, true, stdout, context.interactive)
-  }
-
-  if (secret) {
-    const result = await promptText(answers, message, defaultValue, true, stdout, context.interactive)
-    return result
-  }
-
-  if (type !== undefined && type !== null) {
-    return promptByType(context, answers, message, type, defaultValue, stdout)
-  }
-
-  const result = await promptText(answers, message, defaultValue, false, stdout, context.interactive)
   return result
 }
 
+/** Resolves a value; a missing text prompt yields the placeholder, a missing choice is an error. */
+async function resolveOrPlaceholder(context: ScriptContext, def: JsonObject, name?: string): Promise<JsonValue> {
+  const value = await resolveValue(context, def, name, false)
+  if (value !== undefined) return value
+
+  if (isChoice(def)) {
+    throw new SpecScriptError(`No value selected for '${question(def, name)}' and not in interactive mode`)
+  }
+  return NON_INTERACTIVE_PLACEHOLDER
+}
+
 // ---------------------------------------------------------------------------
-// Choice prompting
+// Shared per-property resolution (used by Prompt and Input schema)
 // ---------------------------------------------------------------------------
+
+/**
+ * Resolves a single property to a value, or undefined if nothing resolves.
+ *
+ * Order: environment variable (when checkEnv) → recorded answer → interactive prompt (with the
+ * default as a hint) → default value.
+ */
+export async function resolveValue(
+  context: ScriptContext,
+  def: JsonObject,
+  name: string | undefined,
+  checkEnv: boolean,
+): Promise<JsonValue | undefined> {
+
+  // Environment variable (input sources only)
+  if (checkEnv && isString(def['x-env'])) {
+    const envValue = process.env[def['x-env']]
+    if (envValue !== undefined) return envValue
+  }
+
+  // Recorded answer or interactive prompt
+  const asked = await ask(context, def, question(def, name))
+  if (asked !== undefined) return asked
+
+  // Fallback to default value (raw type preserved)
+  return def['default']
+}
+
+/** The question shown to the user: title → description → name. */
+export function question(def: JsonObject, name?: string): string {
+  if (isString(def['title'])) return def['title']
+  if (isString(def['description'])) return def['description']
+  return name ?? ''
+}
+
+/** Whether a value must be selected rather than freely typed. */
+export function isChoice(def: JsonObject): boolean {
+  return Array.isArray(def['enum']) || def['type'] === 'array'
+}
+
+/** Evaluates an `x-condition`, resolving its variables first. Absent condition passes. */
+export function passesCondition(def: JsonObject, variables: Map<string, JsonValue>): boolean {
+  const condition = def['x-condition']
+  if (condition === undefined || condition === null) return true
+  const resolved = resolveVariables(condition, variables)
+  if (isObject(resolved)) return toCondition(resolved).isTrue()
+  return true
+}
+
+/** Asks by type: array → multi-select, enum → single-select, password, boolean, or text. */
+async function ask(context: ScriptContext, def: JsonObject, message: string): Promise<JsonValue | undefined> {
+  const answers = getAnswers(context.session)
+  const stdout = context.session.get('stdout') as ((text: string) => void) | undefined
+  const type = def['type']
+  const defaultHint = def['default'] !== undefined ? String(def['default']) : ''
+
+  if (type === 'array') {
+    const items = isObject(def['items']) ? (def['items'] as JsonObject) : undefined
+    if (items === undefined) return undefined
+    const itemsEnum = Array.isArray(items['enum']) ? (items['enum'] as JsonValue[]) : []
+    return promptChoice(answers, message, itemsEnum, asString(items['x-title-property']), asString(items['x-value-property']), true, stdout, context.interactive)
+  }
+
+  if (Array.isArray(def['enum'])) {
+    return promptChoice(answers, message, def['enum'] as JsonValue[], asString(def['x-title-property']), asString(def['x-value-property']), false, stdout, context.interactive)
+  }
+
+  if (def['format'] === 'password') {
+    return promptText(answers, message, defaultHint, true, stdout, context.interactive)
+  }
+
+  if (type === 'boolean') {
+    const answer = await promptText(answers, message, defaultHint, false, stdout, context.interactive)
+    if (answer === undefined) return undefined
+    return answer === true || answer === 'true'
+  }
+
+  return promptText(answers, message, defaultHint, false, stdout, context.interactive)
+}
 
 async function promptChoice(
   answers: Map<string, JsonValue>,
   message: string,
   enumValues: JsonValue[],
-  displayProperty: string | undefined,
+  titleProperty: string | undefined,
   valueProperty: string | undefined,
   multiple: boolean,
   stdout?: (text: string) => void,
   interactive: boolean = false,
-): Promise<JsonValue> {
+): Promise<JsonValue | undefined> {
   const choices: Choice[] = enumValues.map(choiceData => {
-    if (displayProperty && isObject(choiceData)) {
-      return { displayName: String((choiceData as JsonObject)[displayProperty]), value: choiceData }
+    if (titleProperty && isObject(choiceData)) {
+      return { displayName: String((choiceData as JsonObject)[titleProperty]), value: choiceData }
     }
     return { displayName: toDisplayYaml(choiceData), value: choiceData }
   })
 
   const answer = await promptSelect(answers, message, choices, multiple, stdout, interactive)
+  if (answer === undefined) return undefined
 
   return onlyWith(answer, valueProperty)
 }
 
-/**
- * Extract a specific field from the selected value(s), matching Kotlin's onlyWith().
- */
+/** Extract a specific field from the selected value(s). */
 function onlyWith(value: JsonValue, field: string | undefined): JsonValue {
   if (!field) return value
 
   if (Array.isArray(value)) {
-    return value.map(item => isObject(item) ? (item as JsonObject)[field] : item)
+    return value.map(item => (isObject(item) ? (item as JsonObject)[field] : item))
   }
 
   if (isObject(value)) {
@@ -136,91 +203,6 @@ function onlyWith(value: JsonValue, field: string | undefined): JsonValue {
   return value
 }
 
-// ---------------------------------------------------------------------------
-// Type-based prompting
-// ---------------------------------------------------------------------------
-
-async function promptByType(
-  context: ScriptContext,
-  answers: Map<string, JsonValue>,
-  message: string,
-  type: JsonValue,
-  defaultValue: string,
-  stdout?: (text: string) => void,
-): Promise<JsonValue> {
-  // String type name
-  if (isString(type)) {
-    switch (type) {
-      case 'boolean': return promptBoolean(answers, message, defaultValue, stdout, context.interactive)
-      case 'string': return promptText(answers, message, defaultValue, false, stdout, context.interactive)
-      default: return promptText(answers, message, defaultValue, false, stdout, context.interactive)
-    }
-  }
-
-  if (isObject(type)) {
-    const typeObj = type as JsonObject
-
-    // Inline properties → recursive object prompting
-    if (isObject(typeObj['properties'])) {
-      return promptObjectProperties(context, typeObj['properties'] as JsonObject)
-    }
-
-    // Base type
-    if (isString(typeObj['base'])) {
-      switch (typeObj['base']) {
-        case 'boolean': return promptBoolean(answers, message, defaultValue, stdout, context.interactive)
-        case 'string': return promptText(answers, message, defaultValue, false, stdout, context.interactive)
-      }
-    }
-  }
-
-  return promptText(answers, message, defaultValue, false, stdout, context.interactive)
-}
-
-async function promptBoolean(
-  answers: Map<string, JsonValue>,
-  message: string,
-  defaultValue: string,
-  stdout?: (text: string) => void,
-  interactive: boolean = false,
-): Promise<boolean> {
-  const answer = await promptText(answers, message, defaultValue, false, stdout, interactive)
-  return answer === true || answer === 'true'
-}
-
-/**
- * Prompt for each property in a type definition (recursive prompting).
- */
-async function promptObjectProperties(
-  context: ScriptContext,
-  properties: JsonObject,
-): Promise<JsonObject> {
-  const result: JsonObject = {}
-  const answers = getAnswers(context.session)
-  const stdout = context.session.get('stdout') as ((text: string) => void) | undefined
-
-  for (const [name, propDef] of Object.entries(properties)) {
-    let def: JsonObject
-    if (isString(propDef)) {
-      def = { description: propDef }
-    } else if (isObject(propDef)) {
-      def = propDef as JsonObject
-    } else {
-      continue
-    }
-
-    // Check condition
-    if (def['condition'] !== undefined && def['condition'] !== null) {
-      const condition = toCondition(def['condition'])
-      if (!condition.isTrue()) continue
-    }
-
-    const propMessage = (isString(def['description']) ? def['description'] : name) ?? name
-    const propDefault = def['default'] !== undefined ? String(def['default']) : ''
-
-    const answer = await promptText(answers, propMessage, propDefault, def['secret'] === true, stdout, context.interactive)
-    result[name] = answer
-  }
-
-  return result
+function asString(value: JsonValue | undefined): string | undefined {
+  return typeof value === 'string' ? value : undefined
 }

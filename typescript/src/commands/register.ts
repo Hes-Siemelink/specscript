@@ -28,7 +28,6 @@ import { HttpServerCommand, HttpEndpointCommand, StopHttpServerCommand } from '.
 import { GetCommand, PostCommand, PutCommand, PatchCommand, DeleteCommand, HttpRequestDefaultsCommand } from './http.js'
 import { CheckTypeCommand } from './check-type.js'
 import { PromptCommand } from './prompt.js'
-import { PromptObjectCommand } from './prompt-object.js'
 import { ConfirmCommand } from './confirm.js'
 import {
   CredentialsCommand, GetAllCredentialsCommand, GetCredentialsCommand,
@@ -150,7 +149,6 @@ export function registerAllCommands(): void {
 
   // User interaction
   registerCommand(PromptCommand)
-  registerCommand(PromptObjectCommand)
   registerCommand(ConfirmCommand)
 
   // Connections
