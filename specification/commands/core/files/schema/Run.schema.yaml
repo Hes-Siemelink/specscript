@@ -6,10 +6,11 @@ oneOf:
   - type: object
     properties:
       script:
-        type: [object, string]
+        type: [ object, string ]
       file:
         type: string
       cd:
         type: string
       input: { }
     additionalProperties: false
+    x-default-property: script

@@ -3,7 +3,9 @@ package specscript.language
 import specscript.commands.files.Cd
 import specscript.commands.files.TempFile
 import specscript.commands.files.TempFileData
-import specscript.commands.scriptinfo.*
+import specscript.commands.scriptinfo.InputSchema
+import specscript.commands.scriptinfo.ScriptInfo
+import specscript.commands.scriptinfo.ScriptInfoData
 import specscript.commands.shell.Cli
 import specscript.commands.shell.CliData
 import specscript.commands.shell.Shell
@@ -17,6 +19,7 @@ import specscript.util.Yaml
 import specscript.util.toDomainObject
 import specscript.util.toJsonNode
 import tools.jackson.databind.JsonNode
+import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.StringNode
 import kotlin.io.path.name
 
@@ -28,6 +31,11 @@ class Script(val commands: List<Command>, val title: String? = null) {
 
     val info: ScriptInfoData by lazy {
         getScriptInfo()
+    }
+
+    val defaultProperty: String? by lazy {
+        val inputSchemaData = commands.find { it.equalsCommand(InputSchema) }?.data as? ObjectNode
+        inputSchemaData?.let { InputSchema.toInputData(it).defaultProperty }
     }
 
     fun run(context: ScriptContext): JsonNode? {

@@ -266,6 +266,56 @@ Assert equals:
 Keep in mind that input specified though an input flag (e.g. `spec run script.spec.yaml --greeting Hi`) will take
 precedence over environment variables.
 
+## Default property
+
+Use `x-default-property` to specify a single primitive property that can be used at the top level. This makes the
+command more compact.
+
+Given a script file `greet-user.spec.yaml`, we set the `name` input property to be the default.
+
+```yaml temp-file=greet-user.spec.yaml
+Input schema:
+  type: [ object, string ]
+  properties:
+    name:
+      description: Your name
+      type: string
+      default: Stranger
+    language:
+      description: Language to greet in
+      type: string
+      default: English
+  x-default-property: name
+
+Output: Hello ${name}!
+```
+
+Now we can call it like this:
+
+```yaml specscript
+Code example: Call a script with default property
+
+Greet user: World
+
+Expected output: Hello World!
+```
+
+This is equivalent to:
+
+```yaml specscript
+Code example: The object form stays equivalent
+
+Greet user:
+  name: World
+
+Expected output: Hello World!
+```
+
+`${input}` stays an object in both cases, so `${input.name}` and the other properties are always available.
+
+The named property must exist in `properties` and be a primitive value: `string`, `number`, `integer`, or `boolean`. A
+malformed `x-default-property` is a spec error that fails when the schema is processed.
+
 ## Supported JSON Schema subset
 
 `Input schema` uses the JSON Schema structure (`type: object` with `properties`) but only supports a narrow subset of
@@ -284,9 +334,10 @@ the full JSON Schema specification. The following keywords are recognized on eac
 
 At the top level, only these keywords are supported:
 
-- `type` — must be `object`
+- `type` — `object`, or the union `[ object, string ]` when a default property is declared
 - `properties` — map of property definitions
 - `required` — array of required property names
+- `x-default-property` — Scalar input is routed into this object property (SpecScript extension).
 
 Standard JSON Schema features like `pattern`, `minimum`, `maximum`, `minLength`, `maxLength`, `additionalProperties`,
 `allOf`, `anyOf`, `oneOf`, `if/then/else`, `$ref`, and nested object schemas are **not supported**.

@@ -207,3 +207,50 @@ Tests:
     Assert equals:
       actual: ${input.first} ${input.last}
       expected: Alice Smith
+
+  Use default property:
+
+    Temp file:
+      name: default-property-greet.spec.yaml
+      resolve: false
+      content:
+        Input schema:
+          type: [ object, string ]
+          properties:
+            name:
+              description: Your name
+            greeting:
+              default: Hello
+          x-default-property: name
+        Output: ${greeting}, ${name}!
+
+    Run:
+      file: ${output}
+      input: Hes
+
+    Assert equals:
+      actual: ${output}
+      expected: Hello, Hes!
+
+  Default property preserves the scalar JSON type:
+
+    Temp file:
+      name: echo-int.spec.yaml
+      resolve: false
+      content:
+        Input schema:
+          type: [ object, integer ]
+          properties:
+            count:
+              type: integer
+          x-default-property: count
+        Output: ${input}
+
+    Run:
+      file: ${output}
+      input: 42
+
+    Assert equals:
+      actual: ${output}
+      expected:
+        count: 42

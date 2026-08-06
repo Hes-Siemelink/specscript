@@ -1,13 +1,16 @@
 package specscript.files
 
 import specscript.language.*
+import specscript.util.Json
 import specscript.util.Yaml
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.ValueNode
 import java.nio.file.Path
 import kotlin.io.path.name
 
-class SpecScriptFile(val file: Path) : CommandInfo, CommandHandler(asScriptCommand(file.name), null), ObjectHandler {
+class SpecScriptFile(val file: Path) : CommandInfo, CommandHandler(asScriptCommand(file.name), null), ObjectHandler,
+    ValueHandler {
 
     override val name: String = asCliCommand(file.name)
     override val description: String by lazy {
@@ -37,6 +40,16 @@ class SpecScriptFile(val file: Path) : CommandInfo, CommandHandler(asScriptComma
         val localContext = FileContext(file, context, variables = input)
 
         return script.run(localContext)
+    }
+
+    override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
+        val property = script.defaultProperty
+            ?: throw CommandFormatException("Script '$name' does not accept a value; declare x-default-property in Input schema")
+
+        val input = Json.newObject()
+        input.set(property, data)
+
+        return execute(input, context)
     }
 
     fun run(context: ScriptContext = FileContext(file)): JsonNode? {

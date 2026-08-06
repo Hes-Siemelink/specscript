@@ -2,11 +2,12 @@
 
 Use **Run** to execute a SpecScript script file or inline script block with variable isolation.
 
-| Input  | Supported    |
-|--------|--------------|
-| Value  | yes          |
-| List   | auto-iterate |
-| Object | yes          |
+| Input            | Supported    |
+|------------------|--------------|
+| Value            | yes          |
+| List             | auto-iterate |
+| Object           | yes          |
+| Default property | `script`     |
 
 [Run.schema.yaml](schema/Run.schema.yaml)
 

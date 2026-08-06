@@ -25,3 +25,4 @@ properties:
   password:
     type: string
 additionalProperties: false
+x-default-property: url

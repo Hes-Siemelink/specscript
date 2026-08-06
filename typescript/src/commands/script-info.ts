@@ -1,8 +1,8 @@
 import type {CommandHandler} from '../language/command-handler.js'
 import type {JsonObject, JsonValue} from '../language/types.js'
-import {isObject, MissingInputError} from '../language/types.js'
+import {CommandFormatError, isObject, isString, MissingInputError} from '../language/types.js'
 import type {ScriptContext} from '../language/context.js'
-import {resolveValue, passesCondition} from './prompt.js'
+import {passesCondition, resolveValue} from './prompt.js'
 
 /**
  * Script info: declares metadata about a script. No-op during execution.
@@ -27,6 +27,9 @@ export const InputSchema: CommandHandler = {
     async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
         if (!isObject(data)) return getInput(context)
 
+        // Validate x-default-property whenever the schema is processed (load-time check)
+        getDefaultProperty(data)
+
         // Extract properties from JSON Schema format
         const properties = data['properties']
         if (!isObject(properties)) return getInput(context)
@@ -34,6 +37,43 @@ export const InputSchema: CommandHandler = {
         await populateInputVariables(context, properties)
         return getInput(context)
     },
+}
+
+/**
+ * Read and validate the x-default-property from an Input schema command's data.
+ * Returns the named property, or undefined when none is declared. Throws (load-time) if the
+ * annotation names a missing or non-scalar property.
+ */
+export function getDefaultProperty(inputSchemaData: JsonValue): string | undefined {
+    if (!isObject(inputSchemaData)) return undefined
+
+    const defaultProperty = inputSchemaData['x-default-property']
+    if (defaultProperty === undefined) return undefined
+
+    if (!isString(defaultProperty)) {
+        throw new CommandFormatError('x-default-property must be a string')
+    }
+
+    const properties = inputSchemaData['properties']
+    const property = isObject(properties) ? properties[defaultProperty] : undefined
+    if (property === undefined) {
+        throw new CommandFormatError(`x-default-property '${defaultProperty}' is not defined in properties`)
+    }
+    if (!isScalarProperty(property)) {
+        throw new CommandFormatError(`x-default-property '${defaultProperty}' must be a scalar property`)
+    }
+
+    return defaultProperty
+}
+
+/**
+ * A scalar property holds a single value (string, number, integer, boolean), not an object or array.
+ */
+function isScalarProperty(property: JsonValue): boolean {
+    if (!isObject(property)) return true
+    const type = property['type']
+    if (!isString(type)) return true
+    return type !== 'object' && type !== 'array'
 }
 
 /**

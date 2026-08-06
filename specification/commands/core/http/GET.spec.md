@@ -2,11 +2,12 @@
 
 `GET` sends a GET request to an HTTP endpoint.
 
-| Input  | Supported    |
-|--------|--------------|
-| Value  | yes          |
-| List   | auto-iterate |
-| Object | yes          |
+| Input            | Supported    |
+|------------------|--------------|
+| Value            | yes          |
+| List             | auto-iterate |
+| Object           | yes          |
+| Default property | `url`        |
 
 [GET.schema.yaml](schema/GET.schema.yaml)
 

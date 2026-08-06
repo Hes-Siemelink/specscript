@@ -29,7 +29,22 @@ object InputSchema : CommandHandler("Input schema", "core/script-info"),
             parameters[name] = propNode.toDomainObject(ParameterData::class)
         }
 
-        return InputSchemaData(parameters)
+        val defaultProperty = data.get("x-default-property")?.toDefaultProperty(parameters)
+
+        return InputSchemaData(parameters, defaultProperty)
+    }
+
+    private fun JsonNode.toDefaultProperty(properties: Map<String, ParameterData>): String {
+        if (!isString) {
+            throw CommandFormatException("x-default-property must be a string")
+        }
+        val name = stringValue()
+        val property = properties[name]
+            ?: throw CommandFormatException("x-default-property '$name' is not defined in properties")
+        if (!property.isScalar) {
+            throw CommandFormatException("x-default-property '$name' must be a scalar property")
+        }
+        return name
     }
 }
 
@@ -72,5 +87,6 @@ private fun conditionValid(condition: JsonNode?, context: ScriptContext): Boolea
 
 data class InputSchemaData(
     @get:JsonAnyGetter
-    override val properties: Map<String, ParameterData> = mutableMapOf()
+    override val properties: Map<String, ParameterData> = mutableMapOf(),
+    val defaultProperty: String? = null
 ) : ObjectDefinition

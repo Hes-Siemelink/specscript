@@ -28,6 +28,9 @@ abstract class PropertyDefinition {
 
     val isMultiple: Boolean get() = type?.name == "array"
 
+    /** A scalar property holds a single value (string, number, integer, boolean), not an object or array. */
+    val isScalar: Boolean get() = type?.name?.let { it != Type.OBJECT && it != Type.ARRAY } ?: true
+
     fun conditionValid(): Boolean {
         condition?.let { node ->
             return node.toCondition().isTrue()
