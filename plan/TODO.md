@@ -39,7 +39,6 @@
 * `spec --version` CLI flag (needs version baked into jar at build time)
 * Pull default property from command schema. (Currently defined on the code level)
 * Define commands in SpecScript itself
-* Allow list on top level
 * Secrets
 * Properly handle: null, empty, boolean, int
 * Stream and pipe output as Yaml array of lines
