@@ -17,6 +17,17 @@ Add some numbers
 ```yaml specscript
 Code example: 1 + 1 = 2
 
+Add: [ 1, 1 ]
+
+Expected output: 2
+```
+
+We are using the inline list syntax which is more intuitive for adding numbers. You can also use the regular list
+syntax.
+
+```yaml specscript
+Code example: 1 + 1 = 2 (block list syntax)
+
 Add:
   - 1
   - 1
@@ -26,14 +37,17 @@ Expected output: 2
 
 ## Add on objects
 
-Use **Add** to combine two things
+Use **Add** to extend an object with more fields.
 
 ```yaml specscript
-Code example: Add a field
+Code example: Add a field to an object
+
+${object}:
+  1: one
+  2: two
 
 Add:
-  - 1: one
-    2: two
+  - ${object}
   - 3: three
 
 Expected output:
@@ -68,11 +82,16 @@ Or combine two lists.
 ```yaml specscript
 Code example: Append a list to another
 
+${list1}:
+  - 1
+  - 2
+${list2}:
+  - 3
+  - 4
+
 Add:
-  - - 1
-    - 2
-  - - 3
-    - 4
+  - ${list1}
+  - ${list2}
 
 Expected output:
   - 1
@@ -83,13 +102,13 @@ Expected output:
 
 ## Add to text
 
-You can also extend a text string.
+You can add strings to each other.
 
 ```yaml specscript
 Code example: Append text
 
 Add:
-  - Hello
+  - "Hello"
   - " World"
 
 Expected output: Hello World

@@ -4,7 +4,7 @@ Does a text-based find & replace.
 
 | Input  | Supported |
 |--------|-----------|
-| Value  | yes       |
+| Value  | no        |
 | List   | yes       |
 | Object | yes       |
 
