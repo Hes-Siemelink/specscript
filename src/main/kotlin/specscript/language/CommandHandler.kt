@@ -1,5 +1,6 @@
 package specscript.language
 
+import specscript.util.Json
 import specscript.util.validateWithSchema
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ArrayNode
@@ -10,7 +11,7 @@ fun canonicalCommandName(name: String): String = name.lowercase()
 
 fun Command.equalsCommand(handler: CommandHandler): Boolean = name.equals(handler.name, ignoreCase = true)
 
-abstract class CommandHandler(open val name: String, open val namespace: String?) {
+abstract class CommandHandler(open val name: String, open val namespace: String?, val defaultProperty: String? = null) {
 
     fun handlesLists(): Boolean {
         return when (this) {
@@ -29,6 +30,18 @@ abstract class CommandHandler(open val name: String, open val namespace: String?
         data.validateWithSchema(schemaName)
     }
 
+    fun executeWithDefaultProperty(data: ValueNode, context: ScriptContext): JsonNode? {
+        if (this !is ObjectHandler) {
+            throw CommandFormatException("Command '$name' does not support objects invocation with default property.")
+        }
+        if (defaultProperty == null) {
+            throw CommandFormatException("Command '$name' does not have a default property defined.")
+        }
+
+        val objectData = Json.newObject().set(defaultProperty, data)
+
+        return execute(objectData, context)
+    }
 }
 
 

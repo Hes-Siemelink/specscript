@@ -1,22 +1,18 @@
 package specscript.commands.files
 
-import specscript.language.*
+import specscript.language.CommandFormatException
+import specscript.language.CommandHandler
+import specscript.language.ObjectHandler
+import specscript.language.ScriptContext
 import specscript.util.Yaml
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.StringNode
-import tools.jackson.databind.node.ValueNode
 import java.nio.file.Path
 import kotlin.io.path.exists
 
-object ReadFile : CommandHandler("Read file", "core/files"), ValueHandler, ObjectHandler {
-
-    override fun execute(data: ValueNode, context: ScriptContext): JsonNode {
-        val file = data.toPath(context)
-
-        return Yaml.readFile(file)
-    }
-
+object ReadFile : CommandHandler("Read file", namespace = "core/files", defaultProperty = "file"), ObjectHandler {
+    
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode {
         val file = data.toPath(context)
 

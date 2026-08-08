@@ -29,13 +29,15 @@
 
 # Naming alternatives
 
-* Spec.it
+* MayaSpec - Markdown/Yaml Spec
+    * ba'ax ma' bix => "what not how" in Maya
 
 # SpecScript language
 
 ## Core
 
 * `spec --version` CLI flag (needs version baked into jar at build time)
+* Pull default property from command schema. (Currently defined on the code level)
 * Define commands in SpecScript itself
 * Allow list on top level
 * Secrets

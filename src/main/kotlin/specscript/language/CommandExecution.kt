@@ -90,6 +90,10 @@ fun handleCommand(handler: CommandHandler, data: JsonNode, context: ScriptContex
                 handler.execute(data, context)
             }
 
+            handler is ObjectHandler && data is ValueNode && handler.defaultProperty != null -> {
+                handler.executeWithDefaultProperty(data, context)
+            }
+
             handler is ArrayHandler && data is ArrayNode -> {
                 handler.execute(data, context)
             }
