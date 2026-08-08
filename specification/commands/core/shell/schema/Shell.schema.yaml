@@ -28,3 +28,6 @@ oneOf:
       - required:
           - resource
     additionalProperties: false
+
+message:
+  oneOf: "Shell requires either a 'command' or 'resource'."

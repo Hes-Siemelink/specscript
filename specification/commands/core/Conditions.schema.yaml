@@ -36,6 +36,9 @@ definitions:
       - required:
           - not
 
+    message:
+      oneOf: "A condition must be exactly one of 'item' with 'equals' or 'in', 'all', 'any', 'not', or 'empty'."
+
   Condition:
     $ref: "#/definitions/ConditionBase"
     unevaluatedProperties: false

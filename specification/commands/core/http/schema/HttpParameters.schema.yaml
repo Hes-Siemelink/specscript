@@ -13,6 +13,8 @@ properties:
       - PATCH
       - PUT
       - DELETE
+    message:
+      enum: "HTTP method must be one of GET, POST, PATCH, PUT, DELETE."
   headers:
     type: object
   body: { }

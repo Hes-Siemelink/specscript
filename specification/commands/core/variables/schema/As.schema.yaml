@@ -2,3 +2,5 @@ $schema: https://json-schema.org/draft/2020-12/schema
 
 type: string
 pattern: "^\\$\\{([^}]+)}$" # Variable syntax. For example: ${var}
+message:
+  pattern: "As requires a variable reference in $'{'var'}' syntax."

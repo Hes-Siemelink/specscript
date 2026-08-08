@@ -9,3 +9,5 @@ patternProperties:
       - array
       - object
 additionalProperties: false
+message:
+  additionalProperties: "Add to entries must use $'{'var'}' variable syntax."

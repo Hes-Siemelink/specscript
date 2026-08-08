@@ -4,7 +4,10 @@ import com.networknt.schema.InputFormat
 import com.networknt.schema.Schema
 import com.networknt.schema.SchemaLocation
 import com.networknt.schema.SchemaRegistry
+import com.networknt.schema.SchemaRegistryConfig
+import com.networknt.schema.dialect.Dialect
 import com.networknt.schema.dialect.Dialects
+import com.networknt.schema.keyword.NonValidationKeyword
 import com.networknt.schema.resource.IriResourceLoader
 import specscript.language.CommandFormatException
 import tools.jackson.databind.JsonNode
@@ -15,7 +18,15 @@ object JsonSchemas {
 
     private val schemas = mutableMapOf<String, Schema?>()
 
-    var registry: SchemaRegistry = SchemaRegistry.withDialect(Dialects.getDraft202012()) { builder ->
+    private val dialect = Dialect.builder(Dialects.getDraft202012())
+        .keyword(NonValidationKeyword("message"))
+        .keyword(NonValidationKeyword("x-default-property"))
+        .build()
+
+    var registry: SchemaRegistry = SchemaRegistry.withDialect(dialect) { builder ->
+        builder.schemaRegistryConfig(
+            SchemaRegistryConfig.builder().errorMessageKeyword("message").build()
+        )
         builder.schemaIdResolvers { resolvers ->
             resolvers.mapPrefix("https://specscript.info/v1/commands", "classpath:commands")
         }

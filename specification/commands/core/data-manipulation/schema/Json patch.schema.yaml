@@ -21,6 +21,8 @@ properties:
             - move
             - copy
             - test
+          message:
+            enum: "Json patch 'op' must be one of add, remove, replace, move, copy, test."
         path:
           type: string
         value: {}

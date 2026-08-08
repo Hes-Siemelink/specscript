@@ -10,3 +10,5 @@ properties:
       - type: number
       - type: array
       - $ref: "/v1/commands/core/Conditions.schema.yaml"
+    message:
+      oneOf: "The 'until' condition must be a condition object, or a string, boolean, number or array."

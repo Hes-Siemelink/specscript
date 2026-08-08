@@ -14,3 +14,6 @@ oneOf:
       input: { }
     additionalProperties: false
     x-default-property: script
+
+message:
+  oneOf: "Run requires a command string, or an object with 'script', 'file', 'cd' or 'input'."

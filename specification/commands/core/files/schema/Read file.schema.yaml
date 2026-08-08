@@ -25,3 +25,8 @@ oneOf:
         not:
           required:
             - file
+    message:
+      oneOf: "Read file requires either a 'file' or 'resource', but not both."
+
+message:
+  oneOf: "Read file requires a path string, or an object with a 'file' or 'resource'."

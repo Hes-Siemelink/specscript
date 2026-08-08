@@ -14,3 +14,6 @@ oneOf:
     required:
       - content
     additionalProperties: false
+
+message:
+  oneOf: "Temp file requires a content value, or an object with 'name', 'resolve' and 'content'."

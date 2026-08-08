@@ -11,3 +11,6 @@ oneOf:
         type:
           - any
     additionalProperties: false
+
+message:
+  oneOf: "Write file requires a content value, or an object with 'file' and 'content'."
