@@ -102,7 +102,7 @@ tasks.register<Exec>("typescriptTest") {
     group = "verification"
     description = "Runs the TypeScript implementation tests"
     workingDir = file("typescript")
-    commandLine("npm", "test")
+    commandLine("sh", "-c", "pnpm test")
 }
 
 tasks.register("checkAll") {
