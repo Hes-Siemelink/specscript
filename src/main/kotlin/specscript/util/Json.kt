@@ -21,10 +21,13 @@ object Json {
 
     // Full mapper with KotlinModule, for typed deserialization/serialization.
     // Lazy to defer kotlin-reflect cost until first actual use.
+    // Null properties are omitted so that optional fields stay absent in the data,
+    // matching user-facing YAML where unset options are simply not present.
     val mapper: ObjectMapper by lazy {
         jsonMapper {
             addModule(kotlinModule())
             enable(SerializationFeature.INDENT_OUTPUT)
+            changeDefaultPropertyInclusion { it.withValueInclusion(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL) }
         }
     }
 

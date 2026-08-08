@@ -12,8 +12,7 @@ definitions:
         $ref: "#/definitions/Conditions"
       any:
         $ref: "#/definitions/Conditions"
-      empty:
-        $ref: "#/definitions/Container"
+      empty: { }
       item: { }
       equals: { }
       in:
@@ -36,8 +35,6 @@ definitions:
           - in
       - required:
           - not
-    message:
-      oneOf: "Invalid condition syntax in {0}"
 
   Condition:
     $ref: "#/definitions/ConditionBase"

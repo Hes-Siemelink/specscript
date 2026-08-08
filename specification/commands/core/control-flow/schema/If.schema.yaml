@@ -7,7 +7,7 @@ required:
   - then
 properties:
   then:
-    type: object
+    type: [ array, object ]
   else:
-    type: object
+    type: [ array, object ]
 unevaluatedProperties: false

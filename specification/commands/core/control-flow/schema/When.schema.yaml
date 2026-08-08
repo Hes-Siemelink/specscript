@@ -21,5 +21,3 @@ items:
       not:
         required:
           - then
-  message:
-    oneOf: Items in 'When' should have valid 'then' or 'else' (but not both)

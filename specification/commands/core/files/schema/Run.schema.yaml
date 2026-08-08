@@ -6,7 +6,7 @@ oneOf:
   - type: object
     properties:
       script:
-        type: [ object, string ]
+        type: [ array, object, string ]
       file:
         type: string
       cd:

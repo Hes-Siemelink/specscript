@@ -156,11 +156,11 @@ The script `subdir-import-all/hi-and-bye.spec.yaml`:
 ```yaml temp-file=subdir-import-all/hi-and-bye.spec.yaml
 Hi:
   name: Alice
-As: greeting
+As: ${greeting}
 ---
 Bye:
   name: Alice
-As: farewell
+As: ${farewell}
 ---
 Output: "${greeting} ${farewell}"
 ```
@@ -441,7 +441,7 @@ Input schema:
 
 Format name:
   name: ${name}
-As: formatted
+As: ${formatted}
 
 Output: Fancy hi ${formatted}!
 ```
