@@ -1,0 +1,5 @@
+Script info: List available models
+
+Shell:
+  command: opencode models
+  output type: array

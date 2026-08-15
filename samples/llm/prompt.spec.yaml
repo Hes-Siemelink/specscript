@@ -1,0 +1,14 @@
+Script info: Runs a prompt
+
+Input schema:
+  type: object
+  properties:
+    prompt:
+      type: string
+      description: Prompt
+    model:
+      type: string
+      description: "Model (provider/modelname)"
+      default: github-copilot/gpt-5-mini
+
+Shell: opencode run -m ${model} ${prompt}
