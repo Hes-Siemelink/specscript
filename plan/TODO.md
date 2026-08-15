@@ -84,8 +84,6 @@
 
 # Bugs
 
-* BUG: First line of output is not captured if shell script asks for user input => command appears to hang
-
 # Where to take it
 
 * Plaxolotl - cli scripts are just an interface to a portable execution format. This format has all the metadata defined

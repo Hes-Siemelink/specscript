@@ -16,6 +16,7 @@ import tools.jackson.databind.node.ValueNode
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.nio.file.Path
+import java.util.concurrent.LinkedBlockingQueue
 
 object Shell : CommandHandler("Shell", "core/shell"), ObjectHandler, ValueHandler {
 
@@ -134,7 +135,6 @@ fun streamCommand(
         val processBuilder = ProcessBuilder(listOf())
             .redirectOutput(ProcessBuilder.Redirect.PIPE)
             .redirectError(ProcessBuilder.Redirect.PIPE)
-            .redirectErrorStream(true)
             .command(listOf("/bin/bash", "-c", command))
 
         // Set working dir
@@ -150,9 +150,39 @@ fun streamCommand(
 
         // Start process
         val process = processBuilder.start()
+        process.outputStream.close()
 
         sequence {
-            yieldAll(process.inputStream.bufferedReader().lineSequence())
+            val outputLines = LinkedBlockingQueue<StreamEvent>()
+            val stdoutReader = Thread.ofVirtual().start {
+                try {
+                    process.inputStream.bufferedReader().useLines { lines ->
+                        lines.forEach { outputLines.put(StreamEvent.Line(it)) }
+                    }
+                } finally {
+                    outputLines.put(StreamEvent.OutputClosed)
+                }
+            }
+            val stderrReader = Thread.ofVirtual().start {
+                try {
+                    process.errorStream.bufferedReader().useLines { lines ->
+                        lines.forEach { outputLines.put(StreamEvent.Line(it)) }
+                    }
+                } finally {
+                    outputLines.put(StreamEvent.ErrorClosed)
+                }
+            }
+
+            var openStreams = 2
+            while (openStreams > 0) {
+                when (val event = outputLines.take()) {
+                    is StreamEvent.Line -> yield(event.value)
+                    StreamEvent.OutputClosed, StreamEvent.ErrorClosed -> openStreams--
+                }
+            }
+
+            stdoutReader.join()
+            stderrReader.join()
 
             val exitCode = process.waitFor()
             if (exitCode != 0) {
@@ -190,6 +220,12 @@ data class ShellCommand(
 
     val env: MutableMap<String, String> = mutableMapOf()
 )
+
+private sealed interface StreamEvent {
+    data class Line(val value: String) : StreamEvent
+    data object OutputClosed : StreamEvent
+    data object ErrorClosed : StreamEvent
+}
 
 enum class ShellOutputType {
     @JsonProperty("string")

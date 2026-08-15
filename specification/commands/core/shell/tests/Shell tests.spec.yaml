@@ -15,3 +15,17 @@ Tests:
     Shell:
       resource: sh helloworld.sh
     Expected output: Hello World
+
+  Handle stderr-only failure:
+
+    Shell: echo Error >&2 && exit 1
+    On error:
+      Output: Error handled
+    Expected output: Error handled
+
+  Handle commands waiting for stdin on failure:
+
+    Shell: if read x; then echo stdin; else echo closed >&2; fi; exit 1
+    On error:
+      Output: Error handled
+    Expected output: Error handled
