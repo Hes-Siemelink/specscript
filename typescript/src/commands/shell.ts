@@ -25,6 +25,7 @@ export const ShellCommand: CommandHandler = {
             const showOutput = data['show output'] === true
             const showCommand = data['show command'] === true
             const captureOutput = data['capture output'] !== false  // default true
+            const outputType = data['output type'] === 'array' ? 'array' : 'string'
 
             const commandLine = command ?? resource
             if (!commandLine) {
@@ -49,7 +50,7 @@ export const ShellCommand: CommandHandler = {
                 }
             }
 
-            return executeShell(commandLine, workDir, env, {showOutput, showCommand, captureOutput}, context)
+            return executeShell(commandLine, workDir, env, {showOutput, showCommand, captureOutput, outputType}, context)
         }
 
         throw new CommandFormatError('Shell: expected command string or object')
@@ -84,10 +85,10 @@ function executeShell(
     commandLine: string,
     workingDir: string,
     env: Record<string, string>,
-    options: { showOutput?: boolean; showCommand?: boolean; captureOutput?: boolean },
+    options: { showOutput?: boolean; showCommand?: boolean; captureOutput?: boolean; outputType?: 'string' | 'array' },
     context: ScriptContext
 ): JsonValue | undefined {
-    const {showOutput = false, showCommand = false, captureOutput = true} = options
+    const {showOutput = false, showCommand = false, captureOutput = true, outputType = 'string'} = options
 
     if (showCommand) {
         writeToCapture(context, commandLine)
@@ -109,7 +110,15 @@ function executeShell(
             writeToCapture(context, output)
         }
 
-        return captureOutput ? output : undefined
+        if (!captureOutput) {
+            return undefined
+        }
+
+        if (outputType === 'array') {
+            return output === '' ? [] : output.split('\n')
+        }
+
+        return output
     } catch (e: unknown) {
         if (e && typeof e === 'object' && 'status' in e) {
             const execError = e as { status: number; stdout?: string; stderr?: string }

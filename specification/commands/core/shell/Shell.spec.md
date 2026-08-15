@@ -116,6 +116,23 @@ Shell:
 Expected console output: echo Hello Alice
 ```
 
+## Capturing the output as an array
+
+Sometimes you want to process the output line by line. Use the `output type: array` parameter to capture the output as
+an array of lines.
+
+```yaml specscript
+Code example: Capture the output as an array
+
+Shell:
+  command: echo -e "Hello\nWorld"
+  output type: array
+
+Expected output:
+  - Hello
+  - World
+```
+
 ## Ignoring the output
 
 By default, the output of the shell script is stored in the output variable when the shell command is executed. By

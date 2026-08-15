@@ -1,8 +1,11 @@
 package specscript.commands.shell
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import specscript.commands.shell.ShellOutputType.ARRAY
+import specscript.commands.shell.ShellOutputType.STRING
 import specscript.commands.testing.ExpectedConsoleOutput
 import specscript.language.*
+import specscript.util.Json
 import specscript.util.Json.newObject
 import specscript.util.toDisplayYaml
 import specscript.util.toDomainObject
@@ -69,9 +72,11 @@ private fun execute(
     commandLine: String,
     workingDir: Path,
     info: ShellCommand = ShellCommand()
-): StringNode? {
+): JsonNode? {
 
     val buffer = StringBuilder()
+    val lines = Json.newArray()
+
     try {
 
         if (info.showCommand) {
@@ -83,19 +88,29 @@ private fun execute(
         )
 
         output.forEach { line ->
-            if (info.captureOutput) {
+            // Show output to console
+            if (info.showOutput) {
+                println(line)
+            }
+
+            // Capture as string
+            if (info.captureOutput && info.outputType == STRING) {
                 if (!buffer.isEmpty()) {
                     buffer.append("\n")
                 }
                 buffer.append(line)
             }
-            if (info.showOutput) {
-                println(line)
+
+            // Captiure as array
+            if (info.captureOutput && info.outputType == ARRAY) {
+                lines.add(line)
             }
         }
 
-        return if (info.captureOutput) {
+        return if (info.captureOutput && info.outputType == STRING) {
             StringNode(buffer.trim().toString())
+        } else if (info.captureOutput && info.outputType == ARRAY) {
+            lines
         } else {
             null
         }
@@ -170,5 +185,16 @@ data class ShellCommand(
     @JsonProperty("capture output")
     val captureOutput: Boolean = true,
 
+    @JsonProperty("output type")
+    val outputType: ShellOutputType = STRING,
+
     val env: MutableMap<String, String> = mutableMapOf()
 )
+
+enum class ShellOutputType {
+    @JsonProperty("string")
+    STRING,
+
+    @JsonProperty("array")
+    ARRAY
+}

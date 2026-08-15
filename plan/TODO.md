@@ -1,8 +1,6 @@
 # On my mind
 
-* Confirm should only run in interactive mode
-    * Clean up semantics of test runs
-    * Also test typescript
+* Clean up semantics of test runs
 * Plugin system with MCP
     * Move out of core: DB, LLM query
 * Error reporting during tests and execution
@@ -48,7 +46,6 @@
 
 ## User interaction
 
-* Use Input schema for Prompt
 * Resolve difference between Input parameters and Prompt for default values. Use two terms:
     - 'default' for Input parameters only -- no confirmation
     - 'placeholder' for both that will display the value for confirmation. (Alternative names: 'suggestion', '
@@ -56,6 +53,7 @@
     - When putting 'default' on Prompt it will act as a placeholder
 * Check command browser on Windows
 * Command browser should support ESC character to go a level up or exit
+* Confirm should only run in interactive mode
 
 ## Http
 

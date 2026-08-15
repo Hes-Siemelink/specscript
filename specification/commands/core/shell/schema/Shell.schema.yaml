@@ -20,6 +20,8 @@ oneOf:
       capture output:
         type: boolean
         default: true
+      output type:
+        enum: [ string, array ]
       env:
         type: object
     oneOf:
