@@ -24,6 +24,7 @@
 * Tutorial / guide documents: "Spec documents are written spec-first — they define behavior before implementation
   exists. This drives a minimalist style: precise, executable, and cheap to change." Create a separate set of
   friendlier, tutorial-style "getting started" and "how-to" guides.
+* Focus on Agent Skill as specs
 
 # Naming alternatives
 
@@ -43,6 +44,24 @@
 * Find a way to confirm default input parameters vs. just taking them for granted. Interactive mode would trigger
   confirmation?
 * Use Markdown front matter for SpecScript files to define metadata
+
+## CLI
+
+* Different top-level commands
+    - spec run [file|dir] [args]
+    - spec test [file|dir] args?
+    - spec help [file|dir]
+    - spec serve [file|dir] [args]
+    - spec serve --protocol http
+    - spec serve http [args]
+    - spec serve mcp [args]
+    - spec connect
+    - spec login (?)
+    - spec do [command] [args]
+        - spec do GET http://example.com
+        - spec do Print "Hello"
+        - spec do Shell --command "echo Hello" --print-output false
+* Implement top-level commands in SpecScript 😱
 
 ## User interaction
 

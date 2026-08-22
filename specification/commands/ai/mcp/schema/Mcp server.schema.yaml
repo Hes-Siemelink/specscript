@@ -12,13 +12,13 @@ properties:
   port:
     type: integer
   tools:
-    oneOf:
-      - type: object
-        additionalProperties:
-          $ref: "#/definitions/ToolInfo"
-      - type: array
-        items:
-          type: string
+    type: object
+    additionalProperties:
+      $ref: "#/definitions/ToolInfo"
+  tool files:
+    type: array
+    items:
+      type: string
   resources:
     type: object
     additionalProperties:
@@ -40,7 +40,7 @@ definitions:
         type: string
       inputSchema:
         $ref: "#/definitions/InputSchema"
-      output: {}
+      output: { }
       script:
         type:
           - object
@@ -68,7 +68,7 @@ definitions:
         type: string
       mimeType:
         type: string
-      output: {}
+      output: { }
       script:
         type:
           - object
@@ -97,7 +97,7 @@ definitions:
           required:
             - name
             - description
-      output: {}
+      output: { }
       script:
         type:
           - object

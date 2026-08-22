@@ -171,47 +171,86 @@ Stop mcp server: derive-demo
 
 Explicit `description` or `inputSchema` on the tool definition takes precedence over what the script provides.
 
-### Tools as a list of scripts
+## Define tools from files and directories
 
-When `tools` is a list of filenames, each file becomes a tool. The tool name is the filename without extensions.
-Description and input schema are derived from the script's `Script info` and `Input schema` commands.
+Use the `tool files` property to pass a list of scripts to be exposed as tools.
+
+Description and input schema are derived from the script's `Script info` and `Input schema` commands. The name of the
+tool is derived from the filename without extension.
+
+### Pass a list of files to define tools
 
 Given these three script files:
 
-```yaml temp-file=tool1.spec.yaml
-Output: Hello from tool1
+`tool1.spec.yaml`:
+
+```yaml temp-file=my-tools/tool1.spec.yaml
+Output: Hello from tool 1
 ```
 
-```yaml temp-file=tool2.spec.yaml
-Output: Hello from tool2
+`tool2.spec.yaml`:
+
+```yaml temp-file=my-tools/tool2.spec.yaml
+Output: Hello from tool 2
 ```
 
-```yaml temp-file=tool3.spec.yaml
-Output: Hello from tool3
+`tool3.spec.yaml`:
+
+```yaml temp-file=my-tools/tool3.spec.yaml
+Output: Hello from tool 3
 ```
 
-The server exposes each as a tool:
+The server exposes each as a tool by using the `tool files` property:
 
 ```yaml specscript
 Code example: MCP server with tools as script list
 
 Mcp server:
-  name: multi-script-server
+  name: mcp-script-server
   version: "1.0.0"
   port: 8083
-  tools:
-    - tool1.spec.yaml
-    - tool2.spec.yaml
-    - tool3.spec.yaml
+  tool files:
+    - my-tools/tool1.spec.yaml
+    - my-tools/tool2.spec.yaml
+    - my-tools/tool3.spec.yaml
+```
 
+You can then call a tool by its name, that was derived from the filename:
+
+```yaml specscript
 Mcp call tool:
   tool: tool1
   server:
     url: "http://localhost:8083/mcp"
 
-Expected output: Hello from tool1
+Expected output: Hello from tool 1
 
-Stop mcp server: multi-script-server
+Stop mcp server: mcp-script-server
+```
+
+### Scan directory for tools
+
+You can pass a directory to the `tool files` property, and all SpecScript files in that directory will be exposed as
+tools.
+
+```yaml specscript
+Code example: MCP server with tools from directory
+
+Mcp server:
+  name: mcp-dir-server
+  version: "1.0.0"
+  port: 8084
+  tool files:
+    - my-tools/
+
+Mcp call tool:
+  tool: tool2
+  server:
+    url: http://localhost:8084/mcp
+
+Expected output: Hello from tool 2
+
+Stop mcp server: mcp-dir-server
 ```
 
 ## Transports
@@ -230,7 +269,7 @@ Mcp server:
   name: http-server
   version: "1.0.0"
   transport: HTTP
-  port: 8084
+  port: 8085
   tools:
     greet:
       description: Generate a greeting over HTTP
@@ -247,7 +286,7 @@ Mcp call tool:
   input:
     name: Bob
   server:
-    url: "http://localhost:8084/mcp"
+    url: "http://localhost:8085/mcp"
 
 Expected output: Hello Bob via HTTP!
 

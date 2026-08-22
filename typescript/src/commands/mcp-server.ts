@@ -9,8 +9,8 @@
  */
 
 import { createServer, type Server as HttpServer, type IncomingMessage, type ServerResponse } from 'node:http'
-import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
+import { readFileSync, readdirSync, statSync } from 'node:fs'
+import { basename, join, resolve } from 'node:path'
 import { Server as McpLowLevelServer } from '@modelcontextprotocol/sdk/server/index.js'
 import {
   ListToolsRequestSchema, CallToolRequestSchema,
@@ -354,6 +354,73 @@ function setupProtocolHandlers(managed: McpManagedServer, serverOverride?: McpLo
   })
 }
 
+const YAML_SPEC_EXTENSION = '.spec.yaml'
+const MARKDOWN_SPEC_EXTENSION = '.spec.md'
+
+function isSpecScriptFile(path: string): boolean {
+  return path.endsWith(YAML_SPEC_EXTENSION) || path.endsWith(MARKDOWN_SPEC_EXTENSION)
+}
+
+function removeSpecScriptExtension(filename: string): string {
+  if (filename.endsWith(YAML_SPEC_EXTENSION)) return filename.slice(0, -YAML_SPEC_EXTENSION.length)
+  if (filename.endsWith(MARKDOWN_SPEC_EXTENSION)) return filename.slice(0, -MARKDOWN_SPEC_EXTENSION.length)
+  return filename
+}
+
+function isDirectoryPath(path: string): boolean {
+  try {
+    return statSync(path).isDirectory()
+  } catch {
+    return false
+  }
+}
+
+function collectSpecScriptFiles(dir: string, out: string[]): void {
+  for (const entry of readdirSync(dir)) {
+    const fullPath = join(dir, entry)
+    if (statSync(fullPath).isDirectory()) {
+      collectSpecScriptFiles(fullPath, out)
+    } else if (isSpecScriptFile(fullPath)) {
+      out.push(fullPath)
+    }
+  }
+}
+
+/**
+ * Resolves the `tool files` list into a tools map. Each entry may be a single script
+ * file or a directory, which is scanned recursively for spec script files. The tool
+ * name is derived from the filename without extension.
+ */
+function findScriptsRecursively(scriptDir: string, toolFiles: string[]): JsonObject {
+  const found: JsonObject = {}
+
+  for (const entry of toolFiles) {
+    const fullPath = resolve(scriptDir, entry)
+    const files = isDirectoryPath(fullPath) ? collectFrom(fullPath) : [fullPath]
+
+    for (const file of files) {
+      found[removeSpecScriptExtension(basename(file))] = { script: file }
+    }
+  }
+
+  return found
+}
+
+function collectFrom(dir: string): string[] {
+  const files: string[] = []
+  collectSpecScriptFiles(dir, files)
+  return files
+}
+
+function addToolScripts(tools: JsonObject, found: JsonObject): void {
+  for (const [toolName, toolData] of Object.entries(found)) {
+    if (toolName in tools) {
+      throw new CommandFormatError(`Tool name '${toolName}' already exists in tools map`)
+    }
+    tools[toolName] = toolData
+  }
+}
+
 // --- Server lifecycle ---
 
 function createMcpServer(name: string, version: string): McpManagedServer {
@@ -477,21 +544,15 @@ export const McpServerCommand: CommandHandler = {
       servers.set(name, managed)
     }
 
-    // Register tools (normalize list of filenames to object form)
-    if (Array.isArray(data.tools)) {
-      const toolsMap: JsonObject = {}
-      for (const filename of data.tools as string[]) {
-        const toolName = String(filename).replace(/\.spec\.yaml$/, '')
-        toolsMap[toolName] = { script: filename }
-      }
-      data.tools = toolsMap
+    // Register tools
+    const tools = (isObject(data.tools) ? data.tools : {}) as JsonObject
+    const toolFiles = data['tool files']
+    if (Array.isArray(toolFiles)) {
+      addToolScripts(tools, findScriptsRecursively(context.scriptDir, toolFiles as string[]))
     }
-    const tools = data.tools as JsonObject | undefined
-    if (isObject(tools)) {
-      for (const [toolName, toolData] of Object.entries(tools)) {
-        if (isObject(toolData)) {
-          addTool(managed, toolName, toolData, context.clone())
-        }
+    for (const [toolName, toolData] of Object.entries(tools)) {
+      if (isObject(toolData)) {
+        addTool(managed, toolName, toolData, context.clone())
       }
     }
 

@@ -1,28 +1,39 @@
 package specscript.commands.mcp
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
-import io.modelcontextprotocol.kotlin.sdk.server.*
+import io.modelcontextprotocol.kotlin.sdk.server.Server
+import io.modelcontextprotocol.kotlin.sdk.server.ServerOptions
+import io.modelcontextprotocol.kotlin.sdk.server.StdioServerTransport
+import io.modelcontextprotocol.kotlin.sdk.server.mcpStreamableHttp
 import io.modelcontextprotocol.kotlin.sdk.types.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.runBlocking
 import kotlinx.io.asSink
 import kotlinx.io.asSource
 import kotlinx.io.buffered
-import specscript.commands.scriptinfo.InputSchema as InputSchemaCommand
 import specscript.commands.server.HandlerInfo
 import specscript.commands.server.run
-import specscript.files.removeSpecScriptExtension
+import specscript.files.MARKDOWN_SPEC_EXTENSION
 import specscript.files.SpecScriptFile
+import specscript.files.YAML_SPEC_EXTENSION
+import specscript.files.removeSpecScriptExtension
 import specscript.language.*
 import specscript.util.*
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.StringNode
+import java.nio.file.Path
 import kotlin.concurrent.thread
+import kotlin.io.path.isDirectory
+import kotlin.io.path.listDirectoryEntries
+import kotlin.io.path.name
+import specscript.commands.scriptinfo.InputSchema as InputSchemaCommand
+
 
 object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, DelayedResolver {
 
@@ -37,10 +48,9 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
     private val httpServers = mutableMapOf<String, HttpMcpServer>()
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
-        normalizeToolsList(data)
         val info = data.toDomainObject(McpServerInfo::class)
-
-        // TODO Resolve top level properties but not the scripts
+        val toolScripts: Map<String, ToolInfo> = findScriptsRecursively(context.scriptDir, info.toolFiles)
+        info.tools.addTools(toolScripts)
 
         val server = servers.getOrPut(info.name) {
             Server(
@@ -79,23 +89,46 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
         return null
     }
 
-    /**
-     * When tools is a list of script filenames, convert to a map: tool name → {script: filename}.
-     * Tool name is the filename without .spec.yaml extension.
+    /** Resolves the given list of filenames against [scriptDir] and collects them as tools. Entries that
+     * are directories are scanned recursively for spec script files.
+     *
+     * @param scriptDir the root directory. Filenames are relative to this directory.
+     * @param toolFiles the list of filenames to scan. Can be files or directories.
+     * @return a map of tool names to ToolInfo objects. The tool name is derived from the filename by stripping the path and extension.
      */
-    private fun normalizeToolsList(data: ObjectNode) {
-        val toolsNode = data["tools"] ?: return
-        if (!toolsNode.isArray) return
-
-        val toolsMap = data.objectNode()
-        for (element in toolsNode) {
-            val filename = element.stringValue()
-            val toolName = filename.removeSpecScriptExtension()
-            val toolEntry = data.objectNode()
-            toolEntry.put("script", filename)
-            toolsMap.set(toolName, toolEntry)
+    private fun findScriptsRecursively(
+        scriptDir: Path,
+        toolFiles: List<String>
+    ): Map<String, ToolInfo> {
+        val tools = mutableMapOf<String, ToolInfo>()
+        for (toolFile in toolFiles) {
+            collectScripts(scriptDir.resolve(toolFile), tools)
         }
-        data.set("tools", toolsMap)
+        return tools
+    }
+
+    private fun collectScripts(path: Path, tools: MutableMap<String, ToolInfo>) {
+        if (path.isDirectory()) {
+            path.listDirectoryEntries().forEach { collectScripts(it, tools) }
+        } else if (path.isSpecScriptFile()) {
+            val toolName = path.fileName.toString().removeSpecScriptExtension()
+            tools[toolName] = ToolInfo(script = StringNode(path.toString()))
+        }
+    }
+
+    private fun Path.isSpecScriptFile(): Boolean {
+        return this.name.endsWith(YAML_SPEC_EXTENSION) || name.endsWith(MARKDOWN_SPEC_EXTENSION)
+    }
+
+    private fun MutableMap<String, ToolInfo>.addTools(tools: Map<String, ToolInfo>) {
+        for (toolName in tools.keys) {
+
+            if (this.containsKey(toolName)) {
+                throw CommandFormatException("Tool name '$toolName' already exists in tools map")
+            }
+
+            this[toolName] = tools[toolName] ?: throw CommandFormatException("Tool '$toolName' not found in tools map")
+        }
     }
 
     private fun startServer(info: McpServerInfo, server: Server) {
@@ -306,9 +339,9 @@ data class McpServerInfo(
     val port: Int = 8080,
 
     val tools: MutableMap<String, ToolInfo> = mutableMapOf(),
-
+    @JsonProperty("tool files")
+    val toolFiles: List<String> = listOf(),
     val resources: MutableMap<String, ResourceInfo> = mutableMapOf(),
-
     val prompts: MutableMap<String, PromptInfo> = mutableMapOf()
 )
 
@@ -319,7 +352,7 @@ enum class TransportType {
 
 data class ToolInfo(
     val description: String? = null,
-    val inputSchema: InputSchema?,
+    val inputSchema: InputSchema? = null,
     override val output: JsonNode? = null,
     override val script: JsonNode? = null
 ) : HandlerInfo
