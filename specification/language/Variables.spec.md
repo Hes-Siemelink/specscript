@@ -1,18 +1,5 @@
 # Variables
 
-## Built-in variables
-
-SpecScript provides several built-in variables:
-
-| Variable             | Description                                                     |
-|----------------------|-----------------------------------------------------------------|
-| `${output}`          | Result of the last command                                      |
-| `${input}`           | Input of the current script                                     |
-| `${env.VAR_NAME}`    | OS environment variable (read-only)                             |
-| `${SCRIPT_HOME}`     | Absolute path to the directory containing the current script    |
-| `${SCRIPT_TEMP_DIR}` | Absolute path to a temporary directory, created on first access |
-| `${PWD}`             | Absolute path to the working directory from where `spec` was launched |
-
 ## Basic usage
 
 SpecScript variables are written in `${..}` syntax.
@@ -80,6 +67,19 @@ Assert equals:
   - actual: ${data["first name"]}
     expected: Bob
 ```
+
+## Built-in variables
+
+SpecScript provides several built-in variables:
+
+| Variable             | Description                                                           |
+|----------------------|-----------------------------------------------------------------------|
+| `${output}`          | Result of the last command                                            |
+| `${input}`           | Input of the current script                                           |
+| `${env.VAR_NAME}`    | OS environment variable (read-only)                                   |
+| `${SCRIPT_HOME}`     | Absolute path to the directory containing the current script          |
+| `${SCRIPT_TEMP_DIR}` | Absolute path to a temporary directory, created on first access       |
+| `${PWD}`             | Absolute path to the working directory from where `spec` was launched |
 
 ## The ${output} variable
 
