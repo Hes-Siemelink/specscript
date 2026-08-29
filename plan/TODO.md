@@ -4,6 +4,7 @@
 * Plugin system with MCP
     * Move out of core: DB, LLM query
 * Error reporting during tests and execution
+* Run command from command line
 
 # Spotlight
 

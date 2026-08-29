@@ -15,3 +15,26 @@ Get full name:
 
 ---
 Expected output: Alice Bob
+
+---
+/fun:
+  name: get full name
+  description: Get the full name of a person
+
+  input:
+    type: object
+    properties:
+      first_name: string
+      last_name: string
+
+  output:
+    type: string
+
+  script:
+    /output: ${input.first_name} ${input.last_name}
+
+/get full name:
+  first_name: Alice
+  last_name: Bob
+
+/expect: Alice Bob

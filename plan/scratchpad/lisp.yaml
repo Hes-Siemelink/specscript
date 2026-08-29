@@ -1,14 +1,91 @@
 /let:
   a: 1
-/add: [ $a, 2, 3 ]
+/add: [ ${ a }, 2, 3 ]
 
 /expect: 6
 
----
-${a}: 2
-Add:
-  - ${a}
-  - 2
-  - 3
+/assert:
+  /equals:
+    - ${a}
+    - 1
 
-Expected output: 6
+/define:
+  function: add
+  description: Add numbers together
+
+  input:
+    type: array
+
+  output:
+    type: number
+
+  script:
+    /let:
+      sum: 0
+    /for-each:
+      item: ${input}
+      /do:
+        /let:
+          sum: ${sum} + ${item}
+    /output: ${sum}
+
+---
+/define:
+  class: Person
+  description: A person with a name and age
+
+  properties:
+    name:
+      type: string
+    age:
+      type: number
+
+  functions:
+    full name:
+      script:
+        /output: ${name} (${age})
+    greet:
+      input:
+        type: object
+        properties:
+          greeting:
+            type: string
+      script:
+        /output: ${greeting} ${name}
+
+let:
+  person:
+    /class: Person
+    name: Alice
+    age: 30
+
+Print:
+  ${person.greet}:
+    greeting: Hello
+
+/expect: Hello Alice
+---
+
+/if:
+  - /equals:
+      - ${a}
+      - 0
+    then:
+      /output: Zero
+  - /equals:
+      - ${a}
+      - 1
+    /then:
+      /output: One
+  - /else:
+      /output: Other
+
+---
+
+/equals:
+  - ${a}
+  - 1
+/then:
+  /output: One
+/else:
+  /output: Other
