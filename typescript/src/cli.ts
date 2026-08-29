@@ -945,6 +945,10 @@ function reportLanguageError(e: SpecScriptError, debug: boolean, logError: (...a
 
 function reportCommandError(e: SpecScriptCommandError, logError: (...args: unknown[]) => void): void {
     logError(e.message)
+
+    if (e.data !== undefined) {
+        logError(toDisplayYaml({[e.type]: e.data}))
+    }
 }
 
 // ---------------------------------------------------------------------------

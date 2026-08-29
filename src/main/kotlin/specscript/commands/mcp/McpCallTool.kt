@@ -54,6 +54,8 @@ object McpCallTool : CommandHandler("Mcp call tool", "ai/mcp"), ObjectHandler {
 
             firstMessage
 
+        } catch (e: SpecScriptCommandError) {
+            throw e
         } catch (e: Exception) {
             throw SpecScriptCommandError("Tool '${info.tool}' call failed: ${e.message}", cause = e)
         } finally {

@@ -146,12 +146,12 @@ class SpecScriptCli(
                 System.err.println(e.info.toDisplayString())
                 return 1
 
-            } catch (e: SpecScriptException) {
-                CliErrorReporter.reportLanguageError(e, options.debug)
-                return 1
-
             } catch (e: SpecScriptCommandError) {
                 CliErrorReporter.reportCommandError(e)
+                return 1
+
+            } catch (e: SpecScriptException) {
+                CliErrorReporter.reportLanguageError(e, options.debug)
                 return 1
             }
 

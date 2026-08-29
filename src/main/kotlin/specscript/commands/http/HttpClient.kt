@@ -65,7 +65,12 @@ object HttpClient {
         val contentType = parameters.headers?.get("Content-Type")?.stringValue()
         if (contentType == ContentType.Application.FormUrlEncoded.toString()) {
             val formData = body.properties().joinToString("&") { entry ->
-                "${URLEncoder.encode(entry.key, Charsets.UTF_8)}=${URLEncoder.encode(entry.value.toDisplayYaml(), Charsets.UTF_8)}"
+                "${URLEncoder.encode(entry.key, Charsets.UTF_8)}=${
+                    URLEncoder.encode(
+                        entry.value.toDisplayYaml(),
+                        Charsets.UTF_8
+                    )
+                }"
             }
             return HttpRequest.BodyPublishers.ofString(formData)
         }

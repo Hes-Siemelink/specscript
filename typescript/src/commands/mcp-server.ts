@@ -688,7 +688,8 @@ export const McpCallToolCommand: CommandHandler = {
           : 'Unknown error'
         throw new SpecScriptCommandError(
           `Tool '${toolName}' call failed`,
-          { type: 'MCP Server error', data: errorText },
+          'MCP Server error',
+          errorText,
         )
       }
 
