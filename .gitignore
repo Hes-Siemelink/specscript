@@ -31,3 +31,6 @@ typescript/pnpm-lock.yaml
 # Specscript
 /.specscript
 test-results
+
+# Playwright
+.playwright-mcp

@@ -1,0 +1,111 @@
+# Http request defaults
+
+Http request defaults:
+  url: http://localhost:2525
+  path: /items
+
+POST:
+  body:
+    1: One
+    2: Two
+    3: Three
+
+---
+# Explicit 'Mcp start session' and 'Mcp stop session' commands
+
+Mcp start session:
+  name: worker-a
+  server:
+    url: "http://localhost:8091/mcp"
+
+Mcp call tool:
+  session: worker-a
+  tool: remember
+  input:
+    value: 42
+
+---
+Mcp call tool:
+  session: worker-a
+  tool: recall
+
+Mcp stop session: worker-a
+
+Expected output: 42
+
+---
+# Mcp request defaults - also starts session?
+
+Mcp request defaults:
+  name: worker-a
+  server:
+    url: "http://localhost:8091/mcp"
+
+Mcp call tool:
+  session: worker-a
+  tool: remember
+  input:
+    value: 42
+
+Expected output: 42
+
+---
+# Http session start  and Mcp session start (and stop)
+
+Http session start:
+  url: http://localhost:2525
+  path: /items
+
+POST:
+  body:
+    1: One
+    2: Two
+    3: Three
+
+Mcp session start:
+  name: worker-a
+  server:
+    url: "http://localhost:8091/mcp"
+
+Mcp call tool:
+  session: worker-a
+  tool: remember
+  input:
+    value: 42
+
+Expected output: 42
+
+Mcp session stop: worker-a
+
+---
+# 'Http session' and 'Mcp session' but stop commands are more explicit
+# Note: no defaults, just sessions! Support both? => just do sessions and maybe someday add generic defaults support...
+
+Http session:
+  url: http://localhost:2525
+  path: /items
+As: ${http_session}
+
+POST:
+  body:
+    1: One
+    2: Two
+    3: Three
+
+Http stop session: ${http_session}
+
+---
+Mcp session:
+  name: worker-a
+  server:
+    url: "http://localhost:8091/mcp"
+
+Mcp call tool:
+  tool: remember
+  input:
+    value: 42
+
+Expected output: 42
+
+Mcp stop session: worker-a
+
