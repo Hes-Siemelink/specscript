@@ -24,6 +24,7 @@ import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js'
 import type { CommandHandler } from '../language/command-handler.js'
 import type { ScriptContext } from '../language/context.js'
+import { SessionRegistry, type Session } from '../language/sessions.js'
 import type { JsonValue, JsonObject } from '../language/types.js'
 import { isObject, isString, SpecScriptError, SpecScriptCommandError, CommandFormatError } from '../language/types.js'
 import { Script } from '../language/script.js'
@@ -144,6 +145,34 @@ function parseMcpTextContent(text: string): JsonValue {
     return parseYamlIfPossible(text)
   }
   return text
+}
+
+interface McpTextContent {
+  type?: string
+  text?: string
+}
+
+/**
+ * The first text content found in an MCP result. Items may carry text directly
+ * (tool content blocks, resource contents) or nest it in a `content` field
+ * (prompt messages). Mirrors Kotlin's firstTextAsJson helper.
+ */
+function firstTextContent(items: unknown): McpTextContent | undefined {
+  if (Array.isArray(items)) {
+    for (const item of items) {
+      const found = firstTextContent(item)
+      if (found !== undefined) return found
+    }
+    return undefined
+  }
+
+  if (items === null || typeof items !== 'object') return undefined
+
+  const block = items as Record<string, unknown>
+  if (typeof block.text === 'string') {
+    return { type: typeof block.type === 'string' ? block.type : undefined, text: block.text }
+  }
+  return firstTextContent(block.content)
 }
 
 function writeToContext(context: ScriptContext | undefined, text: string): void {
@@ -654,6 +683,67 @@ export const McpPromptCommand: CommandHandler = {
   },
 }
 
+// --- Mcp session commands ---
+
+export interface McpSessionEntry extends Session {
+  data: JsonObject
+  client: Client
+}
+
+export const mcpSessionRegistry = new SessionRegistry<McpSessionEntry>('mcp.sessions', 'mcp-session')
+
+export const McpSessionCommand: CommandHandler = {
+  name: 'Mcp session',
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
+    if (!isObject(data)) {
+      throw new CommandFormatError('Mcp session: expected an object')
+    }
+
+    const name = (data.name as string | undefined) ?? mcpSessionRegistry.generateName(context)
+    data.name = name
+
+    const serverInfo: JsonObject = { ...data }
+    delete serverInfo.name
+
+    const transport = createClientTransport(serverInfo)
+    const client = new Client({ name: 'specscript-client', version: '1.0.0' })
+
+    try {
+      await client.connect(transport)
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e)
+      throw new SpecScriptCommandError(`Could not open Mcp session '${name}': ${msg}`)
+    }
+
+    mcpSessionRegistry.open(context, {
+        name,
+        data,
+        client,
+        close: () => client.close(),
+    })
+    return data
+  },
+}
+
+export const McpCloseSessionCommand: CommandHandler = {
+  name: 'Mcp close session',
+  async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
+    const name = mcpSessionNameFrom(data)
+    if (name === undefined) {
+      throw new CommandFormatError('Mcp close session: expected a session name or a session object')
+    }
+    await mcpSessionRegistry.close(context, name)
+    return undefined
+  },
+}
+
+/** The session name from a value (string) or a session object (has a name property). */
+function mcpSessionNameFrom(data: JsonValue): string | undefined {
+  if (isString(data)) return data
+  if (isObject(data) && typeof data.name === 'string') return data.name
+  return undefined
+}
+
 // --- Mcp call tool command ---
 
 export const McpCallToolCommand: CommandHandler = {
@@ -666,51 +756,90 @@ export const McpCallToolCommand: CommandHandler = {
     const toolName = data.tool as string
     if (!toolName) throw new CommandFormatError('Mcp call tool: missing required "tool" property')
 
-    const serverInfo = data.server as JsonObject
-    if (!isObject(serverInfo)) throw new CommandFormatError('Mcp call tool: missing required "server" property')
-
     const input = data.input as JsonObject | undefined
-    const transport = createClientTransport(serverInfo)
-
-    const client = new Client({ name: 'specscript-client', version: '1.0.0' })
+    const session = resolveMcpTarget(data, context)
 
     try {
-      await client.connect(transport)
-
-      const result = await client.callTool({
-        name: toolName,
-        arguments: input ?? {},
-      })
-
-      if (result.isError) {
-        const errorText = result.content && Array.isArray(result.content) && result.content.length > 0
-          ? (result.content[0] as { text?: string }).text ?? 'Unknown error'
-          : 'Unknown error'
-        throw new SpecScriptCommandError(
-          `Tool '${toolName}' call failed`,
-          'MCP Server error',
-          errorText,
-        )
+      if (session) {
+        return await callTool(session.client, toolName, input)
       }
-
-      // Extract first text content
-      if (result.content && Array.isArray(result.content) && result.content.length > 0) {
-        const first = result.content[0] as { type: string; text?: string }
-        if (first.type === 'text' && first.text !== undefined) {
-          return parseMcpTextContent(first.text)
-        }
-        return `Tool executed successfully with result of type ${first.type}`
-      }
-
-      return 'Tool executed but returned no content'
+      return await callToolOnce(data, toolName, input)
     } catch (e) {
       if (e instanceof SpecScriptCommandError) throw e
       const msg = e instanceof Error ? e.message : String(e)
       throw new SpecScriptCommandError(`Tool '${toolName}' call failed: ${msg}`)
-    } finally {
-      await client.close()
     }
   },
+}
+
+/**
+ * Resolve the session to use for an Mcp command. Resolution order:
+ * explicit `session:` name → explicit `server:` (connect-per-call) →
+ * current open session → error. `session` and `server` are mutually exclusive.
+ */
+function resolveMcpTarget(data: JsonObject, context: ScriptContext): McpSessionEntry | undefined {
+  const sessionName = data.session as string | undefined
+  const serverGiven = data.server !== undefined
+
+  if (sessionName !== undefined && serverGiven) {
+    throw new SpecScriptCommandError("Give either 'session' or 'server' on Mcp call tool, not both")
+  }
+
+  if (sessionName !== undefined) {
+    const session = mcpSessionRegistry.get(context, sessionName)
+    if (!session) throw new SpecScriptCommandError(`No open Mcp session: ${sessionName}`)
+    return session
+  }
+
+  if (serverGiven) {
+    return undefined
+  }
+
+  const current = mcpSessionRegistry.current(context)
+  if (!current) throw new SpecScriptCommandError('No MCP server specified and no open Mcp session')
+  return current
+}
+
+async function callToolOnce(data: JsonObject, toolName: string, input: JsonObject | undefined): Promise<JsonValue> {
+  const serverInfo = data.server as JsonObject
+  if (!isObject(serverInfo)) throw new CommandFormatError('Mcp call tool: missing required "server" property')
+
+  const transport = createClientTransport(serverInfo)
+  const client = new Client({ name: 'specscript-client', version: '1.0.0' })
+
+  try {
+    await client.connect(transport)
+    return await callTool(client, toolName, input)
+  } finally {
+    await client.close()
+  }
+}
+
+async function callTool(client: Client, toolName: string, input: JsonObject | undefined): Promise<JsonValue> {
+  const result = await client.callTool({
+    name: toolName,
+    arguments: input ?? {},
+  })
+
+  const first = firstTextContent(result.content)
+
+  if (result.isError) {
+    throw new SpecScriptCommandError(
+      `Tool '${toolName}' call failed`,
+      'MCP Server error',
+      first?.text ?? 'Unknown error',
+    )
+  }
+
+  if (first?.text !== undefined) {
+    return parseMcpTextContent(first.text)
+  }
+
+  if (first) {
+    return `Tool executed successfully with result of type ${first.type}`
+  }
+
+  return 'Tool executed but returned no content'
 }
 
 // --- Mcp read resource command ---
@@ -736,14 +865,8 @@ export const McpReadResourceCommand: CommandHandler = {
 
       const result = await client.readResource({ uri })
 
-      if (result.contents && result.contents.length > 0) {
-        const first = result.contents[0] as { text?: string }
-        if (first.text !== undefined) {
-          return parseMcpTextContent(first.text)
-        }
-      }
-
-      return undefined
+      const first = firstTextContent(result.contents)
+      return first?.text !== undefined ? parseMcpTextContent(first.text) : undefined
     } catch (e) {
       if (e instanceof SpecScriptCommandError) throw e
       const msg = e instanceof Error ? e.message : String(e)
@@ -781,15 +904,8 @@ export const McpGetPromptCommand: CommandHandler = {
         arguments: input,
       })
 
-      if (result.messages && result.messages.length > 0) {
-        const first = result.messages[0]
-        const content = first.content as { type: string; text?: string }
-        if (content.type === 'text' && content.text !== undefined) {
-          return parseMcpTextContent(content.text)
-        }
-      }
-
-      return undefined
+      const first = firstTextContent(result.messages)
+      return first?.text !== undefined ? parseMcpTextContent(first.text) : undefined
     } catch (e) {
       if (e instanceof SpecScriptCommandError) throw e
       const msg = e instanceof Error ? e.message : String(e)

@@ -35,8 +35,19 @@ object HttpClient {
     }
 
     fun processRequest(data: ObjectNode, context: ScriptContext, method: HttpMethod): JsonNode? {
-        val parameters = HttpParameters.create(data, HttpRequestDefaults.getFrom(context), method)
+        val defaults = sessionDefaults(data, context) ?: HttpRequestDefaults.getFrom(context)
+        val parameters = HttpParameters.create(data, defaults, method)
         return processRequest(parameters)
+    }
+
+    private fun sessionDefaults(data: ObjectNode, context: ScriptContext): JsonNode? {
+        val sessionName = data.remove("session")?.stringValue()
+            ?: return HttpSession.sessions.current(context)?.data
+
+        val session = HttpSession.sessions.get(context, sessionName)
+            ?: throw SpecScriptCommandError("No open Http session: $sessionName")
+
+        return session.data
     }
 
     private fun processRequest(parameters: HttpParameters): JsonNode? {
@@ -116,7 +127,7 @@ object HttpClient {
         if (statusCode !in 200..299) {
             val data = Yaml.parseIfPossible(String(response.body()))
             val type = statusCode.toString()
-            throw SpecScriptCommandError("Http request returned an error", type = type, data = data)
+            throw SpecScriptCommandError("Http request returned an error: $statusCode", type = type, data = data)
         }
 
         // No content

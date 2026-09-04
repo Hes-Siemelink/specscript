@@ -13,6 +13,7 @@ import type { ScriptContext } from '../language/context.js'
 import type { JsonValue, JsonObject } from '../language/types.js'
 import { isObject, SpecScriptCommandError } from '../language/types.js'
 import { parseYamlIfPossible, toDisplayYaml } from '../util/yaml.js'
+import { httpSessionRegistry } from './http-sessions.js'
 
 const HTTP_DEFAULTS_KEY = 'http.defaults'
 
@@ -41,7 +42,7 @@ export async function processValueRequest(urlString: string, context: ScriptCont
  * Process an HTTP request from an object form.
  */
 export async function processObjectRequest(data: JsonObject, context: ScriptContext, method: string): Promise<JsonValue | undefined> {
-  const defaults = getDefaults(context)
+  const defaults = sessionDefaults(data, context) ?? getDefaults(context)
   const merged = mergeWithDefaults({ ...data }, defaults)
 
   const url = buildUrl(merged)
@@ -64,6 +65,28 @@ export async function processObjectRequest(data: JsonObject, context: ScriptCont
 }
 
 // --- Defaults management ---
+
+/**
+ * Resolve the defaults object for a request from an Http session.
+ * The `session` property on the request is consumed here, so request commands
+ * do not need to know about sessions. Falls back to the current session when no
+ * explicit `session` property is given.
+ */
+function sessionDefaults(data: JsonObject, context: ScriptContext): JsonObject | undefined {
+  const sessionName = data.session as string | undefined
+  delete data.session
+
+  if (sessionName === undefined) {
+    const current = httpSessionRegistry.current(context)
+    return current?.data
+  }
+
+  const session = httpSessionRegistry.get(context, sessionName)
+  if (!session) {
+    throw new SpecScriptCommandError(`No open Http session: ${sessionName}`)
+  }
+  return session.data
+}
 
 export function storeDefaults(context: ScriptContext, data: JsonObject): void {
   context.session.set(HTTP_DEFAULTS_KEY, data)

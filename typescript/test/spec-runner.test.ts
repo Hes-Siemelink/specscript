@@ -13,6 +13,7 @@ import {parseYamlCommands} from '../src/util/yaml.js'
 import {getTestTitle, parseMarkdownScripts} from '../src/markdown/converter.js'
 import {stopAllServers} from '../src/commands/http-server.js'
 import {stopAllMcpServers} from '../src/commands/mcp-server.js'
+import {closeAllSessions} from '../src/language/sessions.js'
 
 // Register commands once
 registerAllCommands()
@@ -111,8 +112,9 @@ function runSpecYaml(relativePath: string, commands: Command[]): void {
 /**
  * Register a single spec test with vitest, honoring SKIP_TESTS and applying silent capture.
  * Shared by the Tests: and legacy Test case: formats.
+ * Sessions opened by the last test of a file are closed afterwards (mirrors Kotlin TestUtil).
  */
-function registerScriptTest(name: string, script: Script, createContext: () => DefaultContext): void {
+function registerScriptTest(name: string, script: Script, createContext: () => DefaultContext, closeSessionsAfterwards = false): void {
     if (SKIP_TESTS.has(name)) {
         it.skip(name, () => {})
         return
@@ -120,7 +122,13 @@ function registerScriptTest(name: string, script: Script, createContext: () => D
     it(name, async () => {
         const context = createContext()
         setupSilentCapture(context)
-        await script.run(context)
+        try {
+            await script.run(context)
+        } finally {
+            if (closeSessionsAfterwards) {
+                await closeAllSessions(context)
+            }
+        }
     }, TEST_TIMEOUT)
 }
 
@@ -155,11 +163,13 @@ function runStructuredTests(script: Script, fullPath: string): void {
     }
 
     if (testsData && isObject(testsData)) {
-        for (const [testName, testBody] of Object.entries(testsData)) {
+        const entries = Object.entries(testsData)
+        for (const [index, [testName, testBody]] of entries.entries()) {
             registerScriptTest(testName, Script.fromData(testBody as JsonValue), () =>
                 sharedContext
                     ? (sharedContext!.clone() as DefaultContext)
-                    : new DefaultContext({scriptFile: fullPath, workingDir: dirname(fullPath)})
+                    : new DefaultContext({scriptFile: fullPath, workingDir: dirname(fullPath)}),
+                index === entries.length - 1,
             )
         }
     }
@@ -172,8 +182,8 @@ function runFlatTests(script: Script, relativePath: string, fullPath: string): v
     if (testCases.length === 1 && testCases[0].name === 'default') {
         registerScriptTest(relativePath, script, createContext)
     } else {
-        for (const testCase of testCases) {
-            registerScriptTest(testCase.name, testCase.script, createContext)
+        for (const [index, testCase] of testCases.entries()) {
+            registerScriptTest(testCase.name, testCase.script, createContext, index === testCases.length - 1)
         }
     }
 }
@@ -193,9 +203,10 @@ function runMarkdownFile(fullPath: string, displayPath: string, scriptHome: stri
 
     let hasTests = false
 
-    for (const script of scripts) {
+    for (const [index, script] of scripts.entries()) {
         const title = getTestTitle(script)
         const qualifiedTitle = `${displayPath} > ${title}`
+        const isLast = index === scripts.length - 1
 
         if (SKIP_TESTS.has(title) || SKIP_TESTS.has(qualifiedTitle)) {
             it.skip(title, () => {})
@@ -205,11 +216,17 @@ function runMarkdownFile(fullPath: string, displayPath: string, scriptHome: stri
 
         hasTests = true
         it(title, async () => {
-            sharedContext.error = undefined
-            sharedContext.variables.delete('input')
-            const captured = sharedContext.session.get('capturedOutput') as string[] | undefined
-            if (captured) captured.length = 0
-            await script.run(sharedContext)
+            try {
+                sharedContext.error = undefined
+                sharedContext.variables.delete('input')
+                const captured = sharedContext.session.get('capturedOutput') as string[] | undefined
+                if (captured) captured.length = 0
+                await script.run(sharedContext)
+            } finally {
+                if (isLast) {
+                    await closeAllSessions(sharedContext)
+                }
+            }
         }, TEST_TIMEOUT)
     }
 

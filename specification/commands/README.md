@@ -100,6 +100,9 @@ Overview of standard commands in SpecScript.
 * [DELETE](core/http/DELETE.spec.md) - Sends a DELETE request to an HTTP endpoint
 * [Http request defaults](core/http/Http%20request%20defaults.spec.md) - Sets the default parameters for all subsequent
   HTTP commands.
+* [Http session](core/http/Http%20session.spec.md) - Opens a session that provides default parameters for subsequent
+  HTTP commands
+* [Http close session](core/http/Http%20close%20session.spec.md) - Closes an open Http session
 
 ### Http server
 
@@ -126,6 +129,8 @@ Overview of standard commands in SpecScript.
 * [Mcp call tool](ai/mcp/Mcp%20call%20tool.spec.md) - Executes tools on MCP servers
 * [Mcp read resource](ai/mcp/Mcp%20read%20resource.spec.md) - Reads resources from MCP servers
 * [Mcp get prompt](ai/mcp/Mcp%20get%20prompt.spec.md) - Gets prompts from MCP servers
+* [Mcp session](ai/mcp/Mcp%20session.spec.md) - Opens a connection to an MCP server that stays alive across calls
+* [Mcp close session](ai/mcp/Mcp%20close%20session.spec.md) - Closes an open Mcp session
 * [Mcp server](ai/mcp/Mcp%20server.spec.md) - Starts an MCP server with tools, resources, and prompts
 * [Mcp tool](ai/mcp/Mcp%20tool.spec.md) - Defines tools for an MCP server
 * [Mcp prompt](ai/mcp/Mcp%20prompt.spec.md) - Defines prompts for an MCP server

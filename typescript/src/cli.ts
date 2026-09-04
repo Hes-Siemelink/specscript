@@ -4,6 +4,7 @@ import {tmpdir} from 'node:os'
 import {Script} from './language/script.js'
 import type {ScriptContext} from './language/context.js'
 import {DefaultContext} from './language/context.js'
+import {closeAllSessions} from './language/sessions.js'
 import {registerAllCommands} from './commands/register.js'
 import {setupSilentCapture, setupStdoutCapture} from './language/stdout-capture.js'
 import {parseMarkdownScripts} from './markdown/converter.js'
@@ -742,6 +743,11 @@ export async function executeFile(
     } else {
         const script = Script.fromString(content)
         await script.run(context)
+    }
+
+    // Close open Http and Mcp sessions when the top-level script run finishes
+    if (!parent) {
+        await closeAllSessions(context)
     }
 
     return context.output

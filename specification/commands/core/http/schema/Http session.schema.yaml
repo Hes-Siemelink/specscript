@@ -2,19 +2,13 @@ $schema: https://json-schema.org/draft/2020-12/schema
 
 type: object
 properties:
+  name:
+    type: string
+    description: Session name that serves as its id. Generated if not specified.
   url:
     type: string
   path:
     type: string
-  method:
-    enum:
-      - GET
-      - POST
-      - PATCH
-      - PUT
-      - DELETE
-    message:
-      enum: "HTTP method must be one of GET, POST, PATCH, PUT, DELETE."
   headers:
     type: object
   body: { }
@@ -26,7 +20,4 @@ properties:
     type: string
   password:
     type: string
-  session:
-    type: string
 additionalProperties: false
-x-default-property: url

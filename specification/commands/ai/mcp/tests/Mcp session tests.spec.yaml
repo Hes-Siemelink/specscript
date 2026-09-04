@@ -1,0 +1,139 @@
+# TODO: add a test that proves server-side session state survives across calls in one session
+# (remember/recall against a session-aware server). Needs a stateful test server; the current
+# mock-mcp-server.sh is not up to it.
+
+Before all tests:
+
+  Mcp server:
+    - name: session-test-server-a
+      port: 8092
+      tools:
+        ping:
+          description: A simple ping
+          script:
+            Output: pong-a
+    - name: session-test-server-b
+      port: 8093
+      tools:
+        ping:
+          description: A simple ping
+          script:
+            Output: pong-b
+
+
+After all tests:
+
+  Stop mcp server:
+    - session-test-server-a
+    - session-test-server-b
+
+
+Tests:
+
+  Call tool in the current session:
+
+    Mcp session:
+      name: worker-a
+      url: "http://localhost:8092/mcp"
+
+    Mcp call tool:
+      tool: ping
+
+    Expected output: pong-a
+
+    Mcp close session: worker-a
+
+
+  The most recently opened session is the current one:
+
+    Mcp session:
+      - name: worker-a
+        url: "http://localhost:8092/mcp"
+      - name: worker-b
+        url: "http://localhost:8093/mcp"
+
+    Mcp call tool:
+      tool: ping
+
+    Expected output: pong-b
+
+    Mcp close session:
+      - worker-b
+      - worker-a
+
+
+  Closing the current session makes the previous one current:
+
+    Mcp session:
+      - name: worker-a
+        url: "http://localhost:8092/mcp"
+      - name: worker-b
+        url: "http://localhost:8093/mcp"
+
+    Mcp close session: worker-b
+
+    Do:
+      Mcp call tool:
+        tool: ping
+
+      Expected output: pong-a
+
+      Mcp close session: worker-a
+
+
+  Target a session by name:
+
+    Mcp session:
+      - name: worker-a
+        url: "http://localhost:8092/mcp"
+      - name: worker-b
+        url: "http://localhost:8093/mcp"
+
+    Mcp call tool:
+      session: worker-a
+      tool: ping
+
+    Expected output: pong-a
+
+    Mcp close session:
+      - worker-b
+      - worker-a
+
+
+  Close a session with the session object:
+
+    Mcp session:
+      url: "http://localhost:8092/mcp"
+    As: ${session}
+
+    Mcp close session: ${session}
+
+
+  Generated session names contain the session parameters:
+
+    Mcp session:
+      url: "http://localhost:8092/mcp"
+    As: ${session}
+
+    Assert that:
+      item:
+        url: "http://localhost:8092/mcp"
+      in: ${session}
+
+    Mcp close session: ${session}
+
+
+  Explicit server connects per call when no session targeted:
+
+    Mcp session:
+      name: worker-a
+      url: "http://localhost:8092/mcp"
+
+    Mcp call tool:
+      tool: ping
+      server:
+        url: "http://localhost:8093/mcp"
+
+    Expected output: pong-b
+
+    Mcp close session: worker-a

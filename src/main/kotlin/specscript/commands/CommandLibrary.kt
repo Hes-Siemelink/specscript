@@ -113,6 +113,8 @@ object CommandLibrary {
         Patch,
         Delete,
         HttpRequestDefaults,
+        HttpSession,
+        HttpCloseSession,
 
         // Http server
         HttpEndpoint,
@@ -141,11 +143,13 @@ object CommandLibrary {
 
         // AI
         McpCallTool,
+        McpCloseSession,
         McpGetPrompt,
         McpReadResource,
         McpPrompt,
         McpResource,
         McpServer,
+        McpSession,
         McpTool,
         StopMcpServer
     )

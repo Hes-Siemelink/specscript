@@ -9,7 +9,6 @@ import specscript.commands.mcp.transport.HttpClient
 import specscript.commands.mcp.transport.McpClientWrapper
 import specscript.commands.mcp.transport.StdioClient
 import specscript.language.*
-import specscript.util.Json
 import specscript.util.Yaml
 import specscript.util.toDomainObject
 import specscript.util.toKotlinx
@@ -22,19 +21,47 @@ object McpCallTool : CommandHandler("Mcp call tool", "ai/mcp"), ObjectHandler {
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val info = data.toDomainObject(CallMcpToolInfo::class)
 
+        if (info.session != null && info.server != null) {
+            throw SpecScriptCommandError("Give either 'session' or 'server' on Mcp call tool, not both")
+        }
+
+        val session = when {
+            info.session != null -> McpSession.sessions.get(context, info.session)
+                ?: throw SpecScriptCommandError("No open Mcp session: ${info.session}")
+
+            info.server != null -> null
+
+            else -> McpSession.sessions.current(context)
+                ?: throw SpecScriptCommandError("No MCP server specified and no open Mcp session")
+        }
+
         return runBlocking {
-            callTool(info)
+            if (session != null) {
+                callTool(session.client, info)
+            } else {
+                callToolOnce(info)
+            }
         }
     }
 
-    private suspend fun callTool(
-        info: CallMcpToolInfo,
-    ): JsonNode? {
-        val mcp = createMcpClient(info.server)
+    private suspend fun callToolOnce(info: CallMcpToolInfo): JsonNode {
+        val mcp = createMcpClient(info.server!!)
 
         return try {
-            mcp.connect()
+            try {
+                mcp.connect()
+            } catch (e: Exception) {
+                throw SpecScriptCommandError("Tool '${info.tool}' call failed: ${e.message}", cause = e)
+            }
 
+            callTool(mcp, info)
+        } finally {
+            mcp.close()
+        }
+    }
+
+    private suspend fun callTool(mcp: McpClientWrapper, info: CallMcpToolInfo): JsonNode {
+        try {
             val request = CallToolRequest(
                 CallToolRequestParams(
                     name = info.tool,
@@ -52,18 +79,14 @@ object McpCallTool : CommandHandler("Mcp call tool", "ai/mcp"), ObjectHandler {
                 )
             }
 
-            firstMessage
+            return firstMessage
 
         } catch (e: SpecScriptCommandError) {
             throw e
         } catch (e: Exception) {
             throw SpecScriptCommandError("Tool '${info.tool}' call failed: ${e.message}", cause = e)
-        } finally {
-            mcp.close()
         }
     }
-
-
 }
 
 fun CallToolResult.firstTextAsJson(): JsonNode {
@@ -97,7 +120,8 @@ fun createMcpClient(
 
 data class CallMcpToolInfo(
     val tool: String,
-    val server: TargetServerInfo,
+    val server: TargetServerInfo? = null,
+    val session: String? = null,
     val input: ObjectNode? = null
 )
 

@@ -26,6 +26,7 @@ import { RunCommand } from './run.js'
 import { CliCommand } from './cli-command.js'
 import { HttpServerCommand, HttpEndpointCommand, StopHttpServerCommand } from './http-server.js'
 import { GetCommand, PostCommand, PutCommand, PatchCommand, DeleteCommand, HttpRequestDefaultsCommand } from './http.js'
+import { HttpSessionCommand, HttpCloseSessionCommand } from './http-sessions.js'
 import { CheckTypeCommand } from './check-type.js'
 import { PromptCommand } from './prompt.js'
 import { ConfirmCommand } from './confirm.js'
@@ -38,6 +39,7 @@ import {
   McpServerCommand, McpToolCommand, McpResourceCommand,
   McpPromptCommand, McpCallToolCommand, McpReadResourceCommand,
   McpGetPromptCommand, StopMcpServerCommand,
+  McpSessionCommand, McpCloseSessionCommand,
 } from './mcp-server.js'
 import { SQLiteCommand, SQLiteDefaultsCommand, StoreCommand } from './sqlite.js'
 
@@ -142,6 +144,8 @@ export function registerAllCommands(): void {
   registerCommand(PatchCommand)
   registerCommand(DeleteCommand)
   registerCommand(HttpRequestDefaultsCommand)
+  registerCommand(HttpSessionCommand)
+  registerCommand(HttpCloseSessionCommand)
 
   // Schema / Types
   registerCommand(CheckTypeCommand)
@@ -167,5 +171,7 @@ export function registerAllCommands(): void {
   registerCommand(McpCallToolCommand)
   registerCommand(McpReadResourceCommand)
   registerCommand(McpGetPromptCommand)
+  registerCommand(McpSessionCommand)
+  registerCommand(McpCloseSessionCommand)
   registerCommand(StopMcpServerCommand)
 }

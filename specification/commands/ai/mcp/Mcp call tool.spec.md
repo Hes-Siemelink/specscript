@@ -23,7 +23,7 @@ Mcp server:
   port: 8091
   tools:
     hello:
-      description: Generate a personalized greeting
+      description: A simple greeting
       script:
         Output: Hello there!
 ```
@@ -36,7 +36,7 @@ Code example: Basic Mcp call tool
 Mcp call tool:
   tool: hello
   server:
-    url: "http://localhost:8091/mcp"
+    url: http://localhost:8091/mcp
 
 Expected output: Hello there!
 ```
@@ -66,7 +66,7 @@ Mcp call tool:
   input:
     name: Alice
   server:
-    url: "http://localhost:8091/mcp"
+    url: http://localhost:8091/mcp
 
 Expected output: Hello Alice!
 ```
@@ -112,3 +112,47 @@ Mcp call tool:
     command: node my-mcp-server.js
 ```
 
+## Sessions
+
+By default, `Mcp call tool` opens a new connection for each call. When an [Mcp session](Mcp%20session.spec.md) is open,
+`Mcp call tool` uses it and the `server` property can be omitted. The Mcp session supports the same properties as the
+`server` property.
+
+Target a specific open session with the `session` property. (Note that `session` and `server` are mutually exclusive —
+give at most one.)
+
+```yaml specscript
+Code example: Calling tools in a session
+
+Mcp server:
+  name: call-tool-session-demo
+  port: 8086
+  tools:
+    hello:
+      description: A simple greeting
+      script:
+        Output: Hello there!
+
+Mcp session:
+  name: demo
+  url: http://localhost:8086/mcp
+
+Mcp call tool:
+  session: demo
+  tool: hello
+
+Expected output: Hello there!
+```
+
+If you don't specify a session, the most recently opened one is used:
+
+```yaml specscript
+Mcp call tool:
+  tool: hello
+
+Expected output: Hello there!
+```
+
+<!-- yaml specscript
+Stop mcp server: call-tool-session-demo
+-->

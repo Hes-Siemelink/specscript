@@ -68,10 +68,17 @@ class SpecScriptCli(
         }
 
         // Handle file or directory
-        if (resolvedFile.isDirectory()) {
-            invokeDirectory(resolvedFile, options.commands.drop(1), context, options)
-        } else {
-            executeFile(resolvedFile, options, context, output)
+        try {
+            if (resolvedFile.isDirectory()) {
+                invokeDirectory(resolvedFile, options.commands.drop(1), context, options)
+            } else {
+                executeFile(resolvedFile, options, context, output)
+            }
+        } finally {
+            // Close open Http and Mcp sessions when the top-level script run finishes
+            if (parent == null) {
+                SessionRegistry.closeAll(context)
+            }
         }
     }
 

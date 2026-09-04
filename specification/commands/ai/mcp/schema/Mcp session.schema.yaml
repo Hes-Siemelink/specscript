@@ -1,0 +1,25 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+
+type: object
+properties:
+  name:
+    type: string
+    description: Session name that serves as its id. Generated if not specified.
+  transport:
+    type: string
+    enum: [ STDIO, HTTP ]
+  url:
+    type: string
+    description: HTTP address of the MCP server
+  command:
+    type: string
+    description: Command to spawn MCP server process (STDIO transport)
+  headers:
+    type: object
+    additionalProperties:
+      type: string
+    description: Additional HTTP headers to include in requests
+  token:
+    type: string
+    description: Authentication token for the MCP server
+additionalProperties: false

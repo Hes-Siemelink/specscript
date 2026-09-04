@@ -90,34 +90,42 @@ fun Path.getTests(): List<DynamicNode> {
 
 class TestCaseRunner(
     val context: ScriptContext,
-    val script: Script
+    val script: Script,
+    val closeSessionsAfterwards: Boolean = false
 ) : Executable {
 
     override fun execute() {
         context.error = null
         context.variables.remove(INPUT_VARIABLE)
 
-        var failure: Throwable? = null
-        val (stdout, stderr) = IO.captureSystemOutAndErr(echo = false) {
-            try {
-                script.run(context)
-            } catch (a: Break) {
-                a.output
-            } catch (e: Throwable) {
-                failure = e
+        try {
+            var failure: Throwable? = null
+            val (stdout, stderr) = IO.captureSystemOutAndErr(echo = false) {
+                try {
+                    script.run(context)
+                } catch (a: Break) {
+                    a.output
+                } catch (e: Throwable) {
+                    failure = e
+                }
             }
-        }
 
-        // XXX Review error reporting and check if this is the best place to print it
-        val f = failure
-        if (f is SpecScriptCommandError) {
-            System.err.println(f.data.toDisplayYaml().replace("\\n", "\n"))
-        }
+            // XXX Review error reporting and check if this is the best place to print it
+            val f = failure
+            if (f is SpecScriptCommandError) {
+                System.err.println(f.data.toDisplayYaml().replace("\\n", "\n"))
+            }
 
-        if (failure != null) {
-            if (stdout.isNotBlank()) System.out.print(stdout)
-            if (stderr.isNotBlank()) System.err.print(stderr)
-            throw failure
+            if (failure != null) {
+                if (stdout.isNotBlank()) System.out.print(stdout)
+                if (stderr.isNotBlank()) System.err.print(stderr)
+                throw failure
+            }
+        } finally {
+            // Close open Http and Mcp sessions after the last test in a spec file
+            if (closeSessionsAfterwards) {
+                SessionRegistry.closeAll(context)
+            }
         }
     }
 }
@@ -141,8 +149,13 @@ fun SpecScriptFile.getTestCases(): List<DynamicTest> {
         return getTests(context)
     }
 
-    return script.splitTestCases().map { script ->
-        dynamicTest(script.getTestTitle(TestCase), file.toUri(), TestCaseRunner(context, script))
+    val cases = script.splitTestCases()
+    return cases.mapIndexed { index, script ->
+        dynamicTest(
+            script.getTestTitle(TestCase),
+            file.toUri(),
+            TestCaseRunner(context, script, closeSessionsAfterwards = index == cases.lastIndex)
+        )
     }
 }
 
@@ -162,7 +175,11 @@ private fun SpecScriptFile.getTests(context: ScriptContext): List<DynamicTest> {
             commands.addAll(suite.teardown.commands)
         }
 
-        dynamicTest(namedTest.name, file.toUri(), TestCaseRunner(context, Script(commands)))
+        dynamicTest(
+            namedTest.name,
+            file.toUri(),
+            TestCaseRunner(context, Script(commands), closeSessionsAfterwards = index == suite.tests.lastIndex)
+        )
     }
 }
 
@@ -181,29 +198,16 @@ fun SpecScriptFile.getCodeExamplesAsTests(): List<DynamicTest> {
     val context = FileContext(testDir, scriptHome = scriptHome)
     context.setTempDir(testDir)
 
-    val scripts = splitMarkdown()
-    val tests: List<DynamicTest> = scripts
-        .mapNotNull {
-            toTestFromScript(file, it, context)
-        }
-
-    return tests
-}
-
-private fun toTestFromScript(
-    document: Path,
-    script: Script,
-    context: ScriptContext,
-): DynamicTest? {
-
     // Filter out sections that don't have any commands
-    if (script.commands.isEmpty()) {
-        return null
+    val scripts = splitMarkdown().filter { it.commands.isNotEmpty() }
+
+    return scripts.mapIndexed { index, script ->
+        dynamicTest(
+            script.getTestTitle(CodeExample),
+            file.toUri(),
+            TestCaseRunner(context, script, closeSessionsAfterwards = index == scripts.lastIndex)
+        )
     }
-
-    val title = script.getTestTitle(CodeExample)
-
-    return dynamicTest(title, document.toUri(), TestCaseRunner(context, script))
 }
 
 fun Script.getTestTitle(commandHandler: CommandHandler): String {

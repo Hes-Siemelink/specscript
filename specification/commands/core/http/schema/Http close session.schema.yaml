@@ -1,0 +1,12 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+
+oneOf:
+  - type: string
+    description: Name of the session to close
+  - type: object
+    description: The session object, as returned by Http session
+    properties:
+      name:
+        type: string
+    required:
+      - name

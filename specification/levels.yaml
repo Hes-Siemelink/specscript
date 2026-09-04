@@ -293,6 +293,8 @@ levels:
       - PATCH
       - DELETE
       - Http request defaults
+      - Http session
+      - Http close session
       - Http server
       - Http endpoint
       - Stop http server
@@ -303,10 +305,13 @@ levels:
       - commands/core/http/PATCH.spec.md
       - commands/core/http/DELETE.spec.md
       - commands/core/http/Http request defaults.spec.md
+      - commands/core/http/Http session.spec.md
+      - commands/core/http/Http close session.spec.md
       - commands/core/http/Http server.spec.md
       - commands/core/http/Http endpoint.spec.md
       - commands/core/http/Stop http server.spec.md
       - commands/core/http/tests/Http client tests.spec.yaml
+      - commands/core/http/tests/Http session tests.spec.yaml
       - commands/core/http/tests/Http server tests.spec.yaml
 
   - name: User Interaction and Connections
@@ -382,6 +387,8 @@ levels:
       - Mcp call tool
       - Mcp read resource
       - Mcp get prompt
+      - Mcp session
+      - Mcp close session
       - Mcp prompt
       - Mcp resource
       - Stop mcp server
@@ -391,11 +398,14 @@ levels:
       - commands/ai/mcp/Mcp call tool.spec.md
       - commands/ai/mcp/Mcp read resource.spec.md
       - commands/ai/mcp/Mcp get prompt.spec.md
+      - commands/ai/mcp/Mcp session.spec.md
+      - commands/ai/mcp/Mcp close session.spec.md
       - commands/ai/mcp/Mcp prompt.spec.md
       - commands/ai/mcp/Mcp resource.spec.md
       - commands/ai/mcp/Stop mcp server.spec.md
       - commands/ai/mcp/backup-info.spec.yaml
       - commands/ai/mcp/tests/Mcp client tests.spec.yaml
+      - commands/ai/mcp/tests/Mcp session tests.spec.yaml
       - commands/ai/mcp/tests/greet-tool.spec.yaml
       - commands/ai/mcp/tests/config-resource.spec.yaml
       - commands/ai/mcp/tests/review-prompt.spec.yaml

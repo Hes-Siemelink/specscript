@@ -26,6 +26,9 @@ properties:
         type: string
         description: Authentication token for the MCP server
     additionalProperties: false
+  session:
+    type: string
+    description: Name of an open Mcp session to use
   tool:
     type: string
     description: Name of the tool to execute
@@ -33,6 +36,7 @@ properties:
     type: object
     description: Arguments to pass to the tool
 required:
-  - server
   - tool
+not:
+  required: [ server, session ]
 additionalProperties: false
