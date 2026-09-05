@@ -4,7 +4,10 @@ import io.modelcontextprotocol.kotlin.sdk.types.GetPromptRequest
 import io.modelcontextprotocol.kotlin.sdk.types.GetPromptRequestParams
 import io.modelcontextprotocol.kotlin.sdk.types.TextContent
 import kotlinx.coroutines.runBlocking
-import specscript.language.*
+import specscript.language.CommandHandler
+import specscript.language.ObjectHandler
+import specscript.language.ScriptContext
+import specscript.language.SpecScriptCommandError
 import specscript.util.Yaml
 import specscript.util.toDomainObject
 import tools.jackson.databind.JsonNode
@@ -27,12 +30,12 @@ object McpGetPrompt : CommandHandler("Mcp get prompt", "ai/mcp"), ObjectHandler 
         return try {
             mcp.connect()
 
-            val arguments = info.input?.properties()
+            val arguments = info.arguments?.properties()
                 ?.associate { (key, value) -> key to value.stringValue() }
 
             val request = GetPromptRequest(
                 GetPromptRequestParams(
-                    name = info.prompt,
+                    name = info.name,
                     arguments = arguments
                 )
             )
@@ -47,7 +50,7 @@ object McpGetPrompt : CommandHandler("Mcp get prompt", "ai/mcp"), ObjectHandler 
             }
 
         } catch (e: Exception) {
-            throw SpecScriptCommandError("Prompt '${info.prompt}' get failed: ${e.message}", cause = e)
+            throw SpecScriptCommandError("Prompt '${info.name}' get failed: ${e.message}", cause = e)
         } finally {
             mcp.close()
         }
@@ -55,7 +58,7 @@ object McpGetPrompt : CommandHandler("Mcp get prompt", "ai/mcp"), ObjectHandler 
 }
 
 data class GetMcpPromptInfo(
-    val prompt: String,
+    val name: String,
     val server: TargetServerInfo,
-    val input: ObjectNode? = null,
+    val arguments: ObjectNode? = null,
 )

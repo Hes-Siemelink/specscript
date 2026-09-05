@@ -1,8 +1,9 @@
 # On my mind
 
 * Rename MCP tool to name and input to argument
+* Use MCP session for Mcp read resource add and Mcp get prompt.
 * Default session for input to script that doesn't have a session but can take one.
-*
+
 
 * Clean up semantics of test runs
 * Plugin system with MCP

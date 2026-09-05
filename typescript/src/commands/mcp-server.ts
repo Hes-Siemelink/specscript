@@ -886,13 +886,13 @@ export const McpGetPromptCommand: CommandHandler = {
       throw new CommandFormatError('Mcp get prompt: expected an object')
     }
 
-    const promptName = data.prompt as string
-    if (!promptName) throw new CommandFormatError('Mcp get prompt: missing required "prompt" property')
+    const promptName = data.name as string
+    if (!promptName) throw new CommandFormatError('Mcp get prompt: missing required "name" property')
 
     const serverInfo = data.server as JsonObject
     if (!isObject(serverInfo)) throw new CommandFormatError('Mcp get prompt: missing required "server" property')
 
-    const input = data.input as Record<string, string> | undefined
+    const input = data.arguments as Record<string, string> | undefined
     const transport = createClientTransport(serverInfo)
     const client = new Client({ name: 'specscript-client', version: '1.0.0' })
 

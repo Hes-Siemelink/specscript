@@ -1,0 +1,79 @@
+Before all tests:
+
+  Mcp server:
+    name: mcp-prompt-test-server
+    port: 8101
+    prompts:
+      summarize:
+        description: Summarize text
+        script:
+          Output: Please summarize the following text.
+      review:
+        description: Review code
+        arguments:
+          - name: code
+            description: The code to review
+            required: true
+          - name: language
+            description: Programming language
+            required: false
+        script:
+          Output: Please review this ${input.language} code - ${input.code}
+      review-from-file:
+        description: Review from external file
+        script: review-prompt.spec.yaml
+
+
+After all tests:
+
+  Stop mcp server: mcp-prompt-test-server
+
+
+Tests:
+
+  Get prompt with no input:
+
+    Mcp get prompt:
+      name: summarize
+      server:
+        url: http://localhost:8101/mcp
+
+    Expected output: Please summarize the following text.
+
+
+  Get prompt with input arguments:
+
+    Mcp get prompt:
+      name: review
+      arguments:
+        code: "def foo(): pass"
+        language: Python
+      server:
+        url: http://localhost:8101/mcp
+
+    Expected output: "Please review this Python code - def foo(): pass"
+
+
+  Get prompt with variable resolution in input:
+
+    ${lang}: Kotlin
+
+    Mcp get prompt:
+      name: review
+      arguments:
+        code: "fun bar() {}"
+        language: ${lang}
+      server:
+        url: http://localhost:8101/mcp
+
+    Expected output: "Please review this Kotlin code - fun bar() {}"
+
+
+  Get prompt backed by external script file:
+
+    Mcp get prompt:
+      name: review-from-file
+      server:
+        url: http://localhost:8101/mcp
+
+    Expected output: Please review the following code and suggest improvements.

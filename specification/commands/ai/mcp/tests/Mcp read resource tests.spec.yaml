@@ -1,0 +1,67 @@
+Before all tests:
+
+  Mcp server:
+    name: mcp-resource-test-server
+    port: 8100
+    resources:
+      config://app:
+        name: App Config
+        description: Application configuration
+        output:
+          theme: dark
+          version: "2.0"
+      status://system:
+        name: System Status
+        description: Current system status
+        mimeType: application/json
+        script:
+          Output:
+            status: ok
+            uptime: 99.9
+      config://from-file:
+        name: Config from file
+        description: Configuration from external file
+        script: config-resource.spec.yaml
+
+After all tests:
+
+  Stop mcp server: mcp-resource-test-server
+
+
+Tests:
+
+  Read resource with static output:
+
+    Mcp read resource:
+      uri: config://app
+      server:
+        url: http://localhost:8100/mcp
+
+    Expected output:
+      theme: dark
+      version: "2.0"
+
+
+  Read resource backed by inline script:
+
+    Mcp read resource:
+      uri: status://system
+      server:
+        url: http://localhost:8100/mcp
+
+    Expected output:
+      status: ok
+      uptime: 99.9
+
+
+  Read resource backed by external script file:
+
+    Mcp read resource:
+      uri: config://from-file
+      server:
+        url: http://localhost:8100/mcp
+
+    Expected output:
+      app: test-app
+      version: "1.0"
+

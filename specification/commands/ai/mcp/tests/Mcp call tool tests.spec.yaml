@@ -1,7 +1,7 @@
 Before all tests:
 
   Mcp server:
-    name: client-test-server
+    name: mcp-tool-test-server
     port: 8098
     tools:
       ping:
@@ -38,42 +38,20 @@ Before all tests:
         name: Config from file
         description: Configuration from external file
         script: config-resource.spec.yaml
-    prompts:
-      summarize:
-        description: Summarize text
-        script:
-          Output: Please summarize the following text.
-      review:
-        description: Review code
-        arguments:
-          - name: code
-            description: The code to review
-            required: true
-          - name: language
-            description: Programming language
-            required: false
-        script:
-          Output: Please review this ${input.language} code - ${input.code}
-      review-from-file:
-        description: Review from external file
-        script: review-prompt.spec.yaml
-
 
 After all tests:
 
-  Stop mcp server: client-test-server
+  Stop mcp server: mcp-tool-test-server
 
 
 Tests:
-
-  # ── Mcp call tool ──
 
   Call tool with no arguments:
 
     Mcp call tool:
       tool: ping
       server:
-        url: "http://localhost:8098/mcp"
+        url: http://localhost:8098/mcp
 
     Expected output: pong
 
@@ -85,7 +63,7 @@ Tests:
       input:
         name: Alice
       server:
-        url: "http://localhost:8098/mcp"
+        url: http://localhost:8098/mcp
 
     Expected output: Hello Alice!
 
@@ -99,7 +77,7 @@ Tests:
       input:
         name: ${person}
       server:
-        url: "http://localhost:8098/mcp"
+        url: http://localhost:8098/mcp
 
     Expected output: Hello Charlie!
 
@@ -111,7 +89,7 @@ Tests:
       input:
         name: Dave
       server:
-        url: "http://localhost:8098/mcp"
+        url: http://localhost:8098/mcp
 
     Expected output: Hello Dave!
 
@@ -123,7 +101,7 @@ Tests:
       input:
         name: Eve
       server:
-        url: "http://localhost:8098/mcp"
+        url: http://localhost:8098/mcp
 
     Expected output: Hello, Eve!
 
@@ -135,94 +113,7 @@ Tests:
       input:
         name: Frank
       server:
-        url: "http://localhost:8098/mcp"
+        url: http://localhost:8098/mcp
 
     Expected output: Hello, Frank!
 
-
-  # ── Mcp read resource ──
-
-  Read resource with static output:
-
-    Mcp read resource:
-      uri: "config://app"
-      server:
-        url: "http://localhost:8098/mcp"
-
-    Expected output:
-      theme: dark
-      version: "2.0"
-
-
-  Read resource backed by inline script:
-
-    Mcp read resource:
-      uri: "status://system"
-      server:
-        url: "http://localhost:8098/mcp"
-
-    Expected output:
-      status: ok
-      uptime: 99.9
-
-
-  Read resource backed by external script file:
-
-    Mcp read resource:
-      uri: "config://from-file"
-      server:
-        url: "http://localhost:8098/mcp"
-
-    Expected output:
-      app: test-app
-      version: "1.0"
-
-
-  # ── Mcp get prompt ──
-
-  Get prompt with no input:
-
-    Mcp get prompt:
-      prompt: summarize
-      server:
-        url: "http://localhost:8098/mcp"
-
-    Expected output: Please summarize the following text.
-
-
-  Get prompt with input arguments:
-
-    Mcp get prompt:
-      prompt: review
-      input:
-        code: "def foo(): pass"
-        language: Python
-      server:
-        url: "http://localhost:8098/mcp"
-
-    Expected output: "Please review this Python code - def foo(): pass"
-
-
-  Get prompt with variable resolution in input:
-
-    ${lang}: Kotlin
-
-    Mcp get prompt:
-      prompt: review
-      input:
-        code: "fun bar() {}"
-        language: ${lang}
-      server:
-        url: "http://localhost:8098/mcp"
-
-    Expected output: "Please review this Kotlin code - fun bar() {}"
-
-
-  Get prompt backed by external script file:
-
-    Mcp get prompt:
-      prompt: review-from-file
-      server:
-        url: "http://localhost:8098/mcp"
-
-    Expected output: Please review the following code and suggest improvements.

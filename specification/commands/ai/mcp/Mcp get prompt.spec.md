@@ -38,8 +38,8 @@ Get the prompt using `Mcp get prompt`:
 Code example: Basic Mcp get prompt
 
 Mcp get prompt:
-  prompt: greet
-  input:
+  name: greet
+  arguments:
     name: Alice
   server:
     url: "http://localhost:8091/mcp"

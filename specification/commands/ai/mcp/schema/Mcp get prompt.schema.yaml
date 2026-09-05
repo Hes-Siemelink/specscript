@@ -26,13 +26,13 @@ properties:
         type: string
         description: Authentication token for the MCP server
     additionalProperties: false
-  prompt:
+  name:
     type: string
     description: Name of the prompt to get
-  input:
+  arguments:
     type: object
     description: Arguments to pass to the prompt
 required:
   - server
-  - prompt
+  - name
 additionalProperties: false
