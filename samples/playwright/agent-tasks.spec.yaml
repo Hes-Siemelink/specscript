@@ -1,0 +1,38 @@
+Mcp session:
+  name: playwright
+  url: http://localhost:8931/mcp
+
+Login:
+  url: http://release.digital.ai.local:5516
+  username: admin
+  password: admin
+  session: playwright
+
+---
+Print: Going to Folders page
+
+Mcp call tool:
+  tool: browser_navigate
+  input:
+    url: http://release.digital.ai.local:5516/#/folders
+    waitUntil: networkidle
+
+## TODO: Figure out a better way to wait for the page to load
+Wait: 2
+
+---
+Browser click:
+
+  - target: text=Agent tasks
+    session: playwright
+
+  - target: text=13:43
+    session: playwright
+
+---
+Mcp call tool:
+  tool: browser_take_screenshot
+
+---
+Mcp call tool:
+  tool: browser_snapshot

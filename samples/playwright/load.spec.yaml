@@ -1,8 +1,9 @@
+Mcp session:
+  name: playwright
+  url: http://localhost:8931/mcp
+
 Mcp call tool:
   tool: browser_navigate
   input:
-    url: http://release.digital.ai.local:5516
-  server:
-    url: http://localhost:8931/mcp
-    transport: HTTP
+    url: http://release.digital.ai.local:5516/login
 

@@ -1,0 +1,29 @@
+Script info:
+  description: Click an element
+  hidden: true
+
+Input schema:
+  type: object
+  properties:
+    target:
+      type: string
+      description: The click target
+    session:
+      type: string
+      description: Internal MCP session name
+
+
+---
+Print: Clicking on ${target}
+
+Mcp call tool:
+  tool: browser_click
+  input:
+    target: ${input.target}
+
+# TODO better way to wait for the page to load
+Wait: 1.5
+
+---
+Mcp call tool:
+  tool: browser_snapshot

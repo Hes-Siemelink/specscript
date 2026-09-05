@@ -1,0 +1,19 @@
+apiVersion: xl-release/v1
+kind: Users
+spec:
+
+  - username: dev-1
+    password: Password-1234
+    name: Developer 1
+    email: dev-1@example.com
+    enabled: true
+    defaultGlobalPage: releases
+    defaultFolderPage: releases
+
+  - username: other-1
+    password: Password-1234
+    name: Other user 1
+    email: other-1@example.com
+    enabled: true
+    defaultGlobalPage: releases
+    defaultFolderPage: releases

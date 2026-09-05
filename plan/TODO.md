@@ -1,5 +1,9 @@
 # On my mind
 
+* Rename MCP tool to name and input to argument
+* Default session for input to script that doesn't have a session but can take one.
+*
+
 * Clean up semantics of test runs
 * Plugin system with MCP
     * Move out of core: DB, LLM query

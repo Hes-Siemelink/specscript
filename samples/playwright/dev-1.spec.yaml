@@ -1,0 +1,25 @@
+Mcp session:
+  name: dev-1
+  url: http://localhost:8931/mcp
+
+Login:
+  url: http://release.digital.ai.local:5516
+  username: dev-1
+  password: Password-1234
+  session: dev-1
+
+---
+Browser click:
+
+  - target: text=Sample release
+    session: dev-1
+  - target: text=Assigned to dev-1
+    session: dev-1
+
+---
+Mcp call tool:
+  tool: browser_take_screenshot
+
+---
+Mcp call tool:
+  tool: browser_snapshot

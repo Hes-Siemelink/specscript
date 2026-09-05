@@ -1,0 +1,52 @@
+Script info:
+  description: Release login
+  hidden: true
+
+Input schema:
+  type: object
+  properties:
+    url:
+      type: string
+      description: Base URL of Release server (e.g. http://release.digital.ai.local:5516)
+    username:
+      type: string
+      description: User name
+    password:
+      type: string
+      description: Password
+    #      format: password
+    session:
+      type: string
+      description: Internal MCP session name
+
+---
+Print: Logging in to Release server at ${input.url} with user '${input.username}'
+
+Mcp call tool:
+  - tool: browser_navigate
+    session: ${input.session}
+    input:
+      url: ${input.url}
+      waitUntil: domcontentloaded
+  - tool: browser_fill_form
+    session: ${input.session}
+    input:
+      fields:
+        - target: input[placeholder="User"]
+          name: User
+          type: textbox
+          value: ${input.username}
+        - target: input[placeholder="Password"]
+          name: Password
+          type: textbox
+          value: ${input.password}
+  - tool: browser_click
+    session: ${input.session}
+    input:
+      element: Log in button
+      target: role=button[name="Log in"]
+
+---
+# Single tool call for output variable
+Mcp call tool:
+  tool: browser_snapshot

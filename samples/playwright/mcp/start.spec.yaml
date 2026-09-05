@@ -1,0 +1,13 @@
+Script info: Starts the Playwright MCP server
+
+Input schema:
+  type: object
+  properties:
+    port:
+      type: string
+      description: Port
+      default: 8931
+
+Shell:
+  command: npx @playwright/mcp@latest --port ${port}
+  show output: true

@@ -1,0 +1,134 @@
+apiVersion: xl-release/v1
+kind: Templates
+metadata:
+  home: Permissions
+spec:
+  - template: Permission example
+    phases:
+
+      - phase: Initial phase
+        tasks:
+          - name: First task
+            type: xlrelease.Task
+            team: Developer
+
+      - phase: Future phase
+        tasks:
+          - name: Assigned to no one
+            type: xlrelease.Task
+          - name: Assigned to dev-1
+            type: xlrelease.Task
+            owner: dev-1
+          - name: Assigned to developer team
+            type: xlrelease.Task
+            team: Developer
+
+      - phase: Other phase
+        tasks:
+          - name: Assigned to no one
+            type: xlrelease.Task
+          - name: Assigned to other-1
+            type: xlrelease.Task
+            owner: other-1
+          - name: Assigned to other team
+            type: xlrelease.Task
+            team: Other
+
+---
+apiVersion: xl-release/v1
+kind: Permissions
+metadata:
+  home: Permissions
+spec:
+  - directory: "."
+    teams:
+      - name: Folder Owner
+        users:
+          - admin
+        permissions:
+          - dashboard#view
+          - delivery#edit
+          - delivery#edit_tracked_item
+          - delivery#view
+          - delivery_pattern#edit
+          - delivery_pattern#view
+          - folder#apply_changes
+          - folder#edit
+          - folder#edit_configuration
+          - folder#edit_notifications
+          - folder#edit_security
+          - app_pipelines#edit
+          - folder#edit_versions
+          - folder#generate_configuration
+          - folder#view
+          - folder#view_configuration
+          - folder#view_security
+          - folder#view_versions
+          - group#edit
+          - group#view
+          - folder#edit_variables
+          - app_pipelines#view
+          - dashboard#edit
+      - name: Developer
+        users:
+          - dev-1
+        permissions:
+          - folder#view
+          - release#advance_task_transition
+          - release#view
+      - name: Other
+        users:
+          - other-1
+        permissions:
+          - folder#view
+          - release#view
+      - name: Template Owner
+        users:
+          - admin
+        permissions:
+          - template#edit_precondition
+          - template#edit_security
+          - template#edit_triggers
+          - template#lock_task
+          - template#view
+          - trigger#view_trigger
+          - template#edit
+          - template#create_release_other_folder
+          - template#edit_failure_handler
+          - template#create_release
+          - folder#view
+          - app_pipelines#view
+      - name: Release Admin
+        users:
+          - admin
+        permissions:
+          - trigger#view_trigger
+          - release#edit_task_tags
+          - release#lock_task
+          - release#reassign_lock_task
+          - release#reassign_task
+          - release#restart_phase
+          - release#start
+          - release#task_transition
+          - release#view
+          - trigger#edit_trigger
+          - workflow#abort_execution
+          - workflow#start_execution
+          - workflow#view_execution
+          - app_pipelines#view
+          - folder#view
+          - release#abort
+          - release#advance_task_transition
+          - release#edit
+          - release#edit_blackout
+          - release#edit_failure_handler
+          - release#edit_precondition
+          - release#edit_security
+          - release#edit_task
+          - release#edit_task_attachments
+          - release#edit_task_configuration_facet
+          - release#edit_task_dates
+          - release#edit_task_description
+          - release#edit_task_flag
+          - release#edit_task_input_output_properties
+          - release#edit_task_script

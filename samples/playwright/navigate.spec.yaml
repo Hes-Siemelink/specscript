@@ -1,0 +1,37 @@
+### FIXME doesn't work when calling from another script
+
+Script info:
+  description: Navigate to a URL
+  hidden: true
+
+Input schema:
+  type: object
+  properties:
+    url:
+      type: string
+      description: Where to go
+    message:
+      type: string
+      description: A message to display while navigating
+      default: Navigating to ${url}
+    session:
+      type: string
+      description: Internal MCP session name
+
+
+---
+Print: ${input.message}
+
+Mcp call tool:
+  tool: browser_navigate
+  session: ${input.session}
+  input:
+    url: ${input.url}
+    waitUntil: domcontentloaded
+
+## TODO: Figure out a better way to wait for the page to load
+Wait: 2
+
+---
+Mcp call tool:
+  tool: browser_snapshot
