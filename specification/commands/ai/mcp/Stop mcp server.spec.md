@@ -28,9 +28,9 @@ Mcp server:
         Output: pong
 
 Mcp call tool:
-  tool: ping
+  name: ping
   server:
-    url: "http://localhost:8096/mcp"
+    url: http://localhost:8096/mcp
 
 Expected output: pong
 

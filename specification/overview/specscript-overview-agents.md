@@ -239,11 +239,11 @@ Mcp server:
 Code example: Calling an MCP tool
 
 Mcp call tool:
-  tool: greet
-  input:
+  name: greet
+  arguments:
     name: Alice
   server:
-    url: "http://localhost:8097/mcp"
+    url: http://localhost:8097/mcp
 
 Expected output: Hello Alice!
 ```
@@ -265,8 +265,7 @@ For simpler cases, agents can skip MCP entirely and call `spec` as a CLI tool. `
 - **Shell**: [Shell](../commands/core/shell/Shell.spec.md) — run shell commands with `cd`, `env`, `capture output`
 - **Files**: [Read file](../commands/core/files/Read%20file.spec.md),
   [Write file](../commands/core/files/Write%20file.spec.md),
-  [Run](../commands/core/files/Run.spec.md) (`script:` = relative to script, `file:` = relative to
-  working directory)
+  [Run](../commands/core/files/Run.spec.md) (`script:` = relative to script, `file:` = relative to working directory)
 - **Scripts as commands**:
   [SpecScript files as commands](../commands/core/files/SpecScript%20files%20as%20commands.spec.md) — organize scripts
   in directories for automatic subcommand navigation

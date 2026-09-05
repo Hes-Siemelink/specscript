@@ -62,9 +62,9 @@ Mcp server:
         uptime: 99.9
 
 Mcp call tool:
-  tool: get_status
+  name: get_status
   server:
-    url: "http://localhost:8081/mcp"
+    url: http://localhost:8081/mcp
 
 Expected output:
   status: ok
@@ -82,9 +82,9 @@ Call a tool using the `Mcp call tool` command:
 Code example: Call MCP server tool
 
 Mcp call tool:
-  tool: hello
+  name: hello
   server:
-    url: "http://localhost:8080/mcp"
+    url: http://localhost:8080/mcp
 
 Expected output: Hello world!
 ```
@@ -158,11 +158,11 @@ Mcp server:
       script: say-hello.spec.yaml
 
 Mcp call tool:
-  tool: say_hello
-  input:
+  name: say_hello
+  arguments:
     name: Bob
   server:
-    url: "http://localhost:8082/mcp"
+    url: http://localhost:8082/mcp
 
 Expected output: Hello, Bob!
 
@@ -219,9 +219,9 @@ You can then call a tool by its name, that was derived from the filename:
 
 ```yaml specscript
 Mcp call tool:
-  tool: tool1
+  name: tool1
   server:
-    url: "http://localhost:8083/mcp"
+    url: http://localhost:8083/mcp
 
 Expected output: Hello from tool 1
 
@@ -244,7 +244,7 @@ Mcp server:
     - my-tools/
 
 Mcp call tool:
-  tool: tool2
+  name: tool2
   server:
     url: http://localhost:8084/mcp
 
@@ -282,11 +282,11 @@ Mcp server:
         Output: Hello ${input.name} via HTTP!
 
 Mcp call tool:
-  tool: greet
-  input:
+  name: greet
+  arguments:
     name: Bob
   server:
-    url: "http://localhost:8085/mcp"
+    url: http://localhost:8085/mcp
 
 Expected output: Hello Bob via HTTP!
 

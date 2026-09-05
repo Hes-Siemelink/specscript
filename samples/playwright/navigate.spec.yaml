@@ -23,9 +23,9 @@ Input schema:
 Print: ${input.message}
 
 Mcp call tool:
-  tool: browser_navigate
+  name: browser_navigate
   session: ${input.session}
-  input:
+  arguments:
     url: ${input.url}
     waitUntil: domcontentloaded
 
@@ -34,4 +34,4 @@ Wait: 2
 
 ---
 Mcp call tool:
-  tool: browser_snapshot
+  name: browser_snapshot

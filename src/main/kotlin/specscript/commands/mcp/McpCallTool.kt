@@ -8,7 +8,10 @@ import kotlinx.coroutines.runBlocking
 import specscript.commands.mcp.transport.HttpClient
 import specscript.commands.mcp.transport.McpClientWrapper
 import specscript.commands.mcp.transport.StdioClient
-import specscript.language.*
+import specscript.language.CommandHandler
+import specscript.language.ObjectHandler
+import specscript.language.ScriptContext
+import specscript.language.SpecScriptCommandError
 import specscript.util.Yaml
 import specscript.util.toDomainObject
 import specscript.util.toKotlinx
@@ -51,7 +54,7 @@ object McpCallTool : CommandHandler("Mcp call tool", "ai/mcp"), ObjectHandler {
             try {
                 mcp.connect()
             } catch (e: Exception) {
-                throw SpecScriptCommandError("Tool '${info.tool}' call failed: ${e.message}", cause = e)
+                throw SpecScriptCommandError("Tool '${info.name}' call failed: ${e.message}", cause = e)
             }
 
             callTool(mcp, info)
@@ -64,8 +67,8 @@ object McpCallTool : CommandHandler("Mcp call tool", "ai/mcp"), ObjectHandler {
         try {
             val request = CallToolRequest(
                 CallToolRequestParams(
-                    name = info.tool,
-                    arguments = info.input?.toKotlinx() ?: kotlinx.serialization.json.JsonObject(emptyMap())
+                    name = info.name,
+                    arguments = info.arguments?.toKotlinx() ?: kotlinx.serialization.json.JsonObject(emptyMap())
                 )
             )
 
@@ -73,7 +76,7 @@ object McpCallTool : CommandHandler("Mcp call tool", "ai/mcp"), ObjectHandler {
             val firstMessage: JsonNode = result.firstTextAsJson()
             if (result.isError == true) {
                 throw SpecScriptCommandError(
-                    "Tool '${info.tool}' call failed",
+                    "Tool '${info.name}' call failed",
                     type = "MCP Server error",
                     data = firstMessage
                 )
@@ -84,7 +87,7 @@ object McpCallTool : CommandHandler("Mcp call tool", "ai/mcp"), ObjectHandler {
         } catch (e: SpecScriptCommandError) {
             throw e
         } catch (e: Exception) {
-            throw SpecScriptCommandError("Tool '${info.tool}' call failed: ${e.message}", cause = e)
+            throw SpecScriptCommandError("Tool '${info.name}' call failed: ${e.message}", cause = e)
         }
     }
 }
@@ -119,10 +122,10 @@ fun createMcpClient(
 
 
 data class CallMcpToolInfo(
-    val tool: String,
+    val name: String,
     val server: TargetServerInfo? = null,
     val session: String? = null,
-    val input: ObjectNode? = null
+    val arguments: ObjectNode? = null
 )
 
 data class TargetServerInfo(

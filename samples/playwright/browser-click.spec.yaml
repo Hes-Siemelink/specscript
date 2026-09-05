@@ -17,8 +17,8 @@ Input schema:
 Print: Clicking on ${target}
 
 Mcp call tool:
-  tool: browser_click
-  input:
+  name: browser_click
+  arguments:
     target: ${input.target}
 
 # TODO better way to wait for the page to load
@@ -26,4 +26,4 @@ Wait: 1.5
 
 ---
 Mcp call tool:
-  tool: browser_snapshot
+  name: browser_snapshot

@@ -34,7 +34,7 @@ Call the tool using `Mcp call tool`:
 Code example: Basic Mcp call tool
 
 Mcp call tool:
-  tool: hello
+  name: hello
   server:
     url: http://localhost:8091/mcp
 
@@ -62,8 +62,8 @@ Mcp tool:
 
 
 Mcp call tool:
-  tool: greet
-  input:
+  name: greet
+  arguments:
     name: Alice
   server:
     url: http://localhost:8091/mcp
@@ -93,8 +93,8 @@ Mcp call tool:
     url: "https://api.example.com/mcp"
     headers:
       Authorization: "Bearer ${API_TOKEN}"
-  tool: analyze_data
-  input:
+  name: analyze_data
+  arguments:
     data: "sample input"
 ```
 
@@ -106,7 +106,7 @@ Stdio enables connection to external MCP-compliant servers over standard input/o
 Code example: Stdio transport
 
 Mcp call tool:
-  tool: any_tool
+  name: any_tool
   server:
     transport: STDIO
     command: node my-mcp-server.js
@@ -139,7 +139,7 @@ Mcp session:
 
 Mcp call tool:
   session: demo
-  tool: hello
+  name: hello
 
 Expected output: Hello there!
 ```
@@ -148,7 +148,7 @@ If you don't specify a session, the most recently opened one is used:
 
 ```yaml specscript
 Mcp call tool:
-  tool: hello
+  name: hello
 
 Expected output: Hello there!
 ```

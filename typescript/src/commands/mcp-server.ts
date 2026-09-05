@@ -753,10 +753,10 @@ export const McpCallToolCommand: CommandHandler = {
       throw new CommandFormatError('Mcp call tool: expected an object')
     }
 
-    const toolName = data.tool as string
-    if (!toolName) throw new CommandFormatError('Mcp call tool: missing required "tool" property')
+    const toolName = data.name as string
+    if (!toolName) throw new CommandFormatError('Mcp call tool: missing required "name" property')
 
-    const input = data.input as JsonObject | undefined
+    const input = data.arguments as JsonObject | undefined
     const session = resolveMcpTarget(data, context)
 
     try {

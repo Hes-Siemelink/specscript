@@ -32,7 +32,7 @@ Mcp session:
   url: http://localhost:8099/mcp
 
 Mcp call tool:
-  tool: ping
+  name: ping
 
 Expected output: pong
 

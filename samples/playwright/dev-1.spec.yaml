@@ -18,8 +18,8 @@ Browser click:
 
 ---
 Mcp call tool:
-  tool: browser_take_screenshot
+  name: browser_take_screenshot
 
 ---
 Mcp call tool:
-  tool: browser_snapshot
+  name: browser_snapshot

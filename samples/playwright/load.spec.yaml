@@ -3,7 +3,7 @@ Mcp session:
   url: http://localhost:8931/mcp
 
 Mcp call tool:
-  tool: browser_navigate
-  input:
+  name: browser_navigate
+  arguments:
     url: http://release.digital.ai.local:5516/login
 

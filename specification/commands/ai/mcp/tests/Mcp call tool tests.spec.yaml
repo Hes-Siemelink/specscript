@@ -49,7 +49,7 @@ Tests:
   Call tool with no arguments:
 
     Mcp call tool:
-      tool: ping
+      name: ping
       server:
         url: http://localhost:8098/mcp
 
@@ -59,8 +59,8 @@ Tests:
   Call tool with input arguments:
 
     Mcp call tool:
-      tool: greet
-      input:
+      name: greet
+      arguments:
         name: Alice
       server:
         url: http://localhost:8098/mcp
@@ -73,8 +73,8 @@ Tests:
     ${person}: Charlie
 
     Mcp call tool:
-      tool: greet
-      input:
+      name: greet
+      arguments:
         name: ${person}
       server:
         url: http://localhost:8098/mcp
@@ -85,8 +85,8 @@ Tests:
   Call tool backed by inline script:
 
     Mcp call tool:
-      tool: greet
-      input:
+      name: greet
+      arguments:
         name: Dave
       server:
         url: http://localhost:8098/mcp
@@ -97,8 +97,8 @@ Tests:
   Call tool backed by external script file:
 
     Mcp call tool:
-      tool: greet-from-file
-      input:
+      name: greet-from-file
+      arguments:
         name: Eve
       server:
         url: http://localhost:8098/mcp
@@ -109,8 +109,8 @@ Tests:
   Call tool with derived inputSchema:
 
     Mcp call tool:
-      tool: greet-from-file
-      input:
+      name: greet-from-file
+      arguments:
         name: Frank
       server:
         url: http://localhost:8098/mcp

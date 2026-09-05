@@ -29,14 +29,14 @@ properties:
   session:
     type: string
     description: Name of an open Mcp session to use
-  tool:
+  name:
     type: string
     description: Name of the tool to execute
-  input:
+  arguments:
     type: object
     description: Arguments to pass to the tool
 required:
-  - tool
+  - name
 not:
   required: [ server, session ]
 additionalProperties: false

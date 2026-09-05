@@ -129,11 +129,11 @@ Calling the tool works as expected:
 Code example: Calling a tool with derived metadata
 
 Mcp call tool:
-  tool: greet
-  input:
+  name: greet
+  arguments:
     name: Alice
   server:
-    url: "http://localhost:8094/mcp"
+    url: http://localhost:8094/mcp
 
 Expected output: Hello, Alice!
 ```

@@ -1,6 +1,6 @@
 Mcp call tool:
-  tool: hello
+  name: hello
   server:
     url: http://localhost:25096/mcp
-  input:
+  arguments:
     name: World

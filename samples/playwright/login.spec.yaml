@@ -23,14 +23,14 @@ Input schema:
 Print: Logging in to Release server at ${input.url} with user '${input.username}'
 
 Mcp call tool:
-  - tool: browser_navigate
+  - name: browser_navigate
     session: ${input.session}
-    input:
+    arguments:
       url: ${input.url}
       waitUntil: domcontentloaded
-  - tool: browser_fill_form
+  - name: browser_fill_form
     session: ${input.session}
-    input:
+    arguments:
       fields:
         - target: input[placeholder="User"]
           name: User
@@ -40,13 +40,13 @@ Mcp call tool:
           name: Password
           type: textbox
           value: ${input.password}
-  - tool: browser_click
+  - name: browser_click
     session: ${input.session}
-    input:
+    arguments:
       element: Log in button
       target: role=button[name="Log in"]
 
 ---
 # Single tool call for output variable
 Mcp call tool:
-  tool: browser_snapshot
+  name: browser_snapshot

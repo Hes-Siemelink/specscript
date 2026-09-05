@@ -12,8 +12,8 @@ Login:
 Print: Going to Folders page
 
 Mcp call tool:
-  tool: browser_navigate
-  input:
+  name: browser_navigate
+  arguments:
     url: http://release.digital.ai.local:5516/#/folders
     waitUntil: networkidle
 
@@ -31,8 +31,8 @@ Browser click:
 
 ---
 Mcp call tool:
-  tool: browser_take_screenshot
+  name: browser_take_screenshot
 
 ---
 Mcp call tool:
-  tool: browser_snapshot
+  name: browser_snapshot

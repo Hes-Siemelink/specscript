@@ -45,11 +45,11 @@ Mcp session:
   url: http://localhost:8097/mcp
 
 Mcp call tool:
-  tool: hello
+  name: hello
 
 ---
 Mcp call tool:
-  tool: bye
+  name: bye
 
 Expected output: Bye now!
 

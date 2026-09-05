@@ -37,7 +37,7 @@ Tests:
       url: "http://localhost:8092/mcp"
 
     Mcp call tool:
-      tool: ping
+      name: ping
 
     Expected output: pong-a
 
@@ -48,12 +48,12 @@ Tests:
 
     Mcp session:
       - name: worker-a
-        url: "http://localhost:8092/mcp"
+        url: http://localhost:8092/mcp
       - name: worker-b
-        url: "http://localhost:8093/mcp"
+        url: http://localhost:8093/mcp
 
     Mcp call tool:
-      tool: ping
+      name: ping
 
     Expected output: pong-b
 
@@ -66,15 +66,15 @@ Tests:
 
     Mcp session:
       - name: worker-a
-        url: "http://localhost:8092/mcp"
+        url: http://localhost:8092/mcp
       - name: worker-b
-        url: "http://localhost:8093/mcp"
+        url: http://localhost:8093/mcp
 
     Mcp close session: worker-b
 
     Do:
       Mcp call tool:
-        tool: ping
+        name: ping
 
       Expected output: pong-a
 
@@ -85,13 +85,13 @@ Tests:
 
     Mcp session:
       - name: worker-a
-        url: "http://localhost:8092/mcp"
+        url: http://localhost:8092/mcp
       - name: worker-b
-        url: "http://localhost:8093/mcp"
+        url: http://localhost:8093/mcp
 
     Mcp call tool:
       session: worker-a
-      tool: ping
+      name: ping
 
     Expected output: pong-a
 
@@ -103,7 +103,7 @@ Tests:
   Close a session with the session object:
 
     Mcp session:
-      url: "http://localhost:8092/mcp"
+      url: http://localhost:8092/mcp
     As: ${session}
 
     Mcp close session: ${session}
@@ -112,12 +112,12 @@ Tests:
   Generated session names contain the session parameters:
 
     Mcp session:
-      url: "http://localhost:8092/mcp"
+      url: http://localhost:8092/mcp
     As: ${session}
 
     Assert that:
       item:
-        url: "http://localhost:8092/mcp"
+        url: http://localhost:8092/mcp
       in: ${session}
 
     Mcp close session: ${session}
@@ -127,12 +127,12 @@ Tests:
 
     Mcp session:
       name: worker-a
-      url: "http://localhost:8092/mcp"
+      url: http://localhost:8092/mcp
 
     Mcp call tool:
-      tool: ping
+      name: ping
       server:
-        url: "http://localhost:8093/mcp"
+        url: http://localhost:8093/mcp
 
     Expected output: pong-b
 
