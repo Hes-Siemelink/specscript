@@ -757,7 +757,7 @@ export const McpCallToolCommand: CommandHandler = {
     if (!toolName) throw new CommandFormatError('Mcp call tool: missing required "name" property')
 
     const input = data.arguments as JsonObject | undefined
-    const session = resolveMcpTarget(data, context)
+    const session = resolveMcpTarget(data, context, 'Mcp call tool')
 
     try {
       if (session) {
@@ -777,12 +777,12 @@ export const McpCallToolCommand: CommandHandler = {
  * explicit `session:` name → explicit `server:` (connect-per-call) →
  * current open session → error. `session` and `server` are mutually exclusive.
  */
-function resolveMcpTarget(data: JsonObject, context: ScriptContext): McpSessionEntry | undefined {
+function resolveMcpTarget(data: JsonObject, context: ScriptContext, commandName: string): McpSessionEntry | undefined {
   const sessionName = data.session as string | undefined
   const serverGiven = data.server !== undefined
 
   if (sessionName !== undefined && serverGiven) {
-    throw new SpecScriptCommandError("Give either 'session' or 'server' on Mcp call tool, not both")
+    throw new SpecScriptCommandError(`Give either 'session' or 'server' on ${commandName}, not both`)
   }
 
   if (sessionName !== undefined) {
@@ -854,27 +854,41 @@ export const McpReadResourceCommand: CommandHandler = {
     const uri = data.uri as string
     if (!uri) throw new CommandFormatError('Mcp read resource: missing required "uri" property')
 
-    const serverInfo = data.server as JsonObject
-    if (!isObject(serverInfo)) throw new CommandFormatError('Mcp read resource: missing required "server" property')
-
-    const transport = createClientTransport(serverInfo)
-    const client = new Client({ name: 'specscript-client', version: '1.0.0' })
+    const session = resolveMcpTarget(data, context, 'Mcp read resource')
 
     try {
-      await client.connect(transport)
-
-      const result = await client.readResource({ uri })
-
-      const first = firstTextContent(result.contents)
-      return first?.text !== undefined ? parseMcpTextContent(first.text) : undefined
+      if (session) {
+        return await readResource(session.client, uri)
+      }
+      return await readResourceOnce(data, uri)
     } catch (e) {
       if (e instanceof SpecScriptCommandError) throw e
       const msg = e instanceof Error ? e.message : String(e)
       throw new SpecScriptCommandError(`Resource '${uri}' read failed: ${msg}`)
-    } finally {
-      await client.close()
     }
   },
+}
+
+async function readResourceOnce(data: JsonObject, uri: string): Promise<JsonValue | undefined> {
+  const serverInfo = data.server as JsonObject
+  if (!isObject(serverInfo)) throw new CommandFormatError('Mcp read resource: missing required "server" property')
+
+  const transport = createClientTransport(serverInfo)
+  const client = new Client({ name: 'specscript-client', version: '1.0.0' })
+
+  try {
+    await client.connect(transport)
+    return await readResource(client, uri)
+  } finally {
+    await client.close()
+  }
+}
+
+async function readResource(client: Client, uri: string): Promise<JsonValue | undefined> {
+  const result = await client.readResource({ uri })
+
+  const first = firstTextContent(result.contents)
+  return first?.text !== undefined ? parseMcpTextContent(first.text) : undefined
 }
 
 // --- Mcp get prompt command ---
@@ -889,31 +903,53 @@ export const McpGetPromptCommand: CommandHandler = {
     const promptName = data.name as string
     if (!promptName) throw new CommandFormatError('Mcp get prompt: missing required "name" property')
 
-    const serverInfo = data.server as JsonObject
-    if (!isObject(serverInfo)) throw new CommandFormatError('Mcp get prompt: missing required "server" property')
-
     const input = data.arguments as Record<string, string> | undefined
-    const transport = createClientTransport(serverInfo)
-    const client = new Client({ name: 'specscript-client', version: '1.0.0' })
+    const session = resolveMcpTarget(data, context, 'Mcp get prompt')
 
     try {
-      await client.connect(transport)
-
-      const result = await client.getPrompt({
-        name: promptName,
-        arguments: input,
-      })
-
-      const first = firstTextContent(result.messages)
-      return first?.text !== undefined ? parseMcpTextContent(first.text) : undefined
+      if (session) {
+        return await getPrompt(session.client, promptName, input)
+      }
+      return await getPromptOnce(data, promptName, input)
     } catch (e) {
       if (e instanceof SpecScriptCommandError) throw e
       const msg = e instanceof Error ? e.message : String(e)
       throw new SpecScriptCommandError(`Prompt '${promptName}' get failed: ${msg}`)
-    } finally {
-      await client.close()
     }
   },
+}
+
+async function getPromptOnce(
+  data: JsonObject,
+  promptName: string,
+  input: Record<string, string> | undefined,
+): Promise<JsonValue | undefined> {
+  const serverInfo = data.server as JsonObject
+  if (!isObject(serverInfo)) throw new CommandFormatError('Mcp get prompt: missing required "server" property')
+
+  const transport = createClientTransport(serverInfo)
+  const client = new Client({ name: 'specscript-client', version: '1.0.0' })
+
+  try {
+    await client.connect(transport)
+    return await getPrompt(client, promptName, input)
+  } finally {
+    await client.close()
+  }
+}
+
+async function getPrompt(
+  client: Client,
+  promptName: string,
+  input: Record<string, string> | undefined,
+): Promise<JsonValue | undefined> {
+  const result = await client.getPrompt({
+    name: promptName,
+    arguments: input,
+  })
+
+  const first = firstTextContent(result.messages)
+  return first?.text !== undefined ? parseMcpTextContent(first.text) : undefined
 }
 
 function createClientTransport(serverInfo: JsonObject) {

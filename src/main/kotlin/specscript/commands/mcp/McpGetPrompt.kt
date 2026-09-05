@@ -4,6 +4,7 @@ import io.modelcontextprotocol.kotlin.sdk.types.GetPromptRequest
 import io.modelcontextprotocol.kotlin.sdk.types.GetPromptRequestParams
 import io.modelcontextprotocol.kotlin.sdk.types.TextContent
 import kotlinx.coroutines.runBlocking
+import specscript.commands.mcp.transport.McpClientWrapper
 import specscript.language.CommandHandler
 import specscript.language.ObjectHandler
 import specscript.language.ScriptContext
@@ -19,17 +20,35 @@ object McpGetPrompt : CommandHandler("Mcp get prompt", "ai/mcp"), ObjectHandler 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val info = data.toDomainObject(GetMcpPromptInfo::class)
 
+        val target = resolveMcpTarget(info.session, info.server != null, "Mcp get prompt", context)
+
         return runBlocking {
-            getPrompt(info)
+            when (target) {
+                is McpTarget.Session -> getPrompt(target.session.client, info)
+
+                McpTarget.ConnectPerCall -> getPromptOnce(info)
+            }
         }
     }
 
-    private suspend fun getPrompt(info: GetMcpPromptInfo): JsonNode? {
-        val mcp = createMcpClient(info.server)
+    private suspend fun getPromptOnce(info: GetMcpPromptInfo): JsonNode? {
+        val mcp = createMcpClient(info.server!!)
 
         return try {
-            mcp.connect()
+            try {
+                mcp.connect()
+            } catch (e: Exception) {
+                throw SpecScriptCommandError("Prompt '${info.name}' get failed: ${e.message}", cause = e)
+            }
 
+            getPrompt(mcp, info)
+        } finally {
+            mcp.close()
+        }
+    }
+
+    private suspend fun getPrompt(mcp: McpClientWrapper, info: GetMcpPromptInfo): JsonNode? {
+        return try {
             val arguments = info.arguments?.properties()
                 ?.associate { (key, value) -> key to value.stringValue() }
 
@@ -51,14 +70,13 @@ object McpGetPrompt : CommandHandler("Mcp get prompt", "ai/mcp"), ObjectHandler 
 
         } catch (e: Exception) {
             throw SpecScriptCommandError("Prompt '${info.name}' get failed: ${e.message}", cause = e)
-        } finally {
-            mcp.close()
         }
     }
 }
 
 data class GetMcpPromptInfo(
     val name: String,
-    val server: TargetServerInfo,
+    val server: TargetServerInfo? = null,
+    val session: String? = null,
     val arguments: ObjectNode? = null,
 )

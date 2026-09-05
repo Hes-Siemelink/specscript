@@ -24,25 +24,13 @@ object McpCallTool : CommandHandler("Mcp call tool", "ai/mcp"), ObjectHandler {
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val info = data.toDomainObject(CallMcpToolInfo::class)
 
-        if (info.session != null && info.server != null) {
-            throw SpecScriptCommandError("Give either 'session' or 'server' on Mcp call tool, not both")
-        }
-
-        val session = when {
-            info.session != null -> McpSession.sessions.get(context, info.session)
-                ?: throw SpecScriptCommandError("No open Mcp session: ${info.session}")
-
-            info.server != null -> null
-
-            else -> McpSession.sessions.current(context)
-                ?: throw SpecScriptCommandError("No MCP server specified and no open Mcp session")
-        }
+        val target = resolveMcpTarget(info.session, info.server != null, "Mcp call tool", context)
 
         return runBlocking {
-            if (session != null) {
-                callTool(session.client, info)
-            } else {
-                callToolOnce(info)
+            when (target) {
+                is McpTarget.Session -> callTool(target.session.client, info)
+
+                McpTarget.ConnectPerCall -> callToolOnce(info)
             }
         }
     }

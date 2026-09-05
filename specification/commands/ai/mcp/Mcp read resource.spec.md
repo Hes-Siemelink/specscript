@@ -48,3 +48,53 @@ Expected output:
 <!-- yaml specscript
 Stop mcp server: resource-demo
 -->
+
+## Sessions
+
+By default, `Mcp read resource` opens a new connection for each call. When an [Mcp session](Mcp%20session.spec.md) is
+open, `Mcp read resource` uses it and the `server` property can be omitted.
+
+Target a specific open session with the `session` property. (Note that `session` and `server` are mutually exclusive —
+give at most one.)
+
+```yaml specscript
+Code example: Reading a resource in a session
+
+Mcp server:
+  name: resource-session-demo
+  port: 8092
+  resources:
+    config://app:
+      name: App Config
+      description: Application configuration
+      output:
+        theme: dark
+        version: "2.0"
+
+Mcp session:
+  name: demo
+  url: http://localhost:8092/mcp
+
+Mcp read resource:
+  session: demo
+  uri: "config://app"
+
+Expected output:
+  theme: dark
+  version: "2.0"
+```
+
+If you don't specify a session, the most recently opened one is used:
+
+```yaml specscript
+Mcp read resource:
+  uri: "config://app"
+
+Expected output:
+  theme: dark
+  version: "2.0"
+```
+
+<!-- yaml specscript
+Stop mcp server: resource-session-demo
+-->

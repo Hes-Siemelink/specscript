@@ -65,3 +65,36 @@ Tests:
       app: test-app
       version: "1.0"
 
+
+  Read resource in the current session:
+
+    Mcp session:
+      name: resource-session
+      url: "http://localhost:8100/mcp"
+
+    Mcp read resource:
+      uri: config://app
+
+    Expected output:
+      theme: dark
+      version: "2.0"
+
+    Mcp close session: resource-session
+
+
+  Read resource targeting a specific session:
+
+    Mcp session:
+      name: resource-session
+      url: "http://localhost:8100/mcp"
+
+    Mcp read resource:
+      session: resource-session
+      uri: status://system
+
+    Expected output:
+      status: ok
+      uptime: 99.9
+
+    Mcp close session: resource-session
+

@@ -26,10 +26,14 @@ properties:
         type: string
         description: Authentication token for the MCP server
     additionalProperties: false
+  session:
+    type: string
+    description: Name of an open Mcp session to use
   uri:
     type: string
     description: URI of the resource to read
 required:
-  - server
   - uri
+not:
+  required: [ server, session ]
 additionalProperties: false

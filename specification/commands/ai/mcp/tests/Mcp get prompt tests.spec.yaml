@@ -77,3 +77,35 @@ Tests:
         url: http://localhost:8101/mcp
 
     Expected output: Please review the following code and suggest improvements.
+
+
+  Get prompt in the current session:
+
+    Mcp session:
+      name: prompt-session
+      url: "http://localhost:8101/mcp"
+
+    Mcp get prompt:
+      name: summarize
+
+    Expected output: Please summarize the following text.
+
+    Mcp close session: prompt-session
+
+
+  Get prompt targeting a specific session:
+
+    Mcp session:
+      name: prompt-session
+      url: "http://localhost:8101/mcp"
+
+    Mcp get prompt:
+      session: prompt-session
+      name: review
+      arguments:
+        code: "def foo(): pass"
+        language: Python
+
+    Expected output: "Please review this Python code - def foo(): pass"
+
+    Mcp close session: prompt-session

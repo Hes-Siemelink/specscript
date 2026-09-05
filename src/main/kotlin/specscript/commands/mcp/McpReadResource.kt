@@ -4,7 +4,11 @@ import io.modelcontextprotocol.kotlin.sdk.types.ReadResourceRequest
 import io.modelcontextprotocol.kotlin.sdk.types.ReadResourceRequestParams
 import io.modelcontextprotocol.kotlin.sdk.types.TextResourceContents
 import kotlinx.coroutines.runBlocking
-import specscript.language.*
+import specscript.commands.mcp.transport.McpClientWrapper
+import specscript.language.CommandHandler
+import specscript.language.ObjectHandler
+import specscript.language.ScriptContext
+import specscript.language.SpecScriptCommandError
 import specscript.util.Yaml
 import specscript.util.toDomainObject
 import tools.jackson.databind.JsonNode
@@ -16,17 +20,35 @@ object McpReadResource : CommandHandler("Mcp read resource", "ai/mcp"), ObjectHa
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val info = data.toDomainObject(ReadMcpResourceInfo::class)
 
+        val target = resolveMcpTarget(info.session, info.server != null, "Mcp read resource", context)
+
         return runBlocking {
-            readResource(info)
+            when (target) {
+                is McpTarget.Session -> readResource(target.session.client, info)
+
+                McpTarget.ConnectPerCall -> readResourceOnce(info)
+            }
         }
     }
 
-    private suspend fun readResource(info: ReadMcpResourceInfo): JsonNode? {
-        val mcp = createMcpClient(info.server)
+    private suspend fun readResourceOnce(info: ReadMcpResourceInfo): JsonNode? {
+        val mcp = createMcpClient(info.server!!)
 
         return try {
-            mcp.connect()
+            try {
+                mcp.connect()
+            } catch (e: Exception) {
+                throw SpecScriptCommandError("Resource '${info.uri}' read failed: ${e.message}", cause = e)
+            }
 
+            readResource(mcp, info)
+        } finally {
+            mcp.close()
+        }
+    }
+
+    private suspend fun readResource(mcp: McpClientWrapper, info: ReadMcpResourceInfo): JsonNode? {
+        return try {
             val request = ReadResourceRequest(
                 ReadResourceRequestParams(uri = info.uri)
             )
@@ -42,13 +64,12 @@ object McpReadResource : CommandHandler("Mcp read resource", "ai/mcp"), ObjectHa
 
         } catch (e: Exception) {
             throw SpecScriptCommandError("Resource '${info.uri}' read failed: ${e.message}", cause = e)
-        } finally {
-            mcp.close()
         }
     }
 }
 
 data class ReadMcpResourceInfo(
     val uri: String,
-    val server: TargetServerInfo,
+    val server: TargetServerInfo? = null,
+    val session: String? = null,
 )
