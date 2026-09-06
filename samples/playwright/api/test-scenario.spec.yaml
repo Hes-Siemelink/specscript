@@ -1,0 +1,81 @@
+Http session:
+  name: admin
+  url: http://release.digital.ai.local:5516/api/v1
+  username: admin
+  password: admin
+
+---
+# Get template for permission test
+GET: /templates?title=Permission example
+
+${template}: ${output[0].id}
+
+---
+# Start release
+Shell: date
+As: ${date}
+
+---
+POST:
+  path: /templates/${template}/create
+  body:
+    releaseTitle: Permission Test - ${date}
+    autoStart: true
+As: ${release}
+
+---
+# Complete a task in advance as developer
+Http session:
+  name: developer
+  url: http://release.digital.ai.local:5516/api/v1
+  username: dev-1
+  password: Password-1234
+
+---
+Print: Can't complete a task assigned to no one
+
+${assigned_to_no_one}: ${release.phases[1].tasks[0].id}
+
+POST:
+  path: /tasks/${assigned_to_no_one}/complete
+  body:
+    comment: Completed in advance from script
+
+On error type:
+  400:
+    Output: Operation not allowed
+
+Expected output: Operation not allowed
+
+---
+Print: Complete a task assigned to you
+
+${assigned_to_developer}: ${release.phases[1].tasks[1].id}
+
+POST:
+  path: /tasks/${assigned_to_developer}/complete
+  body:
+    comment: Completed in advance from script
+
+Assert that:
+  item:
+    status: COMPLETED_IN_ADVANCE
+  in: ${output}
+
+---
+Print: Complete a task assigned to your team
+
+${assigned_to_developer_team}: ${release.phases[1].tasks[2].id}
+
+POST:
+  path: /tasks/${assigned_to_developer_team}/complete
+  body:
+    comment: Completed in advance from script
+
+Assert that:
+  item:
+    status: COMPLETED_IN_ADVANCE
+  in: ${output}
+
+---
+Output: All done
