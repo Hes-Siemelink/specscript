@@ -29,14 +29,13 @@ Print: ${output}
 Expected output: Hello World!
 ```
 
-With **Output**, you explicitly set the the `${output}` variable.
+With **Output**, you explicitly set the `${output}` variable.
 
 ```yaml specscript
-Code example: Set the output variable expicitly
+Code example: Set the output variable explicitly
 
 Output: Hello World!
 
-Print: ${output}
 Expected output: Hello World!
 ```
 
@@ -90,7 +89,6 @@ Use **Output** with [For each](../control-flow/For%20each.spec.md) to transform 
 
 ```yaml specscript
 Code example: Transform a list with For each and Output
-
 
 For each:
   ${name} in:

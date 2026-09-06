@@ -1,17 +1,17 @@
 # On my mind
 
-* Rename MCP tool to name and input to argument
-* Use MCP session for Mcp read resource add and Mcp get prompt.
 * Default session for input to script that doesn't have a session but can take one.
-
+* Remove Http request defaults. Check for references
+* Don't put password in session object that is returned to the script.
+* Publish typescript package to npm
 
 * Clean up semantics of test runs
-* Plugin system with MCP
-    * Move out of core: DB, LLM query
+* `spec --test` doesn't work on Markdown
+* Revert to Test case command?
 * Error reporting during tests and execution
 * Run command from command line
 
-# Spotlight
+## Spotlight
 
 * Introduce tutorials
 * Document .spec wrapper file
@@ -23,6 +23,7 @@
     * `spec agent prime` to give a how-to for agents
     * `spec agent skills` lists agent skills
 * Replace specscript-config.yaml with README and put stuff in Markdown front matter.
+* Define bare bones markdown processor first as universal harness; SpecScript second.
 
 ## In general
 
@@ -50,6 +51,8 @@
 * Find a way to confirm default input parameters vs. just taking them for granted. Interactive mode would trigger
   confirmation?
 * Use Markdown front matter for SpecScript files to define metadata
+* Plugin system with MCP
+    * Move out of core: DB, LLM query
 
 ## CLI
 

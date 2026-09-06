@@ -103,7 +103,7 @@ Expected output:
 
 Open sessions form a stack: closing the current session makes the previously opened one current again.
 
-```yaml FIXME specscript
+```yaml specscript
 Code example: Closing the current session
 
 Http close session: hello
