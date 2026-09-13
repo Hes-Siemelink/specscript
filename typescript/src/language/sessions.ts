@@ -13,16 +13,18 @@ export interface Session {
 
 /**
  * Registry for named sessions, stored in ScriptContext.session.
- * Open sessions form a stack: the most recently opened session is the current one.
- * Mirrors Kotlin's `SessionRegistry` in language/Sessions.kt.
+ * Tracks the current session by name: most recent open picks it, and it can be
+ * switched explicitly. Mirrors Kotlin's `SessionRegistry` in language/Sessions.kt.
  */
 export class SessionRegistry<T extends Session> {
     private readonly key: string
     private readonly namePrefix: string
+    private currentSessionName: string | undefined
 
     constructor(key: string, namePrefix: string) {
         this.key = key
         this.namePrefix = namePrefix
+        this.currentSessionName = undefined
         registries.push(this as SessionRegistry<Session>)
     }
 
@@ -44,16 +46,27 @@ export class SessionRegistry<T extends Session> {
         }
         sessions.delete(session.name)
         sessions.set(session.name, session)
+        this.currentSessionName = session.name
     }
 
     get(context: ScriptContext, name: string): T | undefined {
         return this.all(context).get(name)
     }
 
-    /** The most recently opened session, or undefined when none is open. */
+    /** The current session; undefined when none is open or the tracked name is gone. */
     current(context: ScriptContext): T | undefined {
-        const values = [...this.all(context).values()]
-        return values.length > 0 ? values[values.length - 1] : undefined
+        if (this.currentSessionName === undefined) return undefined
+        return this.all(context).get(this.currentSessionName)
+    }
+
+    /** Switch the current session to the named open session. Throws when no such session exists. */
+    setCurrentSession(context: ScriptContext, name: string): T {
+        const session = this.all(context).get(name)
+        if (!session) {
+            throw new Error(`No session with name '${name}' found.`)
+        }
+        this.currentSessionName = name
+        return session
     }
 
     /** Close a session by name. Silently no-ops when the session does not exist. */
@@ -63,6 +76,10 @@ export class SessionRegistry<T extends Session> {
         if (session) {
             sessions.delete(name)
             await session.close?.()
+        }
+        if (name === this.currentSessionName) {
+            const values = [...sessions.values()]
+            this.currentSessionName = values.length > 0 ? values[values.length - 1].name : undefined
         }
     }
 
@@ -78,6 +95,7 @@ export class SessionRegistry<T extends Session> {
                 // Ignore close failures during cleanup
             }
         }
+        this.currentSessionName = undefined
     }
 
     /** Generate a unique session name using a per-registry counter. */

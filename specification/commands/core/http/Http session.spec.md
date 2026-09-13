@@ -5,7 +5,7 @@ like [GET](GET.spec.md), [POST](POST.spec.md), etc.
 
 | Input  | Supported    |
 |--------|--------------|
-| Value  | no           |
+| Value  | yes          |
 | List   | auto-iterate |
 | Object | yes          |
 
@@ -117,3 +117,66 @@ Expected output:
 ---
 Http close session: items
 ```
+
+## Changing sessions by name
+
+Passing a session name to **Http session** switches the current session to the named open session. Opening a session always makes it current; closing the current session falls back to the most recently opened remaining session, and closing any other session leaves the current session unchanged.
+
+```yaml specscript
+Code example: Change the current session
+
+Http session:
+  - name: session-a
+    url: http://localhost:2525
+    headers:
+      Session: session-a
+  - name: session-b
+    url: http://localhost:2525
+    headers:
+      Session: session-b
+
+Get: /echo/headers
+
+Assert that:
+  - item:
+      Session: session-b
+    in: ${output}
+
+---
+Http session: session-a
+
+Get: /echo/headers
+
+Assert that:
+  - item:
+      Session: session-a
+    in: ${output}
+```
+
+<!-- TODO Add error behavior -->
+
+
+Passing an empty string to **Http session** leaves the current session unchanged, so a stored session name can fall back to the session in effect at that point.
+
+```yaml specscript
+Code example: Do not change the session
+
+Get: /echo/headers
+
+Assert that:
+  - item:
+      Session: session-a
+    in: ${output}
+
+---
+Http session: ""
+
+Get: /echo/headers
+
+Assert that:
+  - item:
+      Session: session-a
+    in: ${output}
+```
+
+<!--- TODO Add test case for null -->

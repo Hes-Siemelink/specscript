@@ -78,7 +78,7 @@ Tests:
   Headers:
 
     GET:
-      path: /echo/header
+      path: /echo/headers
       headers:
         Test: something
 

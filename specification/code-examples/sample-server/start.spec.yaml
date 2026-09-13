@@ -38,7 +38,7 @@ Http server:
       delete:
         output: { }
 
-    /echo/header:
+    /echo/headers:
       get:
         output: ${request.headers}
 

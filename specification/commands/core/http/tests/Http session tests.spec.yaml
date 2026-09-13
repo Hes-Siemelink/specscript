@@ -41,7 +41,7 @@ Tests:
         Session-Header: from-session
 
     GET:
-      path: /echo/header
+      path: /echo/headers
       headers:
         Request-Header: from-request
 

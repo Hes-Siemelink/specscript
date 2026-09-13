@@ -3,7 +3,7 @@ Mcp session:
   url: http://localhost:8931/mcp
 
 Login:
-  url: http://release.digital.ai.local:5516
+  url: http://digitalai.release.local:5516
   username: dev-1
   password: Password-1234
   session: dev-1
@@ -11,7 +11,7 @@ Login:
 ---
 Browser click:
 
-  - target: text=Sample release
+  - target: text=Permission Test
     session: dev-1
   - target: text=Assigned to dev-1
     session: dev-1

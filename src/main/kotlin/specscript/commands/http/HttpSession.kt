@@ -5,7 +5,7 @@ import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.ValueNode
 
-object HttpSession : CommandHandler("Http session", "core/http"), ObjectHandler {
+object HttpSession : CommandHandler("Http session", "core/http"), ObjectHandler, ValueHandler {
 
     internal val sessions = SessionRegistry<HttpSessionData>("http.sessions", "http-session")
 
@@ -17,6 +17,25 @@ object HttpSession : CommandHandler("Http session", "core/http"), ObjectHandler 
 
         return data
     }
+
+    override fun execute(
+        data: ValueNode,
+        context: ScriptContext
+    ): JsonNode {
+        val sessionName = data.stringValue()
+
+        if (sessionName.isEmpty()) {
+            val session = sessions.current(context) ?: throw SpecScriptCommandError("No open Http session")
+            return session.data
+        } else {
+            sessions.setCurrentSession(context, sessionName)
+            val session = sessions.get(context, sessionName)
+                ?: throw SpecScriptCommandError("No open Http session: $sessionName")
+            return session.data
+        }
+    }
+
+
 }
 
 object HttpCloseSession : CommandHandler("Http close session", "core/http"), ValueHandler, ObjectHandler {

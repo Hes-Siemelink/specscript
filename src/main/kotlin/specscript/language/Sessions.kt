@@ -15,28 +15,48 @@ class SessionRegistry<T : Session>(private val key: String, private val namePref
         registries.add(this)
     }
 
+    private var currentSessionName: String? = null
+
     @Suppress("UNCHECKED_CAST")
-    private fun all(context: ScriptContext): LinkedHashMap<String, T> =
-        context.session.getOrPut(key) { LinkedHashMap<String, T>() } as LinkedHashMap<String, T>
+    private fun ScriptContext.getSessionsl(): LinkedHashMap<String, T> =
+        session.getOrPut(key) { LinkedHashMap<String, T>() } as LinkedHashMap<String, T>
 
     fun open(context: ScriptContext, session: T) {
-        val sessions = all(context)
+        val sessions = context.getSessionsl()
         sessions.remove(session.name)?.close()
         sessions[session.name] = session
+        currentSessionName = session.name
     }
 
-    fun get(context: ScriptContext, name: String): T? = all(context)[name]
+    fun get(context: ScriptContext, name: String): T? = context.getSessionsl()[name]
 
-    fun current(context: ScriptContext): T? = all(context).values.lastOrNull()
+    fun current(context: ScriptContext): T? {
+        currentSessionName ?: return null
+
+        return context.getSessionsl()[currentSessionName]
+    }
+
+    fun setCurrentSession(context: ScriptContext, name: String): T {
+        if (context.getSessionsl().containsKey(name)) {
+            currentSessionName = name
+            return current(context)!!
+        } else {
+            throw IllegalArgumentException("No session with name '$name' found.")
+        }
+    }
 
     fun close(context: ScriptContext, name: String) {
-        all(context).remove(name)?.close()
+        context.getSessionsl().remove(name)?.close()
+        if (name == currentSessionName) {
+            currentSessionName = context.getSessionsl().values.lastOrNull()?.name
+        }
     }
 
     fun closeAll(context: ScriptContext) {
-        val sessions = all(context)
+        val sessions = context.getSessionsl()
         sessions.values.forEach { runCatching { it.close() } }
         sessions.clear()
+        currentSessionName = null
     }
 
     fun generateName(context: ScriptContext): String {

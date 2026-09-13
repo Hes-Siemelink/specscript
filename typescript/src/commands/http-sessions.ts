@@ -8,7 +8,7 @@ import type { CommandHandler } from '../language/command-handler.js'
 import type { ScriptContext } from '../language/context.js'
 import { SessionRegistry, type Session } from '../language/sessions.js'
 import type { JsonObject, JsonValue } from '../language/types.js'
-import { CommandFormatError, isObject, isString } from '../language/types.js'
+import { CommandFormatError, isObject, isString, SpecScriptCommandError } from '../language/types.js'
 
 export interface HttpSessionEntry extends Session {
     data: JsonObject
@@ -19,8 +19,12 @@ export const httpSessionRegistry = new SessionRegistry<HttpSessionEntry>('http.s
 export const HttpSessionCommand: CommandHandler = {
     name: 'Http session',
     async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
+        if (isString(data)) {
+            return switchToSession(data, context)
+        }
+
         if (!isObject(data)) {
-            throw new CommandFormatError('Http session: expected an object')
+            throw new CommandFormatError('Http session: expected a session object or a session name')
         }
 
         const name = (data.name as string | undefined) ?? httpSessionRegistry.generateName(context)
@@ -30,6 +34,20 @@ export const HttpSessionCommand: CommandHandler = {
 
         return data
     },
+}
+
+/**
+ * Value form: switch the current session to the named open session.
+ * An empty string leaves the current session unchanged and returns it.
+ */
+function switchToSession(sessionName: string, context: ScriptContext): JsonObject {
+    if (sessionName === '') {
+        const session = httpSessionRegistry.current(context)
+        if (!session) throw new SpecScriptCommandError('No open Http session')
+        return session.data
+    }
+
+    return httpSessionRegistry.setCurrentSession(context, sessionName).data
 }
 
 export const HttpCloseSessionCommand: CommandHandler = {
