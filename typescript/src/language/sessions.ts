@@ -1,4 +1,5 @@
 import type { ScriptContext } from './context.js'
+import { SpecScriptCommandError } from './types.js'
 
 /**
  * A named session kept alive across commands. `close` is an optional lifecycle
@@ -63,7 +64,7 @@ export class SessionRegistry<T extends Session> {
     setCurrentSession(context: ScriptContext, name: string): T {
         const session = this.all(context).get(name)
         if (!session) {
-            throw new Error(`No session with name '${name}' found.`)
+            throw new SpecScriptCommandError(`No session with name '${name}' found.`)
         }
         this.currentSessionName = name
         return session

@@ -15,8 +15,6 @@ import { isObject, SpecScriptCommandError } from '../language/types.js'
 import { parseYamlIfPossible, toDisplayYaml } from '../util/yaml.js'
 import { httpSessionRegistry } from './http-sessions.js'
 
-const HTTP_DEFAULTS_KEY = 'http.defaults'
-
 /**
  * Process an HTTP request from a value form (URL string).
  */
@@ -42,7 +40,7 @@ export async function processValueRequest(urlString: string, context: ScriptCont
  * Process an HTTP request from an object form.
  */
 export async function processObjectRequest(data: JsonObject, context: ScriptContext, method: string): Promise<JsonValue | undefined> {
-  const defaults = sessionDefaults(data, context) ?? getDefaults(context)
+  const defaults = sessionDefaults(data, context)
   const merged = mergeWithDefaults({ ...data }, defaults)
 
   const url = buildUrl(merged)
@@ -86,14 +84,6 @@ function sessionDefaults(data: JsonObject, context: ScriptContext): JsonObject |
     throw new SpecScriptCommandError(`No open Http session: ${sessionName}`)
   }
   return session.data
-}
-
-export function storeDefaults(context: ScriptContext, data: JsonObject): void {
-  context.session.set(HTTP_DEFAULTS_KEY, data)
-}
-
-export function getDefaults(context: ScriptContext): JsonObject | undefined {
-  return context.session.get(HTTP_DEFAULTS_KEY) as JsonObject | undefined
 }
 
 // --- Parameter merging ---

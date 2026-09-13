@@ -35,7 +35,7 @@ object HttpClient {
     }
 
     fun processRequest(data: ObjectNode, context: ScriptContext, method: HttpMethod): JsonNode? {
-        val defaults = sessionDefaults(data, context) ?: HttpRequestDefaults.getFrom(context)
+        val defaults = sessionDefaults(data, context)
         val parameters = HttpParameters.create(data, defaults, method)
         return processRequest(parameters)
     }

@@ -1,4 +1,5 @@
 connections:
   SpecScript Sample Server:
-    Http request defaults:
+    Http session:
+      name: specscript-sample-server
       url: http://localhost:9999

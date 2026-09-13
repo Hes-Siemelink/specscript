@@ -208,7 +208,7 @@ levels:
     description: >
       Executable documentation. Parse .spec.md files and run yaml specscript blocks
       as tests. Unlocks self-testing against the specification.
-    commands: []
+    commands: [ ]
     language-features:
       - "Markdown scanner: classify code blocks by type"
       - "Section splitting: each # header becomes a test case"
@@ -292,7 +292,6 @@ levels:
       - PUT
       - PATCH
       - DELETE
-      - Http request defaults
       - Http session
       - Http close session
       - Http server
@@ -304,7 +303,6 @@ levels:
       - commands/core/http/PUT.spec.md
       - commands/core/http/PATCH.spec.md
       - commands/core/http/DELETE.spec.md
-      - commands/core/http/Http request defaults.spec.md
       - commands/core/http/Http session.spec.md
       - commands/core/http/Http close session.spec.md
       - commands/core/http/Http server.spec.md
@@ -319,7 +317,7 @@ levels:
     description: >
       Interactive CLI tool framework. Terminal prompts, credential management,
       type checking, JSON Schema validation.
-    requires: [3]
+    requires: [ 3 ]
     commands:
       - Prompt
       - Confirm
@@ -367,7 +365,7 @@ levels:
   - name: SQLite
     level: 6
     description: SQLite database commands.
-    requires: [3]
+    requires: [ 3 ]
     commands:
       - SQLite
       - SQLite defaults
@@ -380,7 +378,7 @@ levels:
   - name: MCP
     level: 6
     description: Model Context Protocol server and client commands.
-    requires: [1]
+    requires: [ 1 ]
     commands:
       - Mcp server
       - Mcp tool

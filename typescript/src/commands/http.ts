@@ -1,15 +1,15 @@
 /**
- * HTTP verb commands: GET, POST, PUT, PATCH, DELETE, Http request defaults.
+ * HTTP verb commands: GET, POST, PUT, PATCH, DELETE.
  *
  * Thin wrappers that delegate to the shared HttpClient module.
- * Mirrors Kotlin's Get.kt, Post.kt, Put.kt, Patch.kt, Delete.kt, HttpRequestDefaults.kt.
+ * Mirrors Kotlin's Get.kt, Post.kt, Put.kt, Patch.kt, Delete.kt.
  */
 
 import type {CommandHandler} from '../language/command-handler.js'
 import type {ScriptContext} from '../language/context.js'
 import type {JsonValue} from '../language/types.js'
 import {CommandFormatError, isObject, isString} from '../language/types.js'
-import {getDefaults, processObjectRequest, processValueRequest, storeDefaults} from './http-client.js'
+import {processObjectRequest, processValueRequest} from './http-client.js'
 
 function createHttpVerbCommand(name: string, method: string, supportsValue: boolean): CommandHandler {
     return {
@@ -34,16 +34,3 @@ export const PostCommand = createHttpVerbCommand('POST', 'POST', true)
 export const PutCommand = createHttpVerbCommand('PUT', 'PUT', false)
 export const PatchCommand = createHttpVerbCommand('PATCH', 'PATCH', false)
 export const DeleteCommand = createHttpVerbCommand('DELETE', 'DELETE', true)
-
-/** Http request defaults — store/retrieve session-scoped defaults */
-export const HttpRequestDefaultsCommand: CommandHandler = {
-    name: 'Http request defaults',
-    async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
-        if (isObject(data)) {
-            storeDefaults(context, data)
-            return undefined
-        }
-        // Value form: retrieve current defaults
-        return getDefaults(context) ?? {}
-    },
-}

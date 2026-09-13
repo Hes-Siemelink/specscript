@@ -55,6 +55,7 @@ list input over commands that don't handle lists natively.
 ${greeting}: Hello World                # assignment
 Print: ${greeting}                      # interpolation anywhere in a string
 
+---
 GET: /api/users
 As: ${users}                            # capture last output into a variable
 Print: ${users[0].name}                 # nested access
@@ -83,7 +84,8 @@ Do: # group repeated commands (list of commands)
 ### HTTP
 
 ```yaml
-Http request defaults: # base url + headers for subsequent requests
+Http session: # named session provides defaults; current session wins
+  name: backend
   url: https://api.example.com
 
 GET: /api/items
@@ -91,10 +93,6 @@ POST:
   url: /items
   body:
     name: New Item
-
-Http session: # named session provides defaults; current session wins
-  name: backend
-  url: https://api.example.com
 ```
 
 - `GET`, `POST`, `PUT`, `PATCH`, `DELETE` share the same parameter model (`HttpParameters.schema.yaml`): `url`, `path`,
@@ -105,7 +103,7 @@ Http session: # named session provides defaults; current session wins
 - Defaults from a session are stored in the session's data object when opened; the session name is auto-generated when
   omitted.
 
-### Scripts as commands, packages, and connections
+## Scripts as commands, packages, and connections
 
 - Any `.spec.yaml` file becomes a command: `features/list.spec.yaml` → `spec features list`. Directory metadata lives in
   a `specscript-config.yaml` (description, `imports:`, `connections:`).

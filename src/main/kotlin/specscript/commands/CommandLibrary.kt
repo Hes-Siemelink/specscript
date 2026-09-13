@@ -9,11 +9,7 @@ import specscript.commands.db.Store
 import specscript.commands.errors.ErrorCommand
 import specscript.commands.errors.OnError
 import specscript.commands.errors.OnErrorType
-import specscript.commands.files.Cd
-import specscript.commands.files.ReadFile
-import specscript.commands.files.Run
-import specscript.commands.files.TempFile
-import specscript.commands.files.WriteFile
+import specscript.commands.files.*
 import specscript.commands.http.*
 import specscript.commands.mcp.*
 import specscript.commands.schema.CheckType
@@ -112,7 +108,6 @@ object CommandLibrary {
         Put,
         Patch,
         Delete,
-        HttpRequestDefaults,
         HttpSession,
         HttpCloseSession,
 

@@ -98,8 +98,6 @@ Overview of standard commands in SpecScript.
 * [PUT](core/http/PUT.spec.md) - Sends a PUT request to an HTTP endpoint
 * [PATCH](core/http/PATCH.spec.md) - Sends a PATCH request to an HTTP endpoint
 * [DELETE](core/http/DELETE.spec.md) - Sends a DELETE request to an HTTP endpoint
-* [Http request defaults](core/http/Http%20request%20defaults.spec.md) - Sets the default parameters for all subsequent
-  HTTP commands.
 * [Http session](core/http/Http%20session.spec.md) - Opens a session that provides default parameters for subsequent
   HTTP commands
 * [Http close session](core/http/Http%20close%20session.spec.md) - Closes an open Http session

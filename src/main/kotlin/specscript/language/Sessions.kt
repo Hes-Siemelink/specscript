@@ -41,7 +41,7 @@ class SessionRegistry<T : Session>(private val key: String, private val namePref
             currentSessionName = name
             return current(context)!!
         } else {
-            throw IllegalArgumentException("No session with name '$name' found.")
+            throw SpecScriptCommandError("No session with name '$name' found.")
         }
     }
 

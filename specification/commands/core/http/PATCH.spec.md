@@ -23,15 +23,14 @@ PATCH:
     item: one
 ```
 
-## Http request defaults
+## Http session
 
-As with all Http commands, you can use [Http request defaults](Http%20request%20defaults.spec.md) to set the defaults
-for common fields.
+As with all Http commands, you can use [Http session](Http%20session.spec.md) to set the defaults for common fields.
 
 ```yaml specscript
-Code example: Http request defaults and PATCH
+Code example: Http session and PATCH
 
-Http request defaults:
+Http session:
   url: http://localhost:2525
 
 PATCH:
@@ -40,4 +39,4 @@ PATCH:
     item: one
 ```
 
-See [Http request defaults](Http%20request%20defaults.spec.md) for more information on how to configure all fields.
+See [Http session](Http%20session.spec.md) for more information on how to configure all fields.

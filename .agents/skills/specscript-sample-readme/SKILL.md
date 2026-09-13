@@ -60,10 +60,11 @@ Http server:
             resource: recorded-data/${request.path}/${request.query}/GET
       post:
         script:
-          Output: {}
+          Output: { }
 ```
 
 Key details:
+
 - Use `"{...}"` for the catch-all wildcard endpoint (Ktor tailcard syntax). Do NOT use `"*"` — it does not work.
 - Port should be unique (25100+ range for samples)
 - `resource:` resolves relative to the script's directory (where mock-server.spec.yaml lives)
@@ -84,7 +85,7 @@ imports:
 
 connections:
   <Connection Name>:
-    Http request defaults:
+    Http session:
       url: http://localhost:<port>
 ```
 
@@ -113,12 +114,12 @@ Before all tests:
               resource: recorded-data/${request.path}/${request.query}/GET
         post:
           script:
-            Output: {}
+            Output: { }
 
 Tests:
 
   <Test name>:
-    <Command>: {}
+    <Command>: { }
     Expected output:
       - expected item 1
       - expected item 2
@@ -128,12 +129,14 @@ After all tests:
 ```
 
 Important:
+
 - The mock server definition is duplicated in `Before all tests:` (inline, not via `Run script:`)
 - `Before all tests:` runs only with the first test; `After all tests:` runs only with the last
 - Use `Expected output:` for checking command return values (lists, objects)
 - Use `Expected console output:` for checking printed text
 - For interactive commands, use `Answers:` to provide input for `Prompt` commands
-- For stateful operations (e.g., move), verify the command runs without error rather than asserting on post-mutation state
+- For stateful operations (e.g., move), verify the command runs without error rather than asserting on post-mutation
+  state
 
 ## Step 5: Write the README
 

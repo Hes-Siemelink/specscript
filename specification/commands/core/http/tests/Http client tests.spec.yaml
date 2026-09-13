@@ -1,6 +1,7 @@
 Before all tests:
 
-  Http request defaults:
+  Http session:
+    name: test-server
     url: http://localhost:2525
     cookies:
       maria: biscuit

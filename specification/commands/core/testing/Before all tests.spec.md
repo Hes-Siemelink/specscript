@@ -48,7 +48,7 @@ A common use case is setting up HTTP defaults for API testing.
 Code example: Before all tests with Http request defaults
 
 Before all tests:
-  Http request defaults:
+  Http session:
     url: http://localhost:2525
 
 Tests:

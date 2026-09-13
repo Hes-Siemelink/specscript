@@ -25,7 +25,7 @@ import { ShellCommand } from './shell.js'
 import { RunCommand } from './run.js'
 import { CliCommand } from './cli-command.js'
 import { HttpServerCommand, HttpEndpointCommand, StopHttpServerCommand } from './http-server.js'
-import { GetCommand, PostCommand, PutCommand, PatchCommand, DeleteCommand, HttpRequestDefaultsCommand } from './http.js'
+import { GetCommand, PostCommand, PutCommand, PatchCommand, DeleteCommand } from './http.js'
 import { HttpSessionCommand, HttpCloseSessionCommand } from './http-sessions.js'
 import { CheckTypeCommand } from './check-type.js'
 import { PromptCommand } from './prompt.js'
@@ -143,7 +143,6 @@ export function registerAllCommands(): void {
   registerCommand(PutCommand)
   registerCommand(PatchCommand)
   registerCommand(DeleteCommand)
-  registerCommand(HttpRequestDefaultsCommand)
   registerCommand(HttpSessionCommand)
   registerCommand(HttpCloseSessionCommand)
 

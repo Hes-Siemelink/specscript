@@ -13,13 +13,13 @@ the scenes.
 
 ## Basic usage
 
-**Connect to** takes a symbolic name and usually
-configures [Http request defaults](../http/Http%20request%20defaults.spec.md) for subsequent REST API calls.
+**Connect to** takes a symbolic name and usually configures a [Http session](../http/Http%20session.spec.md) for
+subsequent REST API calls.
 
 A script `get-items.spec.yaml` would look like this:
 
 <!-- yaml specscript
-Http request defaults:
+Http session:
   url: http://localhost:2525
 -->
 
@@ -51,7 +51,7 @@ Here's an example connection script:
 
 ```yaml temp-file=connect.spec.yaml
 # Set up endpoint for subsequent HTTP calls
-Http request defaults:
+Http session:
   url: http://localhost:2525
 ```
 

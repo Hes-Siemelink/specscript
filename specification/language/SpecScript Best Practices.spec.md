@@ -51,8 +51,8 @@ As a rule of thumb: when in doubt, add a `---`. It never hurts and prevents subt
 
 ### Prefer `---` over list syntax
 
-Top-level list syntax (`- Print: Hello`) avoids duplicate keys but adds visual noise. The `---` separator is easier
-to scan and acts as a natural section break:
+Top-level list syntax (`- Print: Hello`) avoids duplicate keys but adds visual noise. The `---` separator is easier to
+scan and acts as a natural section break:
 
 ```yaml
 # Noisy
@@ -68,32 +68,6 @@ Print: Hello
 Print: Hello again!
 ---
 Print: Goodbye
-```
-
-### Use `---` instead of comments for section breaks
-
-Comments like `# --- Section ---` are redundant when `---` separators are already present. Let the separators do
-double duty — they enforce valid YAML and visually divide the script:
-
-```yaml
-# ❌ Redundant comment separators
-# --- Set up connection ---
-Http request defaults:
-  url: https://api.example.com
-
-# --- Fetch data ---
-GET: /items
-As: ${items}
-```
-
-```yaml
-# ✅ Let --- do the work
-Http request defaults:
-  url: https://api.example.com
-
----
-GET: /items
-As: ${items}
 ```
 
 ### Temp File Referencing

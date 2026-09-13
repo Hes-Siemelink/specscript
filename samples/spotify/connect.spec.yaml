@@ -18,7 +18,8 @@ POST:
   body:
     grant_type: client_credentials
 
-Http request defaults:
+Http session:
+  name: spotify
   url: https://api.spotify.com/v1
   headers:
     Authorization: Bearer ${output.access_token}

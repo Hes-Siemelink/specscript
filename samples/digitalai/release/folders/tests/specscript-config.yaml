@@ -9,5 +9,6 @@ imports:
 
 connections:
   Digital.ai Release:
-    Http request defaults:
+    Http session:
+      name: digital-ai-release
       url: http://localhost:25102

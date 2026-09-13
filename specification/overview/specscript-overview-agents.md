@@ -131,13 +131,13 @@ See [Input schema](../commands/core/script-info/Input%20schema.spec.md) for the 
 [GET](../commands/core/http/GET.spec.md), [POST](../commands/core/http/POST.spec.md),
 [PUT](../commands/core/http/PUT.spec.md), [PATCH](../commands/core/http/PATCH.spec.md),
 [DELETE](../commands/core/http/DELETE.spec.md) are built-in. Use
-[Http request defaults](../commands/core/http/Http%20request%20defaults.spec.md) to set shared configuration like base
-URL, headers, and authentication:
+[Http session](../commands/core/http/Http%20session.spec.md) to set shared configuration like base URL, headers, and
+authentication:
 
 ```yaml specscript
 Code example: HTTP requests with defaults and POST
 
-Http request defaults:
+Http session:
   url: http://localhost:2525
 
 GET: /items
@@ -190,7 +190,8 @@ Tests only execute with `spec --test`. [Before all tests](../commands/core/testi
 Code example: Test structure
 
 Before all tests:
-  Http request defaults:
+  Http session:
+    name: test-server
     url: http://localhost:2525
 
 Tests:
@@ -205,6 +206,7 @@ Tests:
 
 After all tests:
   Print: Cleanup done
+  Http close session: test-server
 ```
 
 Assertions: [Assert that](../commands/core/testing/Assert%20that.spec.md) (conditions, negation, empty checks),

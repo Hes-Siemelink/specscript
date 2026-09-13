@@ -43,27 +43,14 @@ Expected output:
   - 3
 ```
 
-## Using Http request defaults
+## Using Http session
 
-By using [Http request defaults](Http%20request%20defaults.spec.md), you can set the properties that are common to all
-requests in advance
-
-```yaml specscript
-Code example: Use Http request defaults
-
-Http request defaults:
-  url: http://localhost:2525
-
-GET:
-  path: /items
-```
-
-This way you can simply write the `path` parameter on **GET**:
+By using [Http session](Http%20session.spec.md), you can set the properties that are common to all requests in advance
 
 ```yaml specscript
-Code example: Use Http Endpoint with simple GET
+Code example: Use Http session to set the defaults
 
-Http request defaults:
+Http session:
   url: http://localhost:2525
 
 GET: /items

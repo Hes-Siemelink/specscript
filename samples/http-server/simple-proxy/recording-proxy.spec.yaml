@@ -12,8 +12,8 @@ ${storageDir}: ${input.storageDir}
 
 ---
 # Get actual target from local file
-Http request defaults:
-  :Read file:
+Http session:
+  /Read file:
     resource: target-endpoint.yaml
 
 Http server:
