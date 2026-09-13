@@ -179,3 +179,4 @@ Tests:
     Expected output: Hello from SpecScript!
 
     Http close session: twice
+

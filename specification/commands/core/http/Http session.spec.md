@@ -120,7 +120,9 @@ Http close session: items
 
 ## Changing sessions by name
 
-Passing a session name to **Http session** switches the current session to the named open session. Opening a session always makes it current; closing the current session falls back to the most recently opened remaining session, and closing any other session leaves the current session unchanged.
+Passing a session name to **Http session** switches the current session to the named open session. Opening a session
+always makes it current; closing the current session falls back to the most recently opened remaining session, and
+closing any other session leaves the current session unchanged.
 
 ```yaml specscript
 Code example: Change the current session
@@ -153,10 +155,8 @@ Assert that:
     in: ${output}
 ```
 
-<!-- TODO Add error behavior -->
-
-
-Passing an empty string to **Http session** leaves the current session unchanged, so a stored session name can fall back to the session in effect at that point.
+Passing an empty string to **Http session** leaves the current session unchanged, so a stored session name can fall back
+to the session in effect at that point.
 
 ```yaml specscript
 Code example: Do not change the session
@@ -179,4 +179,13 @@ Assert that:
     in: ${output}
 ```
 
-<!--- TODO Add test case for null -->
+If you switch to a session that does not exist, you will get an empty object.
+
+```yaml specscript
+Code example: Switch to an unknown session returns an empty session
+
+Http session: unknown
+
+Assert that:
+  empty: ${output}
+```

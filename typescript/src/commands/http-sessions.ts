@@ -8,7 +8,7 @@ import type { CommandHandler } from '../language/command-handler.js'
 import type { ScriptContext } from '../language/context.js'
 import { SessionRegistry, type Session } from '../language/sessions.js'
 import type { JsonObject, JsonValue } from '../language/types.js'
-import { CommandFormatError, isObject, isString, SpecScriptCommandError } from '../language/types.js'
+import { CommandFormatError, isObject, isString } from '../language/types.js'
 
 export interface HttpSessionEntry extends Session {
     data: JsonObject
@@ -38,16 +38,23 @@ export const HttpSessionCommand: CommandHandler = {
 
 /**
  * Value form: switch the current session to the named open session.
- * An empty string leaves the current session unchanged and returns it.
+ * A blank name leaves the current session unchanged and returns it; an
+ * unknown name also returns the current session data. Mirrors Kotlin.
  */
 function switchToSession(sessionName: string, context: ScriptContext): JsonObject {
-    if (sessionName === '') {
-        const session = httpSessionRegistry.current(context)
-        if (!session) throw new SpecScriptCommandError('No open Http session')
-        return session.data
+    const current = httpSessionRegistry.current(context)?.data ?? {}
+
+    if (sessionName.trim() === '') {
+        return current
     }
 
-    return httpSessionRegistry.setCurrentSession(context, sessionName).data
+    const target = httpSessionRegistry.get(context, sessionName)
+    if (!target) {
+        return {}
+    }
+
+    httpSessionRegistry.setCurrentSession(context, sessionName)
+    return target.data
 }
 
 export const HttpCloseSessionCommand: CommandHandler = {

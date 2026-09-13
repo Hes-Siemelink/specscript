@@ -1,19 +1,15 @@
 # On my mind
 
-* Use 'Http session: name' to switch current session.
-    * Passing empty string or null does not change session for use case of passing session name as input parameter and
-      take current session.
-* Default session for input to script that doesn't have a session but can take one.
 * Add 'Expected output contains'
-* Remove Http request defaults. Check for references
 * Don't put password in session object that is returned to the script.
-* Publish typescript package to npm
 
 * Fix test runner in Intellij
 * Clean up semantics of test runs
 * `spec --test` doesn't work on Markdown
 * Revert to Test case command?
 * Error reporting during tests and execution
+
+* Publish typescript package to npm
 * Run command from command line
 
 ## Spotlight

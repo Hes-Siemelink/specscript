@@ -1,6 +1,7 @@
 package specscript.commands.http
 
 import specscript.language.*
+import specscript.util.Json
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.ValueNode
@@ -22,20 +23,22 @@ object HttpSession : CommandHandler("Http session", "core/http"), ObjectHandler,
         data: ValueNode,
         context: ScriptContext
     ): JsonNode {
-        val sessionName = data.stringValue()
 
-        if (sessionName.isEmpty()) {
-            val session = sessions.current(context) ?: throw SpecScriptCommandError("No open Http session")
-            return session.data
+        // Passing empty string means get current session.
+        val targetName = data.stringValue()
+        if (targetName.isBlank()) {
+            return sessions.current(context)?.data ?: Json.newObject()
+        }
+
+        // Switch to target or return empty object if it doesn't exist.
+        val target = sessions.get(context, targetName)
+        if (target == null) {
+            return Json.newObject()
         } else {
-            sessions.setCurrentSession(context, sessionName)
-            val session = sessions.get(context, sessionName)
-                ?: throw SpecScriptCommandError("No open Http session: $sessionName")
-            return session.data
+            sessions.setCurrentSession(context, targetName)
+            return target.data
         }
     }
-
-
 }
 
 object HttpCloseSession : CommandHandler("Http close session", "core/http"), ValueHandler, ObjectHandler {
@@ -51,4 +54,4 @@ object HttpCloseSession : CommandHandler("Http close session", "core/http"), Val
     }
 }
 
-class HttpSessionData(override val name: String, val data: ObjectNode) : Session
+class HttpSessionData(override val name: String, override val data: ObjectNode) : Session

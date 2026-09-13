@@ -1,7 +1,10 @@
 package specscript.language
 
+import tools.jackson.databind.node.ObjectNode
+
 interface Session {
     val name: String
+    val data: ObjectNode
     fun close() {}
 }
 
@@ -18,26 +21,26 @@ class SessionRegistry<T : Session>(private val key: String, private val namePref
     private var currentSessionName: String? = null
 
     @Suppress("UNCHECKED_CAST")
-    private fun ScriptContext.getSessionsl(): LinkedHashMap<String, T> =
+    private fun ScriptContext.getSessions(): LinkedHashMap<String, T> =
         session.getOrPut(key) { LinkedHashMap<String, T>() } as LinkedHashMap<String, T>
 
     fun open(context: ScriptContext, session: T) {
-        val sessions = context.getSessionsl()
+        val sessions = context.getSessions()
         sessions.remove(session.name)?.close()
         sessions[session.name] = session
         currentSessionName = session.name
     }
 
-    fun get(context: ScriptContext, name: String): T? = context.getSessionsl()[name]
+    fun get(context: ScriptContext, name: String): T? = context.getSessions()[name]
 
     fun current(context: ScriptContext): T? {
         currentSessionName ?: return null
 
-        return context.getSessionsl()[currentSessionName]
+        return context.getSessions()[currentSessionName]
     }
 
     fun setCurrentSession(context: ScriptContext, name: String): T {
-        if (context.getSessionsl().containsKey(name)) {
+        if (context.getSessions().containsKey(name)) {
             currentSessionName = name
             return current(context)!!
         } else {
@@ -46,14 +49,14 @@ class SessionRegistry<T : Session>(private val key: String, private val namePref
     }
 
     fun close(context: ScriptContext, name: String) {
-        context.getSessionsl().remove(name)?.close()
+        context.getSessions().remove(name)?.close()
         if (name == currentSessionName) {
-            currentSessionName = context.getSessionsl().values.lastOrNull()?.name
+            currentSessionName = context.getSessions().values.lastOrNull()?.name
         }
     }
 
     fun closeAll(context: ScriptContext) {
-        val sessions = context.getSessionsl()
+        val sessions = context.getSessions()
         sessions.values.forEach { runCatching { it.close() } }
         sessions.clear()
         currentSessionName = null

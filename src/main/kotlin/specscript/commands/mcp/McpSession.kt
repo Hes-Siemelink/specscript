@@ -48,7 +48,7 @@ object McpCloseSession : CommandHandler("Mcp close session", "ai/mcp"), ValueHan
 
 class McpSessionData(
     override val name: String,
-    val data: ObjectNode,
+    override val data: ObjectNode,
     val client: McpClientWrapper
 ) : Session {
 

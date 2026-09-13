@@ -1,4 +1,5 @@
 import type { ScriptContext } from './context.js'
+import type { JsonObject } from './types.js'
 import { SpecScriptCommandError } from './types.js'
 
 /**
@@ -9,6 +10,7 @@ import { SpecScriptCommandError } from './types.js'
  */
 export interface Session {
     name: string
+    data: JsonObject
     close?(): void | Promise<void>
 }
 
