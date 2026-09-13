@@ -45,7 +45,7 @@ object Credentials : CommandHandler("Credentials", "core/shell"), ValueHandler {
 fun CredentialsFile.save(): CredentialsFile {
     checkNotNull(file) { "Can't save Credentials object because there is no file associated with it." }
 
-    Yaml.writeToFile(file!!.toFile(), this.targetResources)
+    Yaml.writeToFile(file.toFile(), this.targetResources)
 
     return this
 }

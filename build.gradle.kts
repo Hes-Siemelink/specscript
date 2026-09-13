@@ -2,8 +2,8 @@ group = "hes.specscript"
 version = "0.12.1-SNAPSHOT"
 
 plugins {
-    kotlin("jvm") version "2.1.20"
-    kotlin("plugin.serialization") version "2.1.20"
+    kotlin("jvm") version "2.4.20"
+    kotlin("plugin.serialization") version "2.4.20"
     `maven-publish`
     id("com.github.breadmoirai.github-release") version "2.5.2"
 }
@@ -23,27 +23,27 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
 
-    implementation("tools.jackson.module:jackson-module-kotlin:3.0.+")
-    implementation("tools.jackson.dataformat:jackson-dataformat-yaml:3.0.+")
+    implementation("tools.jackson.module:jackson-module-kotlin:3.2.1")
+    implementation("tools.jackson.dataformat:jackson-dataformat-yaml:3.2.1")
     implementation("com.networknt:json-schema-validator:3.0.+")
-    implementation("io.ktor:ktor-client-core:3.3.+")
-    implementation("io.ktor:ktor-client-java:3.3+")
-    implementation("io.ktor:ktor-client-auth:3.3+")
-    implementation("io.ktor:ktor-server-core:3.3.+")
-    implementation("io.ktor:ktor-server-netty:3.3.+")
-    implementation("io.ktor:ktor-server-sse:3.3.+")
-    implementation("ch.qos.logback:logback-classic:1.5.+")
+    implementation("io.ktor:ktor-client-core:3.5.2")
+    implementation("io.ktor:ktor-client-java:3.5.2")
+    implementation("io.ktor:ktor-client-auth:3.5.2")
+    implementation("io.ktor:ktor-server-core:3.5.2")
+    implementation("io.ktor:ktor-server-netty:3.5.2")
+    implementation("io.ktor:ktor-server-sse:3.5.2")
+    implementation("ch.qos.logback:logback-classic:1.6.3")
     implementation("com.github.kotlin-inquirer:kotlin-inquirer:0.1.0")
-    implementation("org.jline:jline:3.27.+")
-    implementation("org.fusesource.jansi:jansi:2.4.1")
-    implementation("org.xerial:sqlite-jdbc:3.47.0.0")
-    implementation("io.modelcontextprotocol:kotlin-sdk:0.8.4")
-    implementation("io.ktor:ktor-server-content-negotiation:3.3.+")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:3.3.+")
-    implementation("io.github.oshai:kotlin-logging:5.0.0")  // For MCP
+    implementation("org.jline:jline:3.30.17")
+    implementation("org.fusesource.jansi:jansi:2.4.3")
+    implementation("org.xerial:sqlite-jdbc:3.53.4.0")
+    implementation("io.modelcontextprotocol:kotlin-sdk:0.15.0")
+    implementation("io.ktor:ktor-server-content-negotiation:3.5.2")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:3.5.2")
+    implementation("io.github.oshai:kotlin-logging:8.0.4")  // For MCP
 
-    implementation("org.junit.jupiter:junit-jupiter-api:5.14.2")
-    runtimeOnly("org.junit.jupiter:junit-jupiter-engine:5.14.2")
+    implementation("org.junit.jupiter:junit-jupiter-api:6.1.3")
+    runtimeOnly("org.junit.jupiter:junit-jupiter-engine:6.1.3")
 
     testImplementation("io.kotest:kotest-assertions-core:5.7.2")
 }
@@ -52,8 +52,8 @@ sourceSets.main.get().resources.srcDir("specification")
 
 testing {
     suites {
-        val test by getting(JvmTestSuite::class) {
-            useJUnitJupiter()
+        val test = getByName<JvmTestSuite>("test") {
+            useJUnitJupiter("6.1.3") // Same dependency for the test suite as the main code base to avoid conflicts
 
             sources {
                 java {
@@ -64,11 +64,13 @@ testing {
 
         register<JvmTestSuite>("specificationTest") {
 
+            useJUnitJupiter("6.1.3") // Same dependency for the test suite as the main code base to avoid conflicts
+
             dependencies {
                 implementation(project())
                 implementation("io.kotest:kotest-assertions-core:5.7.2")
-                implementation("tools.jackson.module:jackson-module-kotlin:3.0.+")
-                implementation("tools.jackson.dataformat:jackson-dataformat-yaml:3.0.+")
+                implementation("tools.jackson.module:jackson-module-kotlin:3.2.1")
+                implementation("tools.jackson.dataformat:jackson-dataformat-yaml:3.2.1")
             }
 
             sources {

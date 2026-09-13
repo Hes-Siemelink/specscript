@@ -142,7 +142,7 @@ object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, Delaye
         val transport = StdioServerTransport(
             System.`in`.asSource().buffered(),
             System.out.asSink().buffered()
-        )
+        ) {}
 
         thread(start = true, isDaemon = false, name = "MCP Server - $name") {
             runBlocking {
