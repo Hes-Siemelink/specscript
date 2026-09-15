@@ -139,20 +139,16 @@ Http session:
 
 Get: /echo/headers
 
-Assert that:
-  - item:
-      Session: session-b
-    in: ${output}
+Expected output contains:
+  Session: session-b
 
 ---
 Http session: session-a
 
 Get: /echo/headers
 
-Assert that:
-  - item:
-      Session: session-a
-    in: ${output}
+Expected output contains:
+  Session: session-a
 ```
 
 Passing an empty string to **Http session** leaves the current session unchanged, so a stored session name can fall back
@@ -163,20 +159,16 @@ Code example: Do not change the session
 
 Get: /echo/headers
 
-Assert that:
-  - item:
-      Session: session-a
-    in: ${output}
+Expected output contains:
+  Session: session-a
 
 ---
 Http session: ""
 
 Get: /echo/headers
 
-Assert that:
-  - item:
-      Session: session-a
-    in: ${output}
+Expected output contains:
+  Session: session-a
 ```
 
 If you switch to a session that does not exist, you will get an empty object.

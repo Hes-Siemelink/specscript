@@ -49,6 +49,7 @@ object CommandLibrary {
         AssertThat,
         ExpectedConsoleOutput,
         ExpectedOutput,
+        ExpectedOutputContains,
         ExpectedError,
         Answers,
 

@@ -69,7 +69,7 @@ class Equals implements Condition {
     }
 }
 
-class Contains implements Condition {
+export class Contains implements Condition {
     constructor(private container: JsonValue, private item: JsonValue) {
     }
 

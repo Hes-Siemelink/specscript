@@ -8,7 +8,7 @@ import { ErrorCommand, OnError, OnErrorType } from './error.js'
 import { ScriptInfo, InputSchema } from './script-info.js'
 import {
   AssertEquals, AssertThat,
-  ExpectedOutput, ExpectedConsoleOutput, ExpectedError,
+  ExpectedOutput, ExpectedOutputContains, ExpectedConsoleOutput, ExpectedError,
   TestCase, CodeExample, Answers,
   Tests, BeforeAllTests, AfterAllTests,
 } from './testing.js'
@@ -72,6 +72,7 @@ export function registerAllCommands(): void {
   registerCommand(AssertEquals)
   registerCommand(AssertThat)
   registerCommand(ExpectedOutput)
+  registerCommand(ExpectedOutputContains)
   registerCommand(ExpectedConsoleOutput)
   registerCommand(ExpectedError)
   registerCommand(TestCase)

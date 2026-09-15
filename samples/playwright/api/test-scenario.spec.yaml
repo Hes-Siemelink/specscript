@@ -57,10 +57,8 @@ POST:
   body:
     comment: Completed in advance from script
 
-Assert that:
-  item:
-    status: COMPLETED_IN_ADVANCE
-  in: ${output}
+Expected output contains:
+  status: COMPLETED_IN_ADVANCE
 
 ---
 Print: Complete a task assigned to your team
@@ -72,10 +70,8 @@ POST:
   body:
     comment: Completed in advance from script
 
-Assert that:
-  item:
-    status: COMPLETED_IN_ADVANCE
-  in: ${output}
+Expected output contains:
+  status: COMPLETED_IN_ADVANCE
 
 ---
 Output: All done

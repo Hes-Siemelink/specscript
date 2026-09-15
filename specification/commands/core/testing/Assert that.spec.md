@@ -59,7 +59,7 @@ Assert that:
 
 ### Contains
 
-You can also test if something is inside something else with the `'item'` and `in`.
+You can test if something is inside an array with `item` and `in`:
 
 ```yaml specscript
 Code example: Check if an object is in a list
@@ -72,7 +72,7 @@ Assert that:
     - three
 ```
 
-You can also test for parts of an object.
+You can also test for if an object is part of a larger object.
 
 ```yaml specscript
 Code example: Check if an object contains some properties
@@ -171,12 +171,12 @@ ${config}:
     logging: true
 
 Assert that:
-- not:
-    empty: ${config.database.host}
-- item: ${config.features.authentication}
-  equals: true
-- item: ${config.database.port}
-  equals: 5432
+  - not:
+      empty: ${config.database.host}
+  - item: ${config.features.authentication}
+    equals: true
+  - item: ${config.database.port}
+    equals: 5432
 ```
 
 

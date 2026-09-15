@@ -45,11 +45,9 @@ Tests:
       headers:
         Request-Header: from-request
 
-    Assert that:
-      item:
-        Session-Header: from-session
-        Request-Header: from-request
-      in: ${output}
+    Expected output contains:
+      Session-Header: from-session
+      Request-Header: from-request
 
     Http close session: with-headers
 

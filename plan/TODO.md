@@ -1,9 +1,7 @@
 # On my mind
 
-* Add 'Expected output contains'
 * Don't put password in session object that is returned to the script.
 
-* Fix test runner in Intellij
 * Clean up semantics of test runs
 * `spec --test` doesn't work on Markdown
 * Revert to Test case command?
@@ -98,7 +96,7 @@
 * Support 'list execution' for commands that are SpecScript scripts
 * Multi-line shell support
 * Support stdin:
-  if (System.`in`.available() != 0) { val input = Yaml.mapper.readTree(System.`in`)}
+  if (System.`in`.available () != 0) { val input = Yaml.mapper.readTree (System.`in`)}
 
 ## AI agents
 

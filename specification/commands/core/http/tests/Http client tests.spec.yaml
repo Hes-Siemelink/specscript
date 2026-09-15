@@ -83,10 +83,8 @@ Tests:
       headers:
         Test: something
 
-    Assert that:
-      item:
-        Test: something
-      in: ${output}
+    Expected output contains:
+      Test: something
 
   Cookies:
 
@@ -95,7 +93,7 @@ Tests:
       cookies:
         speculaas: spicy
 
-    Expected output:
+    Expected output contains:
       maria: biscuit
       speculaas: spicy
 

@@ -8,7 +8,7 @@ import {
     SpecScriptCommandError,
 } from '../language/types.js'
 import type {ScriptContext} from '../language/context.js'
-import {deepEquals, toCondition} from '../language/conditions.js'
+import {Contains, deepEquals, toCondition} from '../language/conditions.js'
 import {toDisplayYaml} from '../util/yaml.js'
 
 /**
@@ -67,6 +67,24 @@ export const ExpectedOutput: CommandHandler = {
         if (!deepEquals(actual ?? null, data)) {
             throw new SpecScriptCommandError(
                 `Expected output:\n${toDisplayYaml(data)}\nActual output:\n${toDisplayYaml(actual ?? null)}`,
+                'assertion-error'
+            )
+        }
+        return undefined
+    },
+}
+
+/**
+ * Expected output contains: asserts that the current output contains the expected value.
+ */
+export const ExpectedOutputContains: CommandHandler = {
+    name: 'Expected output contains',
+
+    async execute(data: JsonValue, context: ScriptContext): Promise<JsonValue | undefined> {
+        const condition = new Contains(context.output ?? null, data)
+        if (!condition.isTrue()) {
+            throw new SpecScriptCommandError(
+                `Output does not contain expected value.\nExpected part: ${toDisplayYaml(data)}\nOutput:${toDisplayYaml(context.output ?? null)}`,
                 'assertion-error'
             )
         }
