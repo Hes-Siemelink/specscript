@@ -2,6 +2,7 @@ package specscript.commands.http
 
 import specscript.language.*
 import specscript.util.Json
+import specscript.util.withoutSecrets
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.ValueNode
@@ -16,7 +17,7 @@ object HttpSession : CommandHandler("Http session", "core/http"), ObjectHandler,
 
         sessions.open(context, HttpSessionData(name, data))
 
-        return data
+        return data.withoutSecrets()
     }
 
     override fun execute(
@@ -27,7 +28,7 @@ object HttpSession : CommandHandler("Http session", "core/http"), ObjectHandler,
         // Passing empty string means get current session.
         val targetName = data.stringValue()
         if (targetName.isBlank()) {
-            return sessions.current(context)?.data ?: Json.newObject()
+            return sessions.current(context)?.data?.withoutSecrets() ?: Json.newObject()
         }
 
         // Switch to target or return empty object if it doesn't exist.
@@ -36,7 +37,7 @@ object HttpSession : CommandHandler("Http session", "core/http"), ObjectHandler,
             return Json.newObject()
         } else {
             sessions.setCurrentSession(context, targetName)
-            return target.data
+            return target.data.withoutSecrets()
         }
     }
 }

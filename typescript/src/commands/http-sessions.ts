@@ -9,6 +9,7 @@ import type { ScriptContext } from '../language/context.js'
 import { SessionRegistry, type Session } from '../language/sessions.js'
 import type { JsonObject, JsonValue } from '../language/types.js'
 import { CommandFormatError, isObject, isString } from '../language/types.js'
+import { withoutSecrets } from '../util/json.js'
 
 export interface HttpSessionEntry extends Session {
     data: JsonObject
@@ -32,20 +33,19 @@ export const HttpSessionCommand: CommandHandler = {
 
         httpSessionRegistry.open(context, { name, data })
 
-        return data
+        return withoutSecrets(data)
     },
 }
 
 /**
  * Value form: switch the current session to the named open session.
- * A blank name leaves the current session unchanged and returns it; an
- * unknown name also returns the current session data. Mirrors Kotlin.
+ * A blank name gets the current session; an unknown name returns an empty object. Mirrors Kotlin.
  */
 function switchToSession(sessionName: string, context: ScriptContext): JsonObject {
     const current = httpSessionRegistry.current(context)?.data ?? {}
 
     if (sessionName.trim() === '') {
-        return current
+        return withoutSecrets(current)
     }
 
     const target = httpSessionRegistry.get(context, sessionName)
@@ -54,7 +54,7 @@ function switchToSession(sessionName: string, context: ScriptContext): JsonObjec
     }
 
     httpSessionRegistry.setCurrentSession(context, sessionName)
-    return target.data
+    return withoutSecrets(target.data)
 }
 
 export const HttpCloseSessionCommand: CommandHandler = {

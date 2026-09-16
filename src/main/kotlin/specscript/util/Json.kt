@@ -70,6 +70,10 @@ object Json {
     }
 }
 
+//
+// Convenience methods
+//
+
 fun Any.toJsonNode(): JsonNode {
     return Json.mapper.valueToTree(this)
 }
@@ -107,6 +111,15 @@ fun JsonNode?.toDisplayJson(): String {
 fun JsonNode?.toCompactJson(): String {
     this ?: return ""
     return Json.writeCompact(this).trim()
+}
+
+/**
+ * Best-effort to strip secrets before printing. Removes the "password" field from an ObjectNode, if present. Does not recurse into nested objects.
+ */
+fun ObjectNode.withoutSecrets(): JsonNode {
+    val copy = deepCopy()
+    copy.remove("password")
+    return copy
 }
 
 abstract class JsonProcessor {

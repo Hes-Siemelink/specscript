@@ -181,3 +181,23 @@ Http session: unknown
 Assert that:
   empty: ${output}
 ```
+
+## Passwords
+
+Passwords are retained in memory for the duration of the session. They are removed from the output of the **Http
+session** command.
+
+```yaml specscript
+Code example: No passwords in output
+
+Http session:
+  name: admin-login
+  url: http://localhost:2525
+  username: admin
+  password: admin
+
+Expected output:
+  name: admin-login
+  url: http://localhost:2525
+  username: admin
+```
