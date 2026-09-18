@@ -1,6 +1,6 @@
 Tests:
 
-  Input schema populates input variable:
+  - Test case: Input schema populates input variable
 
     Input schema:
       type: object
@@ -14,7 +14,7 @@ Tests:
       expected:
         name: world
 
-  Input schema populates top-level variables:
+  - Test case: Input schema populates top-level variables
 
     Input schema:
       type: object
@@ -28,7 +28,7 @@ Tests:
       actual: ${greeting}, ${name}!
       expected: Hello, World!
 
-  Input schema with pre-existing input values:
+  - Test case: Input schema with pre-existing input values
 
     ${input}:
       name: Alice
@@ -44,7 +44,7 @@ Tests:
       actual: ${name}
       expected: Alice
 
-  Input schema with multiple defaults:
+  - Test case: Input schema with multiple defaults
 
     Input schema:
       type: object
@@ -63,7 +63,7 @@ Tests:
         b: 2
         c: 3
 
-  Input schema with enum and default:
+  - Test case: Input schema with enum and default
 
     Input schema:
       type: object
@@ -77,7 +77,7 @@ Tests:
       actual: ${color}
       expected: green
 
-  Input schema with integer default:
+  - Test case: Input schema with integer default
 
     Input schema:
       type: object
@@ -90,7 +90,7 @@ Tests:
       actual: ${count}
       expected: 42
 
-  Input schema with boolean default:
+  - Test case: Input schema with boolean default
 
     Input schema:
       type: object
@@ -103,7 +103,7 @@ Tests:
       item: ${verbose}
       equals: true
 
-  Input schema conditional includes matching property:
+  - Test case: Input schema conditional includes matching property
 
     ${input}: { }
 
@@ -131,7 +131,7 @@ Tests:
         mode: fast
         fast-option: turbo
 
-  Input schema conditional with other branch:
+  - Test case: Input schema conditional with other branch
 
     ${input}:
       mode: slow
@@ -158,7 +158,7 @@ Tests:
         mode: slow
         slow-option: crawl
 
-  Input schema pre-existing values are not overwritten by defaults:
+  - Test case: Input schema pre-existing values are not overwritten by defaults
 
     ${input}:
       name: Provided
@@ -181,7 +181,7 @@ Tests:
         color: red
         extra: bonus
 
-  Input schema with empty string default:
+  - Test case: Input schema with empty string default
 
     Input schema:
       type: object
@@ -194,7 +194,7 @@ Tests:
       actual: ${optional_field}
       expected: ""
 
-  Input schema properties accessible via input dot notation:
+  - Test case: Input schema properties accessible via input dot notation
 
     Input schema:
       type: object
@@ -208,7 +208,7 @@ Tests:
       actual: ${input.first} ${input.last}
       expected: Alice Smith
 
-  Use default property:
+  - Test case: Use default property
 
     Temp file:
       name: default-property-greet.spec.yaml
@@ -232,7 +232,7 @@ Tests:
       actual: ${output}
       expected: Hello, Hes!
 
-  Default property preserves the scalar JSON type:
+  - Test case: Default property preserves the scalar JSON type
 
     Temp file:
       name: echo-int.spec.yaml

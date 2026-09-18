@@ -196,11 +196,11 @@ Before all tests:
 
 Tests:
 
-  Items are returned:
+  - Test case: Items are returned
     GET: /items
     Expected output: [ 1, 2, 3 ]
 
-  Hello endpoint works:
+  - Test case: Hello endpoint works
     GET: /hello
     Expected output: Hello from SpecScript!
 

@@ -1,12 +1,12 @@
 Tests:
 
-  Output:
+  - Test case: Output
 
     Output: a result
 
     Expected output: a result
 
-  Set variable with 'As':
+  - Test case: Set variable with 'As'
 
     Output: some more contents
     As: ${var3}
@@ -15,14 +15,14 @@ Tests:
       - actual: ${var3}
         expected: some more contents
 
-  Output variable assignment:
+  - Test case: Output variable assignment
 
     ${var}: something
     ${output}: ${var}
 
     Expected output: something
 
-  Output should be a list when invoking a handler with a list:
+  - Test case: Output should be a list when invoking a handler with a list
 
     Output:
       - one
@@ -34,7 +34,7 @@ Tests:
       - two
       - three
 
-  Use numbers in interpolation:
+  - Test case: Use numbers in interpolation
 
     ${number}: 2
     Output: Number ${number}

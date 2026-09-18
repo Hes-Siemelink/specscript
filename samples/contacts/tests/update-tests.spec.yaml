@@ -12,7 +12,7 @@ Before all tests:
 
 Tests:
 
-  Update contact email:
+  - Test case: Update contact email
     Update:
       id: 1
       email: newalice@example.com
@@ -24,13 +24,13 @@ Tests:
       - item: ${output[0].message}
         equals: Contact updated
 
-  Update non-existent contact:
+  - Test case: Update non-existent contact
     Update:
       id: 9999
       name: Ghost
     Expected output: []
 
-  Update with special characters:
+  - Test case: Update with special characters
     Update:
       id: 1
       name: "O'Connor"
@@ -38,7 +38,7 @@ Tests:
       item: ${output[0].name}
       equals: "O'Connor"
 
-  Unchanged fields are preserved:
+  - Test case: Unchanged fields are preserved
     Update:
       id: 1
       name: New Name

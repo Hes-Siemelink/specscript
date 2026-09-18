@@ -1,6 +1,6 @@
 Tests:
 
-  Confirm has no output:
+  - Test case: Confirm has no output
 
     Output: Unchanged
 

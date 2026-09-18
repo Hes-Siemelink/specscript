@@ -8,14 +8,14 @@ Before all tests:
 
 Tests:
 
-  Create a contact with name only:
+  - Test case: Create a contact with name only
     Create:
       name: Alice Smith
     Assert that:
       - item: ${output[0].name}
         equals: Alice Smith
 
-  Create a contact with all fields:
+  - Test case: Create a contact with all fields
     Create:
       name: Bob Jones
       email: bob@example.com
@@ -30,7 +30,7 @@ Tests:
       - item: ${output[0].company}
         equals: Acme Corp
 
-  Create a contact with special characters:
+  - Test case: Create a contact with special characters
     Create:
       name: "O'Brien"
       email: obrien@example.com

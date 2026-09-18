@@ -1,6 +1,6 @@
 Tests:
 
-  Throw and catch error:
+  - Test case: Throw and catch error
 
     Output:
       - Start
@@ -16,7 +16,7 @@ Tests:
       - Start
       - Caught error
 
-  Named error:
+  - Test case: Named error
 
     Output:
       - Start

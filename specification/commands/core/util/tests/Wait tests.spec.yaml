@@ -1,5 +1,5 @@
 Tests:
 
-  Wait 0.1 second:
+  - Test case: Wait 0.1 second
 
     Wait: 0.1

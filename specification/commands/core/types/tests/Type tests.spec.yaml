@@ -1,26 +1,26 @@
 Tests:
 
-  String type:
+  - Test case: String type
 
     Check type:
       item: Hes
       type: string
 
-  Object type:
+  - Test case: Object type
 
     Check type:
       item:
         name: Hes
       type: object
 
-  Array type:
+  - Test case: Array type
 
     Check type:
       item:
         - name: Hes
       type: array
 
-  Not a string:
+  - Test case: Not a string
 
     Check type:
       item:
@@ -30,7 +30,7 @@ Tests:
     Expected error:
       Type validation: Provided data is an array, not a string
 
-  Not an object:
+  - Test case: Not an object
 
     Check type:
       item: Hes
@@ -39,7 +39,7 @@ Tests:
     Expected error:
       Type validation: Provided data is string, not an object
 
-  Not an array:
+  - Test case: Not an array
 
     Check type:
       item:
@@ -49,7 +49,7 @@ Tests:
     Expected error:
       Type validation: Provided data is an object, not an array
 
-  Object properties:
+  - Test case: Object properties
 
     Check type:
       item:
@@ -59,7 +59,7 @@ Tests:
         properties:
           name: string
 
-  Implicit object definition:
+  - Test case: Implicit object definition
 
     Check type:
       item:
@@ -68,7 +68,7 @@ Tests:
         properties:
           name: string
 
-  Invalid object property:
+  - Test case: Invalid object property
 
     Check type:
       item:
@@ -81,7 +81,7 @@ Tests:
     Expected error:
       Type validation: Validation should fail because name is a string, not an object
 
-  Define a list:
+  - Test case: Define a list
 
     Check type:
       item:
@@ -91,7 +91,7 @@ Tests:
         base: array
         list of: Person
 
-  Faulty object:
+  - Test case: Faulty object
 
     Check type:
       item:
@@ -101,7 +101,7 @@ Tests:
     Expected error:
       Type validation: Validation should fail because the property name is expected in the Person type
 
-  Optional property:
+  - Test case: Optional property
 
     Check type:
       item:
@@ -113,7 +113,7 @@ Tests:
             type: string
             optional: true
 
-  Faulty list:
+  - Test case: Faulty list
 
     Check type:
       item:
@@ -125,7 +125,7 @@ Tests:
     Expected error:
       Type validation: Validation should fail because the property name is expected in the Person type
 
-  Recursive object:
+  - Test case: Recursive object
 
     Check type:
       item:

@@ -1,20 +1,20 @@
 Tests:
 
-  Read file from disk:
+  - Test case: Read file from disk
 
     Read file: content/plain.yaml
 
     Expected output:
       loaded: true
 
-  Read file relative to script:
+  - Test case: Read file relative to script
 
     Read file: ${SCRIPT_HOME}/content/plain.yaml
 
     Expected output:
       loaded: true
 
-  Read file with variable syntax and multiple documents:
+  - Test case: Read file with variable syntax and multiple documents
 
     Read file: content/multiple documents.yaml
     ${raw}: ${output}

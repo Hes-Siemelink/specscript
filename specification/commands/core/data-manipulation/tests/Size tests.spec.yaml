@@ -1,34 +1,34 @@
 Tests:
 
-  Array size:
+  - Test case: Array size
     Size:
       - one
       - two
       - three
     Expected output: 3
 
-  Object size:
+  - Test case: Object size
     Size:
       1: one
       2: two
     Expected output: 2
 
-  String size:
+  - Test case: String size
     Size: internationalization
     Expected output: 20
 
-  Number size:
+  - Test case: Number size
     Size: 12
     Expected output: 12
 
-  Float size:
+  - Test case: Float size
     Size: 1.2
     Expected output: 1.2
 
-  Boolean size of true:
+  - Test case: Boolean size of true
     Size: true
     Expected output: 1
 
-  Boolean size of false:
+  - Test case: Boolean size of false
     Size: false
     Expected output: 0

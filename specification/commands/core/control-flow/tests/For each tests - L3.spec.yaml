@@ -1,6 +1,6 @@
 Tests:
 
-  For each with variable syntax in sample data:
+  - Test case: For each with variable syntax in sample data
 
     Read file:
       resource: data-with-variable-syntax.yaml
@@ -9,7 +9,7 @@ Tests:
       ${item} in: ${output}
       Print: ${item}
 
-  For each with variable syntax in sample data and implicit loop variable:
+  - Test case: For each with variable syntax in sample data and implicit loop variable
 
     Read file:
       resource: data-with-variable-syntax.yaml

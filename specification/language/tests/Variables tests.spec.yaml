@@ -1,6 +1,6 @@
 Tests:
 
-  Bracket notation with nested property:
+  - Test case: Bracket notation with nested property
 
     ${config}:
       server.host:
@@ -13,7 +13,7 @@ Tests:
       - actual: ${config["server.host"].port}
         expected: 8080
 
-  Bracket notation with multiple dots in key:
+  - Test case: Bracket notation with multiple dots in key
 
     ${api}:
       com.example.service:
@@ -23,7 +23,7 @@ Tests:
       actual: ${api["com.example.service"].status}
       expected: ok
 
-  Bracket notation for key with spaces:
+  - Test case: Bracket notation for key with spaces
 
     ${data}:
       first name: Alice
@@ -32,7 +32,7 @@ Tests:
       actual: ${data["first name"]}
       expected: Alice
 
-  Bracket notation mixed with array index:
+  - Test case: Bracket notation mixed with array index
 
     ${data}:
       items:
@@ -46,13 +46,13 @@ Tests:
         expected: Bob
 
 
-  SCRIPT_HOME is available:
+  - Test case: SCRIPT_HOME is available
 
     Assert that:
       not:
         empty: ${SCRIPT_HOME}
 
-  PWD is available:
+  - Test case: PWD is available
 
     Assert that:
       not:
@@ -60,7 +60,7 @@ Tests:
 
 
 
-  Unset environment variable is empty:
+  - Test case: Unset environment variable is empty
 
     Assert that:
       empty: ${env.THIS_VAR_CERTAINLY_DOES_NOT_EXIST_12345}

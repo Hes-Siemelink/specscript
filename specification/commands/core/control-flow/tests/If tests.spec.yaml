@@ -1,6 +1,6 @@
 Tests:
 
-  Simple if with equals:
+  - Test case: Simple if with equals
 
     If:
       item: a value
@@ -10,7 +10,7 @@ Tests:
 
     Expected output: Match
 
-  Simple if with 'in':
+  - Test case: Simple if with 'in'
 
     If:
       item: chocolate
@@ -25,7 +25,7 @@ Tests:
       - item: ${chocolate}
         equals: Found
 
-  Substring matching with 'in':
+  - Test case: Substring matching with 'in'
 
     If:
       item: cola
@@ -37,7 +37,7 @@ Tests:
       - item: ${cola}
         equals: Found
 
-  If with and / or:
+  - Test case: If with and / or
 
     If:
       all:
@@ -53,7 +53,7 @@ Tests:
 
     Expected output: Any Match
 
-  If matching each item; no break:
+  - Test case: If matching each item; no break
 
     If:
       - item: one
@@ -74,7 +74,7 @@ Tests:
           - 1
           - 2
 
-  If returns the result of then:
+  - Test case: If returns the result of then
 
     If:
       - item: one
@@ -91,7 +91,7 @@ Tests:
       - 1
       - 2
 
-  Switch-like if; break after successful match:
+  - Test case: Switch-like if; break after successful match
 
     When:
       - item: a value
@@ -106,7 +106,7 @@ Tests:
 
     Expected output: First match
 
-  Variable resolution in nested Do:
+  - Test case: Variable resolution in nested Do
 
     ${output}: one
 
@@ -122,7 +122,7 @@ Tests:
       - actual: ${var}
         expected: two
 
-  Test against an empty list:
+  - Test case: Test against an empty list
 
     If:
       item: [ ]
@@ -132,7 +132,7 @@ Tests:
 
     Expected output: Success
 
-  Not:
+  - Test case: Not
 
     Output: Failure
 
@@ -145,7 +145,7 @@ Tests:
 
     Expected output: Success
 
-  Empty list:
+  - Test case: Empty list
 
     Output: [ ]
 
@@ -156,7 +156,7 @@ Tests:
 
     Expected output: empty list detected
 
-  Empty object:
+  - Test case: Empty object
 
     Output: { }
 
@@ -167,7 +167,7 @@ Tests:
 
     Expected output: empty object detected
 
-  Empty string:
+  - Test case: Empty string
 
     Output: ""
 

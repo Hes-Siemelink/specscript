@@ -16,7 +16,7 @@ Before all tests:
 
 Tests:
 
-  Update title:
+  - Test case: Update title
     Update:
       id: 1
       title: Updated title
@@ -26,7 +26,7 @@ Tests:
       - item: ${output[0].message}
         equals: Goal updated
 
-  Update state to in_progress:
+  - Test case: Update state to in_progress
     Update:
       id: 1
       state: in_progress
@@ -34,7 +34,7 @@ Tests:
       item: ${output[0].state}
       equals: in_progress
 
-  Update state to completed:
+  - Test case: Update state to completed
     Update:
       id: 1
       state: completed
@@ -42,7 +42,7 @@ Tests:
       item: ${output[0].state}
       equals: completed
 
-  Update priority and assignee:
+  - Test case: Update priority and assignee
     Update:
       id: 1
       priority: high
@@ -53,13 +53,13 @@ Tests:
       - item: ${output[0].assignee}
         equals: bob
 
-  Update non-existent goal:
+  - Test case: Update non-existent goal
     Update:
       id: 999
       title: Ghost
     Expected output: []
 
-  Update with special characters:
+  - Test case: Update with special characters
     Update:
       id: 1
       title: "It's a new title"
@@ -67,7 +67,7 @@ Tests:
       item: ${output[0].title}
       equals: "It's a new title"
 
-  Unchanged fields are preserved:
+  - Test case: Unchanged fields are preserved
     Update:
       id: 1
       title: Only title changes

@@ -1,6 +1,6 @@
 Tests:
 
-  Select with where clause:
+  - Test case: Select with where clause
 
     Shell: rm -f ${SCRIPT_TEMP_DIR}/json_sample.db
 
@@ -19,7 +19,7 @@ Tests:
       - greeting: Hola
         language: Spanish
 
-  Selected fields:
+  - Test case: Selected fields
 
     Shell: rm -f ${SCRIPT_TEMP_DIR}/sample.db
 
@@ -42,7 +42,7 @@ Tests:
       - name: Alice
       - name: Bob
 
-  Multiple selected fields:
+  - Test case: Multiple selected fields
 
     Shell: rm -f ${SCRIPT_TEMP_DIR}/multi_select.db
 

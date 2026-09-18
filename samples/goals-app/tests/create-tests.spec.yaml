@@ -11,7 +11,7 @@ Before all tests:
 
 Tests:
 
-  Create a goal with required fields only:
+  - Test case: Create a goal with required fields only
     Create:
       title: Write tests
       description: Add test coverage for goals app
@@ -25,7 +25,7 @@ Tests:
       - item: ${output[0].priority}
         equals: medium
 
-  Create a goal with all fields:
+  - Test case: Create a goal with all fields
     Create:
       title: Ship release
       description: Deploy version 1.0
@@ -39,7 +39,7 @@ Tests:
       - item: ${output[0].assignee}
         equals: alice
 
-  Create a sub-goal with parent_id:
+  - Test case: Create a sub-goal with parent_id
     Create:
       title: Parent goal
       description: Top-level goal
@@ -55,7 +55,7 @@ Tests:
         item: ${output[0].parent_id}
         equals: ""
 
-  Create a goal with special characters:
+  - Test case: Create a goal with special characters
     Create:
       title: "Fix the user's dashboard"
       description: "Handle single quotes like it's nothing"

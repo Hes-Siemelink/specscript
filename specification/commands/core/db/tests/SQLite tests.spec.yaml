@@ -1,6 +1,6 @@
 Tests:
 
-  Simple DB:
+  - Test case: Simple DB
 
     Shell: rm -f ${SCRIPT_TEMP_DIR}/sample.db
 
@@ -15,7 +15,7 @@ Tests:
       - id: 1
         name: Alice
 
-  Simple DB with query:
+  - Test case: Simple DB with query
 
     Shell: rm -f ${SCRIPT_TEMP_DIR}/sample.db
 
@@ -34,7 +34,7 @@ Tests:
       - name: Bob
         age: 17
 
-  Create JSON DB:
+  - Test case: Create JSON DB
 
     Shell: rm -f ${SCRIPT_TEMP_DIR}/json_sample.db
 
@@ -59,7 +59,7 @@ Tests:
           - greeting: Hola
             language: Spanish
 
-  Query multiple JSON entries:
+  - Test case: Query multiple JSON entries
 
     Shell: rm -f ${SCRIPT_TEMP_DIR}/json_sample.db
 
@@ -90,7 +90,7 @@ Tests:
           - greeting: Hola
             language: Spanish
 
-  JSON / YAML conversion:
+  - Test case: JSON / YAML conversion
 
     Shell: rm -f ${SCRIPT_TEMP_DIR}/sample.db
 
@@ -107,7 +107,7 @@ Tests:
           hello: world
       - json: "one: two: three"
 
-  Prepared statement in update:
+  - Test case: Prepared statement in update
 
     Shell: rm -f ${SCRIPT_TEMP_DIR}/sample.db
 
@@ -123,7 +123,7 @@ Tests:
     Expected output:
       - name: O'Brien
 
-  Prepared statement in query:
+  - Test case: Prepared statement in query
 
     Shell: rm -f ${SCRIPT_TEMP_DIR}/sample.db
 
@@ -139,7 +139,7 @@ Tests:
     Expected output:
       - name: O'Brien
 
-  Prepared statement with multiple parameters:
+  - Test case: Prepared statement with multiple parameters
 
     Shell: rm -f ${SCRIPT_TEMP_DIR}/sample.db
 
@@ -158,7 +158,7 @@ Tests:
         first: Alice
         last: O'Malley
 
-  Unquoted variable is resolved inline:
+  - Test case: Unquoted variable is resolved inline
 
     Shell: rm -f ${SCRIPT_TEMP_DIR}/sample.db
 

@@ -1,9 +1,6 @@
 # On my mind
 
-* Don't put password in session object that is returned to the script.
-
 * Clean up semantics of test runs
-* `spec --test` doesn't work on Markdown
 * Revert to Test case command?
 * Error reporting during tests and execution
 

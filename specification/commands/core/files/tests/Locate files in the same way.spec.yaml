@@ -1,13 +1,13 @@
 Tests:
 
-  Read file from working directory (short way):
+  - Test case: Read file from working directory (short way)
 
     Read file: content/plain.yaml
 
     Expected output:
       loaded: true
 
-  Read file from working directory (file property):
+  - Test case: Read file from working directory (file property)
 
     Read file:
       file: content/plain.yaml
@@ -15,14 +15,14 @@ Tests:
     Expected output:
       loaded: true
 
-  Read file relative to script:
+  - Test case: Read file relative to script
 
     Read file: ${SCRIPT_HOME}/content/plain.yaml
 
     Expected output:
       loaded: true
 
-  Read file relative to script (resource property):
+  - Test case: Read file relative to script (resource property)
 
     Read file:
       resource: content/plain.yaml
@@ -30,13 +30,13 @@ Tests:
     Expected output:
       loaded: true
 
-  Run from same directory (short way):
+  - Test case: Run from same directory (short way)
 
     Run: greet.spec.yaml
 
     Expected output: Hello world!
 
-  Run from working directory (file property):
+  - Test case: Run from working directory (file property)
 
     Run:
       file: greet.spec.yaml
@@ -45,7 +45,7 @@ Tests:
 
     Expected output: Hello Fay!
 
-  Run relative to script:
+  - Test case: Run relative to script
 
     Run:
       file: ${SCRIPT_HOME}/greet.spec.yaml
@@ -54,7 +54,7 @@ Tests:
 
     Expected output: Hello Ray!
 
-  Run relative to script (script property):
+  - Test case: Run relative to script (script property)
 
     Run:
       script: greet.spec.yaml
@@ -63,19 +63,19 @@ Tests:
 
     Expected output: Hello Ray!
 
-  Shell command in same directory as script:
+  - Test case: Shell command in same directory as script
 
     Shell: sh ${SCRIPT_HOME}/hello.sh
 
     Expected output: Hello World
 
-  Shell command from current directory (short way):
+  - Test case: Shell command from current directory (short way)
 
     Shell: sh hello.sh
 
     Expected output: Hello World
 
-  Shell command in same directory as script (resource property):
+  - Test case: Shell command in same directory as script (resource property)
 
     Shell:
       resource: sh hello.sh

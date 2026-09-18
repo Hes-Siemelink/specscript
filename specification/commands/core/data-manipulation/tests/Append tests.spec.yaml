@@ -1,6 +1,6 @@
 Tests:
 
-  Append to empty output:
+  - Test case: Append to empty output
     Append:
       something: new
     Expected output:

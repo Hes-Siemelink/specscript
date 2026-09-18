@@ -1,6 +1,6 @@
 Tests:
 
-  Simple question:
+  - Test case: Simple question
 
     Answers:
       "What is your name?": Emma
@@ -9,7 +9,7 @@ Tests:
 
     Expected output: Emma
 
-  Default answer:
+  - Test case: Default answer
 
     Prompt:
       title: How much is 1 + 1?
@@ -17,7 +17,7 @@ Tests:
 
     Expected output: 2
 
-  Recorded answer overrides default:
+  - Test case: Recorded answer overrides default
 
     Answers:
       How much is 1 + 1?: 3
@@ -28,7 +28,7 @@ Tests:
 
     Expected output: 3
 
-  Description used as question when there is no title:
+  - Test case: Description used as question when there is no title
 
     Answers:
       How much is 1 + 1?: "2"
@@ -38,13 +38,13 @@ Tests:
 
     Expected output: "2"
 
-  Text placeholder when no value in non-interactive mode:
+  - Test case: Text placeholder when no value in non-interactive mode
 
     Prompt: Anything?
 
     Expected output: "[default answer in non-interactive mode]"
 
-  Multiple questions:
+  - Test case: Multiple questions
 
     Answers:
       What is your name?: Mateo
@@ -62,7 +62,7 @@ Tests:
       name: Mateo
       sum: "2"
 
-  Property name used as question when there is no title or description:
+  - Test case: Property name used as question when there is no title or description
 
     Answers:
       name: Alice
@@ -76,7 +76,7 @@ Tests:
     Expected output:
       name: Alice
 
-  Boolean choice:
+  - Test case: Boolean choice
 
     Answers:
       Enabled: "true"
@@ -93,7 +93,7 @@ Tests:
     Expected output:
       enabled: true
 
-  Conditional and dependent questions:
+  - Test case: Conditional and dependent questions
 
     Answers:
       Choose which variable to set: a
@@ -120,7 +120,7 @@ Tests:
       switch: a
       a: a is set
 
-  Select object from list:
+  - Test case: Select object from list
 
     Answers:
       Select account: dev
@@ -144,7 +144,7 @@ Tests:
       id: 123
       password: xxxx
 
-  Select value field only:
+  - Test case: Select value field only
 
     Answers:
       Favorite channel: The News
@@ -161,7 +161,7 @@ Tests:
 
     Expected output: 1
 
-  Select multiple items from list:
+  - Test case: Select multiple items from list
 
     Answers:
       What flavors do you like?:
@@ -182,7 +182,7 @@ Tests:
       - Coconut
       - Pineapple
 
-  Select multiple value fields:
+  - Test case: Select multiple value fields
 
     Answers:
       Favorite channel:

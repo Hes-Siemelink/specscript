@@ -30,7 +30,7 @@ After all tests:
 
 Tests:
 
-  Read resource with static output:
+  - Test case: Read resource with static output
 
     Mcp read resource:
       uri: config://app
@@ -42,7 +42,7 @@ Tests:
       version: "2.0"
 
 
-  Read resource backed by inline script:
+  - Test case: Read resource backed by inline script
 
     Mcp read resource:
       uri: status://system
@@ -54,7 +54,7 @@ Tests:
       uptime: 99.9
 
 
-  Read resource backed by external script file:
+  - Test case: Read resource backed by external script file
 
     Mcp read resource:
       uri: config://from-file
@@ -66,7 +66,7 @@ Tests:
       version: "1.0"
 
 
-  Read resource in the current session:
+  - Test case: Read resource in the current session
 
     Mcp session:
       name: resource-session
@@ -82,7 +82,7 @@ Tests:
     Mcp close session: resource-session
 
 
-  Read resource targeting a specific session:
+  - Test case: Read resource targeting a specific session
 
     Mcp session:
       name: resource-session

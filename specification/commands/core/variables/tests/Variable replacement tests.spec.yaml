@@ -1,6 +1,6 @@
 Tests:
 
-  Text replacement:
+  - Test case: Text replacement
 
     ${text}: some text
     ${text_replacement}: Here is ${text}
@@ -9,7 +9,7 @@ Tests:
       actual: ${text_replacement}
       expected: Here is some text
 
-  Use list in text:
+  - Test case: Use list in text
 
     ${list}:
       - 1
@@ -28,7 +28,7 @@ Tests:
         - 2
         - 3
 
-  Use map in text:
+  - Test case: Use map in text
     ${map_replacement}: |
       My map:
       map
@@ -39,7 +39,7 @@ Tests:
         My map:
         map
 
-  Replace with variable path:
+  - Test case: Replace with variable path
 
     ${data}:
       something:

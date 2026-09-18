@@ -1,6 +1,6 @@
 Tests:
 
-  Sort list of objects by field:
+  - Test case: Sort list of objects by field
     Sort:
       items:
         - name: Three

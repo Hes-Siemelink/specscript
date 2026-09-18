@@ -7,8 +7,6 @@ import type {Command} from '../src/language/types.js'
 import {DefaultContext} from '../src/language/context.js'
 import {registerAllCommands} from '../src/commands/register.js'
 import {setupSilentCapture} from '../src/language/stdout-capture.js'
-import type {JsonValue} from '../src/language/types.js'
-import {isObject} from '../src/language/types.js'
 import {parseYamlCommands} from '../src/util/yaml.js'
 import {getTestTitle, parseMarkdownScripts} from '../src/markdown/converter.js'
 import {stopAllServers} from '../src/commands/http-server.js'
@@ -133,45 +131,33 @@ function registerScriptTest(name: string, script: Script, createContext: () => D
 }
 
 function runStructuredTests(script: Script, fullPath: string): void {
-    let setupCommands: JsonValue | undefined
-    let testsData: JsonValue | undefined
-    let teardownCommands: JsonValue | undefined
-
-    for (const cmd of script.commands) {
-        const n = cmd.name.toLowerCase()
-        if (n === 'before all tests') setupCommands = cmd.data
-        else if (n === 'tests') testsData = cmd.data
-        else if (n === 'after all tests') teardownCommands = cmd.data
-    }
+    const suite = script.splitTests()
 
     let sharedContext: DefaultContext | undefined
 
-    if (setupCommands !== undefined) {
+    if (suite.setup && suite.setup.commands.length > 0) {
         beforeAll(async () => {
             sharedContext = new DefaultContext({scriptFile: fullPath, workingDir: dirname(fullPath)})
             setupSilentCapture(sharedContext)
-            await Script.fromData(setupCommands!).run(sharedContext)
+            await suite.setup!.run(sharedContext)
         })
     }
 
-    if (teardownCommands !== undefined) {
+    if (suite.teardown && suite.teardown.commands.length > 0) {
         afterAll(async () => {
             if (sharedContext) {
-                await Script.fromData(teardownCommands!).run(sharedContext)
+                await suite.teardown!.run(sharedContext)
             }
         })
     }
 
-    if (testsData && isObject(testsData)) {
-        const entries = Object.entries(testsData)
-        for (const [index, [testName, testBody]] of entries.entries()) {
-            registerScriptTest(testName, Script.fromData(testBody as JsonValue), () =>
-                sharedContext
-                    ? (sharedContext!.clone() as DefaultContext)
-                    : new DefaultContext({scriptFile: fullPath, workingDir: dirname(fullPath)}),
-                index === entries.length - 1,
-            )
-        }
+    for (const [index, test] of suite.tests.entries()) {
+        registerScriptTest(test.name, test.script, () =>
+            sharedContext
+                ? (sharedContext.clone() as DefaultContext)
+                : new DefaultContext({scriptFile: fullPath, workingDir: dirname(fullPath)}),
+            index === suite.tests.length - 1,
+        )
     }
 }
 

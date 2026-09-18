@@ -1,6 +1,6 @@
 Tests:
 
-  Assert equals with nested objects:
+  - Test case: Assert equals with nested objects
 
     Assert equals:
       actual:
@@ -14,13 +14,13 @@ Tests:
           path: /home
           token: 456
 
-  Use assert with simple 'if' syntax:
+  - Test case: Use assert with simple 'if' syntax
 
     Assert that:
       item: one
       equals: one
 
-  Use assert with complicated 'if' syntax:
+  - Test case: Use assert with complicated 'if' syntax
 
     Assert that:
       all:

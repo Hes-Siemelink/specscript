@@ -1,6 +1,6 @@
 Tests:
 
-  SQLite defaults:
+  - Test case: SQLite defaults
 
     Shell: rm -f ${SCRIPT_TEMP_DIR}/sample.db
 

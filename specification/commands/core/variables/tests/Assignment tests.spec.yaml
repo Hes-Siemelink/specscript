@@ -1,6 +1,6 @@
 Tests:
 
-  Multiple variables with $-{ syntax:
+  - Test case: Multiple variables with $-{ syntax
 
     Output:
       data:

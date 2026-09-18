@@ -1,7 +1,7 @@
 # Command: Tests
 
-`Tests` defines named tests with nested commands. It takes a list of test cases. Each test case is identified by the
-**Test case** descriptor followed by a test script.
+`Tests` defines named tests with nested commands. It takes a list of test cases. Each test case is identified by **Test
+case** descriptor followed by a test script.
 
 `Tests`, like `Before all tests` and `After all tests`, is only executed in test mode (`spec --test`). In normal
 execution it is ignored.
@@ -18,7 +18,7 @@ execution it is ignored.
 ## Basic usage
 
 ```yaml specscript
-Code example: Define a test case
+Code example: Single test case
 
 Tests:
   - Test case: A simple test

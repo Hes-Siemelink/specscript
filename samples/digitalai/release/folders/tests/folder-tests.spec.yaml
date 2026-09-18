@@ -7,7 +7,7 @@ Before all tests:
 
 Tests:
 
-  List folders shows all folder paths:
+  - Test case: List folders shows all folder paths
     List: {}
     Expected output:
       - Engineering
@@ -16,7 +16,7 @@ Tests:
       - Operations
       - Archive
 
-  Move folder by ID:
+  - Test case: Move folder by ID
     Move by id:
       source: Applications/folder-engineering/folder-frontend
       target: Applications/folder-operations

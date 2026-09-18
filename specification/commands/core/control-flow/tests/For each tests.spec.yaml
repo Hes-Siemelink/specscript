@@ -1,6 +1,6 @@
 Tests:
 
-  Output from for each:
+  - Test case: Output from for each
 
     Output: something
 
@@ -17,7 +17,7 @@ Tests:
       - item: two
       - item: three
 
-  Use Output if there is no loop variable:
+  - Test case: Use Output if there is no loop variable
 
     Output:
       - one
@@ -33,7 +33,7 @@ Tests:
       - item: two
       - item: three
 
-  Use output inside for each:
+  - Test case: Use output inside for each
 
     Output: something
 
@@ -49,7 +49,7 @@ Tests:
       - something one two
       - something one two three
 
-  Make sure variables are resolved at right time in Do command:
+  - Test case: Make sure variables are resolved at right time in Do command
 
     ${output}: something else
     ${test}: [ ]
@@ -69,7 +69,7 @@ Tests:
         - Ratatouille
         - Meatballs
 
-  Use variable in For each:
+  - Test case: Use variable in For each
 
     ${items}:
       - One
@@ -89,7 +89,7 @@ Tests:
           - (Two)
           - (Three)
 
-  For each should output empty list when looping over an empty list:
+  - Test case: For each should output empty list when looping over an empty list
 
     Output: something to begin with
 
@@ -100,7 +100,7 @@ Tests:
 
     Expected output: [ ]
 
-  For each on object:
+  - Test case: For each on object
 
     For each:
       ${entry} in:
@@ -112,7 +112,7 @@ Tests:
       1: one indeed
       2: two indeed
 
-  For each with variables resolution:
+  - Test case: For each with variables resolution
 
     Output:
       agents:
@@ -132,7 +132,7 @@ Tests:
 
   # "For each with variable syntax in sample data" tests moved to For each tests - L3.spec.yaml (uses Read file)
 
-  Loop variable does not leak after the loop:
+  - Test case: Loop variable does not leak after the loop
 
     ${name}: original
 

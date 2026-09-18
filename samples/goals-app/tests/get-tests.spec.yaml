@@ -16,18 +16,18 @@ Before all tests:
 
 Tests:
 
-  Get existing goal by ID:
-    - Get:
-        id: 1
-    - Assert that:
-        - item: ${output[0].title}
-          equals: Fetch me
-        - item: ${output[0].priority}
-          equals: high
-        - item: ${output[0].assignee}
-          equals: alice
+  - Test case: Get existing goal by ID
+    Get:
+      id: 1
+    Assert that:
+      - item: ${output[0].title}
+        equals: Fetch me
+      - item: ${output[0].priority}
+        equals: high
+      - item: ${output[0].assignee}
+        equals: alice
 
-  Get non-existent goal returns empty:
+  - Test case: Get non-existent goal returns empty
     Get:
       id: 999
     Expected output: [ ]

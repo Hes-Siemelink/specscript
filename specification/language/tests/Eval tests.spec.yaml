@@ -1,13 +1,13 @@
 Tests:
 
-  Evaluate a command inside data:
+  - Test case: Evaluate a command inside data
 
     Output:
       /Size: four
 
     Expected output: 4
 
-  Evaluate an array:
+  - Test case: Evaluate an array
 
     Output:
       - /Size: one
@@ -19,7 +19,7 @@ Tests:
       - 3
       - 5
 
-  Evaluate a nested command:
+  - Test case: Evaluate a nested command
 
     Output:
       Size:
@@ -31,7 +31,7 @@ Tests:
     Expected output:
       Size: 3
 
-  Evaluate a command nested in another command:
+  - Test case: Evaluate a command nested in another command
 
     Output:
       /Size:
@@ -42,7 +42,7 @@ Tests:
 
     Expected output: 3
 
-  Eval in conditions:
+  - Test case: Eval in conditions
 
     If:
       item: 5
@@ -55,7 +55,7 @@ Tests:
 
     Expected output: Correct eval
 
-  No eager eval:
+  - Test case: No eager eval
 
     ${state}: clean
 

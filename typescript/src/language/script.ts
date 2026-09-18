@@ -115,49 +115,45 @@ export class Script {
     }
 
     /**
-     * Split this script into a test suite: before-all, tests, after-all.
+     * Split this script into a test suite: before-all, named tests, after-all.
+     * Each `Tests` list element is a test case named by its `Test case` key; the remaining keys are its commands.
      */
     splitTests(): TestSuite {
-        let setup: Command[] = []
-        let tests: Command[] = []
-        let teardown: Command[] = []
-        let section: 'setup' | 'tests' | 'teardown' = 'setup'
+        let setup: Script | null = null
+        const tests: Array<NamedTest> = []
+        let teardown: Script | null = null
 
         for (const command of this.commands) {
             const name = command.name.toLowerCase()
             if (name === 'before all tests') {
-                section = 'setup'
-                setup = toCommandList(command.data)
+                setup = Script.fromData(command.data)
             } else if (name === 'tests') {
-                section = 'tests'
-                tests = toCommandList(command.data)
-            } else if (name === 'after all tests') {
-                section = 'teardown'
-                teardown = toCommandList(command.data)
-            } else {
-                // Commands outside of these sections go to the current section
-                switch (section) {
-                    case 'setup':
-                        setup.push(command);
-                        break
-                    case 'tests':
-                        tests.push(command);
-                        break
-                    case 'teardown':
-                        teardown.push(command);
-                        break
+                const items = isArray(command.data) ? command.data : [command.data]
+                for (const item of items) {
+                    if (!isObject(item)) continue
+                    const testName = typeof item['Test case'] === 'string' ? item['Test case'] : 'unnamed'
+                    const body: Record<string, JsonValue> = {...item}
+                    delete body['Test case']
+                    tests.push({name: testName, script: Script.fromData(body)})
                 }
+            } else if (name === 'after all tests') {
+                teardown = Script.fromData(command.data)
             }
         }
 
-        return {setup: new Script(setup), tests: new Script(tests), teardown: new Script(teardown)}
+        return {setup, tests, teardown}
     }
 }
 
+export interface NamedTest {
+    name: string
+    script: Script
+}
+
 export interface TestSuite {
-    setup: Script
-    tests: Script
-    teardown: Script
+    setup: Script | null
+    tests: NamedTest[]
+    teardown: Script | null
 }
 
 /**

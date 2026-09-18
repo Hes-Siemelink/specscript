@@ -1,6 +1,6 @@
 Tests:
 
-  Validation with external schema:
+  - Test case: Validation with external schema
 
     Validate schema:
       data: Hello world
@@ -10,7 +10,7 @@ Tests:
       Print: ${error}
       Output: invalid data
 
-  Validation with external schema -- failure:
+  - Test case: Validation with external schema -- failure
 
     Validate schema:
       data: Hello world

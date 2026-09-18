@@ -17,7 +17,7 @@ Before all tests:
 
 Tests:
 
-  List all contacts:
+  - Test case: List all contacts
     List:
       company: all
       search: all
@@ -25,7 +25,7 @@ Tests:
     Size: ${contacts}
     Expected output: 2
 
-  List contacts filtered by company:
+  - Test case: List contacts filtered by company
     List:
       company: Acme Corp
     As: ${contacts}
@@ -36,7 +36,7 @@ Tests:
       - item: ${contacts[0].name}
         equals: Alice Smith
 
-  Search contacts by name:
+  - Test case: Search contacts by name
     List:
       search: Bob
     As: ${contacts}
@@ -47,7 +47,7 @@ Tests:
       - item: ${contacts[0].name}
         equals: Bob Jones
 
-  Empty result for non-existent company:
+  - Test case: Empty result for non-existent company
     List:
       company: Nobody Corp
     Expected output: []

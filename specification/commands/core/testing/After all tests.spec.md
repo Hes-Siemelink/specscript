@@ -28,7 +28,7 @@ Before all tests:
     started: true
 
 Tests:
-  Verify setup ran:
+  - Test case: Verify setup ran
     Assert that:
       item: ${data.started}
       equals: true

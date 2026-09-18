@@ -482,11 +482,11 @@ Writing tests in SpecScript is straightforward:
 ```yaml specscript
 Tests:
 
-  A simple test:
+  - Test case: A simple test
     Output: Hello world
     Expected output: Hello world
 
-  Another test:
+  - Test case: Another test
     Assert that:
       item: one
       in: [ one, two, three ]

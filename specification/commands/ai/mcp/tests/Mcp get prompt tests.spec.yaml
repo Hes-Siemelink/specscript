@@ -31,7 +31,7 @@ After all tests:
 
 Tests:
 
-  Get prompt with no input:
+  - Test case: Get prompt with no input
 
     Mcp get prompt:
       name: summarize
@@ -41,7 +41,7 @@ Tests:
     Expected output: Please summarize the following text.
 
 
-  Get prompt with input arguments:
+  - Test case: Get prompt with input arguments
 
     Mcp get prompt:
       name: review
@@ -54,7 +54,7 @@ Tests:
     Expected output: "Please review this Python code - def foo(): pass"
 
 
-  Get prompt with variable resolution in input:
+  - Test case: Get prompt with variable resolution in input
 
     ${lang}: Kotlin
 
@@ -69,7 +69,7 @@ Tests:
     Expected output: "Please review this Kotlin code - fun bar() {}"
 
 
-  Get prompt backed by external script file:
+  - Test case: Get prompt backed by external script file
 
     Mcp get prompt:
       name: review-from-file
@@ -79,7 +79,7 @@ Tests:
     Expected output: Please review the following code and suggest improvements.
 
 
-  Get prompt in the current session:
+  - Test case: Get prompt in the current session
 
     Mcp session:
       name: prompt-session
@@ -93,7 +93,7 @@ Tests:
     Mcp close session: prompt-session
 
 
-  Get prompt targeting a specific session:
+  - Test case: Get prompt targeting a specific session
 
     Mcp session:
       name: prompt-session

@@ -14,12 +14,13 @@ It will report successful and failed tests.
 
 ## Test structure
 
-A test file uses `Tests` to define named tests with nested commands. `Tests`, `Before all tests`, and `After all tests` are
-only executed in test mode (`spec --test`). In normal execution they are ignored.
+A test file uses `Tests` to define named tests with nested commands. Each test case is identified by the **Test case**
+descriptor followed by a test script. `Tests`, `Before all tests`, and `After all tests` are only executed in test mode
+(`spec --test`). In normal execution they are ignored.
 
 ```yaml
 Tests:
-  Items are returned:
+  - Test case: Items are returned
     Get: http://localhost:2525/items
     Expected output: [ 1, 2, 3 ]
 ```
@@ -39,12 +40,12 @@ Before all tests:
     greeting: Hello
 
 Tests:
-  Check items:
+  - Test case: Check items
     Assert that:
       item: ${sample_data.items}
       equals: [ 1, 2, 3 ]
 
-  Check greeting:
+  - Test case: Check greeting
     Assert that:
       item: ${sample_data.greeting}
       equals: Hello

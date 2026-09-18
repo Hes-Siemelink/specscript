@@ -1,6 +1,6 @@
 Tests:
 
-  Start and stop server:
+  - Test case: Start and stop server
 
     HTTP server:
       name: test-server
@@ -17,7 +17,7 @@ Tests:
     Stop HTTP server: test-server
 
 
-  Endpoint with script output:
+  - Test case: Endpoint with script output
 
     HTTP server:
       name: script-server
@@ -35,7 +35,7 @@ Tests:
     Stop HTTP server: script-server
 
 
-  Add endpoint to running server:
+  - Test case: Add endpoint to running server
 
     Http server:
       name: endpoint-test
@@ -53,7 +53,7 @@ Tests:
     Stop http server: endpoint-test
 
 
-  Add multiple endpoints separately:
+  - Test case: Add multiple endpoints separately
 
     Http server:
       name: multi-endpoint-test

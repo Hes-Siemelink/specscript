@@ -11,7 +11,7 @@ Before all tests:
 
 Tests:
 
-  Delete an existing goal:
+  - Test case: Delete an existing goal
 
     Create:
       title: Delete me
@@ -26,7 +26,7 @@ Tests:
       equals: Goal deleted
 
 
-  Deleted goal is no longer retrievable:
+  - Test case: Deleted goal is no longer retrievable
 
     Create:
       title: Gone soon
@@ -42,7 +42,7 @@ Tests:
     Expected output: [ ]
 
 
-  Delete a non-existent goal:
+  - Test case: Delete a non-existent goal
 
     Delete:
       id: 999
@@ -51,7 +51,7 @@ Tests:
       item: ${output[0].message}
       equals: Goal not found
 
-  Cascade delete removes child goals:
+  - Test case: Cascade delete removes child goals
 
     Do:
       - Create:

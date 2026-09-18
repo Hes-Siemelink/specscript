@@ -833,30 +833,17 @@ async function runYamlTests(
     if (hasNewTests) {
         const suite = script.splitTests()
 
-        // Convert tests script into named tests (each command = one test)
-        const testEntries: Array<{ name: string; commands: Command[] }> = []
-        for (const cmd of suite.tests.commands) {
-            const testCommands: Command[] = []
-            // Each key in the Tests object is a test name, value is the test body
-            if (isObject(cmd.data)) {
-                for (const [key, value] of Object.entries(cmd.data as Record<string, JsonValue>)) {
-                    testCommands.push({name: key, data: value})
-                }
-            }
-            testEntries.push({name: cmd.name, commands: testCommands.length > 0 ? testCommands : [cmd]})
-        }
-
-        for (let i = 0; i < testEntries.length; i++) {
-            const test = testEntries[i]
+        for (let i = 0; i < suite.tests.length; i++) {
+            const test = suite.tests[i]
             const commands: Command[] = []
 
             // Prepend setup to first test
-            if (i === 0 && suite.setup.commands.length > 0) {
+            if (i === 0 && suite.setup && suite.setup.commands.length > 0) {
                 commands.push(...suite.setup.commands)
             }
-            commands.push(...test.commands)
+            commands.push(...test.script.commands)
             // Append teardown to last test
-            if (i === testEntries.length - 1 && suite.teardown.commands.length > 0) {
+            if (i === suite.tests.length - 1 && suite.teardown && suite.teardown.commands.length > 0) {
                 commands.push(...suite.teardown.commands)
             }
 

@@ -29,12 +29,12 @@ Before all tests:
   ${app_name}: SpecScript
 
 Tests:
-  Variables from setup are available:
+  - Test case: Variables from setup are available
     Assert equals:
       actual: ${base_url}
       expected: http://localhost:2525
 
-  All tests share the same context:
+  - Test case: All tests share the same context
     Assert equals:
       actual: ${app_name}
       expected: SpecScript
@@ -52,11 +52,11 @@ Before all tests:
     url: http://localhost:2525
 
 Tests:
-  Get items:
+  - Test case: Get items
     Get: /items
     Expected output: [ 1, 2, 3 ]
 
-  Get hello:
+  - Test case: Get hello
     Get: /hello
     Expected output: Hello from SpecScript!
 ```

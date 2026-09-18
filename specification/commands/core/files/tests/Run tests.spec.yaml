@@ -1,6 +1,6 @@
 Tests:
 
-  Run with script property is equivalent to value form:
+  - Test case: Run with script property is equivalent to value form
 
     Temp file:
       name: echo.spec.yaml
@@ -13,7 +13,7 @@ Tests:
 
     Expected output: echo!
 
-  Run with file and absolute path:
+  - Test case: Run with file and absolute path
 
     Temp file:
       name: abs.spec.yaml
@@ -25,7 +25,7 @@ Tests:
 
     Expected output: absolute!
 
-  Run with cd and script resolves relative to cd:
+  - Test case: Run with cd and script resolves relative to cd
 
     Temp file:
       name: in-temp.spec.yaml
@@ -38,7 +38,7 @@ Tests:
 
     Expected output: from temp dir
 
-  Run with cd and file resolves relative to cd:
+  - Test case: Run with cd and file resolves relative to cd
 
     Temp file:
       name: in-temp2.spec.yaml
@@ -51,7 +51,7 @@ Tests:
 
     Expected output: also from temp
 
-  Inline script has clean variable scope:
+  - Test case: Inline script has clean variable scope
 
     ${parent-var}: parent value
 
@@ -62,7 +62,7 @@ Tests:
 
     Expected output: inline value
 
-  Inline script output is returned:
+  - Test case: Inline script output is returned
 
     Run:
       script:
@@ -70,7 +70,7 @@ Tests:
 
     Expected output: inline result
 
-  Run with input passes input to script:
+  - Test case: Run with input passes input to script
 
     Temp file:
       name: with-input.spec.yaml
@@ -86,7 +86,7 @@ Tests:
 
     Expected output: Hello TestUser!
 
-  Run with list input iterates:
+  - Test case: Run with list input iterates
 
     Temp file:
       name: list-input.spec.yaml
@@ -105,7 +105,7 @@ Tests:
       - Hi A
       - Hi B
 
-  Inline script with cd can read files from cd directory:
+  - Test case: Inline script with cd can read files from cd directory
 
     Temp file:
       name: readable.txt
@@ -118,7 +118,7 @@ Tests:
 
     Expected output: file content here
 
-  Run with subdirectory path:
+  - Test case: Run with subdirectory path
 
     Temp file:
       name: sub/nested.spec.yaml
@@ -131,7 +131,7 @@ Tests:
 
     Expected output: nested!
 
-  Inline script sees host script commands:
+  - Test case: Inline script sees host script commands
 
     # The host script's directory has local commands (e.g. greet.spec.yaml).
     # Inline script should be able to call them.

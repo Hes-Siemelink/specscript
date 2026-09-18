@@ -265,8 +265,12 @@ fun Script.splitTests(): TestSuite {
             }
 
             command.equalsCommand(Tests) -> {
-                for (field in command.data.properties()) {
-                    tests.add(NamedTest(field.key, Script.from(field.value)))
+                for (item in command.data) {
+                    val name = item["Test case"]?.stringValue() ?: "unnamed"
+                    val testCommands = item.properties()
+                        .filterNot { it.key == "Test case" }
+                        .map { Command(it.key, it.value) }
+                    tests.add(NamedTest(name, Script(testCommands)))
                 }
             }
         }

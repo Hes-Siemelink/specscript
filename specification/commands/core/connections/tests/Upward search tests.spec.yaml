@@ -1,6 +1,6 @@
 Tests:
 
-  Connection found in parent directory:
+  - Test case: Connection found in parent directory
 
     Run: upward/get-items.spec.yaml
 

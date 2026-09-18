@@ -1,6 +1,6 @@
 Tests:
 
-  Save output to file:
+  - Test case: Save output to file
 
     Output:
       test: true

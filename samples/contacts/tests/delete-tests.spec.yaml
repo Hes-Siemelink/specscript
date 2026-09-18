@@ -8,7 +8,7 @@ Before all tests:
 
 Tests:
 
-  Delete an existing contact:
+  - Test case: Delete an existing contact
 
     Create:
       name: Delete Me
@@ -23,7 +23,7 @@ Tests:
       equals: Contact deleted
 
 
-  Delete non-existent contact:
+  - Test case: Delete non-existent contact
 
     Delete:
       id: 999

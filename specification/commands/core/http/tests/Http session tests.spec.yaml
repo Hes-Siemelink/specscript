@@ -1,6 +1,6 @@
 Tests:
 
-  Session parameters are used:
+  - Test case: Session parameters are used
 
     Http session:
       name: base
@@ -17,7 +17,7 @@ Tests:
     Http close session: base
 
 
-  Request parameters override session parameters:
+  - Test case: Request parameters override session parameters
 
     Http session:
       name: items
@@ -32,7 +32,7 @@ Tests:
     Http close session: items
 
 
-  Session headers merge with request headers:
+  - Test case: Session headers merge with request headers
 
     Http session:
       name: with-headers
@@ -52,7 +52,7 @@ Tests:
     Http close session: with-headers
 
 
-  Session cookies merge with request cookies:
+  - Test case: Session cookies merge with request cookies
 
     Http session:
       name: with-cookies
@@ -72,7 +72,7 @@ Tests:
     Http close session: with-cookies
 
 
-  The most recently opened session is the current one:
+  - Test case: The most recently opened session is the current one
 
     Http session:
       - name: items
@@ -91,7 +91,7 @@ Tests:
       - items
 
 
-  Closing the current session makes the previous one current:
+  - Test case: Closing the current session makes the previous one current
 
     Http session:
       - name: items
@@ -114,7 +114,7 @@ Tests:
       Http close session: items
 
 
-  Target a session by name:
+  - Test case: Target a session by name
 
     Http session:
       - name: items
@@ -137,7 +137,7 @@ Tests:
       - items
 
 
-  Close a session with the session object:
+  - Test case: Close a session with the session object
 
     Http session:
       url: http://localhost:2525
@@ -146,7 +146,7 @@ Tests:
     Http close session: ${session}
 
 
-  Generated session names contain the session parameters:
+  - Test case: Generated session names contain the session parameters
 
     Http session:
       url: http://localhost:2525
@@ -162,7 +162,7 @@ Tests:
     Http close session: ${session}
 
 
-  Opening a session with the name of an open session replaces it:
+  - Test case: Opening a session with the name of an open session replaces it
 
     Http session:
       - name: twice

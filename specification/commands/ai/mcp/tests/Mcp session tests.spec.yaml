@@ -30,7 +30,7 @@ After all tests:
 
 Tests:
 
-  Call tool in the current session:
+  - Test case: Call tool in the current session
 
     Mcp session:
       name: worker-a
@@ -44,7 +44,7 @@ Tests:
     Mcp close session: worker-a
 
 
-  The most recently opened session is the current one:
+  - Test case: The most recently opened session is the current one
 
     Mcp session:
       - name: worker-a
@@ -62,7 +62,7 @@ Tests:
       - worker-a
 
 
-  Closing the current session makes the previous one current:
+  - Test case: Closing the current session makes the previous one current
 
     Mcp session:
       - name: worker-a
@@ -81,7 +81,7 @@ Tests:
       Mcp close session: worker-a
 
 
-  Target a session by name:
+  - Test case: Target a session by name
 
     Mcp session:
       - name: worker-a
@@ -100,7 +100,7 @@ Tests:
       - worker-a
 
 
-  Close a session with the session object:
+  - Test case: Close a session with the session object
 
     Mcp session:
       url: http://localhost:8092/mcp
@@ -109,7 +109,7 @@ Tests:
     Mcp close session: ${session}
 
 
-  Generated session names contain the session parameters:
+  - Test case: Generated session names contain the session parameters
 
     Mcp session:
       url: http://localhost:8092/mcp
@@ -123,7 +123,7 @@ Tests:
     Mcp close session: ${session}
 
 
-  Explicit server connects per call when no session targeted:
+  - Test case: Explicit server connects per call when no session targeted
 
     Mcp session:
       name: worker-a

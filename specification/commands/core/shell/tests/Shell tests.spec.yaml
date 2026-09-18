@@ -1,29 +1,29 @@
 Tests:
 
-  Run command:
+  - Test case: Run command
 
     Shell: echo Hello
     Expected output: Hello
 
-  Run shell script:
+  - Test case: Run shell script
 
     Shell: sh helloworld.sh
     Expected output: Hello World
 
-  Run shell in same directory as script:
+  - Test case: Run shell in same directory as script
 
     Shell:
       resource: sh helloworld.sh
     Expected output: Hello World
 
-  Handle stderr-only failure:
+  - Test case: Handle stderr-only failure
 
     Shell: echo Error >&2 && exit 1
     On error:
       Output: Error handled
     Expected output: Error handled
 
-  Handle commands waiting for stdin on failure:
+  - Test case: Handle commands waiting for stdin on failure
 
     Shell: if read x; then echo stdin; else echo closed >&2; fi; exit 1
     On error:

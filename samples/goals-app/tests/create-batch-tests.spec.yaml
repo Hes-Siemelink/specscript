@@ -11,7 +11,7 @@ Before all tests:
 
 Tests:
 
-  Batch create multiple goals:
+  - Test case: Batch create multiple goals
     Create batch:
       batch:
         - title: Goal one
@@ -30,7 +30,7 @@ Tests:
     Size: ${output}
     Expected output: 3
 
-  Batch create with parent linkage:
+  - Test case: Batch create with parent linkage
     Create:
       title: Parent for batch
       description: Top level

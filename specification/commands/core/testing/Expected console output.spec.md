@@ -40,11 +40,11 @@ For test cases:
 ```yaml specscript
 Tests:
 
-  First test:
+  - Test case: First test
     Print: one
     Expected console output: one
 
-  Second test:
+  - Test case: Second test
     Print: two
     Expected console output: two
 ```

@@ -36,7 +36,7 @@ Before all tests:
 
 Tests:
 
-  List all goals without filters:
+  - Test case: List all goals without filters
     List:
       state: all
       assignee: all
@@ -45,7 +45,7 @@ Tests:
     Size: ${goals}
     Expected output: 4
 
-  Filter by state todo:
+  - Test case: Filter by state todo
     List:
       state: todo
     As: ${goals}
@@ -54,7 +54,7 @@ Tests:
       item: ${output}
       equals: 2
 
-  Filter by state in_progress:
+  - Test case: Filter by state in_progress
     List:
       state: in_progress
     As: ${goals}
@@ -65,7 +65,7 @@ Tests:
       - item: ${goals[0].title}
         equals: In-progress goal
 
-  Filter by state completed:
+  - Test case: Filter by state completed
     List:
       state: completed
     As: ${goals}
@@ -76,7 +76,7 @@ Tests:
       - item: ${goals[0].title}
         equals: Completed goal
 
-  Filter by assignee:
+  - Test case: Filter by assignee
     List:
       assignee: alice
     As: ${goals}
@@ -87,13 +87,13 @@ Tests:
       - item: ${goals[0].assignee}
         equals: alice
 
-  Filter top-level goals only:
+  - Test case: Filter top-level goals only
     List:
       parent_id: none
     Size: ${output}
     Expected output: 3
 
-  Filter children of a specific parent:
+  - Test case: Filter children of a specific parent
     List:
       parent_id: 1
     As: ${goals}
@@ -104,7 +104,7 @@ Tests:
       - item: ${goals[0].title}
         equals: Child of goal 1
 
-  Empty result for non-existent assignee:
+  - Test case: Empty result for non-existent assignee
     List:
       assignee: nobody
     Expected output: []

@@ -8,7 +8,7 @@ Before all tests:
 
 Tests:
 
-  GET with full URL:
+  - Test case: GET with full URL
 
     GET: http://localhost:2525/items
 
@@ -17,7 +17,7 @@ Tests:
       - 2
       - 3
 
-  GET with implicit url and explicit path parameter:
+  - Test case: GET with implicit url and explicit path parameter
 
     GET:
       path: /items
@@ -27,14 +27,14 @@ Tests:
       - 2
       - 3
 
-  GET with query parameters:
+  - Test case: GET with query parameters
 
     GET: /echo/query?content=hello
 
     Expected output:
       content: hello
 
-  POST:
+  - Test case: POST
 
     POST:
       path: /echo/body
@@ -48,7 +48,7 @@ Tests:
       2: Two
       3: Three
 
-  POST with list:
+  - Test case: POST with list
 
     POST:
       path: /echo/body
@@ -62,7 +62,7 @@ Tests:
       - Two
       - Three
 
-  POST without path parameter:
+  - Test case: POST without path parameter
 
     POST:
       url: http://localhost:2525/echo/body
@@ -76,7 +76,7 @@ Tests:
       2: Two
       3: Three
 
-  Headers:
+  - Test case: Headers
 
     GET:
       path: /echo/headers
@@ -86,7 +86,7 @@ Tests:
     Expected output contains:
       Test: something
 
-  Cookies:
+  - Test case: Cookies
 
     GET:
       path: /echo/cookies
@@ -97,7 +97,7 @@ Tests:
       maria: biscuit
       speculaas: spicy
 
-  Path parameters:
+  - Test case: Path parameters
 
     GET:
       path: /echo/path/custom

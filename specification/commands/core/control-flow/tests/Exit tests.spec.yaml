@@ -1,12 +1,12 @@
 Tests:
 
-  Exit from script:
+  - Test case: Exit from script
 
     Exit: Expected exit from test
 
     Expected output: We are not supposed to get here
 
-  Exit from inside If branch:
+  - Test case: Exit from inside If branch
 
     If:
       item: yes

@@ -46,7 +46,7 @@ Http server:
 ---
 Tests:
 
-  List agents test:
+  - Test case: List agents test
     List agents: { }
 
 ---

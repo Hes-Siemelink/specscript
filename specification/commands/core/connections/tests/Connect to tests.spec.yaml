@@ -1,6 +1,6 @@
 Tests:
 
-  Use a connection with SpecScript code:
+  - Test case: Use a connection with SpecScript code
 
     Connect to: SpecScript Sample Server
 
@@ -11,7 +11,7 @@ Tests:
       - 2
       - 3
 
-  Use a connection script:
+  - Test case: Use a connection script
 
     Connect to: SpecScript Sample Server with script
 
