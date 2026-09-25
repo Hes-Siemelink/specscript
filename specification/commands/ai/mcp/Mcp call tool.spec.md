@@ -90,12 +90,12 @@ Code example: HTTP transport
 Mcp call tool:
   server:
     transport: HTTP
-    url: "https://api.example.com/mcp"
+    url: https://api.example.com/mcp
     headers:
-      Authorization: "Bearer ${API_TOKEN}"
+      Authorization: Bearer ${API_TOKEN}
   name: analyze_data
   arguments:
-    data: "sample input"
+    data: sample input
 ```
 
 ### Stdio
