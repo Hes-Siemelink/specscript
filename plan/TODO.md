@@ -1,11 +1,10 @@
 # On my mind
 
-* Clean up semantics of test runs
-* Revert to Test case command?
+* Define bare bones markdown processor first as universal harness; SpecScript second.
+
 * Error reporting during tests and execution
 
 * Publish typescript package to npm
-* Run command from command line
 
 ## Spotlight
 
@@ -19,7 +18,6 @@
     * `spec agent prime` to give a how-to for agents
     * `spec agent skills` lists agent skills
 * Replace specscript-config.yaml with README and put stuff in Markdown front matter.
-* Define bare bones markdown processor first as universal harness; SpecScript second.
 
 ## In general
 
@@ -49,9 +47,14 @@
 * Use Markdown front matter for SpecScript files to define metadata
 * Plugin system with MCP
     * Move out of core: DB, LLM query
+* Clean up semantics of test runs
+    * `Tests` command vs inline `Test case` in markdown. Two philosophies or two use cases?
+    * `Before all tests` and `After all tests` could be part of Tests command.
+    * Rename Test to Test Suite.
 
 ## CLI
 
+* Run command from command line
 * Different top-level commands
     - spec run [file|dir] [args]
     - spec test [file|dir] args?
@@ -95,14 +98,8 @@
 * Support stdin:
   if (System.`in`.available () != 0) { val input = Yaml.mapper.readTree (System.`in`)}
 
-## AI agents
-
-* Langchain
-* https://github.com/JetBrains/koog
-
 ## Code organization
 
-* Versioning and auto-upgrading of commands
 * Review Script info on directories
 * Support modules
 
