@@ -9,7 +9,7 @@ import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.ValueNode
 
-object Get : CommandHandler("GET", "core/http"), ValueHandler, ObjectHandler {
+object Get : CommandHandler("GET", "http/client"), ValueHandler, ObjectHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
         return HttpClient.processRequest(data, context, HttpMethod.Get)

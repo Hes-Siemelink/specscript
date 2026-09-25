@@ -9,7 +9,7 @@ import tools.jackson.databind.node.ValueNode
 import java.nio.file.Path
 import kotlin.io.path.name
 
-object ConnectTo : CommandHandler("Connect to", "core/connections"), ValueHandler {
+object ConnectTo : CommandHandler("Connect to", "connections"), ValueHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
 

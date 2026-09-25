@@ -70,7 +70,7 @@ Published artifacts:
 - **Language Engine**: `src/main/kotlin/specscript/language/` - Core language processing and command execution
 - **Commands**: `src/main/kotlin/specscript/commands/` - Implementation of all script commands (HTTP, testing, control
   flow, etc.)
-    - Commands use paths like `"core/testing"` to reference specification files
+    - Commands register a group path that locates their spec and schema files under `specification/commands/<group>/`
     - 56+ command implementations organized by functionality
 - **File Handling**: `src/main/kotlin/specscript/files/` - .spec.yaml file parsing and management
 - **Utilities**: `src/main/kotlin/specscript/util/` - JSON/YAML processing, I/O utilities
@@ -80,7 +80,7 @@ Published artifacts:
 - The project is split into `specification` (the language specification) and `src` (the Kotlin implementation).
 - Commands are implemented as singleton objects extending `specscript.language.CommandHandler`.
 - The command's name and group are registered in the `CommandHandler` constructor, e.g.,
-  `CommandHandler("Mcp server", "ai/mcp")`.
+  `CommandHandler("Shell", "shell")` or `CommandHandler("If", "core/control-flow")`.
 - The command logic is implemented in the `execute` method.
 
 ### Server Architecture Patterns
@@ -160,8 +160,8 @@ SpecScript implements server patterns for both MCP and HTTP servers with similar
 The `specification/` directory contains the complete language specification written in executable Markdown:
 
 - `specification/language/` - Language syntax and features
-- `specification/commands/core/` - Core command reference with examples (renamed from specscript)
-- `specification/commands/ai/` - AI-related commands (MCP server, etc.)
+- `specification/commands/` - Command reference; most groups live under `core/`, while `db`, `http`, `shell`, and
+  `mcp` are top-level
 - `specification/cli/` - CLI tool usage
 
 All documentation includes runnable code examples that are executed as part of the test suite.
@@ -204,7 +204,8 @@ All documentation includes runnable code examples that are executed as part of t
 - All specifications are executable - documentation doubles as test cases
 - The `specification/` directory is included as a resource directory for runtime access
 - The CLI supports interactive mode with prompts and non-interactive mode with command-line arguments
-- Command implementations reference `"core/"` paths instead of legacy `"specscript/"` paths
+- Command groups mirror the directory layout: `db`, `http`, `shell`, and `mcp` are top-level groups; the rest live
+  under `core/` (e.g. `core/testing`). This replaced the legacy `"specscript/"` paths
 - Two JAR artifacts are built: thin (531KB) and fat (36MB) for different deployment scenarios
 - Run the tests before creating a commit
 

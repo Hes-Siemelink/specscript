@@ -15,7 +15,7 @@ import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.StringNode
 
-object McpReadResource : CommandHandler("Mcp read resource", "ai/mcp"), ObjectHandler {
+object McpReadResource : CommandHandler("Mcp read resource", "mcp/client"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val info = data.toDomainObject(ReadMcpResourceInfo::class)

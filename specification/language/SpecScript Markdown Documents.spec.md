@@ -434,7 +434,7 @@ Expected output:
 
 To execute a command in the shell, use the ` ```shell` directive.
 
-SpecScript will execute this command using the [**Shell**](../commands/core/shell/Shell.spec.md) command. The default
+SpecScript will execute this command using the [**Shell**](../commands/shell/Shell.spec.md) command. The default
 working directory is `SCRIPT_HOME` — the directory containing the current markdown file.
 
 The output of the shell command can be checked with the ` ```ouput` directive.
@@ -486,7 +486,7 @@ Expected console output: Hello
 ### Setting the current directory
 
 Set the current directory with the `cd` option. This is equivalent to using the
-[**Shell**](../commands/core/shell/Shell.spec.md) command with the `cd` option.
+[**Shell**](../commands/shell/Shell.spec.md) command with the `cd` option.
 
 The following example shows how to set the current directory to the temporary directory created by SpecScript for the
 execution of the current script. This is where temporary files are stored that are created with ` ```yaml temp-file` or
@@ -527,12 +527,12 @@ key: value
 There are two options to show the command and output of the shell command.
 
 `show_command=[boolean]` will show the command that is executed. The default is `false`. This is equivalent to using the
-[**Shell**](../commands/core/shell/Shell.spec.md#displaying-the-shell-command) command with the `show command`
+[**Shell**](../commands/shell/Shell.spec.md#displaying-the-shell-command) command with the `show command`
 option.
 
 `show_output=[boolean]` will show and record the output of the command. The default is `true`. This is equivalent to
 using the
-[**Shell**](../commands/core/shell/Shell.spec.md#displaying-the-output) command with the `show output` option. Note:
+[**Shell**](../commands/shell/Shell.spec.md#displaying-the-output) command with the `show output` option. Note:
 the default for **Shell** is `false`.
 
 #### Markdown format
@@ -593,7 +593,7 @@ kill 1
 ## Invoking SpecScript itself
 
 You can also use the ` ```cli` directive to show how to invoke SpecScript itself. This is equivalent to using the
-[**Cli**](../commands/core/shell/Cli.spec.md) command. The default working directory is `SCRIPT_HOME` — the directory
+[**Cli**](../commands/core/run/Cli.spec.md) command. The default working directory is `SCRIPT_HOME` — the directory
 containing the current markdown file.
 
 This is useful for showing how to use the `cli` command and its command line options.
@@ -658,7 +658,7 @@ Global options:
 ### Setting the current directory
 
 Like ` ```shell`, you can set the current directory with the `cd` option. This is equivalent to using the
-[**Cli**](../commands/core/shell/Cli.spec.md) command with the `cd` option.
+[**Cli**](../commands/core/run/Cli.spec.md) command with the `cd` option.
 
 The following example shows how to set the current directory to the temporary directory created by SpecScript for the
 execution of the current script. This is where temporary files are stored that are created with ` ```yaml temp-file`.

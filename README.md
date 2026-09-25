@@ -172,13 +172,13 @@ Hello Carol!
 
 Tired of remembering curl syntax or losing that Postman tab that worked?
 
-Write your **[GET](specification/commands/core/http/GET.spec.md)** request as Yaml:
+Write your **[GET](specification/commands/http/GET.spec.md)** request as Yaml:
 
 ```yaml specscript
 GET: http://localhost:2525/greetings
 ```
 
-A **[POST](specification/commands/core/http/POST.spec.md)** with a body:
+A **[POST](specification/commands/http/POST.spec.md)** with a body:
 
 ```yaml specscript
 POST:
@@ -189,7 +189,7 @@ POST:
     language: Dutch
 ```
 
-For prototyping, SpecScript can run an [HTTP server](specification/commands/core/http/Http%20server.spec.md) too:
+For prototyping, SpecScript can run an [HTTP server](specification/commands/http/Http%20server.spec.md) too:
 
 ```yaml specscript
 Code example: Running an HTTP server

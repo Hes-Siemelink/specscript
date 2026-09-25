@@ -7,7 +7,7 @@ import specscript.language.getTextParameter
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 
-object SetDefaultCredentials : CommandHandler("Set default credentials", "core/connections"), ObjectHandler {
+object SetDefaultCredentials : CommandHandler("Set default credentials", "connections"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
 

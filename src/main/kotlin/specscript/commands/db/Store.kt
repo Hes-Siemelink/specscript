@@ -14,7 +14,7 @@ import tools.jackson.databind.node.ObjectNode
 import java.sql.Connection
 import java.sql.DriverManager
 
-object Store : CommandHandler("Store", "core/db"), ObjectHandler {
+object Store : CommandHandler("Store", "db"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val command = data.toDomainObject(StoreData::class)

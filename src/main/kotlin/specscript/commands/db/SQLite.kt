@@ -14,7 +14,7 @@ import tools.jackson.databind.node.StringNode
 import java.sql.Connection
 import java.sql.DriverManager
 
-object SQLite : CommandHandler("SQLite", "core/db"), ObjectHandler, DelayedResolver {
+object SQLite : CommandHandler("SQLite", "db"), ObjectHandler, DelayedResolver {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         // Extract raw SQL strings before variable resolution

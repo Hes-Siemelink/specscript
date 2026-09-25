@@ -7,7 +7,7 @@ import specscript.language.ScriptContext
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 
-object Patch : CommandHandler("PATCH", "core/http"), ObjectHandler {
+object Patch : CommandHandler("PATCH", "http/client"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         return HttpClient.processRequest(data, context, HttpMethod.Patch)

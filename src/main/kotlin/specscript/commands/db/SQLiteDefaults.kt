@@ -9,7 +9,7 @@ import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.ValueNode
 
-object SQLiteDefaults : CommandHandler("SQLite defaults", "core/db"), ObjectHandler, ValueHandler {
+object SQLiteDefaults : CommandHandler("SQLite defaults", "db"), ObjectHandler, ValueHandler {
 
     private const val SQLITE_DEFAULTS = "sqlite.defaults"
 

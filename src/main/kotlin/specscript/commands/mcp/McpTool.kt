@@ -10,7 +10,7 @@ import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 
 // TODO: Rename to "Mcp server tools"
-object McpTool : CommandHandler("Mcp tool", "ai/mcp"), ObjectHandler, DelayedResolver {
+object McpTool : CommandHandler("Mcp tool", "mcp/server"), ObjectHandler, DelayedResolver {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
 

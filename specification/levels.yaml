@@ -253,10 +253,7 @@ levels:
       - commands/core/files/Read file.spec.md
       - commands/core/files/Write file.spec.md
       - commands/core/files/Temp file.spec.md
-      - commands/core/files/Run.spec.md
-      - commands/core/files/SpecScript files as commands.spec.md
       - commands/core/files/tests/Read file tests.spec.yaml
-      - commands/core/files/tests/Run tests.spec.yaml
       - commands/core/files/tests/Save as tests.spec.yaml
       - commands/core/files/tests/Locate files in the same way.spec.yaml
       - commands/core/files/tests/flat-folder-list.spec.yaml
@@ -264,10 +261,16 @@ levels:
       - commands/core/files/tests/helper/helper-function.spec.yaml
       - commands/core/files/tests/helper/call-helper.spec.yaml
 
+      # Run commands
+      - commands/core/run/Run.spec.md
+      - commands/core/run/SpecScript files as commands.spec.md
+      - commands/core/run/Cli.spec.md
+      - commands/core/run/tests/Run tests.spec.yaml
+      - commands/core/run/tests/greet.spec.yaml
+
       # Shell commands
-      - commands/core/shell/Shell.spec.md
-      - commands/core/shell/Cli.spec.md
-      - commands/core/shell/tests/Shell tests.spec.yaml
+      - commands/shell/Shell.spec.md
+      - commands/shell/tests/Shell tests.spec.yaml
 
       # Language specs that need file/shell features
       - language/Organizing SpecScript files in directories.spec.md
@@ -298,19 +301,22 @@ levels:
       - Http endpoint
       - Stop http server
     spec-files:
-      - commands/core/http/GET.spec.md
-      - commands/core/http/POST.spec.md
-      - commands/core/http/PUT.spec.md
-      - commands/core/http/PATCH.spec.md
-      - commands/core/http/DELETE.spec.md
-      - commands/core/http/Http session.spec.md
-      - commands/core/http/Http close session.spec.md
-      - commands/core/http/Http server.spec.md
-      - commands/core/http/Http endpoint.spec.md
-      - commands/core/http/Stop http server.spec.md
-      - commands/core/http/tests/Http client tests.spec.yaml
-      - commands/core/http/tests/Http session tests.spec.yaml
-      - commands/core/http/tests/Http server tests.spec.yaml
+      # HTTP client
+      - commands/http/client/GET.spec.md
+      - commands/http/client/POST.spec.md
+      - commands/http/client/PUT.spec.md
+      - commands/http/client/PATCH.spec.md
+      - commands/http/client/DELETE.spec.md
+      - commands/http/client/Http session.spec.md
+      - commands/http/client/Http close session.spec.md
+      - commands/http/client/tests/Http client tests.spec.yaml
+      - commands/http/client/tests/Http session tests.spec.yaml
+
+      # HTTP server
+      - commands/http/server/Http server.spec.md
+      - commands/http/server/Http endpoint.spec.md
+      - commands/http/server/Stop http server.spec.md
+      - commands/http/server/tests/Http server tests.spec.yaml
 
   - name: User Interaction and Connections
     level: 5
@@ -337,27 +343,27 @@ levels:
       - commands/core/user-interaction/tests/Prompt tests.spec.yaml
 
       # Connections
-      - commands/core/connections/Connect to.spec.md
-      - commands/core/connections/Credentials.spec.md
-      - commands/core/connections/Create credentials.spec.md
-      - commands/core/connections/Delete credentials.spec.md
-      - commands/core/connections/Get credentials.spec.md
-      - commands/core/connections/Get all credentials.spec.md
-      - commands/core/connections/Set default credentials.spec.md
-      - commands/core/connections/tests/Connect to tests.spec.yaml
-      - commands/core/connections/tests/Connection inheritance tests.spec.yaml
-      - commands/core/connections/tests/Credentials tests.spec.yaml
-      - commands/core/connections/tests/Upward search tests.spec.yaml
-      - commands/core/connections/tests/connect.spec.yaml
-      - commands/core/connections/tests/setup-test-credentials.spec.yaml
-      - commands/core/connections/tests/override/get-items.spec.yaml
-      - commands/core/connections/tests/upward/get-items.spec.yaml
+      - commands/connections/Connect to.spec.md
+      - commands/connections/Credentials.spec.md
+      - commands/connections/Create credentials.spec.md
+      - commands/connections/Delete credentials.spec.md
+      - commands/connections/Get credentials.spec.md
+      - commands/connections/Get all credentials.spec.md
+      - commands/connections/Set default credentials.spec.md
+      - commands/connections/tests/Connect to tests.spec.yaml
+      - commands/connections/tests/Connection inheritance tests.spec.yaml
+      - commands/connections/tests/Credentials tests.spec.yaml
+      - commands/connections/tests/Upward search tests.spec.yaml
+      - commands/connections/tests/connect.spec.yaml
+      - commands/connections/tests/setup-test-credentials.spec.yaml
+      - commands/connections/tests/override/get-items.spec.yaml
+      - commands/connections/tests/upward/get-items.spec.yaml
 
-      # Schema validation and types
-      - commands/core/schema/Validate schema.spec.md
-      - commands/core/schema/tests/Validate tests.spec.yaml
+      # Types and schema validation
       - commands/core/types/Types.spec.md
+      - commands/core/types/Validate schema.spec.md
       - commands/core/types/tests/Type tests.spec.yaml
+      - commands/core/types/tests/Validate tests.spec.yaml
 
       # Contaminated test cases moved from lower levels
       - commands/core/control-flow/schema/Schema tests.spec.yaml  # uses Validate schema
@@ -371,9 +377,9 @@ levels:
       - SQLite defaults
       - Store
     spec-files:
-      - commands/core/db/tests/SQLite tests.spec.yaml
-      - commands/core/db/tests/SQLite defaults tests.spec.yaml
-      - commands/core/db/tests/Store tests.spec.yaml
+      - commands/db/tests/SQLite tests.spec.yaml
+      - commands/db/tests/SQLite defaults tests.spec.yaml
+      - commands/db/tests/Store tests.spec.yaml
 
   - name: MCP
     level: 6
@@ -391,19 +397,25 @@ levels:
       - Mcp resource
       - Stop mcp server
     spec-files:
-      - commands/ai/mcp/Mcp server.spec.md
-      - commands/ai/mcp/Mcp tool.spec.md
-      - commands/ai/mcp/Mcp call tool.spec.md
-      - commands/ai/mcp/Mcp read resource.spec.md
-      - commands/ai/mcp/Mcp get prompt.spec.md
-      - commands/ai/mcp/Mcp session.spec.md
-      - commands/ai/mcp/Mcp close session.spec.md
-      - commands/ai/mcp/Mcp prompt.spec.md
-      - commands/ai/mcp/Mcp resource.spec.md
-      - commands/ai/mcp/Stop mcp server.spec.md
-      - commands/ai/mcp/backup-info.spec.yaml
-      - commands/ai/mcp/tests/Mcp client tests.spec.yaml
-      - commands/ai/mcp/tests/Mcp session tests.spec.yaml
-      - commands/ai/mcp/tests/greet-tool.spec.yaml
-      - commands/ai/mcp/tests/config-resource.spec.yaml
-      - commands/ai/mcp/tests/review-prompt.spec.yaml
+      # MCP client
+      - commands/mcp/client/Mcp call tool.spec.md
+      - commands/mcp/client/Mcp read resource.spec.md
+      - commands/mcp/client/Mcp get prompt.spec.md
+      - commands/mcp/client/Mcp session.spec.md
+      - commands/mcp/client/Mcp close session.spec.md
+      - commands/mcp/client/tests/Mcp call tool tests.spec.yaml
+      - commands/mcp/client/tests/Mcp read resource tests.spec.yaml
+      - commands/mcp/client/tests/Mcp get prompt tests.spec.yaml
+      - commands/mcp/client/tests/Mcp session tests.spec.yaml
+      - commands/mcp/client/tests/greet-tool.spec.yaml
+      - commands/mcp/client/tests/config-resource.spec.yaml
+      - commands/mcp/client/tests/review-prompt.spec.yaml
+
+      # MCP server
+      - commands/mcp/server/Mcp server.spec.md
+      - commands/mcp/server/Mcp tool.spec.md
+      - commands/mcp/server/Mcp resource.spec.md
+      - commands/mcp/server/Mcp prompt.spec.md
+      - commands/mcp/server/Stop mcp server.spec.md
+      - commands/mcp/server/backup-info.spec.yaml
+      - commands/mcp/server/mock-mcp-server.sh

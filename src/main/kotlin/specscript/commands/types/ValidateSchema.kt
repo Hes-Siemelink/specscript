@@ -1,4 +1,4 @@
-package specscript.commands.schema
+package specscript.commands.types
 
 import com.networknt.schema.Schema
 import com.networknt.schema.SchemaLocation
@@ -10,7 +10,7 @@ import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.StringNode
 
-object ValidateSchema : CommandHandler("Validate schema", "core/schema"), ObjectHandler {
+object ValidateSchema : CommandHandler("Validate schema", "core/types"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val json = data.getParameter("data")

@@ -76,7 +76,7 @@ A collection of simple scripts
 ### Calling another script
 
 We showed above that you can call another SpecScript file with the
-**[Run](../commands/core/files/Run.spec.md)** command.
+**[Run](../commands/core/run/Run.spec.md)** command.
 
 Another way is to use it as a regular command. SpecScript reads all cli files in the same directory and makes them
 available as commands in the current script. While doing so, it transforms file names in "kebab-style" to "Sentence
@@ -231,4 +231,4 @@ how to alias imports.
 
 The `specscript-config.yaml` file also contains a `connections` settings for retrieving HTTP connection credentials. See
 the
-**[Connect to](../commands/core/connections/Connect%20to.spec.md)** command for more details.
+**[Connect to](../commands/connections/Connect%20to.spec.md)** command for more details.

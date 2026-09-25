@@ -6,7 +6,7 @@ import specscript.language.ValueHandler
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ValueNode
 
-object StopHttpServer : CommandHandler("Stop http server", "core/http"), ValueHandler {
+object StopHttpServer : CommandHandler("Stop http server", "http/server"), ValueHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
         HttpServer.stop(data.stringValue())

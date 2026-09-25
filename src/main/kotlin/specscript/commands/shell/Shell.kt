@@ -18,7 +18,7 @@ import java.io.IOException
 import java.nio.file.Path
 import java.util.concurrent.LinkedBlockingQueue
 
-object Shell : CommandHandler("Shell", "core/shell"), ObjectHandler, ValueHandler {
+object Shell : CommandHandler("Shell", "shell"), ObjectHandler, ValueHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
 

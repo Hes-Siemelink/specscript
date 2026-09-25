@@ -19,7 +19,7 @@ import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.StringNode
 
-object McpCallTool : CommandHandler("Mcp call tool", "ai/mcp"), ObjectHandler {
+object McpCallTool : CommandHandler("Mcp call tool", "mcp/client"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val info = data.toDomainObject(CallMcpToolInfo::class)

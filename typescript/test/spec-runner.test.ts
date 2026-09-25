@@ -45,9 +45,9 @@ const SAMPLE_SERVER = 'code-examples/sample-server/start.spec.yaml'
  */
 const SKIP_TESTS = new Set([
     // (b) Validate schema not yet implemented in TypeScript
-    'commands/core/schema/Validate schema.spec.md > Basic usage',
-    'commands/core/schema/Validate schema.spec.md > Schema from file',
-    'commands/core/schema/Validate schema.spec.md > Invalid data',
+    'commands/core/types/Validate schema.spec.md > Basic usage',
+    'commands/core/types/Validate schema.spec.md > Schema from file',
+    'commands/core/types/Validate schema.spec.md > Invalid data',
     'No extra properties in If',
     'If without then',
     "When with both 'then' and 'else'",
@@ -58,7 +58,7 @@ const SKIP_TESTS = new Set([
 
 /** Whole files to skip (all tests inside would fail on a missing command). */
 const SKIP_FILES = new Set([
-    'commands/core/schema/tests/Validate tests.spec.yaml',   // Validate schema (Level 5) not implemented
+    'commands/core/types/tests/Validate tests.spec.yaml',   // Validate schema (Level 5) not implemented
     'commands/core/control-flow/schema/Schema tests.spec.yaml', // uses Validate schema
 ])
 

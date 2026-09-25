@@ -49,7 +49,7 @@ Expected output: Goodbye
 Use `cd` to run scripts from a different directory, or `file` to run a script by absolute path (e.g. one created
 with `Temp file`).
 
-See **[Run](../commands/core/files/Run.spec.md)** for the full reference.
+See **[Run](../commands/core/run/Run.spec.md)** for the full reference.
 
 ## `Cli` — full isolation
 
@@ -78,7 +78,7 @@ Expected console output: |
     --package-path, -p   Directory containing packages
 ```
 
-See **[Cli](../commands/core/shell/Cli.spec.md)** for the full reference.
+See **[Cli](../commands/core/run/Cli.spec.md)** for the full reference.
 
 ## When to use which
 

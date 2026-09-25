@@ -6,7 +6,7 @@ import specscript.language.ValueHandler
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ValueNode
 
-object StopMcpServer : CommandHandler("Stop mcp server", "ai/mcp"), ValueHandler {
+object StopMcpServer : CommandHandler("Stop mcp server", "mcp/server"), ValueHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
         McpServer.stopServer(data.stringValue())

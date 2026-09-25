@@ -122,7 +122,7 @@ results — that is what keeps the two implementations honest and the docs truth
 ```
 specification/                    language spec, command reference, executable docs, sample server, code-examples
   language/                       core syntax: scripts, variables, eval, packages, conditions
-  commands/core/                  command reference, one dir per group (http, control-flow, testing, ...)
+  commands/                       command reference, one dir per group; mostly core/, but db, http, shell, mcp are top-level
   code-examples/sample-server/    start.spec.yaml — mock server on localhost:2525 started by the tests
 src/main/kotlin/specscript/       Kotlin reference implementation
   language/                       engine: CommandExecution, Sessions, ScriptContext, conditions, eval, variables

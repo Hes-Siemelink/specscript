@@ -1,4 +1,4 @@
-package specscript.commands.schema
+package specscript.commands.types
 
 import specscript.language.*
 import specscript.language.types.*
@@ -8,7 +8,7 @@ import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.StringNode
 
-object CheckType : CommandHandler("Check type", "core/schema"), ObjectHandler {
+object CheckType : CommandHandler("Check type", "core/types"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val json = data.getParameter("item")

@@ -7,7 +7,7 @@ import specscript.util.toDomainObject
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 
-object CreateCredentials : CommandHandler("Create credentials", "core/connections"), ObjectHandler {
+object CreateCredentials : CommandHandler("Create credentials", "connections"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode {
 

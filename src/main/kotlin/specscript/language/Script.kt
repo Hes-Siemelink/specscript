@@ -3,11 +3,11 @@ package specscript.language
 import specscript.commands.files.Cd
 import specscript.commands.files.TempFile
 import specscript.commands.files.TempFileData
+import specscript.commands.run.Cli
+import specscript.commands.run.CliData
 import specscript.commands.scriptinfo.InputSchema
 import specscript.commands.scriptinfo.ScriptInfo
 import specscript.commands.scriptinfo.ScriptInfoData
-import specscript.commands.shell.Cli
-import specscript.commands.shell.CliData
 import specscript.commands.shell.Shell
 import specscript.commands.shell.ShellCommand
 import specscript.commands.testing.*

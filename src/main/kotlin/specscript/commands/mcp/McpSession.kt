@@ -8,7 +8,7 @@ import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.ValueNode
 
-object McpSession : CommandHandler("Mcp session", "ai/mcp"), ObjectHandler {
+object McpSession : CommandHandler("Mcp session", "mcp/client"), ObjectHandler {
 
     internal val sessions = SessionRegistry<McpSessionData>("mcp.sessions", "mcp-session")
 
@@ -33,7 +33,7 @@ object McpSession : CommandHandler("Mcp session", "ai/mcp"), ObjectHandler {
     }
 }
 
-object McpCloseSession : CommandHandler("Mcp close session", "ai/mcp"), ValueHandler, ObjectHandler {
+object McpCloseSession : CommandHandler("Mcp close session", "mcp/client"), ValueHandler, ObjectHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
         McpSession.sessions.close(context, data.stringValue())

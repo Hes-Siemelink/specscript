@@ -96,7 +96,8 @@ Use `.tmp` in this repo as a temp directory so you don't need to ask for permiss
 - **Language Engine**: `src/main/kotlin/specscript/language/` — core language processing and command execution
 - **Command Registry**: `src/main/kotlin/specscript/language/CommandLibrary.kt` — where commands are registered
 - **Commands**: `src/main/kotlin/specscript/commands/` — 56+ command implementations organized by functionality
-    - Commands use paths like `"core/testing"` to reference specification files
+    - Commands register a group path that locates their spec and schema files under `specification/commands/<group>/`,
+      e.g. `"core/testing"` or the top-level `"http"`, `"db"`, `"shell"`, `"mcp"`
 - **Command Schemas**: `src/main/kotlin/specscript/schema/` — JSON Schema definitions for command YAML structure
 - **File Handling**: `src/main/kotlin/specscript/files/` — .spec.yaml file parsing and management
 - **Utilities**: `src/main/kotlin/specscript/util/` — JSON/YAML processing, I/O utilities
@@ -110,11 +111,12 @@ Use `.tmp` in this repo as a temp directory so you don't need to ask for permiss
   tests.
 - Commands are implemented as singleton objects extending `specscript.language.CommandHandler`.
 - The command's name and group are registered in the `CommandHandler` constructor, e.g.,
-  `CommandHandler("Mcp server", "ai/mcp")`.
+  `CommandHandler("Shell", "shell")` or `CommandHandler("If", "core/control-flow")`.
 - The command logic is implemented in the `execute` method.
 - Two JAR artifacts are built: thin and fat for different deployment scenarios.
 - The project uses "specscript" internally but is branded as "SpecScript" externally.
-- Command implementations reference `"core/"` paths instead of legacy `"specscript/"` paths.
+- Command groups mirror the directory layout: `db`, `http`, `shell`, and `mcp` are top-level groups; the rest live
+  under `core/` (e.g. `core/testing`). This replaced the legacy `"specscript/"` paths.
 
 ### Porting guides
 

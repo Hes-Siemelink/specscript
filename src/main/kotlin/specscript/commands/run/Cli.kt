@@ -1,4 +1,4 @@
-package specscript.commands.shell
+package specscript.commands.run
 
 import specscript.cli.SpecScriptCli
 import specscript.commands.testing.ExpectedConsoleOutput
@@ -14,7 +14,7 @@ import tools.jackson.databind.node.StringNode
 import tools.jackson.databind.node.ValueNode
 import java.nio.file.Path
 
-object Cli : CommandHandler("Cli", "core/shell"), ValueHandler, ObjectHandler {
+object Cli : CommandHandler("Cli", "core/run"), ValueHandler, ObjectHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
 

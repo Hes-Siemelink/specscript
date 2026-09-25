@@ -7,7 +7,7 @@ import specscript.util.toDomainObject
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 
-object HttpEndpoint : CommandHandler("Http endpoint", "core/http"), ObjectHandler, DelayedResolver {
+object HttpEndpoint : CommandHandler("Http endpoint", "http/server"), ObjectHandler, DelayedResolver {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val endpointsData = data.toDomainObject(HttpEndpointData::class)

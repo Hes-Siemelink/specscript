@@ -12,13 +12,14 @@ import specscript.commands.errors.OnErrorType
 import specscript.commands.files.*
 import specscript.commands.http.*
 import specscript.commands.mcp.*
-import specscript.commands.schema.CheckType
-import specscript.commands.schema.ValidateSchema
+import specscript.commands.run.Cli
+import specscript.commands.run.Run
 import specscript.commands.scriptinfo.InputSchema
 import specscript.commands.scriptinfo.ScriptInfo
-import specscript.commands.shell.Cli
 import specscript.commands.shell.Shell
 import specscript.commands.testing.*
+import specscript.commands.types.CheckType
+import specscript.commands.types.ValidateSchema
 import specscript.commands.userinteraction.Confirm
 import specscript.commands.userinteraction.Prompt
 import specscript.commands.util.*
@@ -60,7 +61,6 @@ object CommandLibrary {
         When,
         ForEach,
         Repeat,
-        Find,
 
         // Error handling
         ErrorCommand,
@@ -76,6 +76,7 @@ object CommandLibrary {
         AddTo,
         Append,
         Fields,
+        Find,
         JsonPatch,
         Replace,
         Size,
@@ -126,10 +127,8 @@ object CommandLibrary {
         GetCredentials,
         SetDefaultCredentials,
 
-        // JSON Schema
+        // Types and validation
         ValidateSchema,
-
-        // Types
         CheckType,
 
         // Database

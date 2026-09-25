@@ -1,4 +1,4 @@
-package specscript.commands.files
+package specscript.commands.run
 
 import specscript.files.FileContext
 import specscript.files.SpecScriptFile
@@ -11,7 +11,7 @@ import tools.jackson.databind.node.ValueNode
 import java.nio.file.Path
 import kotlin.io.path.exists
 
-object Run : CommandHandler("Run", "core/files"), ObjectHandler, ValueHandler, DelayedResolver {
+object Run : CommandHandler("Run", "core/run"), ObjectHandler, ValueHandler, DelayedResolver {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
 

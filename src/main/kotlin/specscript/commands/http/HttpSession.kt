@@ -7,7 +7,7 @@ import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.ValueNode
 
-object HttpSession : CommandHandler("Http session", "core/http"), ObjectHandler, ValueHandler {
+object HttpSession : CommandHandler("Http session", "http/client"), ObjectHandler, ValueHandler {
 
     internal val sessions = SessionRegistry<HttpSessionData>("http.sessions", "http-session")
 
@@ -42,7 +42,7 @@ object HttpSession : CommandHandler("Http session", "core/http"), ObjectHandler,
     }
 }
 
-object HttpCloseSession : CommandHandler("Http close session", "core/http"), ValueHandler, ObjectHandler {
+object HttpCloseSession : CommandHandler("Http close session", "http/client"), ValueHandler, ObjectHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
         HttpSession.sessions.close(context, data.stringValue())

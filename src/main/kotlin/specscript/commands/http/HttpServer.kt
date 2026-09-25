@@ -22,7 +22,7 @@ import tools.jackson.databind.node.StringNode
 import kotlin.concurrent.thread
 
 
-object HttpServer : CommandHandler("Http server", "core/http"), ObjectHandler, DelayedResolver {
+object HttpServer : CommandHandler("Http server", "http/server"), ObjectHandler, DelayedResolver {
 
     init {
         // Avoid NoClassDefFoundError from Ktor's shutdown hook when the JVM exits via Ctrl+C

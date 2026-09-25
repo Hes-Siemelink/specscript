@@ -372,4 +372,4 @@ Mcp tool:
 The tool will automatically use the `Input schema` from the script as its `inputSchema`. You can still provide an
 explicit `inputSchema` on the tool definition if you need to override or customize it.
 
-See [Mcp tool](../../ai/mcp/Mcp%20tool.spec.md) and [Mcp server](../../ai/mcp/Mcp%20server.spec.md) for full details.
+See [Mcp tool](../../mcp/Mcp%20tool.spec.md) and [Mcp server](../../mcp/Mcp%20server.spec.md) for full details.

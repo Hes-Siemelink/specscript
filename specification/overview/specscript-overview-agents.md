@@ -128,10 +128,10 @@ See [Input schema](../commands/core/script-info/Input%20schema.spec.md) for the 
 
 ## HTTP commands
 
-[GET](../commands/core/http/GET.spec.md), [POST](../commands/core/http/POST.spec.md),
-[PUT](../commands/core/http/PUT.spec.md), [PATCH](../commands/core/http/PATCH.spec.md),
-[DELETE](../commands/core/http/DELETE.spec.md) are built-in. Use
-[Http session](../commands/core/http/Http%20session.spec.md) to set shared configuration like base URL, headers, and
+[GET](../commands/http/client/GET.spec.md), [POST](../commands/http/client/POST.spec.md),
+[PUT](../commands/http/client/PUT.spec.md), [PATCH](../commands/http/client/PATCH.spec.md),
+[DELETE](../commands/http/client/DELETE.spec.md) are built-in. Use
+[Http session](../commands/http/client/Http%20session.spec.md) to set shared configuration like base URL, headers, and
 authentication:
 
 ```yaml specscript
@@ -255,7 +255,7 @@ Stop mcp server: agent-overview-server
 -->
 
 Transports: `HTTP` (default, streaming), `SSE` (legacy), `STDIO`. See
-[Mcp server](../commands/ai/mcp/Mcp%20server.spec.md) for full details.
+[Mcp server](../commands/mcp/server/Mcp%20server.spec.md) for full details.
 
 For simpler cases, agents can skip MCP entirely and call `spec` as a CLI tool. `Input schema` gives structured
 `--help` output and predictable `--option` flags, which is often all an agent needs to discover and invoke a tool.
@@ -264,12 +264,12 @@ For simpler cases, agents can skip MCP entirely and call `spec` as a CLI tool. `
 
 - **Error handling**: [Error](../commands/core/errors/Error.spec.md),
   [On error](../commands/core/errors/On%20error.spec.md) — catch errors with `${error.message}`
-- **Shell**: [Shell](../commands/core/shell/Shell.spec.md) — run shell commands with `cd`, `env`, `capture output`
+- **Shell**: [Shell](../commands/shell/Shell.spec.md) — run shell commands with `cd`, `env`, `capture output`
 - **Files**: [Read file](../commands/core/files/Read%20file.spec.md),
   [Write file](../commands/core/files/Write%20file.spec.md),
-  [Run](../commands/core/files/Run.spec.md) (`script:` = relative to script, `file:` = relative to working directory)
+  [Run](../commands/core/run/Run.spec.md) (`script:` = relative to script, `file:` = relative to working directory)
 - **Scripts as commands**:
-  [SpecScript files as commands](../commands/core/files/SpecScript%20files%20as%20commands.spec.md) — organize scripts
+  [SpecScript files as commands](../commands/core/run/SpecScript%20files%20as%20commands.spec.md) — organize scripts
   in directories for automatic subcommand navigation
 - **User interaction**: [Prompt](../commands/core/user-interaction/Prompt.spec.md),
   [Confirm](../commands/core/user-interaction/Confirm.spec.md) — use `--interactive` to enable prompts

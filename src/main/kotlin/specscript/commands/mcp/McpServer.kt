@@ -35,7 +35,7 @@ import kotlin.io.path.name
 import specscript.commands.scriptinfo.InputSchema as InputSchemaCommand
 
 
-object McpServer : CommandHandler("Mcp server", "ai/mcp"), ObjectHandler, DelayedResolver {
+object McpServer : CommandHandler("Mcp server", "mcp/server"), ObjectHandler, DelayedResolver {
 
     init {
         // Avoid NoClassDefFoundError from Ktor's shutdown hook when the JVM exits via Ctrl+C

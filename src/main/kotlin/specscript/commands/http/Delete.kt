@@ -9,7 +9,7 @@ import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.ValueNode
 
-object Delete : CommandHandler("DELETE", "core/http"), ValueHandler, ObjectHandler {
+object Delete : CommandHandler("DELETE", "http/client"), ValueHandler, ObjectHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
         return HttpClient.processRequest(data, context, HttpMethod.Delete)

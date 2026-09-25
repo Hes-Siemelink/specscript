@@ -8,7 +8,7 @@ import specscript.util.Json
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ValueNode
 
-object GetAllCredentials : CommandHandler("Get all credentials", "core/connections"), ValueHandler {
+object GetAllCredentials : CommandHandler("Get all credentials", "connections"), ValueHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode {
 

@@ -9,7 +9,7 @@ import specscript.util.toDomainObject
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 
-object McpResource : CommandHandler("Mcp resource", "ai/mcp"), ObjectHandler, DelayedResolver {
+object McpResource : CommandHandler("Mcp resource", "mcp/server"), ObjectHandler, DelayedResolver {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
 

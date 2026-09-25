@@ -228,7 +228,7 @@ Output: Hello ${input.name}!
 ```
 
 Now you can call it with input and retrieve the output. In the following example we use the name of the script as a
-command. (See **[SpecScript files as commands](../commands/core/files/SpecScript%20files%20as%20commands.spec.md)**)
+command. (See **[SpecScript files as commands](../commands/core/run/SpecScript%20files%20as%20commands.spec.md)**)
 
 ```yaml specscript
 Code example: Input and output when calling a script

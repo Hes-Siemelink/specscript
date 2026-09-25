@@ -171,13 +171,13 @@ Hello from SpecScript!
 
 Tired of remembering the exact curl syntax or forgetting which tab had that request that worked in Postman?
 
-Simply write your **[GET](specification/commands/core/http/GET.spec.md)** request as-code with SpecScript:
+Simply write your **[GET](specification/commands/http/GET.spec.md)** request as-code with SpecScript:
 
 ```yaml specscript
 GET: http://localhost:2525/greetings
 ```
 
-Here's a **[POST](specification/commands/core/http/POST.spec.md)**:
+Here's a **[POST](specification/commands/http/POST.spec.md)**:
 
 ```yaml specscript
 POST:
@@ -396,7 +396,7 @@ Print:
 
 ## Http Server
 
-For quick API prototyping, SpecScript will run an [HTTP server](specification/commands/core/http/Http%20server.spec.md)
+For quick API prototyping, SpecScript will run an [HTTP server](specification/commands/http/Http%20server.spec.md)
 for you. Define some endpoints and back them by SpecScript Yaml scripts:
 
 ```yaml specscript

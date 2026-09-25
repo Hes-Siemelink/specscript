@@ -6,7 +6,7 @@ import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.StringNode
 import tools.jackson.databind.node.ValueNode
 
-object GetCredentials : CommandHandler("Get credentials", "core/connections"), ValueHandler {
+object GetCredentials : CommandHandler("Get credentials", "connections"), ValueHandler {
 
     override fun execute(data: ValueNode, context: ScriptContext): JsonNode? {
 

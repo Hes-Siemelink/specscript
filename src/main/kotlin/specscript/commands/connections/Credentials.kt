@@ -17,7 +17,7 @@ import kotlin.io.path.createDirectories
 import kotlin.io.path.createFile
 import kotlin.io.path.exists
 
-object Credentials : CommandHandler("Credentials", "core/shell"), ValueHandler {
+object Credentials : CommandHandler("Credentials", "connections"), ValueHandler {
 
     const val FILENAME = "credentials.yaml"
     private val DEFAULT_FILE: Path = Path.of(System.getProperty("user.home"), ".specscript").resolve(FILENAME)

@@ -13,7 +13,7 @@ the scenes.
 
 ## Basic usage
 
-**Connect to** takes a symbolic name and usually configures a [Http session](../http/Http%20session.spec.md) for
+**Connect to** takes a symbolic name and usually configures a [Http session](../../http/Http%20session.spec.md) for
 subsequent REST API calls.
 
 A script `get-items.spec.yaml` would look like this:

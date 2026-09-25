@@ -15,7 +15,7 @@ import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 import tools.jackson.databind.node.StringNode
 
-object McpGetPrompt : CommandHandler("Mcp get prompt", "ai/mcp"), ObjectHandler {
+object McpGetPrompt : CommandHandler("Mcp get prompt", "mcp/client"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
         val info = data.toDomainObject(GetMcpPromptInfo::class)

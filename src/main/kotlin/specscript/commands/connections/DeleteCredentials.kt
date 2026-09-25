@@ -7,7 +7,7 @@ import specscript.language.getTextParameter
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.node.ObjectNode
 
-object DeleteCredentials : CommandHandler("Delete credentials", "core/connections"), ObjectHandler {
+object DeleteCredentials : CommandHandler("Delete credentials", "connections"), ObjectHandler {
 
     override fun execute(data: ObjectNode, context: ScriptContext): JsonNode? {
 
